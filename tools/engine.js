@@ -305,7 +305,7 @@ LB.Tracer = class {
 };
 /* Hilfen für Zustandsansichten */
 LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div><i>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span></div>').join('') + '</div>';
-LB.cellsHTML = (arr, cls) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + k + '</i></span>').join('') + '</div>';
+LB.cellsHTML = (arr, cls, base) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
 
 /* =====================================================================
    Farbige Schlüsselwörter im Fließtext (Wortliste Begriff → Rolle)

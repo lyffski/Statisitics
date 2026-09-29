@@ -1251,7 +1251,7 @@ LB.Tracer = class {
 };
 /* Hilfen für Zustandsansichten */
 LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div><i>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span></div>').join('') + '</div>';
-LB.cellsHTML = (arr, cls) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + k + '</i></span>').join('') + '</div>';
+LB.cellsHTML = (arr, cls, base) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
 
 /* =====================================================================
    Farbige Schlüsselwörter im Fließtext (Wortliste Begriff → Rolle)
@@ -1592,7 +1592,7 @@ LB.on(function tracers() {
       i = n;
       rec.step('vec', 'Vektorisiert entsteht dieselbe Folge mit <code>cumsum</code>. Endwert \\(\\Idx{f_{' + n + '}}=' + LB.fmt(f, 4) + '\\), wahres \\(\\PP(\\mA)=0.5\\).', st());
     },
-    view: s => LB.cellsHTML(s.w, k => k === s.i - 1 ? 'o' : (k < s.i ? (s.w[k] === 'K' ? 'm' : '') : 'out')) +
+    view: s => LB.cellsHTML(s.w, k => k === s.i - 1 ? 'o' : (k < s.i ? (s.w[k] === 'K' ? 'm' : '') : 'out'), 1) +
       LB.kvHTML([['Wurf i', s.i, 'idx'], ['treffer', s.t, 'idx'], ['n', s.n, 'par'], ['f_i(A)', s.f === null ? '–' : LB.fmt(s.f, 4), 'res']]) +
       (s.f === null ? '' : '<div class="bar"><span style="width:' + (100 * s.f) + '%"></span><i style="left:50%"></i></div>')
   });

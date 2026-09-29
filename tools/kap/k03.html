@@ -1,0 +1,421 @@
+<!-- title: Kap. 3 · Deskriptive Statistik -->
+<!-- sub: Mittel, Varianz, Quantile, Median, IQR, Histogramm, Boxplot, F_n, Korrelation, lineare Regression -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 3 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Deskriptive Statistik</h1>
+  <p class="lead">Wo Kapitel 2 die <b>Modelle</b> baute, fasst Kapitel 3 echte <b>Daten</b> zusammen: Mittel, Streuung, Median und Quantile, dazu Histogramm, Boxplot, empirische Verteilungsfunktion und Korrelation. Neu aus der Modulbeschreibung: die <b>lineare Regression</b> (Ausgleichsgerade, Residuen, R²). Jede empirische Kennzahl ist das Gegenstück zu ihrer theoretischen Schwester aus Kap. 2.</p>
+</div>
+<x-card t="🎨 Farblegende für Kapitel 3" src="GN">
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: berechnete Kennzahl \(\Res{\bar x},\Res{s},\Res{q_\alpha},\Res{r}\)</div>
+    <div><b class="kw-chg">orange · Umformung</b>: ordnen \(\Chg{x_{(i)}}\), Abweichung \(\Chg{x_i-\bar x}\), Residuum</div>
+    <div><b class="kw-rule">lila · Regel/Name</b>: Median, IQR, Sturges, 1.5-IQR-Regel, kleinste Quadrate</div>
+    <div><b class="kw-par">blau · Umfang/Anteil</b>: \(\Par{n}\), \(\Par{\alpha}\), Klassenzahl</div>
+    <div><b class="kw-idx">grün · Index</b>: \(\Idx{i}\), \(\Idx{k}\), Position \(\lceil\alpha n\rceil\)</div>
+    <div><b class="kw-cond">cyan · Vergleich</b>: \(x_i\Cond{\le}x\), Ausreißer-Grenze, Klassengrenzen</div>
+    <div><b class="kw-mem">pink · Daten</b>: Beobachtungen \(\Mem{x_i},\Mem{y_i}\), Stichprobe</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Der rote Faden des Kapitels:</b> jede rote Kennzahl ist die aus pinken Daten geschätzte Version einer Modellgröße aus Kap. 2: \(\bar x\leftrightarrow\EE[\mX]\), \(s^2\leftrightarrow\Var(\mX)\), \(\FF_n\leftrightarrow\FF\). Mehr Daten → näher am Modell.</div>
+</x-card>
+<x-course cur="3"/>
+
+<section id="s3-0" data-m="🔬 Master-Anatomie|6 Leitfragen, 4-Schritte-Werkzeug">
+<h2><span class="num">3.0</span>Master-Anatomie</h2>
+<x-anat t="Daten → Kennzahl → Modellgröße" f="\underbrace{\Mem{x_1},\dots,\Mem{x_{\Par{n}}}}_{\text{Daten}}\ \xrightarrow{\ \Chg{\text{zusammenfassen}}\ }\ \underbrace{\Res{\bar x}=\frac1{\Par{n}}\sum_{\Idx{i}=1}^{\Par{n}}\Mem{x_{\Idx{i}}}}_{\text{empirisch}}\ \approx\ \underbrace{\EE[\mX]}_{\text{Modell (Kap. 2)}}">
+  <x-a s="\Mem{x_i}">die gemessenen Rohwerte (pink = Daten)</x-a>
+  <x-a s="\Res{\bar x}">die daraus berechnete Kennzahl (rot = Ergebnis)</x-a>
+  <x-a s="\approx\EE[\mX]">sie schätzt die entsprechende Größe des Modells; die Güte der Schätzung ist Thema von Kap. 5 und 6</x-a>
+  <x-read>„Aus den Daten x eins bis x n berechnet man x quer; das ist eine Schätzung für den Erwartungswert von X.“</x-read>
+</x-anat>
+<x-card t="🧭 Die 6 Leitfragen dieses Kapitels" src="G">
+  <ol class="cook"><li><b>Wo liegt die Mitte der Daten?</b> Arithmetisches Mittel \(\bar x\) (empfindlich) oder Median \(q_{0.5}\) (robust)?</li>
+  <li><b>Wie stark streuen sie?</b> Empirische Standardabweichung s oder robust die Quartilsdifferenz (IQR)?</li>
+  <li><b>Wie sieht die Verteilung aus?</b> Histogramm (= empirische Dichte), Boxplot, empirische Verteilungsfunktion \(\FF_n\).</li>
+  <li><b>Was ist „robust“?</b> Welche Kennzahl übersteht einen Ausreißer, welche kippt?</li>
+  <li><b>Hängen zwei Größen zusammen?</b> Empirische Korrelation \(r\in[-1,1]\), aber nie ohne Streudiagramm! Und die Ausgleichsgerade (Regression).</li>
+  <li><b>Wie verbindet sich Daten- mit Modellwelt?</b> Jede empirische Größe schätzt ihr theoretisches Gegenstück aus Kap. 2.</li></ol>
+</x-card>
+<x-card t="🎓 Das agnostische Spitzenwerkzeug für JEDE Prüfungsfrage" src="G">
+  <ol class="cook"><li><b>ERKENNEN:</b> Was wird verlangt? Lage (Mittel/Median), Streuung (s/IQR), Form (Histogramm/\(\FF_n\)), Zusammenhang (r, Gerade) oder Modell-Bezug? Eine Größe oder Paare (x, y)?</li>
+  <li><b>WÄHLEN:</b> Ausreißer oder schiefe Daten im Spiel? → robust: Median und IQR. Sonst Mittel und s. Grafik: Histogramm = Form, Boxplot = Vergleich, \(\FF_n\) = Anteile.</li>
+  <li><b>RECHNEN:</b> passende Formel einsetzen. Quantil-Reflex: ordnen → \(\alpha\cdot n\) bilden → ganzzahlig? dann zwei mitteln, sonst \(\lceil\alpha n\rceil\) ablesen.</li>
+  <li><b>ARTIKULIEREN:</b> „Die [Kennzahl] beträgt [Wert] [Einheit]; sie misst [Lage/Streuung/…], ist [robust/empfindlich] und ist das empirische Gegenstück zu [E[X] / Var / F].“</li></ol>
+</x-card>
+</section>
+
+<!-- ============================================================ 3.1 -->
+<section id="s3-1" data-vn data-m="3.1 Einführung|Stichprobe vs. Grundgesamtheit, erst plotten">
+<h2><span class="num">3.1</span>Einführung: Daten zusammenfassen</h2>
+<x-vn id="vn-3-1" sec="3.1" q="Welche Zusammenfassung passt zu welchen Daten?">
+  <x-task>Eine Firma misst an 40 zufällig ausgewählten Tagen (a) die Anzahl Kundenbeschwerden pro Tag und (b) die Wartezeit des ersten Kunden in Minuten. (1) Was ist Grundgesamtheit, was Stichprobe? (2) Sind die Merkmale diskret oder stetig? (3) Welche Grafik schaust du zuerst an, und warum darf man nicht gleich nur den Mittelwert berichten?</x-task>
+  <x-step h="(1) Grundgesamtheit und Stichprobe.">Grundgesamtheit = alle Arbeitstage (auch zukünftige) unter gleichen Bedingungen; Stichprobe = die 40 gemessenen Tage mit Werten \(\Mem{x_1},\dots,\Mem{x_{40}}\).</x-step>
+  <x-step h="(2) Typ.">(a) Anzahl → gezählt → diskret; (b) Zeit → gemessen → stetig (Kap. 2.1).</x-step>
+  <x-step h="(3) Erst schauen.">Pflicht ist eine Grafik: für (a) ein Stabdiagramm der Häufigkeiten, für (b) ein Histogramm oder Boxplot. Grund: jede Kennzahl wirft Information weg. Wartezeiten sind oft schief (Exponential-ähnlich) oder haben Ausreißer; dann beschreibt der Median die „typische“ Wartezeit besser als das Mittel.</x-step>
+  <x-res>Grundgesamtheit = alle Tage, Stichprobe = 40 Tage; (a) diskret, (b) stetig; zuerst Grafik, dann passende (evtl. robuste) Kennzahl.</x-res>
+</x-vn>
+<x-g><p>Die <b>deskriptive Statistik</b> stellt vorhandene Daten übersichtlich dar und fasst sie zusammen, als ersten Schritt, bevor man später (schließende Statistik, Kap. 6 bis 8) auf den dahinterliegenden Mechanismus schließt.</p></x-g>
+<x-anat t="Stichprobe und Grundgesamtheit" src="G">
+  <x-a s="\text{Grundgesamtheit}">die ganze interessierende Menge (z. B. alle Studierenden). Meist zu groß, um sie vollständig zu messen</x-a>
+  <x-a s="\text{Stichprobe}">eine (idealerweise zufällig gezogene) Teilmenge, die die Grundgesamtheit repräsentieren soll, z. B. 50 Studierende</x-a>
+  <x-a s="\Mem{x_1},\dots,\Mem{x_n}">die n Beobachtungen der Stichprobe; \(\Mem{x_{\Idx{i}}}\) ist die i-te Messung</x-a>
+  <x-read>„Aus der Grundgesamtheit wird eine Stichprobe vom Umfang n gezogen; x i ist die i-te Beobachtung.“</x-read>
+</x-anat>
+<div class="trap is-g"><b>⚠ Grundregel:</b> Immer wenn man Daten sammelt, ist es Pflicht, sie zuerst grafisch anzuschauen. Und: Jedes Zusammenfassen, ob Kennzahl oder Grafik, wirft zwangsläufig Information weg. <span class="srcin">📘 Grundlage</span></div>
+<x-pt><x-q>Eine Behörde befragt 300 zufällig ausgewählte Haushalte einer Stadt zum Wasserverbrauch. Was ist Stichprobe, was Grundgesamtheit, und warum „zufällig“?</x-q><x-e>Immer wenn „eine Auswahl, X von Y, Messungen aus einer größeren Menge“ vorkommt.</x-e><x-l>Grundgesamtheit = alle Haushalte der Stadt; Stichprobe = die 300 gemessenen; zufällig → repräsentativ, kein systematischer Fehler.</x-l><x-s>„Die 300 Haushalte sind eine zufällige (repräsentative) Stichprobe aus der Grundgesamtheit aller Haushalte der Stadt.“</x-s></x-pt>
+<x-vids><x-vid f="init2/Introduction to Statistics and Data Analysis [QIXUTsdj_oA].mp4" n="Einführung Datenanalyse"/><x-vid f="statquest/Population and Estimated Parameters, Clearly Explained!!! [vikkiwjQqfU].mp4" n="Population vs. Schätzung"/></x-vids>
+</section>
+
+<!-- ============================================================ 3.2 -->
+<section id="s3-2" data-vn data-m="3.2 Kennzahlen|x̄, s², s, Quantile, Median, IQR, robust">
+<h2><span class="num">3.2</span>Kennzahlen</h2>
+<p class="one">Eine Zahl für die Lage (Mittel, Median) und eine für die Streuung (Standardabweichung, Quartilsdifferenz).</p>
+<x-vn id="vn-3-2" sec="3.2" q="Acht Messwerte mit einem Ausreißer: alle Kennzahlen von null">
+  <x-task>Gegeben sind \(\Par{n}=8\) Messwerte: 12, 15, 11, 18, 14, 13, 30, 16. Berechne (a) \(\bar x\), \(s^2\), \(s\); (b) Median, unteres und oberes Quartil, IQR, das 10 %-Quantil (Definition des Skripts); (c) ob 30 nach der 1.5-IQR-Regel ein Ausreißer ist; (d) welche Lagekennzahl du berichten würdest.</x-task>
+  <x-step h="(a) Mittel.">\(\Res{\bar x}=\tfrac18(12+15+11+18+14+13+30+16)=\tfrac{129}{8}=\Res{16.125}\).</x-step>
+  <x-step h="(a) Varianz: Abweichungen quadrieren.">Abweichungen \(\Chg{x_i-\bar x}\): −4.125, −1.125, −5.125, 1.875, −2.125, −3.125, 13.875, −0.125. Quadrate summiert:
+  \[\begin{aligned}
+  \sum(\Chg{x_i-\bar x})^2 &= 17.016+1.266+26.266+3.516+4.516+9.766+192.516+0.016 && \text{acht Quadrate} \\
+  &= 254.875 && \text{Summe} \\
+  \Res{s^2} &= \frac{254.875}{\Par{n}-1}=\frac{254.875}{7}=\Res{36.41} && \text{Nenner n − 1} \\
+  \Res{s} &= \sqrt{36.41}\approx\Res{6.034} && \text{gleiche Einheit wie die Daten}
+  \end{aligned}\]</x-step>
+  <x-step h="(b) Ordnen.">\(\Chg{x_{(1)},\dots,x_{(8)}}\) = 11, 12, 13, 14, 15, 16, 18, 30.</x-step>
+  <x-step h="(b) Quantile nach Skript.">
+  \[\begin{aligned}
+  q_{0.5}:&\ \alpha n=4\ \text{ganzzahlig} &&\Rightarrow\ \tfrac12(x_{(4)}+x_{(5)})=\tfrac12(14+15)=\Res{14.5} \\
+  q_{0.25}:&\ \alpha n=2\ \text{ganzzahlig} &&\Rightarrow\ \tfrac12(x_{(2)}+x_{(3)})=\tfrac12(12+13)=\Res{12.5} \\
+  q_{0.75}:&\ \alpha n=6\ \text{ganzzahlig} &&\Rightarrow\ \tfrac12(x_{(6)}+x_{(7)})=\tfrac12(16+18)=\Res{17} \\
+  q_{0.1}:&\ \alpha n=0.8\ \text{nicht ganzzahlig} &&\Rightarrow\ x_{(\lceil0.8\rceil)}=x_{(1)}=\Res{11} \\
+  \text{IQR}&=q_{0.75}-q_{0.25}=17-12.5 &&= \Res{4.5}
+  \end{aligned}\]</x-step>
+  <x-step h="(c) Ausreißer-Grenze.">Obere Grenze \(q_{0.75}+1.5\cdot\text{IQR}=17+6.75=23.75\). \(30\Cond{>}23.75\) → <b>Ausreißer</b>. (Untere Grenze \(12.5-6.75=5.75\), kein Wert darunter.)</x-step>
+  <x-step h="(d) Bericht.">Das Mittel 16.125 liegt über 6 der 8 Werte, weil 30 es nach oben zieht. Der Median 14.5 beschreibt die „typische“ Messung besser.</x-step>
+  <x-res>\(\bar x=16.125\), \(s^2\approx36.41\), \(s\approx6.03\); Median 14.5, \(q_{0.25}=12.5\), \(q_{0.75}=17\), IQR = 4.5, \(q_{0.1}=11\); 30 ist Ausreißer → Median berichten.</x-res>
+  <x-trap>R <code>quantile(x)</code> und numpy <code>np.quantile(x)</code> nutzen standardmäßig eine andere Definition (Typ 7) und liefern hier 12.75 und 16.5. Für das Skript: R <code>quantile(x, type = 2)</code>, Python <code>method="averaged_inverted_cdf"</code>.</x-trap>
+</x-vn>
+<x-g><p>Wenige Zahlen fassen den Datensatz zusammen: eine für die <b>Lage</b> (Mittel, Median) und eine für die <b>Streuung</b> (Standardabweichung, Quartilsdifferenz).</p></x-g>
+<x-anat t="arithmetisches Mittel x̄" f="\Res{\bar x}=\frac{1}{\Par{n}}\sum_{\Idx{i}=1}^{\Par{n}}\underbrace{\Mem{x_{\Idx{i}}}}_{\text{i-te Beobachtung}}" src="G">
+  <x-a s="\bar x">der Durchschnitt (Mittelwert, Stichprobenmittel): Kennzahl für die Lage. Sprich „x quer“</x-a>
+  <x-a s="\Par{n}">Anzahl Beobachtungen. Man summiert alle und teilt durch n</x-a>
+  <x-why>⚖️ Brücke zu Kap. 2: Gibt man jeder Beobachtung gleiches Gewicht \(1/n\), ist \(\bar x\) der Schwerpunkt der Datenpunkte: das empirische Pendant zum Erwartungswert \(\EE[\mX]=\sum x\,\pf(x)\).</x-why>
+  <x-read>„x quer gleich eins durch n, mal Summe über i von x i: alle Werte addieren, durch die Anzahl teilen.“</x-read>
+</x-anat>
+<x-pt><x-q>Fünf Rohr-Durchmesser (mm): 3, 7, 7, 9, 4. Bestimme das arithmetische Mittel.</x-q><x-e>Signalwörter „Durchschnitt, Mittelwert, im Mittel, typischer Wert“ bei symmetrischen Daten ohne Ausreißer.</x-e><x-l>\(\bar x=\tfrac15(3+7+7+9+4)=\tfrac{30}{5}=\Res{6}\) mm.</x-l><x-s>„Das Stichprobenmittel beträgt x̄ = 6 mm; es ist der Schwerpunkt der Daten und das empirische Gegenstück zu E[X].“</x-s></x-pt>
+<x-anat t="empirische Varianz s² und Standardabweichung s" f="\Res{s^2}=\frac{1}{\Par{n}-1}\sum_{\Idx{i}=1}^{\Par{n}}\underbrace{(\Chg{\Mem{x_{\Idx{i}}}-\bar x})^2}_{\text{Abstand zum Mittel, quadriert}},\qquad \Res{s}=\sqrt{s^2}" src="G">
+  <x-a s="s^2">die empirische Varianz: mittlere quadrierte Abweichung vom Mittel. Streuungsmaß; entspricht \(\Var(\mX)\)</x-a>
+  <x-a s="s">die empirische Standardabweichung: gleiche Einheit wie die Daten</x-a>
+  <x-a s="\Par{n}-1">der „gewöhnungsbedürftige“ Nenner, nicht n! Er verhindert einen systematischen Fehler (erwartungstreue Schätzung, Kap. 6.3.3)</x-a>
+  <x-read>„s Quadrat gleich eins durch (n minus eins), mal Summe der quadrierten Abstände zum Mittel; s ist die Wurzel davon.“</x-read>
+</x-anat>
+<x-pt><x-q>Für dieselben Werte 3, 7, 7, 9, 4 (x̄ = 6): berechne s² und s.</x-q><x-e>„Streuung, wie stark schwanken, Varianz, Standardabweichung, ± wie viel“.</x-e><x-l>Abweichungen −3, 1, 1, 3, −2 → Quadrate 9, 1, 1, 9, 4, Summe 24. \(s^2=\tfrac{24}{4}=\Res{6}\), \(s=\sqrt6\approx\Res{2.45}\) mm.</x-l><x-s>„Die empirische Varianz ist s² = 6 mm², die Standardabweichung s = √6 ≈ 2.45 mm: Streuung um x̄, Nenner n−1.“</x-s></x-pt>
+<x-anat t="geordnete Werte und empirisches Quantil" f="\Chg{x_{(1)}}\le\Chg{x_{(2)}}\le\dots\le\Chg{x_{(\Par{n})}},\qquad \Res{q_{\Par{\alpha}}}=\begin{cases}\tfrac12\big(x_{(\alpha n)}+x_{(\alpha n+1)}\big) & \alpha n\ \text{ganzzahlig}\\ x_{(\lceil\alpha n\rceil)} & \text{sonst}\end{cases}" src="G">
+  <x-a s="x_{(k)}">der k-kleinste Wert; Klammer im Index = geordnet. \(x_{(1)}\) ist das Minimum, \(x_{(n)}\) das Maximum</x-a>
+  <x-a s="\lceil\alpha n\rceil">aufrunden auf die nächste ganze Zahl</x-a>
+  <x-a s="q_{\alpha}">das empirische \((\alpha\cdot100)\)-%-Quantil: ca. \(\alpha\cdot100\) % der Werte liegen darunter. Ist \(\alpha n\) ganzzahlig, mittelt man zwei Nachbarn</x-a>
+  <x-read>„x in Klammern eins bis x in Klammern n: die aufsteigend geordnete Stichprobe. Das alpha-Quantil ist die geordnete Beobachtung an der Stelle Aufrunden von alpha mal n.“</x-read>
+</x-anat>
+<x-pt><x-q>Datensatz (n = 8): 2, 3, 5, 6, 8, 9, 11, 14. Bestimme das 25 %-Quantil.</x-q><x-e>„α-%-Quantil, Perzentil, unteres oder oberes Quartil“.</x-e><x-l>\(\alpha n=0.25\cdot8=2\) ganzzahlig → \(\tfrac12(x_{(2)}+x_{(3)})=\tfrac12(3+5)=\Res{4}\).</x-l><x-s>„Da 0.25·8 = 2 ganzzahlig ist, mittelt man x₍₂₎ und x₍₃₎: q₀.₂₅ = 4.“</x-s></x-pt>
+<x-anat t="Median, Quartile und IQR (die robusten Kennzahlen)" f="q_{0.5}=\begin{cases}\tfrac12\big(x_{(n/2)}+x_{(n/2+1)}\big) & n\ \text{gerade}\\ x_{((n+1)/2)} & n\ \text{ungerade}\end{cases},\qquad \Res{\text{IQR}}=q_{0.75}-q_{0.25}" src="G">
+  <x-a s="\text{Median }q_{0.5}">das 50-%-Quantil: steht „in der Mitte“ der geordneten Stichprobe. Lagekennzahl wie \(\bar x\), aber robust</x-a>
+  <x-a s="\text{Quartile}">unteres Quartil = \(q_{0.25}\), oberes = \(q_{0.75}\)</x-a>
+  <x-a s="\text{IQR}">Quartilsdifferenz (interquartile range): robustes Streuungsmaß, Breite der mittleren 50 %</x-a>
+  <x-read>„Der Median ist das 50-Prozent-Quantil; die Quartilsdifferenz ist oberes minus unteres Quartil.“</x-read>
+</x-anat>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🛡️ Robust heißt:</b> Erhöht man den größten Wert nochmals drastisch (Tippfehler, eine Null zu viel), ändert sich der Median nicht, weil er nur schaut, ob links und rechts gleich viele Punkte liegen. Das arithmetische Mittel dagegen kippt sofort.</div>
+<x-pt><x-q>Für 2, 3, 5, 6, 8, 9, 11, 14 (n = 8): Median und Quartilsdifferenz IQR?</x-q><x-e>„mittlerer Wert, robust, Streubreite der mittleren 50 %“.</x-e><x-l>Median \(=\tfrac12(6+8)=\Res{7}\). \(q_{0.75}=\tfrac12(9+11)=10\), IQR \(=10-4=\Res{6}\).</x-l><x-s>„Median = 7, IQR = q₀.₇₅ − q₀.₂₅ = 10 − 4 = 6: beide robust gegen Ausreißer.“</x-s></x-pt>
+<x-card t="🧱 Bauplan: Old Faithful Geysir (n = 10 Eruptionsdauern)" src="G">
+  <p>Rohdaten (Minuten): 3.600, 1.800, 3.333, 2.283, 4.533, 2.883, 4.700, 3.600, 1.950, 4.350.</p>
+  <p>① Ordnen: 1.800 · 1.950 · 2.283 · 2.883 · 3.333 · 3.600 · 3.600 · 4.350 · 4.533 · 4.700</p>
+  <p>② Mittel und Streuung</p>\[\bar x=\Res{3.3032},\qquad s^2=\Res{1.11605},\qquad s=\Res{1.056433}\]
+  <p>③ Median (n = 10 gerade)</p>\[q_{0.5}=\tfrac12\big(x_{(5)}+x_{(6)}\big)=\tfrac12(3.333+3.600)=\Res{3.4665}\]
+  <p>④ 15 %-Quantil</p>\[\alpha n=0.15\cdot10=1.5\ \text{(nicht ganzzahlig)}\ \Rightarrow\ \lceil1.5\rceil=2\ \Rightarrow\ q_{0.15}=x_{(2)}=\Res{1.950}\]
+  <p class="small">Nachgerechnet (Python/numpy): x̄ = 3.3032, s² = 1.11605, s = 1.056433, Median = 3.4665, q₀.₁₅ = 1.950.</p>
+</x-card>
+<x-pt><x-q>Bei Old Faithful wird 4.700 versehentlich als 47.00 eingetippt. Wie ändern sich Mittel und Median?</x-q><x-e>„Tippfehler, Ausreißer, eine Null zu viel, extremer Wert“ → Robustheits-Frage.</x-e><x-l>Mittel: \(\tfrac{33.032-4.7+47}{10}=\Res{7.5332}\) min (springt!). Median: die mittleren zwei Werte bleiben 3.333 und 3.600 → \(\Res{3.4665}\) min (unverändert).</x-l><x-s>„Das Mittel springt von 3.30 auf 7.53 min, der Median bleibt bei 3.4665 min: Musterbeleg für robust vs. empfindlich.“</x-s></x-pt>
+<x-viz t="robust vs. nicht robust" src="G">
+  <div class="ctl"><label>Ausreißer-Position <input type="range" id="rbX" min="0" max="60" step="0.5" value="6" data-fmt="1"><output for="rbX"></output></label></div>
+  <div id="rbPlot" class="plot" style="min-height:220px"></div>
+  <div class="out" id="rbOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> der Median (grün) bleibt fast stehen, das Mittel (rot) wird vom Ausreißer weggezogen.</div>
+</x-viz>
+<x-pt><x-q>Jahresgehälter eines Teams, dazu ein Vorstand mit Millionengehalt. Welche Lagekennzahl berichtest du?</x-q><x-e>„Einkommen, Immobilienpreise, ein extrem großer Wert“ → schiefe Verteilung mit Ausreißer.</x-e><x-l>Median (robust) statt Mittel; das Mittel würde vom Ausreißer nach oben gezogen und wäre untypisch für „die meisten“.</x-l><x-s>„Wegen des Ausreißers berichte ich den Median als typische Lage; das Mittel wäre nach oben verzerrt.“</x-s></x-pt>
+<x-card t="🔧 Wie berechnet man ein empirisches Quantil? (abstrakt)" src="G">
+  <ol class="cook"><li><b>Ordnen:</b> Stichprobe aufsteigend sortieren → \(x_{(1)}\le\dots\le x_{(n)}\).</li><li><b>Position rechnen:</b> \(\alpha\cdot n\) bilden.</li><li><b>Fall unterscheiden:</b> ganzzahlig → Mittel von \(x_{(\alpha n)}\) und \(x_{(\alpha n+1)}\); sonst → \(x_{(\lceil\alpha n\rceil)}\).</li></ol>
+  <p>Median = Spezialfall α = 0.5; Quartile = α = 0.25 bzw. 0.75. (Es gibt viele alternative Quantil-Definitionen; für großes n verschwinden die Unterschiede.)</p>
+</x-card>
+<div class="vs"><b>⚖ Skript vs. Software.</b> Die Skript-Definition ist in R <code>quantile(x, probs, type = 2)</code> und in numpy <code>np.quantile(x, probs, method="averaged_inverted_cdf")</code>. Der Standard beider Programme (Typ 7, lineare Interpolation) gibt bei kleinen n andere Zahlen. Für Prüfungsaufgaben „von Hand“ gilt die Skript-Definition; der Median ist in allen Definitionen gleich.</div>
+<x-pt><x-q>n = 20 Messungen, gesucht das 90 %-Quantil. Welche geordnete(n) Beobachtung(en)?</x-q><x-e>Beliebiges α: immer dasselbe Rezept.</x-e><x-l>\(0.9\cdot20=18\) ganzzahlig → \(q_{0.9}=\tfrac12(x_{(18)}+x_{(19)})\).</x-l><x-s>„0.9·20 = 18 ist ganzzahlig, also q₀.₉ = ½(x₍₁₈₎ + x₍₁₉₎).“</x-s></x-pt>
+<h3 id="s3-2-a" data-m="Kennzahlen-Tracer|x̄, s², Quantile in R/Python">Code: alle Kennzahlen Schritt für Schritt</h3>
+<p>Eingabe: beliebige Zahlen. Der Tracer summiert, bildet die Abweichungen, ordnet und bestimmt die Quartile genau nach der Skript-Regel.</p>
+<div id="trKz"></div>
+<x-code2 f="k3_kennzahlen" t="Kennzahlen"/>
+<x-vids><x-vid f="statquest/The mean, the median, and the mode. [-14BImgVENA].mp4" n="Mittel, Median, Modus"/><x-vid f="statquest/Calculating the Mean, Variance and Standard Deviation, Clearly Explained!!! [SzZ6GpcfoQY].mp4" n="x̄, s², s"/><x-vid f="statquest/Why Dividing By N Underestimates the Variance [sHRBg6BhKjI].mp4" n="warum n − 1"/><x-vid f="statquest/Quantiles and Percentiles, Clearly Explained!!! [IFKQLDmRK0Y].mp4" n="Quantile"/></x-vids>
+</section>
+
+<!-- ============================================================ 3.3 -->
+<section id="s3-3" data-vn data-m="3.3 Grafiken|Histogramm, Sturges, Boxplot, F_n">
+<h2><span class="num">3.3</span>Grafische Darstellungen</h2>
+<p class="one">Histogramm, Boxplot und empirische Verteilungsfunktion: drei Blickwinkel auf dieselbe Verteilung.</p>
+<x-vn id="vn-3-3" sec="3.3" q="Boxplot und F_n von Hand für acht Messwerte">
+  <x-task>Für die Daten 11, 12, 13, 14, 15, 16, 18, 30 (aus 3.2): (a) Beschreibe den Boxplot vollständig (Box, Median-Strich, Whisker-Enden, Ausreißerpunkte). (b) Wie viele Klassen empfiehlt die Sturges-Regel? (c) Bestimme \(\FF_n(15)\) und \(\FF_n(15.5)\) und \(\FF_n(10)\).</x-task>
+  <x-step h="(a) Box und Strich.">Box von \(q_{0.25}=12.5\) bis \(q_{0.75}=17\), Median-Strich bei 14.5.</x-step>
+  <x-step h="(a) Whisker.">Grenzen \(12.5-6.75=5.75\) und \(17+6.75=23.75\). Whisker reichen bis zum extremsten Wert <i>innerhalb</i> der Grenzen: unten bis 11, oben bis 18. Der Wert 30 wird als Punkt gezeichnet.</x-step>
+  <x-step h="(b) Sturges.">\(\lceil1+\log_2 8\rceil=\lceil1+3\rceil=\Res{4}\) Klassen.</x-step>
+  <x-step h="(c) Anteile zählen.">\(\FF_n(15)=\tfrac{\#\{x_i\le15\}}{8}=\tfrac58=\Res{0.625}\); \(\FF_n(15.5)=\tfrac58\) (zwischen den Daten bleibt die Treppe flach); \(\FF_n(10)=0\).</x-step>
+  <x-res>Box [12.5, 17], Median 14.5, Whisker 11 bis 18, Ausreißer 30; Sturges: 4 Klassen; F_n(15) = F_n(15.5) = 0.625, F_n(10) = 0.</x-res>
+  <x-trap>Der Whisker endet nicht bei der Grenze 23.75, sondern beim letzten Datenpunkt innerhalb der Grenze (18).</x-trap>
+</x-vn>
+<x-g><p>Drei Standardgrafiken für einen eindimensionalen Datensatz: <b>Histogramm</b>, <b>Boxplot</b> und <b>empirische Verteilungsfunktion</b>. Jede zeigt die Verteilung aus einem anderen Blickwinkel.</p></x-g>
+<x-anat t="Histogramm" f="\text{Balkenhöhe}\ \propto\ \frac{h_{\Idx{k}}}{c_{\Idx{k}}-c_{\Idx{k}-1}}\quad\Rightarrow\quad\text{Balkenfläche}\ \propto\ h_{\Idx{k}}\ (\text{Anzahl in der Klasse})" src="G">
+  <x-a s="(c_{k-1},c_k]">die k-te Klasse (Intervall). Man teilt den Wertebereich in Klassen auf</x-a>
+  <x-a s="h_k">Anzahl Beobachtungen in Klasse k (Häufigkeit)</x-a>
+  <x-a s="\text{Fläche}">proportional zur Anzahl; bei gleichen Klassenbreiten darf man direkt die Anzahl auftragen. Normiert (Gesamtfläche 1) ist das Histogramm die empirische Version der Dichte</x-a>
+  <x-a s="\text{Sturges}">\(\text{Anzahl Klassen}=\lceil1+\log_2(n)\rceil\). Zu breite Klassen → „Erosion“: Gipfel werden abgetragen, Täler aufgefüllt</x-a>
+  <x-read>„Balkenhöhe proportional zur Häufigkeit durch Klassenbreite: so ist die Fläche proportional zur Anzahl. Die Sturges-Regel schlägt Aufrunden von eins plus Logarithmus zur Basis 2 von n Klassen vor.“</x-read>
+</x-anat>
+<x-pt><x-q>Ein Datensatz hat n = 100 Werte. Wie viele Klassen empfiehlt die Sturges-Regel?</x-q><x-e>„wie viele Klassen, Balken, Bins“.</x-e><x-l>\(\lceil1+\log_2 100\rceil=\lceil7.64\rceil=\Res{8}\).</x-l><x-s>„Sturges empfiehlt ⌈1 + log₂ 100⌉ = 8 Klassen.“</x-s></x-pt>
+<x-viz t="Histogramm-Explorer (Klassenzahl)" src="G">
+  <div class="ctl"><label>Anzahl Klassen <input type="range" id="hiK" min="1" max="40" value="10"><output for="hiK"></output></label></div>
+  <div id="hiPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> ein bimodaler Datensatz (zwei Gipfel, n = 200). Zu wenige Klassen verschmelzen die Gipfel; die gestrichelte Linie zeigt die Sturges-Empfehlung.</div>
+</x-viz>
+<x-pt><x-q>Ein Histogramm zeigt zwei deutlich getrennte Gipfel. Was schließt du, und welche Einzelkennzahl wäre irreführend?</x-q><x-e>„zwei Gipfel, zwei Häufungen, Doppelspitze“ → bimodal.</x-e><x-l>Die Verteilung ist bimodal (evtl. zwei Gruppen im Datensatz). Eine einzelne Lagekennzahl läge im leeren Tal zwischen den Gipfeln.</x-l><x-s>„Die Verteilung ist bimodal; ein einzelner Lagewert landet im Tal zwischen den Gipfeln und beschreibt keinen der beiden: besser zwei Gruppen trennen.“</x-s></x-pt>
+<x-anat t="Boxplot" src="G">
+  <x-a s="\text{Box}">Rechteck vom unteren bis zum oberen Quartil (25 % → 75 %); ihre Länge ist die IQR</x-a>
+  <x-a s="\text{Strich}">der Median (50 %)</x-a>
+  <x-a s="\text{Whisker}">reichen bis zum kleinsten/größten „normalen“ Wert, höchstens \(1.5\cdot\text{IQR}\) vom jeweiligen Quartil entfernt</x-a>
+  <x-a s="\text{Punkte}">Ausreißer: Werte, die weiter als \(1.5\cdot\text{IQR}\) außerhalb liegen</x-a>
+  <x-read>„Die Box geht vom unteren zum oberen Quartil, der Strich ist der Median, die Whisker reichen höchstens anderthalb Quartilsabstände weit, alles darüber hinaus sind Ausreißerpunkte.“</x-read>
+</x-anat>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡</b> Ideal, um viele Verteilungen nebeneinander zu vergleichen (verschiedene Orte/Bedingungen). Aber Vorsicht: ein Boxplot zeigt keine mehrgipfeligen (bimodalen) Strukturen; dafür braucht man das Histogramm.</div>
+<x-pt><x-q>Ein Boxplot hat Q₁ = 20 und Q₃ = 32. Ab welchem Wert ist eine Beobachtung ein Ausreißer nach oben?</x-q><x-e>„Ausreißer, Whisker, 1.5·IQR, noch normaler Wert“.</x-e><x-l>IQR = 12; obere Grenze \(=32+1.5\cdot12=\Res{50}\).</x-l><x-s>„Mit IQR = 12 liegt die Ausreißergrenze bei Q₃ + 1.5·IQR = 50; alles darüber wird als Punkt gezeichnet.“</x-s></x-pt>
+<x-viz t="Boxplot-Baukasten" src="G">
+  <div class="ctl"><label>ein Wert wird verschoben nach <input type="range" id="bxV" min="-20" max="60" step="0.5" value="30" data-fmt="1"><output for="bxV"></output></label></div>
+  <div id="bxPlot" class="plot" style="min-height:220px"></div>
+  <div class="out" id="bxOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> Box = Quartile, Strich = Median, gestrichelte Linien = 1.5-IQR-Grenzen; Punkte außerhalb sind Ausreißer. Daten wie in der Von-null-Karte, der letzte Wert (30) ist verschiebbar.</div>
+</x-viz>
+<x-pt><x-q>Zwei Boxplots nebeneinander: A hat den höheren Median-Strich, B die breitere Box. Was bedeutet das?</x-q><x-e>„vergleiche, mehrere Gruppen, nebeneinander“.</x-e><x-l>A liegt in der Lage höher (größerer Median); B streut stärker (größere IQR).</x-l><x-s>„Gruppe A hat die höhere zentrale Lage, Gruppe B die größere Streuung.“</x-s></x-pt>
+<x-anat t="empirische kumulative Verteilungsfunktion F_n" f="\Res{\FF_{\Par{n}}(x)}=\frac{1}{\Par{n}}\,\underbrace{\#\{\Idx{i}:\ \Mem{x_{\Idx{i}}}\Cond{\le}x\}}_{\text{Anzahl Werte}\le x}\ \in[0,1]" src="G">
+  <x-a s="\FF_n(x)">der Anteil der Beobachtungen, die ≤ x sind. Empirisches Pendant zu \(\FF(x)=\PP(\mX\le x)\)</x-a>
+  <x-a s="\text{Treppe}">Sprung der Höhe 1/n an jedem Datenpunkt (Vielfaches, falls Werte mehrfach). Links vom Minimum 0, rechts vom Maximum 1</x-a>
+  <x-a s="\text{Steilheit}">wo viele Punkte liegen (Histogramm-Gipfel), steigt \(\FF_n\) steil</x-a>
+  <x-read>„F n von x gleich eins durch n mal Anzahl der i mit x i kleiner gleich x: der Anteil der Daten bis zur Stelle x.“</x-read>
+</x-anat>
+<x-pt><x-q>\(\FF_n(5)=0.7\) bei n = 20. Wie viele Beobachtungen sind ≤ 5?</x-q><x-e>„Anteil, wie viele Prozent, kumuliert, F_n“.</x-e><x-l>\(0.7\cdot20=\Res{14}\).</x-l><x-s>„F_n(5) = 0.7 heißt: 70 %, also 14 der 20 Beobachtungen, sind ≤ 5.“</x-s></x-pt>
+<x-viz t="empirische Verteilungsfunktion" src="G">
+  <div id="ecPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> dieselben bimodalen Daten als Treppe \(\FF_n\). Jeder Datenpunkt (unten als Strich) hebt die Treppe um 1/n. Zwei steile Abschnitte = die zwei Gipfel.</div>
+</x-viz>
+<x-pt><x-q>In der empirischen Verteilungsfunktion ist ein Bereich sehr steil. Was sagt das über die Daten dort?</x-q><x-e>„steil, flach, großer Sprung in F_n“.</x-e><x-l>Viele Datenpunkte dicht beieinander → viele 1/n-Sprünge → steil (Histogramm-Gipfel). Flach = wenige/keine Daten.</x-l><x-s>„Ein steiler Abschnitt von F_n zeigt eine Häufung von Beobachtungen: genau dort liegt ein Histogramm-Gipfel.“</x-s></x-pt>
+<x-code2 f="k3_grafik" t="Histogramm, Boxplot, F_n"/>
+<x-vids><x-vid f="statquest/StatQuest： Histograms, Clearly Explained [qBigTkBLU6g].mp4" n="Histogramm"/><x-vid f="statquest/Boxplots are Awesome!!! [fHLhBnmwUM0].mp4" n="Boxplot"/><x-vid f="statquest/Bar Charts Are Better than Pie Charts [RiEZ_hEf96A].mp4" n="Balken statt Torte"/></x-vids>
+</section>
+
+<!-- ============================================================ 3.4 -->
+<section id="s3-4" data-vn data-m="3.4 Korrelation|s_xy, r ∈ [−1,1], Streudiagramm, Anscombe">
+<h2><span class="num">3.4</span>Mehrere Messgrößen: Korrelation</h2>
+<x-vn id="vn-3-4" sec="3.4" q="Korrelation von fünf Datenpaaren von Hand">
+  <x-task>Fünf Paare \((x_i,y_i)\): (1, 2), (2, 4), (3, 5), (4, 4), (5, 5). Berechne \(s_{xy}\), \(s_x\), \(s_y\) und \(r\). Deute das Ergebnis.</x-task>
+  <x-step h="Mittelwerte.">\(\bar x=3\), \(\bar y=\tfrac{20}{5}=4\).</x-step>
+  <x-step h="Tabelle der Abweichungen.">
+  <table class="tbl"><tr><th>i</th><th class="r">\(x_i-\bar x\)</th><th class="r">\(y_i-\bar y\)</th><th class="r">Produkt</th><th class="r">\((x_i-\bar x)^2\)</th><th class="r">\((y_i-\bar y)^2\)</th></tr>
+  <tr><td>1</td><td class="r">−2</td><td class="r">−2</td><td class="r">4</td><td class="r">4</td><td class="r">4</td></tr>
+  <tr><td>2</td><td class="r">−1</td><td class="r">0</td><td class="r">0</td><td class="r">1</td><td class="r">0</td></tr>
+  <tr><td>3</td><td class="r">0</td><td class="r">1</td><td class="r">0</td><td class="r">0</td><td class="r">1</td></tr>
+  <tr><td>4</td><td class="r">1</td><td class="r">0</td><td class="r">0</td><td class="r">1</td><td class="r">0</td></tr>
+  <tr><td>5</td><td class="r">2</td><td class="r">1</td><td class="r">2</td><td class="r">4</td><td class="r">1</td></tr>
+  <tr><td>Σ</td><td></td><td></td><td class="r"><b>6</b></td><td class="r"><b>10</b></td><td class="r"><b>6</b></td></tr></table></x-step>
+  <x-step h="Einsetzen.">
+  \[\begin{aligned}
+  s_{xy} &= \tfrac{6}{4}=1.5,\quad s_x=\sqrt{\tfrac{10}{4}}=1.5811,\quad s_y=\sqrt{\tfrac64}=1.2247 && \text{Nenner n − 1 = 4} \\
+  \Res{r} &= \frac{s_{xy}}{s_x\,s_y}=\frac{1.5}{1.5811\cdot1.2247}=\frac{6}{\sqrt{10\cdot6}}\approx\Res{0.775} && \text{die Nenner n − 1 kürzen sich}
+  \end{aligned}\]</x-step>
+  <x-step h="Deuten.">Positiv (je größer x, desto eher größer y), mittelstark bis stark linear. Streudiagramm ansehen: die Punkte steigen, flachen aber ab.</x-step>
+  <x-res>\(s_{xy}=1.5\), \(s_x\approx1.581\), \(s_y\approx1.225\), \(r\approx0.775\).</x-res>
+</x-vn>
+<x-g><p>Oft liegen Daten paarweise vor: \((\Mem{x_1},\Mem{y_1}),\dots,(\Mem{x_n},\Mem{y_n})\), z. B. Verkehr an zwei Tunneln am selben Tag. Wie stark hängen x und y <b>linear</b> zusammen?</p></x-g>
+<x-anat t="empirische Korrelation r und Kovarianz s_xy" f="\Res{r}=\frac{s_{xy}}{s_x\,s_y}\in[-1,1],\qquad s_{xy}=\frac{1}{\Par{n}-1}\sum_{\Idx{i}=1}^{\Par{n}}(\Chg{\Mem{x_{\Idx{i}}}-\bar x})(\Chg{\Mem{y_{\Idx{i}}}-\bar y})" src="G">
+  <x-a s="r">die empirische Korrelation: dimensionslos, immer zwischen −1 und +1. Vorzeichen = Richtung, Betrag = Stärke der linearen Abhängigkeit</x-a>
+  <x-a s="s_{xy}">die empirische Kovarianz: weichen x und y gemeinsam in dieselbe Richtung vom Mittel ab? (n − 1 wie bei s²)</x-a>
+  <x-a s="s_x,\ s_y">die Standardabweichungen von x bzw. y; sie normieren die Kovarianz auf [−1, 1]</x-a>
+  <x-a s="r=\pm1">genau dann, wenn alle Punkte auf einer Geraden \(y_i=a+bx_i\) liegen (\(b>0\) bzw. \(b<0\))</x-a>
+  <x-read>„r gleich s x y durch (s x mal s y): die Kovarianz, normiert mit den beiden Standardabweichungen; sie liegt immer zwischen minus eins und plus eins.“</x-read>
+</x-anat>
+<x-pt><x-q>Zwischen zwei Größen ist r = −0.9. Interpretiere Richtung und Stärke.</x-q><x-e>„Zusammenhang, je … desto, Korrelation, linear abhängig“.</x-e><x-l>Vorzeichen − → gegenläufig; |r| = 0.9 nahe 1 → starker linearer Zusammenhang.</x-l><x-s>„r = −0.9: starker (Betrag nahe 1) und negativer (gegenläufiger) linearer Zusammenhang.“</x-s></x-pt>
+<x-viz t="Korrelations-Explorer" src="G">
+  <div class="ctl"><label>Ziel-Korrelation r <input type="range" id="coR" min="-1" max="1" step="0.05" value="0.8" data-fmt="2"><output for="coR"></output></label>
+  <button class="btn" id="coNew">🎲 neue Punkte</button></div>
+  <div id="coPlot" class="plot"></div>
+  <div class="out" id="coOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> bei r = ±1 liegen alle Punkte auf einer Geraden; bei r = 0 keine lineare Struktur. Das Vorzeichen dreht die Steigung.</div>
+</x-viz>
+<x-pt><x-q>Ein Streudiagramm zeigt eine perfekte U-Form (Parabel). Welchen r-Wert erwartest du?</x-q><x-e>„Streudiagramm, gekrümmt, U-Form, offensichtlich nichtlinear“.</x-e><x-l>\(r\approx0\): r misst nur den linearen Anteil. Die symmetrische U-Form hat keinen linearen Trend.</x-l><x-s>„r ≈ 0: es gibt einen klaren, aber nichtlinearen Zusammenhang, und r sieht nur den linearen Anteil.“</x-s></x-pt>
+<div class="trap is-g"><b>⚠ Achtung: nie r „blind“ berechnen.</b> Ganz verschiedene Strukturen können denselben r-Wert liefern. Das berühmte <b>Anscombe-Quartett</b>: vier völlig unterschiedliche Datensätze (Gerade, Kurve, Ausreißer) haben alle r = 0.82. Deshalb: immer zuerst das Streudiagramm anschauen, dann erst r interpretieren. <span class="srcin">📘 Grundlage</span></div>
+<x-viz t="Anscombe-Quartett">
+  <div id="anPlot" class="plot" style="min-height:420px"></div>
+  <div class="recog"><b>Erkennbar an:</b> alle vier haben \(\bar x=9\), \(\bar y\approx7.50\), \(r\approx0.816\) und dieselbe Ausgleichsgerade \(y\approx3+0.5x\), sehen aber völlig anders aus.</div>
+</x-viz>
+<x-pt><x-q>Zwei Datensätze haben beide r = 0.82. Darfst du daraus schließen, sie „sehen gleich aus“?</x-q><x-e>„gleicher r-Wert, nur die Zahl gegeben, kein Plot“.</x-e><x-l>Nein: Anscombe-Quartett: identisches r, völlig verschiedene Formen. Erst das Streudiagramm entscheidet.</x-l><x-s>„Nein: gleicher r-Wert sagt nichts über die Form; ohne Streudiagramm darf ich nicht auf gleiche Struktur schließen (Anscombe).“</x-s></x-pt>
+<div id="trKor"></div>
+<x-code2 f="k3_korrelation" t="Kovarianz und Korrelation"/>
+<x-vids><x-vid f="statquest/Covariance, Clearly Explained!!! [qtaqvPAeEJY].mp4" n="Kovarianz"/><x-vid f="statquest/Pearson's Correlation, Clearly Explained!!! [xZ_z8KWkhXE].mp4" n="Korrelation"/></x-vids>
+</section>
+
+<!-- ============================================================ 3.4.1 Regression (Modul) -->
+<section id="s3-5" data-vn data-m="3.4.1 Lineare Regression|kleinste Quadrate, a, b, Residuen, R² (Modul)">
+<h2><span class="num">3.4.1</span>Lineare Regression: die Ausgleichsgerade <span class="srcin n">✚ Neu · Modulinhalt</span></h2>
+<p class="one">Die Modulbeschreibung nennt „Lineare Regression und t-Tests“. Hier der beschreibende Teil (Gerade durch die Punktwolke), in Kap. 8 der Test für die Steigung.</p>
+<x-vn id="vn-3-5" sec="3.4.1" q="Ausgleichsgerade, Vorhersage und R² für fünf Punkte">
+  <x-task>Für die fünf Paare aus 3.4, (1, 2), (2, 4), (3, 5), (4, 4), (5, 5), bestimme (a) die Kleinste-Quadrate-Gerade \(\hat y=a+bx\), (b) die Vorhersage für \(x=6\), (c) die Residuen und das Bestimmtheitsmaß \(R^2\). (d) Wie hängt \(R^2\) mit r zusammen?</x-task>
+  <x-step h="Was minimiert man?">Die Summe der quadrierten senkrechten Abstände (Residuen) \(\sum(\Mem{y_i}-(a+bx_i))^2\). Nullsetzen der Ableitungen nach a und b liefert die Formeln unten.</x-step>
+  <x-step h="(a) Steigung und Achsenabschnitt.">Aus 3.4: \(S_{xy}=\sum(x_i-\bar x)(y_i-\bar y)=6\), \(S_{xx}=\sum(x_i-\bar x)^2=10\).
+  \[\begin{aligned}
+  \Res{b} &= \frac{S_{xy}}{S_{xx}}=\frac{6}{10}=\Res{0.6} && \text{Steigung} \\
+  \Res{a} &= \bar y-b\,\bar x=4-0.6\cdot3=\Res{2.2} && \text{Gerade geht durch den Schwerpunkt }(\bar x,\bar y)
+  \end{aligned}\]</x-step>
+  <x-step h="(b) Vorhersage.">\(\hat y(6)=2.2+0.6\cdot6=\Res{5.8}\). (Vorsicht: 6 liegt außerhalb der Daten, Extrapolation.)</x-step>
+  <x-step h="(c) Residuen.">\(\hat y_i=2.8,3.4,4.0,4.6,5.2\); Residuen \(\Chg{e_i=y_i-\hat y_i}=-0.8,\ 0.6,\ 1.0,\ -0.6,\ -0.2\) (Summe 0 ✓).
+  \[\begin{aligned}
+  \text{SSE} &= 0.64+0.36+1+0.36+0.04=2.4 && \text{Residuen-Quadratsumme} \\
+  \text{SST} &= \sum(y_i-\bar y)^2=6 && \text{Gesamt-Streuung von y} \\
+  \Res{R^2} &= 1-\frac{\text{SSE}}{\text{SST}}=1-\frac{2.4}{6}=\Res{0.6} && \text{60 Prozent der Streuung von y erklärt}
+  \end{aligned}\]</x-step>
+  <x-step h="(d) Zusammenhang.">Bei einfacher linearer Regression gilt \(R^2=r^2=0.775^2=0.6\) ✓. Außerdem \(b=r\cdot\frac{s_y}{s_x}\).</x-step>
+  <x-res>\(\hat y=2.2+0.6x\); \(\hat y(6)=5.8\); \(R^2=0.6=r^2\). R: <code>lm(y ~ x)</code>, Python: <code>stats.linregress(x, y)</code>.</x-res>
+  <x-trap>Regression von y auf x ist nicht dasselbe wie von x auf y (andere Gerade!). Und ein hohes \(R^2\) beweist keinen ursächlichen Zusammenhang.</x-trap>
+</x-vn>
+<x-anat t="Kleinste-Quadrate-Gerade" f="\Res{b}=\frac{\sum_{\Idx{i}}(x_{\Idx{i}}-\bar x)(y_{\Idx{i}}-\bar y)}{\sum_{\Idx{i}}(x_{\Idx{i}}-\bar x)^2}=\frac{s_{xy}}{s_x^2},\qquad \Res{a}=\bar y-b\,\bar x,\qquad \Res{R^2}=1-\frac{\sum\Chg{e_{\Idx{i}}}^2}{\sum(y_{\Idx{i}}-\bar y)^2}">
+  <x-a s="b">Steigung: um wie viel ändert sich \(\hat y\), wenn x um 1 wächst</x-a>
+  <x-a s="a">Achsenabschnitt: so gewählt, dass die Gerade durch den Schwerpunkt \((\bar x,\bar y)\) geht</x-a>
+  <x-a s="\Chg{e_i}=y_i-\hat y_i">Residuum: der Teil von \(y_i\), den die Gerade nicht erklärt</x-a>
+  <x-a s="R^2">Bestimmtheitsmaß: Anteil der Streuung von y, den die Gerade erklärt (0 bis 1); bei einer erklärenden Variable \(=r^2\)</x-a>
+  <x-why>Minimiere \(Q(a,b)=\sum(y_i-a-bx_i)^2\). \(\partial Q/\partial a=0\) gibt \(\bar y=a+b\bar x\); \(\partial Q/\partial b=0\) gibt dann \(b=S_{xy}/S_{xx}\).</x-why>
+  <x-read>„b ist die Summe der Kreuzprodukte der Abweichungen geteilt durch die Summe der quadrierten x-Abweichungen; a ist y quer minus b mal x quer.“</x-read>
+</x-anat>
+<x-viz t="Regression per Klick: Punkte setzen, Gerade und Residuen live">
+  <p class="small">Klicke in die Fläche, um Punkte hinzuzufügen; „Rückgängig“ entfernt den letzten. Rot gestrichelt = Residuen; ihre Quadratsumme wird von der Geraden minimiert.</p>
+  <div class="ctl"><button class="btn" id="rgUndo">↶ Rückgängig</button><button class="btn" id="rgReset">Beispiel laden</button><button class="btn" id="rgClear">leeren</button></div>
+  <div id="rgPlot" class="plot" style="min-height:360px;cursor:crosshair"></div>
+  <div class="out" id="rgOut"></div>
+</x-viz>
+<div id="trReg"></div>
+<x-code2 f="k3_regression" t="Ausgleichsgerade"/>
+<x-vids><x-vid f="statquest/The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.) [PaFPbb66DxQ].mp4" n="kleinste Quadrate"/><x-vid f="statquest/Linear Regression, Clearly Explained!!! [7ArmBVF2dCs].mp4" n="lineare Regression"/><x-vid f="statquest/R-squared, Clearly Explained!!! [2AQKmw14mHM].mp4" n="R²"/><x-vid f="statquest/Linear Regression in R, Step-by-Step [u1cc1r_Y7M0].mp4" n="in R"/><x-vid f="statquest/The Essence of Linear Regression!!! [aFDOzpTeg0s].mp4" n="Essenz"/></x-vids>
+</section>
+
+<!-- ============================================================ 3.5 -->
+<section id="s3-6" data-vn data-m="3.5 Modell vs. Daten|empirisch schätzt theoretisch">
+<h2><span class="num">3.5</span>Modell vs. Daten: die zwei Welten</h2>
+<x-vn id="vn-3-6" sec="3.5" q="Würfeldaten gegen das Modell prüfen">
+  <x-task>Ein Würfel wird 12-mal geworfen: 3, 6, 1, 4, 6, 2, 5, 6, 3, 6, 4, 6. (a) Berechne \(\bar x\) und \(s^2\). (b) Vergleiche mit \(\EE[\mX]\) und \(\Var(\mX)\) des fairen Würfels. (c) Vergleiche \(\FF_{12}(3)\) mit \(\FF(3)\). Deutet das auf einen gezinkten Würfel hin?</x-task>
+  <x-step h="(a) Kennzahlen.">Summe = 52, \(\bar x=\tfrac{52}{12}\approx\Res{4.333}\). \(\sum x_i^2=260\), also \(s^2=\tfrac{260-12\cdot(52/12)^2}{11}=\tfrac{260-225.33}{11}\approx\Res{3.152}\).</x-step>
+  <x-step h="(b) Modell.">Fairer Würfel: \(\EE[\mX]=3.5\), \(\Var(\mX)=\tfrac{35}{12}\approx2.917\). Die Daten liegen höher und streuen etwas mehr (3.15 gegen 2.92).</x-step>
+  <x-step h="(c) Anteile.">\(\FF_{12}(3)=\tfrac{\#\{x_i\le3\}}{12}=\tfrac{4}{12}\approx0.333\) gegen \(\FF(3)=0.5\).</x-step>
+  <x-step h="Deutung.">Fünf Sechsen in 12 Würfen sind auffällig, aber bei n = 12 schwanken empirische Größen stark. Ob der Unterschied „zu groß für Zufall“ ist, beantwortet erst ein Test (Kap. 7).</x-step>
+  <x-res>\(\bar x\approx4.33\) vs. 3.5; \(s^2\approx3.15\) vs. 2.92; \(\FF_{12}(3)=0.33\) vs. 0.5: Verdacht, aber keine Entscheidung ohne Test.</x-res>
+</x-vn>
+<x-g><p>Kapitel 2 lieferte die Modelle (Verteilungen), Kapitel 3 die Daten. Für unendlich viele Beobachtungen stimmen die empirischen Größen mit den theoretischen überein; für einen konkreten Datensatz <b>schätzen</b> sie diese.</p></x-g>
+<table class="tbl is-g"><tr><th>Konzept</th><th>Modell (Kap. 2, theoretisch)</th><th>Daten (Kap. 3, empirisch)</th><th>R / Python</th></tr>
+<tr><td>Verteilungsform</td><td>Dichte \(\ff(x)\)</td><td>Histogramm (normiert)</td><td><code>hist(x, freq=FALSE)</code> / <code>plt.hist(x, density=True)</code></td></tr>
+<tr><td>kumulativ</td><td>Verteilungsfunktion \(\FF(x)\)</td><td>empirische VF \(\FF_n(x)\)</td><td><code>ecdf(x)</code> / <code>np.mean(x &lt;= t)</code></td></tr>
+<tr><td>Lage</td><td>Erwartungswert \(\EE[\mX]\)</td><td>arithm. Mittel \(\bar x\)</td><td><code>mean</code> / <code>np.mean</code></td></tr>
+<tr><td>Streuung</td><td>Varianz \(\Var(\mX)\)</td><td>empirische Varianz \(s^2\)</td><td><code>var</code> / <code>np.var(ddof=1)</code></td></tr>
+<tr><td>Lage (robust)</td><td>Quantil \(q_\alpha\), Median</td><td>empirisches Quantil, Median</td><td><code>quantile(type=2)</code></td></tr>
+<tr><td>Zusammenhang</td><td>Korrelation (Kap. 4)</td><td>empirische Korrelation r</td><td><code>cor</code> / <code>np.corrcoef</code></td></tr></table>
+<p><b>Merksatz:</b> „empirisch“ = aus Daten ermittelt; die roten Kennzahlen sind die Schätzungen ihrer theoretischen Gegenstücke.</p>
+<x-viz t="Mehr Daten → näher am Modell">
+  <div class="ctl"><label>Stichprobenumfang n <input type="range" id="mdN" min="5" max="2000" step="5" value="20"><output for="mdN"></output></label><button class="btn" id="mdNew">🎲 neue Stichprobe</button></div>
+  <div class="two"><div id="mdHist" class="plot"></div><div id="mdEcdf" class="plot"></div></div>
+  <div class="out" id="mdOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> Stichprobe aus \(\Nor(0,1)\). Links normiertes Histogramm gegen die Dichte, rechts \(\FF_n\) gegen \(\Phi\). Für großes n verschmelzen sie (Gesetz der großen Zahlen, Kap. 5).</div>
+</x-viz>
+<h3 id="s3-6-a" data-m="Schema & Beispiele 3|welche Kennzahl/Grafik wann">📐 Schema: welche Kennzahl oder Grafik wann?</h3>
+<ol class="cook"><li>Symmetrische Daten, keine Ausreißer? → Mittel \(\bar x\) und Standardabweichung s.</li><li>Schiefe Daten oder Ausreißer? → Median und IQR (robust). Der Boxplot zeigt beides auf einen Blick.</li><li>Form unbekannt oder mehrere Gipfel? → Histogramm (bimodal erkennbar) oder \(\FF_n\).</li><li>Zwei Größen? → Streudiagramm zuerst, dann r und Ausgleichsgerade.</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Einfach" src="G">Old Faithful, 10 Werte.<x-v>\(\bar x=3.303\) und \(s=1.056\) fassen Lage und Streuung zusammen.</x-v></x-ex>
+  <x-ex l="2" t="Mittel" src="G">Ein Tippfehler macht aus 4.7 plötzlich 47.<x-v>Das Mittel springt von 3.30 auf ≈ 7.5, der Median bleibt bei 3.47: robust wählen.</x-v></x-ex>
+  <x-ex l="3" t="Aufbauend" src="G">Bimodaler Datensatz.<x-v>Der Boxplot sieht „normal“ aus, aber Histogramm/\(\FF_n\) enthüllen zwei Gipfel: Grafik schlägt Kennzahl.</x-v></x-ex>
+</x-ex3>
+</section>
+
+<section id="s3-9" data-m="🌉 Brücke & Lernziele|von Daten zurück zum Modell">
+<h2>🌉 Die große Brücke: von Daten zurück zum Modell</h2>
+<x-card t="🧵 Fluss-Diagramm" src="G">
+<svg viewBox="0 0 1200 330" role="img" aria-label="Fluss von Kapitel 3">
+  <defs><marker id="arrK3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="30" y="20" width="250" height="60" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="155" y="45" fill="#f778ba" font-weight="700">Rohdaten x₁,…,xₙ</text><text x="155" y="68" fill="#8b949e">Stichprobe</text>
+    <rect x="330" y="20" width="250" height="60" rx="10" fill="#1c2129" stroke="#d29922"/><text x="455" y="45" fill="#d29922" font-weight="700">ordnen</text><text x="455" y="68" fill="#8b949e">x₍₁₎ ≤ … ≤ x₍ₙ₎</text>
+    <rect x="630" y="10" width="260" height="80" rx="10" fill="#1c2129" stroke="#f85149"/><text x="760" y="35" fill="#f85149" font-weight="700">KENNZAHLEN</text><text x="760" y="58" fill="#e6edf3">x̄ · Median · s² · IQR</text><text x="760" y="80" fill="#8b949e">robust ↔ empfindlich</text>
+    <rect x="930" y="10" width="250" height="80" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="1055" y="35" fill="#bc8cff" font-weight="700">GRAFIKEN</text><text x="1055" y="58" fill="#e6edf3">Histogramm · Boxplot · Fₙ</text><text x="1055" y="80" fill="#8b949e">Form, Gipfel, Ausreißer</text>
+    <rect x="330" y="140" width="540" height="60" rx="10" fill="#1c2129" stroke="#56d4dd"/><text x="600" y="165" fill="#56d4dd" font-weight="700">zwei Größen: Streudiagramm → r → Ausgleichsgerade, R²</text><text x="600" y="188" fill="#8b949e">Regression (Modul) · Test der Steigung in Kap. 8</text>
+    <rect x="180" y="245" width="840" height="70" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="600" y="270" fill="#58a6ff" font-weight="700">Modell vs. Daten: empirisch schätzt theoretisch</text><text x="600" y="295" fill="#e6edf3">x̄ → E[X] · s² → Var(X) · Histogramm → f · Fₙ → F · mehr Daten → näher dran (Kap. 5)</text>
+    <line x1="280" y1="50" x2="328" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="580" y1="50" x2="628" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="890" y1="50" x2="928" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="760" y1="90" x2="700" y2="138" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="600" y1="200" x2="600" y2="243" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+  </g>
+</svg>
+<p><b>→ Wofür brauchst du das in Kapitel 4?</b> Die empirische Korrelation r und die Kovarianz \(s_{xy}\) haben theoretische Gegenstücke \(\Corr(\mX,\mY)\) und \(\Cov(\mX,\mY)\), die aus der gemeinsamen Verteilung zweier Zufallsvariablen folgen.</p>
+</x-card>
+<x-card t="✅ Lernziele-Check (3.6)" src="G">
+  <ul><li>Ich kenne die wichtigsten empirischen Kennzahlen, ihre Bedeutung und Gefahren (Robustheit, Informationsverlust).</li>
+  <li>Ich kenne den Zusammenhang jeder empirischen Größe mit ihrer Modellgröße aus Kap. 2.</li>
+  <li>Ich kenne Histogramm, Boxplot und empirische Verteilungsfunktion und kann sie interpretieren.</li>
+  <li>Ich weiß, wann ich robuste Kennzahlen (Median, IQR) statt Mittel/s wähle.</li>
+  <li>Ich interpretiere die Korrelation r nur zusammen mit dem Streudiagramm.</li>
+  <li>Ich kann eine Ausgleichsgerade von Hand und mit R/Python bestimmen und R² deuten (Modul).</li></ul>
+</x-card>
+</section>
+
+<section id="s3-cheat" data-m="📋 Cheat-Sheet|Formeln Kap. 3 auf einen Blick">
+<h2>📋 Cheat-Sheet Kapitel 3</h2>
+<table class="tbl cheat">
+<tr><th>Kennzahl</th><th>Formel</th><th>R</th><th>Python</th></tr>
+<tr><td>Mittel</td><td>\(\bar x=\frac1n\sum x_i\)</td><td><code>mean(x)</code></td><td><code>np.mean(x)</code></td></tr>
+<tr><td>Varianz, sd</td><td>\(s^2=\frac1{n-1}\sum(x_i-\bar x)^2\)</td><td><code>var(x)</code>, <code>sd(x)</code></td><td><code>np.var(x, ddof=1)</code></td></tr>
+<tr><td>Quantil (Skript)</td><td>\(\alpha n\) ganz → Mittel zweier, sonst \(x_{(\lceil\alpha n\rceil)}\)</td><td><code>quantile(x, a, type=2)</code></td><td><code>np.quantile(x, a, method="averaged_inverted_cdf")</code></td></tr>
+<tr><td>IQR, Ausreißer</td><td>\(q_{0.75}-q_{0.25}\); außerhalb \(q\pm1.5\,\text{IQR}\)</td><td><code>boxplot.stats(x)$out</code></td><td>—</td></tr>
+<tr><td>Sturges</td><td>\(\lceil1+\log_2 n\rceil\) Klassen</td><td><code>nclass.Sturges(x)</code></td><td><code>bins="sturges"</code></td></tr>
+<tr><td>\(\FF_n\)</td><td>\(\frac1n\#\{x_i\le x\}\)</td><td><code>ecdf(x)(t)</code></td><td><code>np.mean(x &lt;= t)</code></td></tr>
+<tr><td>Kovarianz, Korrelation</td><td>\(s_{xy}\), \(r=s_{xy}/(s_xs_y)\)</td><td><code>cov</code>, <code>cor</code></td><td><code>np.cov</code>, <code>np.corrcoef</code></td></tr>
+<tr><td>Ausgleichsgerade</td><td>\(b=S_{xy}/S_{xx}\), \(a=\bar y-b\bar x\), \(R^2=r^2\)</td><td><code>lm(y ~ x)</code></td><td><code>stats.linregress(x, y)</code></td></tr>
+</table>
+</section>
+
+<section id="s3-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-rule">Deskriptive Statistik</span></td><td>descriptive statistics</td><td>Daten darstellen und zusammenfassen</td><td><a href="#s3-1">3.1</a></td></tr>
+<tr><td><span class="kw kw-mem">Grundgesamtheit / Stichprobe</span></td><td>population / sample</td><td>ganze Menge vs. zufällige Teilmenge</td><td><a href="#s3-1">3.1</a></td></tr>
+<tr><td><span class="kw kw-res">arithmetisches Mittel</span></td><td>mean, average</td><td>Schwerpunkt der Daten, nicht robust</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-res">empirische Varianz</span></td><td>sample variance</td><td>\(s^2\) mit Nenner n − 1</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-chg">geordnete Werte</span></td><td>order statistics</td><td>\(x_{(1)}\le\dots\le x_{(n)}\)</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-res">empirisches Quantil</span></td><td>sample quantile</td><td>Wert, unter dem ca. α·100 % liegen</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Median, Quartile, IQR</span></td><td>median, quartiles, interquartile range</td><td>robuste Lage und Streuung</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-rule">robust</span></td><td>robust</td><td>ändert sich durch Ausreißer kaum</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Histogramm</span></td><td>histogram</td><td>Fläche ∝ Anzahl; empirische Dichte</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-rule">bimodal</span></td><td>bimodal</td><td>zwei Gipfel</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Boxplot</span></td><td>box plot</td><td>Box, Median, Whisker, Ausreißer</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-mem">Ausreißer</span></td><td>outlier</td><td>weiter als 1.5·IQR außerhalb</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-res">empirische Verteilungsfunktion</span></td><td>empirical cdf</td><td>Anteil der Daten ≤ x</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-res">empirische Korrelation</span></td><td>sample correlation</td><td>r ∈ [−1,1], Stärke des linearen Zusammenhangs</td><td><a href="#s3-4">3.4</a></td></tr>
+<tr><td><span class="kw kw-rule">Anscombe-Quartett</span></td><td>Anscombe's quartet</td><td>gleiches r, völlig andere Bilder</td><td><a href="#s3-4">3.4</a></td></tr>
+<tr><td><span class="kw kw-rule">Methode der kleinsten Quadrate</span></td><td>least squares</td><td>Gerade mit minimaler Residuen-Quadratsumme</td><td><a href="#s3-5">3.4.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Residuum</span></td><td>residual</td><td>\(y_i-\hat y_i\)</td><td><a href="#s3-5">3.4.1</a></td></tr>
+<tr><td><span class="kw kw-res">Bestimmtheitsmaß R²</span></td><td>coefficient of determination</td><td>erklärter Anteil der Streuung, \(=r^2\)</td><td><a href="#s3-5">3.4.1</a></td></tr>
+</table>
+</section>
+
+<section id="s3-train" data-m="🏋 Training|Kennzahlen aus Zufallsdaten">
+<h2>🏋 Training: Kennzahlen aus Zufallsdaten</h2>
+<x-card t="Zufallsdatensatz" id="qz3">
+  <p id="q3Task"></p>
+  <div class="quiz two"><p>x̄ = <input id="q3m"></p><p>s = <input id="q3s"></p><p>Median = <input id="q3md"></p><p>q₀.₂₅ = <input id="q3q1"></p></div>
+  <p><button class="btn" id="q3Chk">Prüfen</button> <button class="btn" id="q3New">Neue Daten</button></p>
+  <div class="out" id="q3Res"></div>
+</x-card>
+</section>

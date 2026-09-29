@@ -222,7 +222,7 @@ LB.on(function tracers() {
       i = n;
       rec.step('vec', 'Vektorisiert entsteht dieselbe Folge mit <code>cumsum</code>. Endwert \\(\\Idx{f_{' + n + '}}=' + LB.fmt(f, 4) + '\\), wahres \\(\\PP(\\mA)=0.5\\).', st());
     },
-    view: s => LB.cellsHTML(s.w, k => k === s.i - 1 ? 'o' : (k < s.i ? (s.w[k] === 'K' ? 'm' : '') : 'out')) +
+    view: s => LB.cellsHTML(s.w, k => k === s.i - 1 ? 'o' : (k < s.i ? (s.w[k] === 'K' ? 'm' : '') : 'out'), 1) +
       LB.kvHTML([['Wurf i', s.i, 'idx'], ['treffer', s.t, 'idx'], ['n', s.n, 'par'], ['f_i(A)', s.f === null ? '–' : LB.fmt(s.f, 4), 'res']]) +
       (s.f === null ? '' : '<div class="bar"><span style="width:' + (100 * s.f) + '%"></span><i style="left:50%"></i></div>')
   });

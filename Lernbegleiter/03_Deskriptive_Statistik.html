@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kap. 3 · Deskriptive Statistik · Lernbegleiter Statistik I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+/* ================================================================
+   Lernbegleiter Statistik I · gemeinsamer Stil (dunkler Bildatlas)
+   Farbe = Rolle, überall gleich: Formel, Code, Plot, Fließtext.
+   ================================================================ */
+:root{
+  --bg:#0d1117; --card:#161b22; --card2:#1c2129; --panel:#11161d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+  --res:#f85149;  /* Ergebnis / gesuchte Größe                 rot    */
+  --chg:#d29922;  /* Änderung / Operation / Transformation     orange */
+  --rule:#bc8cff; /* Regel / Operator P,E,Var / Verteilung     lila   */
+  --par:#58a6ff;  /* Parameter / Eingabe  p, λ, μ, σ, n, α     blau   */
+  --idx:#3fb950;  /* Index / Zähler / Freiheitsgrad / „richtig" grün  */
+  --cond:#56d4dd; /* Bedingung / Vergleich / Hypothese         cyan   */
+  --mem:#f778ba;  /* Ereignis / Zufallsvariable / Daten        pink   */
+  --gl:#6e9fd8;   /* Kennzeichen „Grundlage"                          */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{hyphens:auto;overflow-wrap:break-word;margin:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.6}
+a{color:var(--par)}
+.wrap{max-width:1640px;margin:0 auto;padding:1.2rem 1.6rem 5rem}
+h1{font-family:'Crimson Pro',Georgia,serif;font-size:2.4rem;line-height:1.15;margin:.4rem 0 .4rem}
+h2{font-size:1.6rem;margin:2.6rem 0 .7rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h2 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.5rem}
+h3{font-size:1.25rem;margin:1.9rem 0 .5rem}
+h3 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.4rem}
+h4{font-size:1.05rem;margin:1.2rem 0 .4rem}
+.one{color:var(--muted);margin:-.3rem 0 .8rem}
+p{margin:.5rem 0}
+code{hyphens:none;font-family:'JetBrains Mono',Consolas,monospace;font-size:.86em;background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:0 .3rem}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--border);padding:.3rem .55rem;text-align:left;vertical-align:top}
+th{background:var(--card2);color:var(--muted);font-weight:600}
+td.r,th.r{text-align:right}
+.tbl{max-width:100%}
+svg{max-width:100%;height:auto}
+.katex-display{margin:.5rem 0;max-width:100%}
+.katex{font-size:1.07em}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0;position:relative}
+.card>b:first-child,.ctitle{display:block;font-size:1.08rem;margin-bottom:.35rem}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin:.15rem 0}
+
+/* ---------- Farbige Schlüsselwörter im Fließtext ---------- */
+.kw{font-weight:600}
+.kw-res{color:var(--res)} .kw-chg{color:var(--chg)} .kw-rule{color:var(--rule)} .kw-par{color:var(--par)}
+.kw-idx{color:var(--idx)} .kw-cond{color:var(--cond)} .kw-mem{color:var(--mem)}
+
+/* ---------- Herkunfts-Kennzeichen ---------- */
+.src{position:absolute;top:.55rem;right:.7rem;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.05rem .45rem;border:1px solid var(--border);color:var(--muted);background:var(--bg)}
+.src.g{color:var(--gl);border-color:var(--gl)}
+.src.n{color:var(--idx);border-color:color-mix(in srgb,var(--idx) 60%,transparent)}
+.srcin{display:inline-block;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.02rem .42rem;border:1px solid var(--gl);color:var(--gl);vertical-align:middle;margin-left:.35rem}
+.srcin.n{border-color:var(--idx);color:var(--idx)}
+.gblk{border-left:3px solid color-mix(in srgb,var(--gl) 70%,transparent);padding-left:.8rem;margin:.6rem 0}
+body.hl-g .is-g{box-shadow:0 0 0 2px var(--gl)}
+body.hl-g .gblk{background:color-mix(in srgb,var(--gl) 9%,transparent)}
+.has-src{padding-top:1.5rem}
+
+/* ---------- Kopf: NICHT sticky ---------- */
+.lbtop{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.1rem;padding:.8rem 1.4rem;border-bottom:1px solid var(--border);background:var(--card)}
+.lbtop .lbt{min-width:0;flex:1 1 280px}
+.lbtop .lbt b{font-size:1.05rem;margin-right:.6rem}
+.lbtop .lbt span{color:var(--muted);font-size:.85rem;display:block}
+.lbq{display:flex;flex-wrap:wrap;gap:.3rem .45rem;flex:1 1 520px}
+.lbq a{font-size:.8rem;text-decoration:none;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.12rem .5rem;white-space:nowrap}
+.lbq a:hover{border-color:var(--rule);color:var(--rule)}
+.lbq a small{color:var(--muted);margin-left:.3rem}
+.lbburger,.lbfab{font:inherit;font-weight:700;cursor:pointer;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--text);padding:.3rem .75rem}
+.lbfab{position:fixed;right:18px;bottom:18px;z-index:300;border-radius:50%;width:48px;height:48px;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.lbmenu{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.6);display:none;overflow:auto;padding:2.2rem 2rem}
+body.menu-open .lbmenu{display:block}
+.lbm-in{max-width:1640px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.4rem 1.4rem}
+.lbm-head{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-bottom:.6rem}
+.lbm-head .sp{margin-left:auto}
+.lbm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.9rem 1.4rem}
+.lbm-grid h5{margin:.2rem 0 .3rem;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--rule)}
+.lbm-grid a{display:flex;gap:.5rem;align-items:baseline;text-decoration:none;color:var(--text);padding:.16rem .35rem;border-radius:6px;font-size:.9rem}
+.lbm-grid a:hover{background:var(--card2)}
+.lbm-grid a span{color:var(--muted);font-size:.8rem}
+.lbm-grid a.sub{padding-left:1.1rem;font-size:.86rem}
+.lbm-opts{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;align-items:center;margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--border);font-size:.88rem;color:var(--muted)}
+.lbm-opts input[type=text]{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:min(30rem,100%)}
+.lbm-parts{display:flex;flex-wrap:wrap;gap:.35rem .5rem;align-items:center;margin:.2rem 0 .8rem;font-size:.86rem}
+.lbm-parts a{border:1px solid var(--border);border-radius:7px;padding:.1rem .5rem;text-decoration:none;color:var(--text)}
+.lbm-parts a.cur{border-color:var(--rule);color:var(--rule)}
+
+/* ---------- Titelbereich ---------- */
+.hero{padding:1rem 0 .4rem}
+.hero .kick{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rule);font-weight:700}
+.hero .lead{font-size:1.1rem;color:#c9d1d9;max-width:1100px}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.45rem .9rem;margin:.6rem 0}
+.legend div{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.35rem .6rem;font-size:.92rem}
+.legend b{font-family:'JetBrains Mono',monospace}
+
+/* ---------- Anatomie ---------- */
+.anat-f{text-align:center;font-size:1.15rem;margin:.3rem 0 .6rem}
+.anat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.45rem 1.2rem}
+.anat>div{display:grid;grid-template-columns:minmax(4.2rem,auto) minmax(0,1fr);gap:.6rem;align-items:baseline;background:var(--card2);border-radius:8px;padding:.35rem .6rem}
+.anat .sym{font-weight:600;text-align:center}
+.anat>div>span{min-width:0}
+.read{border-left:4px solid var(--rule);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+.why{border-left:4px solid var(--chg);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+
+/* ---------- Von-null-Karte ---------- */
+.vonnull{border:1.6px solid var(--rule);border-radius:14px;background:var(--panel);padding:1rem 1.2rem .8rem;margin:1.1rem 0 1.4rem;position:relative}
+.vonnull .vn-ttl{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem;font-size:1.2rem;font-weight:700;padding-right:6rem}
+.vn-badge{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#fff;background:var(--rule);border-radius:6px;padding:.16rem .55rem;font-weight:600}
+.vonnull .vn-task{border-left:4px solid var(--res);background:var(--card2);border-radius:8px;padding:.6rem .9rem;margin:.5rem 0 .6rem}
+details>summary{cursor:pointer;font-weight:700;color:var(--rule);padding:.35rem 0}
+.vn-step{display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.65rem;align-items:start;margin:.55rem 0}
+.vnn{display:inline-flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--rule);color:#fff;font-weight:700;font-size:.85rem}
+.vn-res{margin:.6rem 0 .3rem;padding:.45rem .85rem;border-radius:9px;font-weight:700;border:1.5px solid var(--idx);color:var(--idx);background:color-mix(in srgb,var(--idx) 8%,transparent)}
+.trap{margin:.5rem 0;padding:.45rem .85rem;border-radius:9px;border:1.3px solid var(--chg);background:color-mix(in srgb,var(--chg) 8%,transparent)}
+.trap b:first-child{color:var(--chg)}
+.blsol{border-color:var(--par)}
+.blsol .vn-badge{background:var(--par)}
+
+/* ---------- Prüfungs-Trainer (aus der Grundlage) ---------- */
+.pt{border:1px dashed color-mix(in srgb,var(--gl) 70%,transparent);border-radius:12px;padding:.7rem 1rem;margin:.9rem 0;background:#121a24;position:relative}
+.pt .ptq{padding-right:6rem}
+.pt .ptq b:first-child{color:var(--gl)}
+.pt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-top:.4rem}
+.pt-grid>div{background:var(--card2);border-radius:8px;padding:.4rem .6rem;font-size:.95rem}
+.pt-grid>div>i{display:block;font-style:normal;font-size:.78rem;color:var(--muted);font-weight:700;letter-spacing:.04em}
+
+/* ---------- Bausteine ---------- */
+.idea{border-left:4px solid var(--rule);background:var(--card);border-radius:10px;padding:.6rem 1rem;margin:.8rem 0}
+.idea>b:first-child{color:var(--rule)}
+.cook{counter-reset:ck;list-style:none;padding-left:0}
+.cook>li{counter-increment:ck;position:relative;padding-left:2.3rem;margin:.4rem 0}
+.cook>li::before{content:counter(ck);position:absolute;left:0;top:.05rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--card2);border:1px solid var(--rule);color:var(--rule);font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.ex3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem}
+.ex{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.7rem .9rem}
+.ex .lvl{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.ex .lvl.l1{color:var(--idx)} .ex .lvl.l2{color:var(--chg)} .ex .lvl.l3{color:var(--res)}
+.verdict{margin-top:.5rem;border-top:1px solid var(--border);padding-top:.4rem}
+.verdict b{color:var(--idx)}
+.vs{border:1.3px solid var(--cond);border-radius:12px;padding:.6rem 1rem;margin:.8rem 0;background:color-mix(in srgb,var(--cond) 6%,transparent)}
+.vs>b:first-child{color:var(--cond)}
+.cheat td:first-child{white-space:normal}
+
+/* ---------- Video-Chips ---------- */
+.vids{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}
+.vid{display:inline-flex;flex-wrap:wrap;align-items:center;gap:.35rem;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.2rem .35rem .2rem .6rem;font-size:.86rem;max-width:100%}
+.vid .vt{color:var(--text)}
+.vid .vs2{color:var(--muted);font-size:.74rem;font-family:'JetBrains Mono',monospace}
+.vid a,.vid button{font:inherit;font-size:.8rem;cursor:pointer;border:1px solid var(--border);border-radius:6px;padding:0 .4rem;background:var(--bg);color:var(--text);text-decoration:none}
+.vid a:hover{border-color:var(--chg);color:var(--chg)}
+
+/* ---------- Code ---------- */
+.code{margin:.7rem 0;border:1px solid var(--border);border-radius:10px;background:#0b0f14;overflow:hidden}
+.code .ch{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;background:var(--card2);padding:.3rem .8rem;font-size:.85rem;border-bottom:1px solid var(--border)}
+.code .ch b{color:var(--text)}
+.code .ch span{color:var(--muted)}
+.code pre{margin:0;padding:.5rem 0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.83rem;line-height:1.5}
+.code .row,.tr-code .row{white-space:pre-wrap;word-break:break-word;padding:0 .7rem 0 3.4em;text-indent:-2.7em}
+.code .ln,.tr-code .ln{display:inline-block;width:2.2em;text-indent:0;color:#5c6370;margin-right:.5em;text-align:right;user-select:none}
+.tok-c{color:#7d8590;font-style:italic}
+.tok-k{color:#ff7b72}
+.tok-t{color:#79c0ff}
+.tok-s{color:#a5d6ff}
+.tok-n{color:#e3b341}
+.tok-a{color:var(--chg);font-weight:700}
+
+/* ---------- Tracer ---------- */
+.tracer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0}
+.tr-head{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-bottom:.6rem}
+.tr-head input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.2rem .5rem;width:min(28rem,100%)}
+.tr-head select{max-width:100%;font:inherit;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .4rem}
+.tracer button,.btn{font:inherit;cursor:pointer;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.2rem .6rem}
+.tracer button:hover,.btn:hover{border-color:var(--chg)}
+.btn.on,.tracer button.on{border-color:var(--rule);color:var(--rule);background:color-mix(in srgb,var(--rule) 14%,transparent)}
+.tr-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1rem}
+.tr-code{margin:0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.82rem;background:#0b0f14;border:1px solid var(--border);border-radius:10px;padding:.5rem 0;line-height:1.5}
+.tr-code .row.cur{background:color-mix(in srgb,var(--chg) 22%,transparent);outline:1px solid var(--chg)}
+.tr-code .hits{color:var(--idx);margin-left:.6em;font-size:.75rem}
+.tr-state{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.6rem .8rem;min-width:0}
+.tr-ctl{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-top:.6rem}
+.tr-ctl input[type=range]{flex:1 1 200px}
+.tr-cnt{color:var(--muted);font-size:.85rem}
+.tr-msg{margin-top:.5rem;border-left:4px solid var(--chg);padding:.3rem .8rem;background:var(--card2);border-radius:6px;min-height:2.2rem}
+.cells{display:flex;flex-wrap:wrap;gap:3px;margin:.2rem 0 .4rem}
+.cells .c{min-width:2.4rem;text-align:center;border:1px solid var(--border);border-radius:5px;padding:.1rem .25rem;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem}
+.cells .c i{display:block;font-style:normal;font-size:.62rem;font-weight:400;color:var(--muted)}
+.cells .c.m{border-color:var(--idx);background:color-mix(in srgb,var(--idx) 22%,transparent)}
+.cells .c.h{border-color:var(--res);background:color-mix(in srgb,var(--res) 18%,transparent)}
+.cells .c.o{border-color:var(--chg);background:color-mix(in srgb,var(--chg) 20%,transparent)}
+.cells .c.out{opacity:.3}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.35rem;margin:.3rem 0}
+.kv div{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.2rem .45rem;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.kv div i{display:block;font-style:normal;color:var(--muted);font-size:.7rem;font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Visuals / Regler ---------- */
+.viz{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0;position:relative}
+.viz .ctl{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;align-items:center;margin:.3rem 0 .5rem}
+.viz .ctl label{display:flex;align-items:center;gap:.5rem;font-size:.92rem;flex:1 1 230px}
+.viz .ctl input[type=range]{flex:1 1 120px;accent-color:var(--par)}
+.viz .ctl output{font-family:'JetBrains Mono',monospace;color:var(--par);min-width:3.5rem}
+.viz input[type=number],.viz input[type=text],.viz textarea{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;max-width:100%}
+.viz textarea{width:100%;min-height:3rem}
+.plot{width:100%;min-height:280px}
+.recog{margin-top:.4rem;font-size:.92rem;color:#c9d1d9}
+.recog b:first-child{color:var(--chg)}
+.out{font-family:'JetBrains Mono',monospace;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .6rem;margin:.4rem 0}
+.ok{color:var(--idx)} .bad{color:var(--res)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:.25rem}
+
+/* ---------- Brücke ---------- */
+.bridge svg text{font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Training ---------- */
+.quiz input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:8rem}
+
+footer.foot{color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem;padding-top:1rem}
+
+@media(max-width:900px){
+  .wrap{padding:1rem .9rem 5rem}
+  .tr-grid,.anat,.two,.three,.ex3,.pt-grid{grid-template-columns:minmax(0,1fr)}
+  .lbmenu{padding:1rem .6rem}
+  h1{font-size:1.8rem}
+  .vonnull .vn-ttl,.pt .ptq{padding-right:0;padding-top:1rem}
+}
+@media(max-width:640px){
+  /* Tabellen werden zu gestapelten Karten: nie seitwärts scrollen */
+  .tbl,.tbl tbody,.tbl tr,.tbl td,.tbl th{display:block;width:100%}
+  .tbl tr{border:1px solid var(--border);border-radius:8px;margin:.4rem 0;padding:.2rem}
+  .tbl td,.tbl th{border:0;padding:.15rem .4rem;text-align:left!important}
+  .tbl th{background:none}
+  .dgrid{grid-template-columns:2.2rem repeat(6,minmax(0,1fr))}
+  body{font-size:16px}
+  .katex-display{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+  .anat>div{grid-template-columns:minmax(0,1fr)}
+  .anat>div>span,.pt-grid>div,.vn-step>div,td{overflow-x:auto}
+  .katex{font-size:1em}
+}
+
+
+</style>
+</head>
+<body>
+<header class="lbtop">
+  <button class="lbburger" id="lbOpen" aria-label="Inhalt öffnen">☰ Inhalt</button>
+  <div class="lbt"><b>Kap. 3 · Deskriptive Statistik</b><span>Mittel, Varianz, Quantile, Median, IQR, Histogramm, Boxplot, F_n, Korrelation, lineare Regression</span></div>
+  <nav class="lbq"><a href="#s3-0">🔬 Master-Anatomie<small>6 Leitfragen</small></a><a href="#s3-1">3.1 Einführung<small>Stichprobe vs. Grundgesamtheit</small></a><a href="#s3-2">3.2 Kennzahlen<small>x̄</small></a><a href="#s3-3">3.3 Grafiken<small>Histogramm</small></a><a href="#s3-4">3.4 Korrelation<small>s_xy</small></a><a href="#s3-5">3.4.1 Lineare Regression<small>kleinste Quadrate</small></a><a href="#s3-6">3.5 Modell vs. Daten<small>empirisch schätzt theoretisch</small></a><a href="#s3-9">🌉 Brücke &amp; Lernziele<small>von Daten zurück zum Modell</small></a><a href="#s3-cheat">📋 Cheat-Sheet<small>Formeln Kap. 3 auf einen Blick</small></a><a href="#s3-glossar">📚 Glossar<small>Fachwörter deutsch/englisch</small></a><a href="#s3-train">🏋 Training<small>Kennzahlen aus Zufallsdaten</small></a></nav>
+</header>
+<div class="lbmenu" id="lbMenu"><div class="lbm-in">
+  <div class="lbm-head"><b>☰ Inhalt · Kap. 3 · Deskriptive Statistik</b><button class="lbburger sp" data-close>✕ schließen</button></div>
+  <div class="lbm-parts"><span class="muted">Teil wechseln:</span><a href="01_Grundlagen_Wahrscheinlichkeit.html" data-part="0">Kap. 1 · Grundlagen W-Rechnung</a><a href="02_Verteilungen.html" data-part="1">Kap. 2 · Verteilungen</a><a href="03_Deskriptive_Statistik.html" data-part="2" class="cur">Kap. 3 · Deskriptive Statistik</a><a href="04_Mehrdimensionale_Verteilungen.html" data-part="3">Kap. 4 · Mehrdimensional</a><a href="05_Grenzwertsaetze.html" data-part="4">Kap. 5 · Grenzwertsätze</a><a href="06_Parameterschaetzung.html" data-part="5">Kap. 6 · Parameterschätzung</a><a href="07_Tests_und_Vertrauensintervalle.html" data-part="6">Kap. 7 · Tests &amp; VI</a><a href="08_Zwei_Stichproben.html" data-part="7">Kap. 8 · Zwei Stichproben</a><a href="09_Rechner.html" data-part="8">🧰 Statistik-Rechner</a></div>
+  <div class="lbm-grid"><div><h5>🔬 Master-Anatomie</h5><a href="#s3-0"><b>🔬 Master-Anatomie</b><span>6 Leitfragen, 4-Schritte-Werkzeug</span></a></div><div><h5>3.1 Einführung</h5><a href="#s3-1"><b>3.1 Einführung</b><span>Stichprobe vs. Grundgesamtheit, erst plotten</span></a></div><div><h5>3.2 Kennzahlen</h5><a href="#s3-2"><b>3.2 Kennzahlen</b><span>x̄, s², s, Quantile, Median, IQR, robust</span></a><a href="#s3-2-a" class="sub"><b>Kennzahlen-Tracer</b><span>x̄, s², Quantile in R/Python</span></a></div><div><h5>3.3 Grafiken</h5><a href="#s3-3"><b>3.3 Grafiken</b><span>Histogramm, Sturges, Boxplot, F_n</span></a></div><div><h5>3.4 Korrelation</h5><a href="#s3-4"><b>3.4 Korrelation</b><span>s_xy, r ∈ [−1,1], Streudiagramm, Anscombe</span></a></div><div><h5>3.4.1 Lineare Regression</h5><a href="#s3-5"><b>3.4.1 Lineare Regression</b><span>kleinste Quadrate, a, b, Residuen, R² (Modul)</span></a></div><div><h5>3.5 Modell vs. Daten</h5><a href="#s3-6"><b>3.5 Modell vs. Daten</b><span>empirisch schätzt theoretisch</span></a><a href="#s3-6-a" class="sub"><b>Schema &amp; Beispiele 3</b><span>welche Kennzahl/Grafik wann</span></a></div><div><h5>🌉 Brücke &amp; Lernziele</h5><a href="#s3-9"><b>🌉 Brücke &amp; Lernziele</b><span>von Daten zurück zum Modell</span></a></div><div><h5>📋 Cheat-Sheet</h5><a href="#s3-cheat"><b>📋 Cheat-Sheet</b><span>Formeln Kap. 3 auf einen Blick</span></a></div><div><h5>📚 Glossar</h5><a href="#s3-glossar"><b>📚 Glossar</b><span>Fachwörter deutsch/englisch</span></a></div><div><h5>🏋 Training</h5><a href="#s3-train"><b>🏋 Training</b><span>Kennzahlen aus Zufallsdaten</span></a></div></div>
+  <div class="lbm-opts">
+    <label><input type="checkbox" id="lbHlG"> 📘 Grundlage-Inhalte hervorheben</label>
+    <label>🎬 Video-Ordner <input type="text" id="lbVbase" value="videos/" title="relativ zur HTML-Datei (z. B. Symlink „videos") oder absolut, z. B. /home/NAME/Videos/Statistik/"></label>
+    <span>Esc schließt · T = Teile</span>
+  </div>
+</div></div>
+<button class="lbfab" id="lbFab" aria-label="Inhalt öffnen">☰</button>
+<main class="wrap">
+<!-- title: Kap. 3 · Deskriptive Statistik -->
+<!-- sub: Mittel, Varianz, Quantile, Median, IQR, Histogramm, Boxplot, F_n, Korrelation, lineare Regression -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 3 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Deskriptive Statistik</h1>
+  <p class="lead">Wo Kapitel 2 die <b>Modelle</b> baute, fasst Kapitel 3 echte <b>Daten</b> zusammen: Mittel, Streuung, Median und Quantile, dazu Histogramm, Boxplot, empirische Verteilungsfunktion und Korrelation. Neu aus der Modulbeschreibung: die <b>lineare Regression</b> (Ausgleichsgerade, Residuen, R²). Jede empirische Kennzahl ist das Gegenstück zu ihrer theoretischen Schwester aus Kap. 2.</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Grundlage, hier vertieft und erweitert">📘 Grundlage ✚ erweitert</span><b>🎨 Farblegende für Kapitel 3</b>
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: berechnete Kennzahl \(\Res{\bar x},\Res{s},\Res{q_\alpha},\Res{r}\)</div>
+    <div><b class="kw-chg">orange · Umformung</b>: ordnen \(\Chg{x_{(i)}}\), Abweichung \(\Chg{x_i-\bar x}\), Residuum</div>
+    <div><b class="kw-rule">lila · Regel/Name</b>: Median, IQR, Sturges, 1.5-IQR-Regel, kleinste Quadrate</div>
+    <div><b class="kw-par">blau · Umfang/Anteil</b>: \(\Par{n}\), \(\Par{\alpha}\), Klassenzahl</div>
+    <div><b class="kw-idx">grün · Index</b>: \(\Idx{i}\), \(\Idx{k}\), Position \(\lceil\alpha n\rceil\)</div>
+    <div><b class="kw-cond">cyan · Vergleich</b>: \(x_i\Cond{\le}x\), Ausreißer-Grenze, Klassengrenzen</div>
+    <div><b class="kw-mem">pink · Daten</b>: Beobachtungen \(\Mem{x_i},\Mem{y_i}\), Stichprobe</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Der rote Faden des Kapitels:</b> jede rote Kennzahl ist die aus pinken Daten geschätzte Version einer Modellgröße aus Kap. 2: \(\bar x\leftrightarrow\EE[\mX]\), \(s^2\leftrightarrow\Var(\mX)\), \(\FF_n\leftrightarrow\FF\). Mehr Daten → näher am Modell.</div>
+</div>
+<div class="bridge"><svg viewBox="0 0 1638 128" role="img" aria-label="Brücke durch Statistik I"><defs><marker id="arrC3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs><rect x="10" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="105" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 1 · Grundlagen</text><text x="105" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Ω, P, Bayes</text><line x1="200" y1="73" x2="213" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC3)"/><rect x="214" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="309" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 2 · Verteilungen</text><text x="309" y="90" fill="#8b949e" font-size="14" text-anchor="middle">X, E, Var</text><line x1="404" y1="73" x2="417" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC3)"/><rect x="418" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#bc8cff" stroke-width="3"/><text x="513" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 3 · Deskriptiv</text><text x="513" y="90" fill="#8b949e" font-size="14" text-anchor="middle">x̄, s, Quantile</text><line x1="608" y1="73" x2="621" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC3)"/><text x="513" y="28" fill="#bc8cff" font-size="16" font-weight="700" text-anchor="middle">▼ DU BIST HIER</text><rect x="622" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="717" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 4 · Mehrdim.</text><text x="717" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Cov, Corr</text><line x1="812" y1="73" x2="825" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC3)"/><rect x="826" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="921" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 5 · Grenzwerte</text><text x="921" y="90" fill="#8b949e" font-size="14" text-anchor="middle">GGZ, ZGS</text><line x1="1016" y1="73" x2="1029" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC3)"/><rect x="1030" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1125" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 6 · Schätzen</text><text x="1125" y="90" fill="#8b949e" font-size="14" text-anchor="middle">MoM, ML, SE</text><line x1="1220" y1="73" x2="1233" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC3)"/><rect x="1234" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1329" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 7 · Tests & VI</text><text x="1329" y="90" fill="#8b949e" font-size="14" text-anchor="middle">H₀, p, VI</text><line x1="1424" y1="73" x2="1437" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC3)"/><rect x="1438" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1533" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 8 · Zwei Stichpr.</text><text x="1533" y="90" fill="#8b949e" font-size="14" text-anchor="middle">gepaart, t</text></svg></div>
+
+<section id="s3-0" data-m="🔬 Master-Anatomie|6 Leitfragen, 4-Schritte-Werkzeug">
+<h2><span class="num">3.0</span>Master-Anatomie</h2>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: Daten → Kennzahl → Modellgröße</b><div class="anat-f">\[ \underbrace{\Mem{x_1},\dots,\Mem{x_{\Par{n}}}}_{\text{Daten}}\ \xrightarrow{\ \Chg{\text{zusammenfassen}}\ }\ \underbrace{\Res{\bar x}=\frac1{\Par{n}}\sum_{\Idx{i}=1}^{\Par{n}}\Mem{x_{\Idx{i}}}}_{\text{empirisch}}\ \approx\ \underbrace{\EE[\mX]}_{\text{Modell (Kap. 2)}} \]</div><div class="anat"><div><span class="sym">\(\Mem{x_i}\)</span><span>die gemessenen Rohwerte (pink = Daten)</span></div><div><span class="sym">\(\Res{\bar x}\)</span><span>die daraus berechnete Kennzahl (rot = Ergebnis)</span></div><div><span class="sym">\(\approx\EE[\mX]\)</span><span>sie schätzt die entsprechende Größe des Modells; die Güte der Schätzung ist Thema von Kap. 5 und 6</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Aus den Daten x eins bis x n berechnet man x quer; das ist eine Schätzung für den Erwartungswert von X.“</div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧭 Die 6 Leitfragen dieses Kapitels</b>
+  <ol class="cook"><li><b>Wo liegt die Mitte der Daten?</b> Arithmetisches Mittel \(\bar x\) (empfindlich) oder Median \(q_{0.5}\) (robust)?</li>
+  <li><b>Wie stark streuen sie?</b> Empirische Standardabweichung s oder robust die Quartilsdifferenz (IQR)?</li>
+  <li><b>Wie sieht die Verteilung aus?</b> Histogramm (= empirische Dichte), Boxplot, empirische Verteilungsfunktion \(\FF_n\).</li>
+  <li><b>Was ist „robust“?</b> Welche Kennzahl übersteht einen Ausreißer, welche kippt?</li>
+  <li><b>Hängen zwei Größen zusammen?</b> Empirische Korrelation \(r\in[-1,1]\), aber nie ohne Streudiagramm! Und die Ausgleichsgerade (Regression).</li>
+  <li><b>Wie verbindet sich Daten- mit Modellwelt?</b> Jede empirische Größe schätzt ihr theoretisches Gegenstück aus Kap. 2.</li></ol>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🎓 Das agnostische Spitzenwerkzeug für JEDE Prüfungsfrage</b>
+  <ol class="cook"><li><b>ERKENNEN:</b> Was wird verlangt? Lage (Mittel/Median), Streuung (s/IQR), Form (Histogramm/\(\FF_n\)), Zusammenhang (r, Gerade) oder Modell-Bezug? Eine Größe oder Paare (x, y)?</li>
+  <li><b>WÄHLEN:</b> Ausreißer oder schiefe Daten im Spiel? → robust: Median und IQR. Sonst Mittel und s. Grafik: Histogramm = Form, Boxplot = Vergleich, \(\FF_n\) = Anteile.</li>
+  <li><b>RECHNEN:</b> passende Formel einsetzen. Quantil-Reflex: ordnen → \(\alpha\cdot n\) bilden → ganzzahlig? dann zwei mitteln, sonst \(\lceil\alpha n\rceil\) ablesen.</li>
+  <li><b>ARTIKULIEREN:</b> „Die [Kennzahl] beträgt [Wert] [Einheit]; sie misst [Lage/Streuung/…], ist [robust/empfindlich] und ist das empirische Gegenstück zu [E[X] / Var / F].“</li></ol>
+</div>
+</section>
+
+<!-- ============================================================ 3.1 -->
+<section id="s3-1" data-vn data-m="3.1 Einführung|Stichprobe vs. Grundgesamtheit, erst plotten">
+<h2><span class="num">3.1</span>Einführung: Daten zusammenfassen</h2>
+<div class="vonnull" id="vn-3-1" data-sec="3.1"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 3.1</span>Welche Zusammenfassung passt zu welchen Daten?</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Eine Firma misst an 40 zufällig ausgewählten Tagen (a) die Anzahl Kundenbeschwerden pro Tag und (b) die Wartezeit des ersten Kunden in Minuten. (1) Was ist Grundgesamtheit, was Stichprobe? (2) Sind die Merkmale diskret oder stetig? (3) Welche Grafik schaust du zuerst an, und warum darf man nicht gleich nur den Mittelwert berichten?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(1) Grundgesamtheit und Stichprobe.</b> Grundgesamtheit = alle Arbeitstage (auch zukünftige) unter gleichen Bedingungen; Stichprobe = die 40 gemessenen Tage mit Werten \(\Mem{x_1},\dots,\Mem{x_{40}}\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(2) Typ.</b> (a) Anzahl → gezählt → diskret; (b) Zeit → gemessen → stetig (Kap. 2.1).</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(3) Erst schauen.</b> Pflicht ist eine Grafik: für (a) ein Stabdiagramm der Häufigkeiten, für (b) ein Histogramm oder Boxplot. Grund: jede Kennzahl wirft Information weg. Wartezeiten sind oft schief (Exponential-ähnlich) oder haben Ausreißer; dann beschreibt der Median die „typische“ Wartezeit besser als das Mittel.</div></div>
+  <div class="vn-res">✔ Grundgesamtheit = alle Tage, Stichprobe = 40 Tage; (a) diskret, (b) stetig; zuerst Grafik, dann passende (evtl. robuste) Kennzahl.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Die <b>deskriptive Statistik</b> stellt vorhandene Daten übersichtlich dar und fasst sie zusammen, als ersten Schritt, bevor man später (schließende Statistik, Kap. 6 bis 8) auf den dahinterliegenden Mechanismus schließt.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Stichprobe und Grundgesamtheit</b><div class="anat"><div><span class="sym">\(\text{Grundgesamtheit}\)</span><span>die ganze interessierende Menge (z. B. alle Studierenden). Meist zu groß, um sie vollständig zu messen</span></div><div><span class="sym">\(\text{Stichprobe}\)</span><span>eine (idealerweise zufällig gezogene) Teilmenge, die die Grundgesamtheit repräsentieren soll, z. B. 50 Studierende</span></div><div><span class="sym">\(\Mem{x_1},\dots,\Mem{x_n}\)</span><span>die n Beobachtungen der Stichprobe; \(\Mem{x_{\Idx{i}}}\) ist die i-te Messung</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Aus der Grundgesamtheit wird eine Stichprobe vom Umfang n gezogen; x i ist die i-te Beobachtung.“</div></div>
+<div class="trap is-g"><b>⚠ Grundregel:</b> Immer wenn man Daten sammelt, ist es Pflicht, sie zuerst grafisch anzuschauen. Und: Jedes Zusammenfassen, ob Kennzahl oder Grafik, wirft zwangsläufig Information weg. <span class="srcin">📘 Grundlage</span></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Eine Behörde befragt 300 zufällig ausgewählte Haushalte einer Stadt zum Wasserverbrauch. Was ist Stichprobe, was Grundgesamtheit, und warum „zufällig“?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Immer wenn „eine Auswahl, X von Y, Messungen aus einer größeren Menge“ vorkommt.</div><div><i>⚙️ LÖSEN</i>Grundgesamtheit = alle Haushalte der Stadt; Stichprobe = die 300 gemessenen; zufällig → repräsentativ, kein systematischer Fehler.</div><div><i>🗣️ SAGEN</i>„Die 300 Haushalte sind eine zufällige (repräsentative) Stichprobe aus der Grundgesamtheit aller Haushalte der Stadt.“</div></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init2/Introduction to Statistics and Data Analysis [QIXUTsdj_oA].mp4"><span class="vt">🎬 Introduction to Statistics and Data Analysis</span> <span class="muted small">Einführung Datenanalyse</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Introduction to Statistics and Data Analysis [QIXUTsdj_oA].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Population and Estimated Parameters, Clearly Explained!!! [vikkiwjQqfU].mp4"><span class="vt">🎬 Population and Estimated Parameters, Clearly Explained!!!</span> <span class="muted small">Population vs. Schätzung</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Population and Estimated Parameters, Clearly Explained!!! [vikkiwjQqfU].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 3.2 -->
+<section id="s3-2" data-vn data-m="3.2 Kennzahlen|x̄, s², s, Quantile, Median, IQR, robust">
+<h2><span class="num">3.2</span>Kennzahlen</h2>
+<p class="one">Eine Zahl für die Lage (Mittel, Median) und eine für die Streuung (Standardabweichung, Quartilsdifferenz).</p>
+<div class="vonnull" id="vn-3-2" data-sec="3.2"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 3.2</span>Acht Messwerte mit einem Ausreißer: alle Kennzahlen von null</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Gegeben sind \(\Par{n}=8\) Messwerte: 12, 15, 11, 18, 14, 13, 30, 16. Berechne (a) \(\bar x\), \(s^2\), \(s\); (b) Median, unteres und oberes Quartil, IQR, das 10 %-Quantil (Definition des Skripts); (c) ob 30 nach der 1.5-IQR-Regel ein Ausreißer ist; (d) welche Lagekennzahl du berichten würdest.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) Mittel.</b> \(\Res{\bar x}=\tfrac18(12+15+11+18+14+13+30+16)=\tfrac{129}{8}=\Res{16.125}\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(a) Varianz: Abweichungen quadrieren.</b> Abweichungen \(\Chg{x_i-\bar x}\): −4.125, −1.125, −5.125, 1.875, −2.125, −3.125, 13.875, −0.125. Quadrate summiert:
+  \[\begin{aligned}
+  \sum(\Chg{x_i-\bar x})^2 &= 17.016+1.266+26.266+3.516+4.516+9.766+192.516+0.016 && \text{acht Quadrate} \\
+  &= 254.875 && \text{Summe} \\
+  \Res{s^2} &= \frac{254.875}{\Par{n}-1}=\frac{254.875}{7}=\Res{36.41} && \text{Nenner n − 1} \\
+  \Res{s} &= \sqrt{36.41}\approx\Res{6.034} && \text{gleiche Einheit wie die Daten}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(b) Ordnen.</b> \(\Chg{x_{(1)},\dots,x_{(8)}}\) = 11, 12, 13, 14, 15, 16, 18, 30.</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(b) Quantile nach Skript.</b> 
+  \[\begin{aligned}
+  q_{0.5}:&\ \alpha n=4\ \text{ganzzahlig} &&\Rightarrow\ \tfrac12(x_{(4)}+x_{(5)})=\tfrac12(14+15)=\Res{14.5} \\
+  q_{0.25}:&\ \alpha n=2\ \text{ganzzahlig} &&\Rightarrow\ \tfrac12(x_{(2)}+x_{(3)})=\tfrac12(12+13)=\Res{12.5} \\
+  q_{0.75}:&\ \alpha n=6\ \text{ganzzahlig} &&\Rightarrow\ \tfrac12(x_{(6)}+x_{(7)})=\tfrac12(16+18)=\Res{17} \\
+  q_{0.1}:&\ \alpha n=0.8\ \text{nicht ganzzahlig} &&\Rightarrow\ x_{(\lceil0.8\rceil)}=x_{(1)}=\Res{11} \\
+  \text{IQR}&=q_{0.75}-q_{0.25}=17-12.5 &&= \Res{4.5}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">(c) Ausreißer-Grenze.</b> Obere Grenze \(q_{0.75}+1.5\cdot\text{IQR}=17+6.75=23.75\). \(30\Cond{>}23.75\) → <b>Ausreißer</b>. (Untere Grenze \(12.5-6.75=5.75\), kein Wert darunter.)</div></div>
+  <div class="vn-step"><span class="vnn">6</span><div><b class="h">(d) Bericht.</b> Das Mittel 16.125 liegt über 6 der 8 Werte, weil 30 es nach oben zieht. Der Median 14.5 beschreibt die „typische“ Messung besser.</div></div>
+  <div class="vn-res">✔ \(\bar x=16.125\), \(s^2\approx36.41\), \(s\approx6.03\); Median 14.5, \(q_{0.25}=12.5\), \(q_{0.75}=17\), IQR = 4.5, \(q_{0.1}=11\); 30 ist Ausreißer → Median berichten.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> R <code>quantile(x)</code> und numpy <code>np.quantile(x)</code> nutzen standardmäßig eine andere Definition (Typ 7) und liefern hier 12.75 und 16.5. Für das Skript: R <code>quantile(x, type = 2)</code>, Python <code>method="averaged_inverted_cdf"</code>.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Wenige Zahlen fassen den Datensatz zusammen: eine für die <b>Lage</b> (Mittel, Median) und eine für die <b>Streuung</b> (Standardabweichung, Quartilsdifferenz).</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: arithmetisches Mittel x̄</b><div class="anat-f">\[ \Res{\bar x}=\frac{1}{\Par{n}}\sum_{\Idx{i}=1}^{\Par{n}}\underbrace{\Mem{x_{\Idx{i}}}}_{\text{i-te Beobachtung}} \]</div><div class="anat"><div><span class="sym">\(\bar x\)</span><span>der Durchschnitt (Mittelwert, Stichprobenmittel): Kennzahl für die Lage. Sprich „x quer“</span></div><div><span class="sym">\(\Par{n}\)</span><span>Anzahl Beobachtungen. Man summiert alle und teilt durch n</span></div></div><div class="why">🧠 <b>Warum so?</b> ⚖️ Brücke zu Kap. 2: Gibt man jeder Beobachtung gleiches Gewicht \(1/n\), ist \(\bar x\) der Schwerpunkt der Datenpunkte: das empirische Pendant zum Erwartungswert \(\EE[\mX]=\sum x\,\pf(x)\).</div><div class="read">📖 <b>Vorlesen:</b> „x quer gleich eins durch n, mal Summe über i von x i: alle Werte addieren, durch die Anzahl teilen.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Fünf Rohr-Durchmesser (mm): 3, 7, 7, 9, 4. Bestimme das arithmetische Mittel.</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Signalwörter „Durchschnitt, Mittelwert, im Mittel, typischer Wert“ bei symmetrischen Daten ohne Ausreißer.</div><div><i>⚙️ LÖSEN</i>\(\bar x=\tfrac15(3+7+7+9+4)=\tfrac{30}{5}=\Res{6}\) mm.</div><div><i>🗣️ SAGEN</i>„Das Stichprobenmittel beträgt x̄ = 6 mm; es ist der Schwerpunkt der Daten und das empirische Gegenstück zu E[X].“</div></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: empirische Varianz s² und Standardabweichung s</b><div class="anat-f">\[ \Res{s^2}=\frac{1}{\Par{n}-1}\sum_{\Idx{i}=1}^{\Par{n}}\underbrace{(\Chg{\Mem{x_{\Idx{i}}}-\bar x})^2}_{\text{Abstand zum Mittel, quadriert}},\qquad \Res{s}=\sqrt{s^2} \]</div><div class="anat"><div><span class="sym">\(s^2\)</span><span>die empirische Varianz: mittlere quadrierte Abweichung vom Mittel. Streuungsmaß; entspricht \(\Var(\mX)\)</span></div><div><span class="sym">\(s\)</span><span>die empirische Standardabweichung: gleiche Einheit wie die Daten</span></div><div><span class="sym">\(\Par{n}-1\)</span><span>der „gewöhnungsbedürftige“ Nenner, nicht n! Er verhindert einen systematischen Fehler (erwartungstreue Schätzung, Kap. 6.3.3)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „s Quadrat gleich eins durch (n minus eins), mal Summe der quadrierten Abstände zum Mittel; s ist die Wurzel davon.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Für dieselben Werte 3, 7, 7, 9, 4 (x̄ = 6): berechne s² und s.</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„Streuung, wie stark schwanken, Varianz, Standardabweichung, ± wie viel“.</div><div><i>⚙️ LÖSEN</i>Abweichungen −3, 1, 1, 3, −2 → Quadrate 9, 1, 1, 9, 4, Summe 24. \(s^2=\tfrac{24}{4}=\Res{6}\), \(s=\sqrt6\approx\Res{2.45}\) mm.</div><div><i>🗣️ SAGEN</i>„Die empirische Varianz ist s² = 6 mm², die Standardabweichung s = √6 ≈ 2.45 mm: Streuung um x̄, Nenner n−1.“</div></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: geordnete Werte und empirisches Quantil</b><div class="anat-f">\[ \Chg{x_{(1)}}\le\Chg{x_{(2)}}\le\dots\le\Chg{x_{(\Par{n})}},\qquad \Res{q_{\Par{\alpha}}}=\begin{cases}\tfrac12\big(x_{(\alpha n)}+x_{(\alpha n+1)}\big) & \alpha n\ \text{ganzzahlig}\\ x_{(\lceil\alpha n\rceil)} & \text{sonst}\end{cases} \]</div><div class="anat"><div><span class="sym">\(x_{(k)}\)</span><span>der k-kleinste Wert; Klammer im Index = geordnet. \(x_{(1)}\) ist das Minimum, \(x_{(n)}\) das Maximum</span></div><div><span class="sym">\(\lceil\alpha n\rceil\)</span><span>aufrunden auf die nächste ganze Zahl</span></div><div><span class="sym">\(q_{\alpha}\)</span><span>das empirische \((\alpha\cdot100)\)-%-Quantil: ca. \(\alpha\cdot100\) % der Werte liegen darunter. Ist \(\alpha n\) ganzzahlig, mittelt man zwei Nachbarn</span></div></div><div class="read">📖 <b>Vorlesen:</b> „x in Klammern eins bis x in Klammern n: die aufsteigend geordnete Stichprobe. Das alpha-Quantil ist die geordnete Beobachtung an der Stelle Aufrunden von alpha mal n.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Datensatz (n = 8): 2, 3, 5, 6, 8, 9, 11, 14. Bestimme das 25 %-Quantil.</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„α-%-Quantil, Perzentil, unteres oder oberes Quartil“.</div><div><i>⚙️ LÖSEN</i>\(\alpha n=0.25\cdot8=2\) ganzzahlig → \(\tfrac12(x_{(2)}+x_{(3)})=\tfrac12(3+5)=\Res{4}\).</div><div><i>🗣️ SAGEN</i>„Da 0.25·8 = 2 ganzzahlig ist, mittelt man x₍₂₎ und x₍₃₎: q₀.₂₅ = 4.“</div></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Median, Quartile und IQR (die robusten Kennzahlen)</b><div class="anat-f">\[ q_{0.5}=\begin{cases}\tfrac12\big(x_{(n/2)}+x_{(n/2+1)}\big) & n\ \text{gerade}\\ x_{((n+1)/2)} & n\ \text{ungerade}\end{cases},\qquad \Res{\text{IQR}}=q_{0.75}-q_{0.25} \]</div><div class="anat"><div><span class="sym">\(\text{Median }q_{0.5}\)</span><span>das 50-%-Quantil: steht „in der Mitte“ der geordneten Stichprobe. Lagekennzahl wie \(\bar x\), aber robust</span></div><div><span class="sym">\(\text{Quartile}\)</span><span>unteres Quartil = \(q_{0.25}\), oberes = \(q_{0.75}\)</span></div><div><span class="sym">\(\text{IQR}\)</span><span>Quartilsdifferenz (interquartile range): robustes Streuungsmaß, Breite der mittleren 50 %</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Der Median ist das 50-Prozent-Quantil; die Quartilsdifferenz ist oberes minus unteres Quartil.“</div></div>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🛡️ Robust heißt:</b> Erhöht man den größten Wert nochmals drastisch (Tippfehler, eine Null zu viel), ändert sich der Median nicht, weil er nur schaut, ob links und rechts gleich viele Punkte liegen. Das arithmetische Mittel dagegen kippt sofort.</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Für 2, 3, 5, 6, 8, 9, 11, 14 (n = 8): Median und Quartilsdifferenz IQR?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„mittlerer Wert, robust, Streubreite der mittleren 50 %“.</div><div><i>⚙️ LÖSEN</i>Median \(=\tfrac12(6+8)=\Res{7}\). \(q_{0.75}=\tfrac12(9+11)=10\), IQR \(=10-4=\Res{6}\).</div><div><i>🗣️ SAGEN</i>„Median = 7, IQR = q₀.₇₅ − q₀.₂₅ = 10 − 4 = 6: beide robust gegen Ausreißer.“</div></div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: Old Faithful Geysir (n = 10 Eruptionsdauern)</b>
+  <p>Rohdaten (Minuten): 3.600, 1.800, 3.333, 2.283, 4.533, 2.883, 4.700, 3.600, 1.950, 4.350.</p>
+  <p>① Ordnen: 1.800 · 1.950 · 2.283 · 2.883 · 3.333 · 3.600 · 3.600 · 4.350 · 4.533 · 4.700</p>
+  <p>② Mittel und Streuung</p>\[\bar x=\Res{3.3032},\qquad s^2=\Res{1.11605},\qquad s=\Res{1.056433}\]
+  <p>③ Median (n = 10 gerade)</p>\[q_{0.5}=\tfrac12\big(x_{(5)}+x_{(6)}\big)=\tfrac12(3.333+3.600)=\Res{3.4665}\]
+  <p>④ 15 %-Quantil</p>\[\alpha n=0.15\cdot10=1.5\ \text{(nicht ganzzahlig)}\ \Rightarrow\ \lceil1.5\rceil=2\ \Rightarrow\ q_{0.15}=x_{(2)}=\Res{1.950}\]
+  <p class="small">Nachgerechnet (Python/numpy): x̄ = 3.3032, s² = 1.11605, s = 1.056433, Median = 3.4665, q₀.₁₅ = 1.950.</p>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Bei Old Faithful wird 4.700 versehentlich als 47.00 eingetippt. Wie ändern sich Mittel und Median?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„Tippfehler, Ausreißer, eine Null zu viel, extremer Wert“ → Robustheits-Frage.</div><div><i>⚙️ LÖSEN</i>Mittel: \(\tfrac{33.032-4.7+47}{10}=\Res{7.5332}\) min (springt!). Median: die mittleren zwei Werte bleiben 3.333 und 3.600 → \(\Res{3.4665}\) min (unverändert).</div><div><i>🗣️ SAGEN</i>„Das Mittel springt von 3.30 auf 7.53 min, der Median bleibt bei 3.4665 min: Musterbeleg für robust vs. empfindlich.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? robust vs. nicht robust</b>
+  <div class="ctl"><label>Ausreißer-Position <input type="range" id="rbX" min="0" max="60" step="0.5" value="6" data-fmt="1"><output for="rbX"></output></label></div>
+  <div id="rbPlot" class="plot" style="min-height:220px"></div>
+  <div class="out" id="rbOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> der Median (grün) bleibt fast stehen, das Mittel (rot) wird vom Ausreißer weggezogen.</div>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Jahresgehälter eines Teams, dazu ein Vorstand mit Millionengehalt. Welche Lagekennzahl berichtest du?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„Einkommen, Immobilienpreise, ein extrem großer Wert“ → schiefe Verteilung mit Ausreißer.</div><div><i>⚙️ LÖSEN</i>Median (robust) statt Mittel; das Mittel würde vom Ausreißer nach oben gezogen und wäre untypisch für „die meisten“.</div><div><i>🗣️ SAGEN</i>„Wegen des Ausreißers berichte ich den Median als typische Lage; das Mittel wäre nach oben verzerrt.“</div></div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔧 Wie berechnet man ein empirisches Quantil? (abstrakt)</b>
+  <ol class="cook"><li><b>Ordnen:</b> Stichprobe aufsteigend sortieren → \(x_{(1)}\le\dots\le x_{(n)}\).</li><li><b>Position rechnen:</b> \(\alpha\cdot n\) bilden.</li><li><b>Fall unterscheiden:</b> ganzzahlig → Mittel von \(x_{(\alpha n)}\) und \(x_{(\alpha n+1)}\); sonst → \(x_{(\lceil\alpha n\rceil)}\).</li></ol>
+  <p>Median = Spezialfall α = 0.5; Quartile = α = 0.25 bzw. 0.75. (Es gibt viele alternative Quantil-Definitionen; für großes n verschwinden die Unterschiede.)</p>
+</div>
+<div class="vs"><b>⚖ Skript vs. Software.</b> Die Skript-Definition ist in R <code>quantile(x, probs, type = 2)</code> und in numpy <code>np.quantile(x, probs, method="averaged_inverted_cdf")</code>. Der Standard beider Programme (Typ 7, lineare Interpolation) gibt bei kleinen n andere Zahlen. Für Prüfungsaufgaben „von Hand“ gilt die Skript-Definition; der Median ist in allen Definitionen gleich.</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> n = 20 Messungen, gesucht das 90 %-Quantil. Welche geordnete(n) Beobachtung(en)?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Beliebiges α: immer dasselbe Rezept.</div><div><i>⚙️ LÖSEN</i>\(0.9\cdot20=18\) ganzzahlig → \(q_{0.9}=\tfrac12(x_{(18)}+x_{(19)})\).</div><div><i>🗣️ SAGEN</i>„0.9·20 = 18 ist ganzzahlig, also q₀.₉ = ½(x₍₁₈₎ + x₍₁₉₎).“</div></div></div>
+<h3 id="s3-2-a" data-m="Kennzahlen-Tracer|x̄, s², Quantile in R/Python">Code: alle Kennzahlen Schritt für Schritt</h3>
+<p>Eingabe: beliebige Zahlen. Der Tracer summiert, bildet die Abweichungen, ordnet und bestimmt die Quartile genau nach der Skript-Regel.</p>
+<div id="trKz"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Kennzahlen</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Kennzahlen einer Stichprobe von Hand: Mittel, Varianz, Quantile wie im Skript"><span class="ln">1</span># Kennzahlen einer Stichprobe von Hand: Mittel, Varianz, Quantile wie im Skript</div><div class="row" data-src="x &lt;- c(12, 15, 11, 18, 14, 13, 30, 16)      # Daten x_1 bis x_n"><span class="ln">2</span>x &lt;- c(12, 15, 11, 18, 14, 13, 30, 16)      # Daten x_1 bis x_n</div><div class="row" data-src="n &lt;- length(x)                             # Stichprobenumfang"><span class="ln">3</span>n &lt;- length(x)                             # Stichprobenumfang</div><div class="row" data-src="summe &lt;- 0                                 # Summe aller Werte"><span class="ln">4</span>summe &lt;- 0                                 # Summe aller Werte</div><div class="row" data-src="for (i in 1:n) summe &lt;- summe + x[i]       # aufsummieren"><span class="ln">5</span>for (i in 1:n) summe &lt;- summe + x[i]       # aufsummieren</div><div class="row" data-src="xbar &lt;- summe / n                          # arithmetisches Mittel"><span class="ln">6</span>xbar &lt;- summe / n                          # arithmetisches Mittel</div><div class="row" data-src="q &lt;- 0                                     # Summe der quadrierten Abweichungen"><span class="ln">7</span>q &lt;- 0                                     # Summe der quadrierten Abweichungen</div><div class="row" data-src="for (i in 1:n) q &lt;- q + (x[i] - xbar)^2    # Abstand zum Mittel, quadriert"><span class="ln">8</span>for (i in 1:n) q &lt;- q + (x[i] - xbar)^2    # Abstand zum Mittel, quadriert</div><div class="row" data-src="s2 &lt;- q / (n - 1)                          # empirische Varianz mit Nenner n - 1"><span class="ln">9</span>s2 &lt;- q / (n - 1)                          # empirische Varianz mit Nenner n - 1</div><div class="row" data-src="s &lt;- sqrt(s2)                              # empirische Standardabweichung"><span class="ln">10</span>s &lt;- sqrt(s2)                              # empirische Standardabweichung</div><div class="row" data-src="xs &lt;- sort(x)                              # geordnete Werte x_(1) &lt;= ... &lt;= x_(n)"><span class="ln">11</span>xs &lt;- sort(x)                              # geordnete Werte x_(1) &lt;= ... &lt;= x_(n)</div><div class="row" data-src="quant &lt;- function(alpha) {                 # empirisches Quantil nach Skript"><span class="ln">12</span>quant &lt;- function(alpha) {                 # empirisches Quantil nach Skript</div><div class="row" data-src="  k &lt;- alpha * n                           # Position alpha * n"><span class="ln">13</span>  k &lt;- alpha * n                           # Position alpha * n</div><div class="row" data-src="  if (k == round(k)) (xs[k] + xs[k + 1]) / 2 else xs[ceiling(k)]   # ganzzahlig: mitteln"><span class="ln">14</span>  if (k == round(k)) (xs[k] + xs[k + 1]) / 2 else xs[ceiling(k)]   # ganzzahlig: mitteln</div><div class="row" data-src="}"><span class="ln">15</span>}</div><div class="row" data-src="c(xbar, s2, s, quant(0.25), quant(0.5), quant(0.75))"><span class="ln">16</span>c(xbar, s2, s, quant(0.25), quant(0.5), quant(0.75))</div><div class="row" data-src="# eingebaut: mean(x); var(x); sd(x); quantile(x, c(.25, .5, .75), type = 2)  (type 2 = Skript!)"><span class="ln">17</span># eingebaut: mean(x); var(x); sd(x); quantile(x, c(.25, .5, .75), type = 2)  (type 2 = Skript!)</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Kennzahlen</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Kennzahlen einer Stichprobe von Hand: Mittel, Varianz, Quantile wie im Skript"><span class="ln">1</span># Kennzahlen einer Stichprobe von Hand: Mittel, Varianz, Quantile wie im Skript</div><div class="row" data-src="import math"><span class="ln">2</span>import math</div><div class="row" data-src="import numpy as np"><span class="ln">3</span>import numpy as np</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="x = [12, 15, 11, 18, 14, 13, 30, 16]       # Daten x_1 bis x_n"><span class="ln">5</span>x = [12, 15, 11, 18, 14, 13, 30, 16]       # Daten x_1 bis x_n</div><div class="row" data-src="n = len(x)                                 # Stichprobenumfang"><span class="ln">6</span>n = len(x)                                 # Stichprobenumfang</div><div class="row" data-src="summe = 0                                  # Summe aller Werte"><span class="ln">7</span>summe = 0                                  # Summe aller Werte</div><div class="row" data-src="for i in range(n): summe += x[i]           # aufsummieren"><span class="ln">8</span>for i in range(n): summe += x[i]           # aufsummieren</div><div class="row" data-src="xbar = summe / n                           # arithmetisches Mittel"><span class="ln">9</span>xbar = summe / n                           # arithmetisches Mittel</div><div class="row" data-src="q = 0.0                                    # Summe der quadrierten Abweichungen"><span class="ln">10</span>q = 0.0                                    # Summe der quadrierten Abweichungen</div><div class="row" data-src="for i in range(n): q += (x[i] - xbar) ** 2 # Abstand zum Mittel, quadriert"><span class="ln">11</span>for i in range(n): q += (x[i] - xbar) ** 2 # Abstand zum Mittel, quadriert</div><div class="row" data-src="s2 = q / (n - 1)                           # empirische Varianz mit Nenner n - 1"><span class="ln">12</span>s2 = q / (n - 1)                           # empirische Varianz mit Nenner n - 1</div><div class="row" data-src="s = math.sqrt(s2)                          # empirische Standardabweichung"><span class="ln">13</span>s = math.sqrt(s2)                          # empirische Standardabweichung</div><div class="row" data-src="xs = sorted(x)                             # geordnete Werte x_(1) &lt;= ... &lt;= x_(n)"><span class="ln">14</span>xs = sorted(x)                             # geordnete Werte x_(1) &lt;= ... &lt;= x_(n)</div><div class="row" data-src="def quant(alpha):                          # empirisches Quantil nach Skript"><span class="ln">15</span>def quant(alpha):                          # empirisches Quantil nach Skript</div><div class="row" data-src="    k = alpha * n                          # Position alpha * n"><span class="ln">16</span>    k = alpha * n                          # Position alpha * n</div><div class="row" data-src="    return (xs[round(k) - 1] + xs[round(k)]) / 2 if k == round(k) else xs[math.ceil(k) - 1]   # Python zählt ab 0"><span class="ln">17</span>    return (xs[round(k) - 1] + xs[round(k)]) / 2 if k == round(k) else xs[math.ceil(k) - 1]   # Python zählt ab 0</div><div class="row" data-src="print(xbar, s2, s, quant(0.25), quant(0.5), quant(0.75))"><span class="ln">18</span>print(xbar, s2, s, quant(0.25), quant(0.5), quant(0.75))</div><div class="row" data-src="# eingebaut: np.mean(x); np.var(x, ddof=1); np.std(x, ddof=1)"><span class="ln">19</span># eingebaut: np.mean(x); np.var(x, ddof=1); np.std(x, ddof=1)</div><div class="row" data-src="print(np.quantile(x, [.25, .5, .75], method=&quot;averaged_inverted_cdf&quot;))   # = Skript-Definition"><span class="ln">20</span>print(np.quantile(x, [.25, .5, .75], method=&quot;averaged_inverted_cdf&quot;))   # = Skript-Definition</div></pre></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/The mean, the median, and the mode. [-14BImgVENA].mp4"><span class="vt">🎬 The mean, the median, and the mode.</span> <span class="muted small">Mittel, Median, Modus</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/The mean, the median, and the mode. [-14BImgVENA].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Calculating the Mean, Variance and Standard Deviation, Clearly Explained!!! [SzZ6GpcfoQY].mp4"><span class="vt">🎬 Calculating the Mean, Variance and Standard Deviation, Clearly Explained!!!</span> <span class="muted small">x̄, s², s</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Calculating the Mean, Variance and Standard Deviation, Clearly Explained!!! [SzZ6GpcfoQY].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Why Dividing By N Underestimates the Variance [sHRBg6BhKjI].mp4"><span class="vt">🎬 Why Dividing By N Underestimates the Variance</span> <span class="muted small">warum n − 1</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Why Dividing By N Underestimates the Variance [sHRBg6BhKjI].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Quantiles and Percentiles, Clearly Explained!!! [IFKQLDmRK0Y].mp4"><span class="vt">🎬 Quantiles and Percentiles, Clearly Explained!!!</span> <span class="muted small">Quantile</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Quantiles and Percentiles, Clearly Explained!!! [IFKQLDmRK0Y].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 3.3 -->
+<section id="s3-3" data-vn data-m="3.3 Grafiken|Histogramm, Sturges, Boxplot, F_n">
+<h2><span class="num">3.3</span>Grafische Darstellungen</h2>
+<p class="one">Histogramm, Boxplot und empirische Verteilungsfunktion: drei Blickwinkel auf dieselbe Verteilung.</p>
+<div class="vonnull" id="vn-3-3" data-sec="3.3"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 3.3</span>Boxplot und F_n von Hand für acht Messwerte</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Für die Daten 11, 12, 13, 14, 15, 16, 18, 30 (aus 3.2): (a) Beschreibe den Boxplot vollständig (Box, Median-Strich, Whisker-Enden, Ausreißerpunkte). (b) Wie viele Klassen empfiehlt die Sturges-Regel? (c) Bestimme \(\FF_n(15)\) und \(\FF_n(15.5)\) und \(\FF_n(10)\).</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) Box und Strich.</b> Box von \(q_{0.25}=12.5\) bis \(q_{0.75}=17\), Median-Strich bei 14.5.</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(a) Whisker.</b> Grenzen \(12.5-6.75=5.75\) und \(17+6.75=23.75\). Whisker reichen bis zum extremsten Wert <i>innerhalb</i> der Grenzen: unten bis 11, oben bis 18. Der Wert 30 wird als Punkt gezeichnet.</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(b) Sturges.</b> \(\lceil1+\log_2 8\rceil=\lceil1+3\rceil=\Res{4}\) Klassen.</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(c) Anteile zählen.</b> \(\FF_n(15)=\tfrac{\#\{x_i\le15\}}{8}=\tfrac58=\Res{0.625}\); \(\FF_n(15.5)=\tfrac58\) (zwischen den Daten bleibt die Treppe flach); \(\FF_n(10)=0\).</div></div>
+  <div class="vn-res">✔ Box [12.5, 17], Median 14.5, Whisker 11 bis 18, Ausreißer 30; Sturges: 4 Klassen; F_n(15) = F_n(15.5) = 0.625, F_n(10) = 0.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Der Whisker endet nicht bei der Grenze 23.75, sondern beim letzten Datenpunkt innerhalb der Grenze (18).</div>
+</details></div>
+<div class="gblk is-g"><div><p>Drei Standardgrafiken für einen eindimensionalen Datensatz: <b>Histogramm</b>, <b>Boxplot</b> und <b>empirische Verteilungsfunktion</b>. Jede zeigt die Verteilung aus einem anderen Blickwinkel.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Histogramm</b><div class="anat-f">\[ \text{Balkenhöhe}\ \propto\ \frac{h_{\Idx{k}}}{c_{\Idx{k}}-c_{\Idx{k}-1}}\quad\Rightarrow\quad\text{Balkenfläche}\ \propto\ h_{\Idx{k}}\ (\text{Anzahl in der Klasse}) \]</div><div class="anat"><div><span class="sym">\((c_{k-1},c_k]\)</span><span>die k-te Klasse (Intervall). Man teilt den Wertebereich in Klassen auf</span></div><div><span class="sym">\(h_k\)</span><span>Anzahl Beobachtungen in Klasse k (Häufigkeit)</span></div><div><span class="sym">\(\text{Fläche}\)</span><span>proportional zur Anzahl; bei gleichen Klassenbreiten darf man direkt die Anzahl auftragen. Normiert (Gesamtfläche 1) ist das Histogramm die empirische Version der Dichte</span></div><div><span class="sym">\(\text{Sturges}\)</span><span>\(\text{Anzahl Klassen}=\lceil1+\log_2(n)\rceil\). Zu breite Klassen → „Erosion“: Gipfel werden abgetragen, Täler aufgefüllt</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Balkenhöhe proportional zur Häufigkeit durch Klassenbreite: so ist die Fläche proportional zur Anzahl. Die Sturges-Regel schlägt Aufrunden von eins plus Logarithmus zur Basis 2 von n Klassen vor.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Ein Datensatz hat n = 100 Werte. Wie viele Klassen empfiehlt die Sturges-Regel?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„wie viele Klassen, Balken, Bins“.</div><div><i>⚙️ LÖSEN</i>\(\lceil1+\log_2 100\rceil=\lceil7.64\rceil=\Res{8}\).</div><div><i>🗣️ SAGEN</i>„Sturges empfiehlt ⌈1 + log₂ 100⌉ = 8 Klassen.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? Histogramm-Explorer (Klassenzahl)</b>
+  <div class="ctl"><label>Anzahl Klassen <input type="range" id="hiK" min="1" max="40" value="10"><output for="hiK"></output></label></div>
+  <div id="hiPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> ein bimodaler Datensatz (zwei Gipfel, n = 200). Zu wenige Klassen verschmelzen die Gipfel; die gestrichelte Linie zeigt die Sturges-Empfehlung.</div>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Ein Histogramm zeigt zwei deutlich getrennte Gipfel. Was schließt du, und welche Einzelkennzahl wäre irreführend?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„zwei Gipfel, zwei Häufungen, Doppelspitze“ → bimodal.</div><div><i>⚙️ LÖSEN</i>Die Verteilung ist bimodal (evtl. zwei Gruppen im Datensatz). Eine einzelne Lagekennzahl läge im leeren Tal zwischen den Gipfeln.</div><div><i>🗣️ SAGEN</i>„Die Verteilung ist bimodal; ein einzelner Lagewert landet im Tal zwischen den Gipfeln und beschreibt keinen der beiden: besser zwei Gruppen trennen.“</div></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Boxplot</b><div class="anat"><div><span class="sym">\(\text{Box}\)</span><span>Rechteck vom unteren bis zum oberen Quartil (25 % → 75 %); ihre Länge ist die IQR</span></div><div><span class="sym">\(\text{Strich}\)</span><span>der Median (50 %)</span></div><div><span class="sym">\(\text{Whisker}\)</span><span>reichen bis zum kleinsten/größten „normalen“ Wert, höchstens \(1.5\cdot\text{IQR}\) vom jeweiligen Quartil entfernt</span></div><div><span class="sym">\(\text{Punkte}\)</span><span>Ausreißer: Werte, die weiter als \(1.5\cdot\text{IQR}\) außerhalb liegen</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Die Box geht vom unteren zum oberen Quartil, der Strich ist der Median, die Whisker reichen höchstens anderthalb Quartilsabstände weit, alles darüber hinaus sind Ausreißerpunkte.“</div></div>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡</b> Ideal, um viele Verteilungen nebeneinander zu vergleichen (verschiedene Orte/Bedingungen). Aber Vorsicht: ein Boxplot zeigt keine mehrgipfeligen (bimodalen) Strukturen; dafür braucht man das Histogramm.</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Ein Boxplot hat Q₁ = 20 und Q₃ = 32. Ab welchem Wert ist eine Beobachtung ein Ausreißer nach oben?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„Ausreißer, Whisker, 1.5·IQR, noch normaler Wert“.</div><div><i>⚙️ LÖSEN</i>IQR = 12; obere Grenze \(=32+1.5\cdot12=\Res{50}\).</div><div><i>🗣️ SAGEN</i>„Mit IQR = 12 liegt die Ausreißergrenze bei Q₃ + 1.5·IQR = 50; alles darüber wird als Punkt gezeichnet.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? Boxplot-Baukasten</b>
+  <div class="ctl"><label>ein Wert wird verschoben nach <input type="range" id="bxV" min="-20" max="60" step="0.5" value="30" data-fmt="1"><output for="bxV"></output></label></div>
+  <div id="bxPlot" class="plot" style="min-height:220px"></div>
+  <div class="out" id="bxOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> Box = Quartile, Strich = Median, gestrichelte Linien = 1.5-IQR-Grenzen; Punkte außerhalb sind Ausreißer. Daten wie in der Von-null-Karte, der letzte Wert (30) ist verschiebbar.</div>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Zwei Boxplots nebeneinander: A hat den höheren Median-Strich, B die breitere Box. Was bedeutet das?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„vergleiche, mehrere Gruppen, nebeneinander“.</div><div><i>⚙️ LÖSEN</i>A liegt in der Lage höher (größerer Median); B streut stärker (größere IQR).</div><div><i>🗣️ SAGEN</i>„Gruppe A hat die höhere zentrale Lage, Gruppe B die größere Streuung.“</div></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: empirische kumulative Verteilungsfunktion F_n</b><div class="anat-f">\[ \Res{\FF_{\Par{n}}(x)}=\frac{1}{\Par{n}}\,\underbrace{\#\{\Idx{i}:\ \Mem{x_{\Idx{i}}}\Cond{\le}x\}}_{\text{Anzahl Werte}\le x}\ \in[0,1] \]</div><div class="anat"><div><span class="sym">\(\FF_n(x)\)</span><span>der Anteil der Beobachtungen, die ≤ x sind. Empirisches Pendant zu \(\FF(x)=\PP(\mX\le x)\)</span></div><div><span class="sym">\(\text{Treppe}\)</span><span>Sprung der Höhe 1/n an jedem Datenpunkt (Vielfaches, falls Werte mehrfach). Links vom Minimum 0, rechts vom Maximum 1</span></div><div><span class="sym">\(\text{Steilheit}\)</span><span>wo viele Punkte liegen (Histogramm-Gipfel), steigt \(\FF_n\) steil</span></div></div><div class="read">📖 <b>Vorlesen:</b> „F n von x gleich eins durch n mal Anzahl der i mit x i kleiner gleich x: der Anteil der Daten bis zur Stelle x.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> \(\FF_n(5)=0.7\) bei n = 20. Wie viele Beobachtungen sind ≤ 5?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„Anteil, wie viele Prozent, kumuliert, F_n“.</div><div><i>⚙️ LÖSEN</i>\(0.7\cdot20=\Res{14}\).</div><div><i>🗣️ SAGEN</i>„F_n(5) = 0.7 heißt: 70 %, also 14 der 20 Beobachtungen, sind ≤ 5.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? empirische Verteilungsfunktion</b>
+  <div id="ecPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> dieselben bimodalen Daten als Treppe \(\FF_n\). Jeder Datenpunkt (unten als Strich) hebt die Treppe um 1/n. Zwei steile Abschnitte = die zwei Gipfel.</div>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> In der empirischen Verteilungsfunktion ist ein Bereich sehr steil. Was sagt das über die Daten dort?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„steil, flach, großer Sprung in F_n“.</div><div><i>⚙️ LÖSEN</i>Viele Datenpunkte dicht beieinander → viele 1/n-Sprünge → steil (Histogramm-Gipfel). Flach = wenige/keine Daten.</div><div><i>🗣️ SAGEN</i>„Ein steiler Abschnitt von F_n zeigt eine Häufung von Beobachtungen: genau dort liegt ein Histogramm-Gipfel.“</div></div></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Histogramm, Boxplot, F_n</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Histogramm, Boxplot und empirische Verteilungsfunktion"><span class="ln">1</span># Histogramm, Boxplot und empirische Verteilungsfunktion</div><div class="row" data-src="x &lt;- c(3.600, 1.800, 3.333, 2.283, 4.533, 2.883, 4.700, 3.600, 1.950, 4.350)   # Old Faithful (min)"><span class="ln">2</span>x &lt;- c(3.600, 1.800, 3.333, 2.283, 4.533, 2.883, 4.700, 3.600, 1.950, 4.350)   # Old Faithful (min)</div><div class="row" data-src="k &lt;- ceiling(1 + log2(length(x)))          # Sturges: Anzahl Klassen"><span class="ln">3</span>k &lt;- ceiling(1 + log2(length(x)))          # Sturges: Anzahl Klassen</div><div class="row" data-src="hist(x, breaks = k, freq = FALSE)          # Histogramm mit Fläche 1 = empirische Dichte"><span class="ln">4</span>hist(x, breaks = k, freq = FALSE)          # Histogramm mit Fläche 1 = empirische Dichte</div><div class="row" data-src="boxplot(x, horizontal = TRUE)              # Box = Quartile, Strich = Median, Whisker bis 1.5 IQR"><span class="ln">5</span>boxplot(x, horizontal = TRUE)              # Box = Quartile, Strich = Median, Whisker bis 1.5 IQR</div><div class="row" data-src="plot(ecdf(x))                              # Treppe F_n(x)"><span class="ln">6</span>plot(ecdf(x))                              # Treppe F_n(x)</div><div class="row" data-src="Fn &lt;- ecdf(x); Fn(3.5)                     # Anteil der Daten &lt;= 3.5"><span class="ln">7</span>Fn &lt;- ecdf(x); Fn(3.5)                     # Anteil der Daten &lt;= 3.5</div><div class="row" data-src="boxplot.stats(x)$out                       # Ausreißer nach der 1.5-IQR-Regel"><span class="ln">8</span>boxplot.stats(x)$out                       # Ausreißer nach der 1.5-IQR-Regel</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Histogramm, Boxplot, F_n</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Histogramm, Boxplot und empirische Verteilungsfunktion"><span class="ln">1</span># Histogramm, Boxplot und empirische Verteilungsfunktion</div><div class="row" data-src="import math"><span class="ln">2</span>import math</div><div class="row" data-src="import numpy as np"><span class="ln">3</span>import numpy as np</div><div class="row" data-src="import matplotlib.pyplot as plt"><span class="ln">4</span>import matplotlib.pyplot as plt</div><div class="row" data-src=""><span class="ln">5</span></div><div class="row" data-src="x = np.array([3.600, 1.800, 3.333, 2.283, 4.533, 2.883, 4.700, 3.600, 1.950, 4.350])   # Old Faithful (min)"><span class="ln">6</span>x = np.array([3.600, 1.800, 3.333, 2.283, 4.533, 2.883, 4.700, 3.600, 1.950, 4.350])   # Old Faithful (min)</div><div class="row" data-src="k = math.ceil(1 + math.log2(len(x)))       # Sturges: Anzahl Klassen"><span class="ln">7</span>k = math.ceil(1 + math.log2(len(x)))       # Sturges: Anzahl Klassen</div><div class="row" data-src="fig, ax = plt.subplots(1, 3, figsize=(12, 3.5))"><span class="ln">8</span>fig, ax = plt.subplots(1, 3, figsize=(12, 3.5))</div><div class="row" data-src="ax[0].hist(x, bins=k, density=True)        # Histogramm mit Fläche 1 = empirische Dichte"><span class="ln">9</span>ax[0].hist(x, bins=k, density=True)        # Histogramm mit Fläche 1 = empirische Dichte</div><div class="row" data-src="ax[1].boxplot(x, orientation=&quot;horizontal&quot;)             # Box = Quartile, Strich = Median, Whisker bis 1.5 IQR"><span class="ln">10</span>ax[1].boxplot(x, orientation=&quot;horizontal&quot;)             # Box = Quartile, Strich = Median, Whisker bis 1.5 IQR</div><div class="row" data-src="xs = np.sort(x); ax[2].step(xs, np.arange(1, len(x) + 1) / len(x), where=&quot;post&quot;)   # Treppe F_n(x)"><span class="ln">11</span>xs = np.sort(x); ax[2].step(xs, np.arange(1, len(x) + 1) / len(x), where=&quot;post&quot;)   # Treppe F_n(x)</div><div class="row" data-src="print(np.mean(x &lt;= 3.5))                   # F_n(3.5) = Anteil der Daten &lt;= 3.5"><span class="ln">12</span>print(np.mean(x &lt;= 3.5))                   # F_n(3.5) = Anteil der Daten &lt;= 3.5</div><div class="row" data-src="plt.show()"><span class="ln">13</span>plt.show()</div></pre></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/StatQuest： Histograms, Clearly Explained [qBigTkBLU6g].mp4"><span class="vt">🎬 StatQuest: Histograms, Clearly Explained</span> <span class="muted small">Histogramm</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/StatQuest： Histograms, Clearly Explained [qBigTkBLU6g].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Boxplots are Awesome!!! [fHLhBnmwUM0].mp4"><span class="vt">🎬 Boxplots are Awesome!!!</span> <span class="muted small">Boxplot</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Boxplots are Awesome!!! [fHLhBnmwUM0].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Bar Charts Are Better than Pie Charts [RiEZ_hEf96A].mp4"><span class="vt">🎬 Bar Charts Are Better than Pie Charts</span> <span class="muted small">Balken statt Torte</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Bar Charts Are Better than Pie Charts [RiEZ_hEf96A].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 3.4 -->
+<section id="s3-4" data-vn data-m="3.4 Korrelation|s_xy, r ∈ [−1,1], Streudiagramm, Anscombe">
+<h2><span class="num">3.4</span>Mehrere Messgrößen: Korrelation</h2>
+<div class="vonnull" id="vn-3-4" data-sec="3.4"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 3.4</span>Korrelation von fünf Datenpaaren von Hand</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Fünf Paare \((x_i,y_i)\): (1, 2), (2, 4), (3, 5), (4, 4), (5, 5). Berechne \(s_{xy}\), \(s_x\), \(s_y\) und \(r\). Deute das Ergebnis.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Mittelwerte.</b> \(\bar x=3\), \(\bar y=\tfrac{20}{5}=4\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">Tabelle der Abweichungen.</b> 
+  <table class="tbl"><tr><th>i</th><th class="r">\(x_i-\bar x\)</th><th class="r">\(y_i-\bar y\)</th><th class="r">Produkt</th><th class="r">\((x_i-\bar x)^2\)</th><th class="r">\((y_i-\bar y)^2\)</th></tr>
+  <tr><td>1</td><td class="r">−2</td><td class="r">−2</td><td class="r">4</td><td class="r">4</td><td class="r">4</td></tr>
+  <tr><td>2</td><td class="r">−1</td><td class="r">0</td><td class="r">0</td><td class="r">1</td><td class="r">0</td></tr>
+  <tr><td>3</td><td class="r">0</td><td class="r">1</td><td class="r">0</td><td class="r">0</td><td class="r">1</td></tr>
+  <tr><td>4</td><td class="r">1</td><td class="r">0</td><td class="r">0</td><td class="r">1</td><td class="r">0</td></tr>
+  <tr><td>5</td><td class="r">2</td><td class="r">1</td><td class="r">2</td><td class="r">4</td><td class="r">1</td></tr>
+  <tr><td>Σ</td><td></td><td></td><td class="r"><b>6</b></td><td class="r"><b>10</b></td><td class="r"><b>6</b></td></tr></table></div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">Einsetzen.</b> 
+  \[\begin{aligned}
+  s_{xy} &= \tfrac{6}{4}=1.5,\quad s_x=\sqrt{\tfrac{10}{4}}=1.5811,\quad s_y=\sqrt{\tfrac64}=1.2247 && \text{Nenner n − 1 = 4} \\
+  \Res{r} &= \frac{s_{xy}}{s_x\,s_y}=\frac{1.5}{1.5811\cdot1.2247}=\frac{6}{\sqrt{10\cdot6}}\approx\Res{0.775} && \text{die Nenner n − 1 kürzen sich}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">Deuten.</b> Positiv (je größer x, desto eher größer y), mittelstark bis stark linear. Streudiagramm ansehen: die Punkte steigen, flachen aber ab.</div></div>
+  <div class="vn-res">✔ \(s_{xy}=1.5\), \(s_x\approx1.581\), \(s_y\approx1.225\), \(r\approx0.775\).</div>
+</details></div>
+<div class="gblk is-g"><div><p>Oft liegen Daten paarweise vor: \((\Mem{x_1},\Mem{y_1}),\dots,(\Mem{x_n},\Mem{y_n})\), z. B. Verkehr an zwei Tunneln am selben Tag. Wie stark hängen x und y <b>linear</b> zusammen?</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: empirische Korrelation r und Kovarianz s_xy</b><div class="anat-f">\[ \Res{r}=\frac{s_{xy}}{s_x\,s_y}\in[-1,1],\qquad s_{xy}=\frac{1}{\Par{n}-1}\sum_{\Idx{i}=1}^{\Par{n}}(\Chg{\Mem{x_{\Idx{i}}}-\bar x})(\Chg{\Mem{y_{\Idx{i}}}-\bar y}) \]</div><div class="anat"><div><span class="sym">\(r\)</span><span>die empirische Korrelation: dimensionslos, immer zwischen −1 und +1. Vorzeichen = Richtung, Betrag = Stärke der linearen Abhängigkeit</span></div><div><span class="sym">\(s_{xy}\)</span><span>die empirische Kovarianz: weichen x und y gemeinsam in dieselbe Richtung vom Mittel ab? (n − 1 wie bei s²)</span></div><div><span class="sym">\(s_x,\ s_y\)</span><span>die Standardabweichungen von x bzw. y; sie normieren die Kovarianz auf [−1, 1]</span></div><div><span class="sym">\(r=\pm1\)</span><span>genau dann, wenn alle Punkte auf einer Geraden \(y_i=a+bx_i\) liegen (\(b>0\) bzw. \(b<0\))</span></div></div><div class="read">📖 <b>Vorlesen:</b> „r gleich s x y durch (s x mal s y): die Kovarianz, normiert mit den beiden Standardabweichungen; sie liegt immer zwischen minus eins und plus eins.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Zwischen zwei Größen ist r = −0.9. Interpretiere Richtung und Stärke.</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„Zusammenhang, je … desto, Korrelation, linear abhängig“.</div><div><i>⚙️ LÖSEN</i>Vorzeichen − → gegenläufig; |r| = 0.9 nahe 1 → starker linearer Zusammenhang.</div><div><i>🗣️ SAGEN</i>„r = −0.9: starker (Betrag nahe 1) und negativer (gegenläufiger) linearer Zusammenhang.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? Korrelations-Explorer</b>
+  <div class="ctl"><label>Ziel-Korrelation r <input type="range" id="coR" min="-1" max="1" step="0.05" value="0.8" data-fmt="2"><output for="coR"></output></label>
+  <button class="btn" id="coNew">🎲 neue Punkte</button></div>
+  <div id="coPlot" class="plot"></div>
+  <div class="out" id="coOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> bei r = ±1 liegen alle Punkte auf einer Geraden; bei r = 0 keine lineare Struktur. Das Vorzeichen dreht die Steigung.</div>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Ein Streudiagramm zeigt eine perfekte U-Form (Parabel). Welchen r-Wert erwartest du?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„Streudiagramm, gekrümmt, U-Form, offensichtlich nichtlinear“.</div><div><i>⚙️ LÖSEN</i>\(r\approx0\): r misst nur den linearen Anteil. Die symmetrische U-Form hat keinen linearen Trend.</div><div><i>🗣️ SAGEN</i>„r ≈ 0: es gibt einen klaren, aber nichtlinearen Zusammenhang, und r sieht nur den linearen Anteil.“</div></div></div>
+<div class="trap is-g"><b>⚠ Achtung: nie r „blind“ berechnen.</b> Ganz verschiedene Strukturen können denselben r-Wert liefern. Das berühmte <b>Anscombe-Quartett</b>: vier völlig unterschiedliche Datensätze (Gerade, Kurve, Ausreißer) haben alle r = 0.82. Deshalb: immer zuerst das Streudiagramm anschauen, dann erst r interpretieren. <span class="srcin">📘 Grundlage</span></div>
+<div class="viz has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>👁️ Woran erkennbar? Anscombe-Quartett</b>
+  <div id="anPlot" class="plot" style="min-height:420px"></div>
+  <div class="recog"><b>Erkennbar an:</b> alle vier haben \(\bar x=9\), \(\bar y\approx7.50\), \(r\approx0.816\) und dieselbe Ausgleichsgerade \(y\approx3+0.5x\), sehen aber völlig anders aus.</div>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Zwei Datensätze haben beide r = 0.82. Darfst du daraus schließen, sie „sehen gleich aus“?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>„gleicher r-Wert, nur die Zahl gegeben, kein Plot“.</div><div><i>⚙️ LÖSEN</i>Nein: Anscombe-Quartett: identisches r, völlig verschiedene Formen. Erst das Streudiagramm entscheidet.</div><div><i>🗣️ SAGEN</i>„Nein: gleicher r-Wert sagt nichts über die Form; ohne Streudiagramm darf ich nicht auf gleiche Struktur schließen (Anscombe).“</div></div></div>
+<div id="trKor"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Kovarianz und Korrelation</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Empirische Kovarianz und Korrelation Schritt für Schritt"><span class="ln">1</span># Empirische Kovarianz und Korrelation Schritt für Schritt</div><div class="row" data-src="x &lt;- c(1, 2, 3, 4, 5)                      # erste Messgröße"><span class="ln">2</span>x &lt;- c(1, 2, 3, 4, 5)                      # erste Messgröße</div><div class="row" data-src="y &lt;- c(2, 4, 5, 4, 5)                      # zweite Messgröße, paarweise zu x"><span class="ln">3</span>y &lt;- c(2, 4, 5, 4, 5)                      # zweite Messgröße, paarweise zu x</div><div class="row" data-src="n &lt;- length(x); mx &lt;- mean(x); my &lt;- mean(y)   # Umfang und Mittelwerte"><span class="ln">4</span>n &lt;- length(x); mx &lt;- mean(x); my &lt;- mean(y)   # Umfang und Mittelwerte</div><div class="row" data-src="sxy &lt;- 0; sxx &lt;- 0; syy &lt;- 0               # drei Summen"><span class="ln">5</span>sxy &lt;- 0; sxx &lt;- 0; syy &lt;- 0               # drei Summen</div><div class="row" data-src="for (i in 1:n) {                           # jedes Paar einmal"><span class="ln">6</span>for (i in 1:n) {                           # jedes Paar einmal</div><div class="row" data-src="  dx &lt;- x[i] - mx; dy &lt;- y[i] - my         # Abweichungen vom jeweiligen Mittel"><span class="ln">7</span>  dx &lt;- x[i] - mx; dy &lt;- y[i] - my         # Abweichungen vom jeweiligen Mittel</div><div class="row" data-src="  sxy &lt;- sxy + dx * dy                     # gemeinsame Abweichung"><span class="ln">8</span>  sxy &lt;- sxy + dx * dy                     # gemeinsame Abweichung</div><div class="row" data-src="  sxx &lt;- sxx + dx^2; syy &lt;- syy + dy^2     # quadrierte Abweichungen"><span class="ln">9</span>  sxx &lt;- sxx + dx^2; syy &lt;- syy + dy^2     # quadrierte Abweichungen</div><div class="row" data-src="}"><span class="ln">10</span>}</div><div class="row" data-src="r &lt;- sxy / sqrt(sxx * syy)                 # r = s_xy / (s_x s_y), Nenner n - 1 kürzt sich"><span class="ln">11</span>r &lt;- sxy / sqrt(sxx * syy)                 # r = s_xy / (s_x s_y), Nenner n - 1 kürzt sich</div><div class="row" data-src="cat(&quot;s_xy =&quot;, sxy / (n - 1), &quot; r =&quot;, r, &quot;\n&quot;)"><span class="ln">12</span>cat(&quot;s_xy =&quot;, sxy / (n - 1), &quot; r =&quot;, r, &quot;\n&quot;)</div><div class="row" data-src="# eingebaut: cov(x, y); cor(x, y); plot(x, y)"><span class="ln">13</span># eingebaut: cov(x, y); cor(x, y); plot(x, y)</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Kovarianz und Korrelation</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Empirische Kovarianz und Korrelation Schritt für Schritt"><span class="ln">1</span># Empirische Kovarianz und Korrelation Schritt für Schritt</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src=""><span class="ln">3</span></div><div class="row" data-src="x = np.array([1, 2, 3, 4, 5])              # erste Messgröße"><span class="ln">4</span>x = np.array([1, 2, 3, 4, 5])              # erste Messgröße</div><div class="row" data-src="y = np.array([2, 4, 5, 4, 5])              # zweite Messgröße, paarweise zu x"><span class="ln">5</span>y = np.array([2, 4, 5, 4, 5])              # zweite Messgröße, paarweise zu x</div><div class="row" data-src="n, mx, my = len(x), x.mean(), y.mean()     # Umfang und Mittelwerte"><span class="ln">6</span>n, mx, my = len(x), x.mean(), y.mean()     # Umfang und Mittelwerte</div><div class="row" data-src="sxy = sxx = syy = 0.0                      # drei Summen"><span class="ln">7</span>sxy = sxx = syy = 0.0                      # drei Summen</div><div class="row" data-src="for i in range(n):                         # jedes Paar einmal"><span class="ln">8</span>for i in range(n):                         # jedes Paar einmal</div><div class="row" data-src="    dx, dy = x[i] - mx, y[i] - my          # Abweichungen vom jeweiligen Mittel"><span class="ln">9</span>    dx, dy = x[i] - mx, y[i] - my          # Abweichungen vom jeweiligen Mittel</div><div class="row" data-src="    sxy += dx * dy                         # gemeinsame Abweichung"><span class="ln">10</span>    sxy += dx * dy                         # gemeinsame Abweichung</div><div class="row" data-src="    sxx += dx ** 2; syy += dy ** 2         # quadrierte Abweichungen"><span class="ln">11</span>    sxx += dx ** 2; syy += dy ** 2         # quadrierte Abweichungen</div><div class="row" data-src="r = sxy / np.sqrt(sxx * syy)               # r = s_xy / (s_x s_y), Nenner n - 1 kürzt sich"><span class="ln">12</span>r = sxy / np.sqrt(sxx * syy)               # r = s_xy / (s_x s_y), Nenner n - 1 kürzt sich</div><div class="row" data-src="print(&quot;s_xy =&quot;, sxy / (n - 1), &quot; r =&quot;, r)"><span class="ln">13</span>print(&quot;s_xy =&quot;, sxy / (n - 1), &quot; r =&quot;, r)</div><div class="row" data-src="# eingebaut: np.cov(x, y)[0, 1]; np.corrcoef(x, y)[0, 1]"><span class="ln">14</span># eingebaut: np.cov(x, y)[0, 1]; np.corrcoef(x, y)[0, 1]</div></pre></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/Covariance, Clearly Explained!!! [qtaqvPAeEJY].mp4"><span class="vt">🎬 Covariance, Clearly Explained!!!</span> <span class="muted small">Kovarianz</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Covariance, Clearly Explained!!! [qtaqvPAeEJY].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Pearson&#x27;s Correlation, Clearly Explained!!! [xZ_z8KWkhXE].mp4"><span class="vt">🎬 Pearson&#x27;s Correlation, Clearly Explained!!!</span> <span class="muted small">Korrelation</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Pearson&#x27;s Correlation, Clearly Explained!!! [xZ_z8KWkhXE].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 3.4.1 Regression (Modul) -->
+<section id="s3-5" data-vn data-m="3.4.1 Lineare Regression|kleinste Quadrate, a, b, Residuen, R² (Modul)">
+<h2><span class="num">3.4.1</span>Lineare Regression: die Ausgleichsgerade <span class="srcin n">✚ Neu · Modulinhalt</span></h2>
+<p class="one">Die Modulbeschreibung nennt „Lineare Regression und t-Tests“. Hier der beschreibende Teil (Gerade durch die Punktwolke), in Kap. 8 der Test für die Steigung.</p>
+<div class="vonnull" id="vn-3-5" data-sec="3.4.1"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 3.4.1</span>Ausgleichsgerade, Vorhersage und R² für fünf Punkte</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Für die fünf Paare aus 3.4, (1, 2), (2, 4), (3, 5), (4, 4), (5, 5), bestimme (a) die Kleinste-Quadrate-Gerade \(\hat y=a+bx\), (b) die Vorhersage für \(x=6\), (c) die Residuen und das Bestimmtheitsmaß \(R^2\). (d) Wie hängt \(R^2\) mit r zusammen?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Was minimiert man?</b> Die Summe der quadrierten senkrechten Abstände (Residuen) \(\sum(\Mem{y_i}-(a+bx_i))^2\). Nullsetzen der Ableitungen nach a und b liefert die Formeln unten.</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(a) Steigung und Achsenabschnitt.</b> Aus 3.4: \(S_{xy}=\sum(x_i-\bar x)(y_i-\bar y)=6\), \(S_{xx}=\sum(x_i-\bar x)^2=10\).
+  \[\begin{aligned}
+  \Res{b} &= \frac{S_{xy}}{S_{xx}}=\frac{6}{10}=\Res{0.6} && \text{Steigung} \\
+  \Res{a} &= \bar y-b\,\bar x=4-0.6\cdot3=\Res{2.2} && \text{Gerade geht durch den Schwerpunkt }(\bar x,\bar y)
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(b) Vorhersage.</b> \(\hat y(6)=2.2+0.6\cdot6=\Res{5.8}\). (Vorsicht: 6 liegt außerhalb der Daten, Extrapolation.)</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(c) Residuen.</b> \(\hat y_i=2.8,3.4,4.0,4.6,5.2\); Residuen \(\Chg{e_i=y_i-\hat y_i}=-0.8,\ 0.6,\ 1.0,\ -0.6,\ -0.2\) (Summe 0 ✓).
+  \[\begin{aligned}
+  \text{SSE} &= 0.64+0.36+1+0.36+0.04=2.4 && \text{Residuen-Quadratsumme} \\
+  \text{SST} &= \sum(y_i-\bar y)^2=6 && \text{Gesamt-Streuung von y} \\
+  \Res{R^2} &= 1-\frac{\text{SSE}}{\text{SST}}=1-\frac{2.4}{6}=\Res{0.6} && \text{60 Prozent der Streuung von y erklärt}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">(d) Zusammenhang.</b> Bei einfacher linearer Regression gilt \(R^2=r^2=0.775^2=0.6\) ✓. Außerdem \(b=r\cdot\frac{s_y}{s_x}\).</div></div>
+  <div class="vn-res">✔ \(\hat y=2.2+0.6x\); \(\hat y(6)=5.8\); \(R^2=0.6=r^2\). R: <code>lm(y ~ x)</code>, Python: <code>stats.linregress(x, y)</code>.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Regression von y auf x ist nicht dasselbe wie von x auf y (andere Gerade!). Und ein hohes \(R^2\) beweist keinen ursächlichen Zusammenhang.</div>
+</details></div>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: Kleinste-Quadrate-Gerade</b><div class="anat-f">\[ \Res{b}=\frac{\sum_{\Idx{i}}(x_{\Idx{i}}-\bar x)(y_{\Idx{i}}-\bar y)}{\sum_{\Idx{i}}(x_{\Idx{i}}-\bar x)^2}=\frac{s_{xy}}{s_x^2},\qquad \Res{a}=\bar y-b\,\bar x,\qquad \Res{R^2}=1-\frac{\sum\Chg{e_{\Idx{i}}}^2}{\sum(y_{\Idx{i}}-\bar y)^2} \]</div><div class="anat"><div><span class="sym">\(b\)</span><span>Steigung: um wie viel ändert sich \(\hat y\), wenn x um 1 wächst</span></div><div><span class="sym">\(a\)</span><span>Achsenabschnitt: so gewählt, dass die Gerade durch den Schwerpunkt \((\bar x,\bar y)\) geht</span></div><div><span class="sym">\(\Chg{e_i}=y_i-\hat y_i\)</span><span>Residuum: der Teil von \(y_i\), den die Gerade nicht erklärt</span></div><div><span class="sym">\(R^2\)</span><span>Bestimmtheitsmaß: Anteil der Streuung von y, den die Gerade erklärt (0 bis 1); bei einer erklärenden Variable \(=r^2\)</span></div></div><div class="why">🧠 <b>Warum so?</b> Minimiere \(Q(a,b)=\sum(y_i-a-bx_i)^2\). \(\partial Q/\partial a=0\) gibt \(\bar y=a+b\bar x\); \(\partial Q/\partial b=0\) gibt dann \(b=S_{xy}/S_{xx}\).</div><div class="read">📖 <b>Vorlesen:</b> „b ist die Summe der Kreuzprodukte der Abweichungen geteilt durch die Summe der quadrierten x-Abweichungen; a ist y quer minus b mal x quer.“</div></div>
+<div class="viz has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>👁️ Woran erkennbar? Regression per Klick: Punkte setzen, Gerade und Residuen live</b>
+  <p class="small">Klicke in die Fläche, um Punkte hinzuzufügen; „Rückgängig“ entfernt den letzten. Rot gestrichelt = Residuen; ihre Quadratsumme wird von der Geraden minimiert.</p>
+  <div class="ctl"><button class="btn" id="rgUndo">↶ Rückgängig</button><button class="btn" id="rgReset">Beispiel laden</button><button class="btn" id="rgClear">leeren</button></div>
+  <div id="rgPlot" class="plot" style="min-height:360px;cursor:crosshair"></div>
+  <div class="out" id="rgOut"></div>
+</div>
+<div id="trReg"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Ausgleichsgerade</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Einfache lineare Regression mit der Methode der kleinsten Quadrate"><span class="ln">1</span># Einfache lineare Regression mit der Methode der kleinsten Quadrate</div><div class="row" data-src="x &lt;- c(1, 2, 3, 4, 5)                      # erklärende Variable"><span class="ln">2</span>x &lt;- c(1, 2, 3, 4, 5)                      # erklärende Variable</div><div class="row" data-src="y &lt;- c(2, 4, 5, 4, 5)                      # Zielgröße"><span class="ln">3</span>y &lt;- c(2, 4, 5, 4, 5)                      # Zielgröße</div><div class="row" data-src="mx &lt;- mean(x); my &lt;- mean(y)               # Schwerpunkt der Punktwolke"><span class="ln">4</span>mx &lt;- mean(x); my &lt;- mean(y)               # Schwerpunkt der Punktwolke</div><div class="row" data-src="Sxy &lt;- sum((x - mx) * (y - my))            # Summe der Kreuzprodukte"><span class="ln">5</span>Sxy &lt;- sum((x - mx) * (y - my))            # Summe der Kreuzprodukte</div><div class="row" data-src="Sxx &lt;- sum((x - mx)^2)                     # Summe der Quadrate in x"><span class="ln">6</span>Sxx &lt;- sum((x - mx)^2)                     # Summe der Quadrate in x</div><div class="row" data-src="b &lt;- Sxy / Sxx                             # Steigung"><span class="ln">7</span>b &lt;- Sxy / Sxx                             # Steigung</div><div class="row" data-src="a &lt;- my - b * mx                           # Achsenabschnitt: Gerade geht durch (mx, my)"><span class="ln">8</span>a &lt;- my - b * mx                           # Achsenabschnitt: Gerade geht durch (mx, my)</div><div class="row" data-src="yhat &lt;- a + b * x                          # vorhergesagte Werte auf der Geraden"><span class="ln">9</span>yhat &lt;- a + b * x                          # vorhergesagte Werte auf der Geraden</div><div class="row" data-src="res &lt;- y - yhat                            # Residuen: Abstand senkrecht zur x-Achse"><span class="ln">10</span>res &lt;- y - yhat                            # Residuen: Abstand senkrecht zur x-Achse</div><div class="row" data-src="R2 &lt;- 1 - sum(res^2) / sum((y - my)^2)     # Bestimmtheitsmaß"><span class="ln">11</span>R2 &lt;- 1 - sum(res^2) / sum((y - my)^2)     # Bestimmtheitsmaß</div><div class="row" data-src="cat(&quot;y =&quot;, a, &quot;+&quot;, b, &quot;x   R^2 =&quot;, R2, &quot;\n&quot;)"><span class="ln">12</span>cat(&quot;y =&quot;, a, &quot;+&quot;, b, &quot;x   R^2 =&quot;, R2, &quot;\n&quot;)</div><div class="row" data-src="fit &lt;- lm(y ~ x); coef(fit); summary(fit)$r.squared   # eingebaut"><span class="ln">13</span>fit &lt;- lm(y ~ x); coef(fit); summary(fit)$r.squared   # eingebaut</div><div class="row" data-src="plot(x, y); abline(fit)                    # Punktwolke mit Ausgleichsgerade"><span class="ln">14</span>plot(x, y); abline(fit)                    # Punktwolke mit Ausgleichsgerade</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Ausgleichsgerade</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Einfache lineare Regression mit der Methode der kleinsten Quadrate"><span class="ln">1</span># Einfache lineare Regression mit der Methode der kleinsten Quadrate</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src="from scipy import stats"><span class="ln">3</span>from scipy import stats</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="x = np.array([1, 2, 3, 4, 5])              # erklärende Variable"><span class="ln">5</span>x = np.array([1, 2, 3, 4, 5])              # erklärende Variable</div><div class="row" data-src="y = np.array([2, 4, 5, 4, 5])              # Zielgröße"><span class="ln">6</span>y = np.array([2, 4, 5, 4, 5])              # Zielgröße</div><div class="row" data-src="mx, my = x.mean(), y.mean()                # Schwerpunkt der Punktwolke"><span class="ln">7</span>mx, my = x.mean(), y.mean()                # Schwerpunkt der Punktwolke</div><div class="row" data-src="Sxy = np.sum((x - mx) * (y - my))          # Summe der Kreuzprodukte"><span class="ln">8</span>Sxy = np.sum((x - mx) * (y - my))          # Summe der Kreuzprodukte</div><div class="row" data-src="Sxx = np.sum((x - mx) ** 2)                # Summe der Quadrate in x"><span class="ln">9</span>Sxx = np.sum((x - mx) ** 2)                # Summe der Quadrate in x</div><div class="row" data-src="b = Sxy / Sxx                              # Steigung"><span class="ln">10</span>b = Sxy / Sxx                              # Steigung</div><div class="row" data-src="a = my - b * mx                            # Achsenabschnitt: Gerade geht durch (mx, my)"><span class="ln">11</span>a = my - b * mx                            # Achsenabschnitt: Gerade geht durch (mx, my)</div><div class="row" data-src="yhat = a + b * x                           # vorhergesagte Werte auf der Geraden"><span class="ln">12</span>yhat = a + b * x                           # vorhergesagte Werte auf der Geraden</div><div class="row" data-src="res = y - yhat                             # Residuen: Abstand senkrecht zur x-Achse"><span class="ln">13</span>res = y - yhat                             # Residuen: Abstand senkrecht zur x-Achse</div><div class="row" data-src="R2 = 1 - np.sum(res ** 2) / np.sum((y - my) ** 2)   # Bestimmtheitsmaß"><span class="ln">14</span>R2 = 1 - np.sum(res ** 2) / np.sum((y - my) ** 2)   # Bestimmtheitsmaß</div><div class="row" data-src="print(f&quot;y = {a:.4f} + {b:.4f} x   R^2 = {R2:.4f}&quot;)"><span class="ln">15</span>print(f&quot;y = {a:.4f} + {b:.4f} x   R^2 = {R2:.4f}&quot;)</div><div class="row" data-src="fit = stats.linregress(x, y); print(fit.intercept, fit.slope, fit.rvalue ** 2)   # eingebaut"><span class="ln">16</span>fit = stats.linregress(x, y); print(fit.intercept, fit.slope, fit.rvalue ** 2)   # eingebaut</div></pre></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.) [PaFPbb66DxQ].mp4"><span class="vt">🎬 The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.)</span> <span class="muted small">kleinste Quadrate</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.) [PaFPbb66DxQ].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Linear Regression, Clearly Explained!!! [7ArmBVF2dCs].mp4"><span class="vt">🎬 Linear Regression, Clearly Explained!!!</span> <span class="muted small">lineare Regression</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Linear Regression, Clearly Explained!!! [7ArmBVF2dCs].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/R-squared, Clearly Explained!!! [2AQKmw14mHM].mp4"><span class="vt">🎬 R-squared, Clearly Explained!!!</span> <span class="muted small">R²</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/R-squared, Clearly Explained!!! [2AQKmw14mHM].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Linear Regression in R, Step-by-Step [u1cc1r_Y7M0].mp4"><span class="vt">🎬 Linear Regression in R, Step-by-Step</span> <span class="muted small">in R</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Linear Regression in R, Step-by-Step [u1cc1r_Y7M0].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/The Essence of Linear Regression!!! [aFDOzpTeg0s].mp4"><span class="vt">🎬 The Essence of Linear Regression!!!</span> <span class="muted small">Essenz</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/The Essence of Linear Regression!!! [aFDOzpTeg0s].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 3.5 -->
+<section id="s3-6" data-vn data-m="3.5 Modell vs. Daten|empirisch schätzt theoretisch">
+<h2><span class="num">3.5</span>Modell vs. Daten: die zwei Welten</h2>
+<div class="vonnull" id="vn-3-6" data-sec="3.5"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 3.5</span>Würfeldaten gegen das Modell prüfen</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Ein Würfel wird 12-mal geworfen: 3, 6, 1, 4, 6, 2, 5, 6, 3, 6, 4, 6. (a) Berechne \(\bar x\) und \(s^2\). (b) Vergleiche mit \(\EE[\mX]\) und \(\Var(\mX)\) des fairen Würfels. (c) Vergleiche \(\FF_{12}(3)\) mit \(\FF(3)\). Deutet das auf einen gezinkten Würfel hin?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) Kennzahlen.</b> Summe = 52, \(\bar x=\tfrac{52}{12}\approx\Res{4.333}\). \(\sum x_i^2=260\), also \(s^2=\tfrac{260-12\cdot(52/12)^2}{11}=\tfrac{260-225.33}{11}\approx\Res{3.152}\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(b) Modell.</b> Fairer Würfel: \(\EE[\mX]=3.5\), \(\Var(\mX)=\tfrac{35}{12}\approx2.917\). Die Daten liegen höher und streuen etwas mehr (3.15 gegen 2.92).</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(c) Anteile.</b> \(\FF_{12}(3)=\tfrac{\#\{x_i\le3\}}{12}=\tfrac{4}{12}\approx0.333\) gegen \(\FF(3)=0.5\).</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">Deutung.</b> Fünf Sechsen in 12 Würfen sind auffällig, aber bei n = 12 schwanken empirische Größen stark. Ob der Unterschied „zu groß für Zufall“ ist, beantwortet erst ein Test (Kap. 7).</div></div>
+  <div class="vn-res">✔ \(\bar x\approx4.33\) vs. 3.5; \(s^2\approx3.15\) vs. 2.92; \(\FF_{12}(3)=0.33\) vs. 0.5: Verdacht, aber keine Entscheidung ohne Test.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Kapitel 2 lieferte die Modelle (Verteilungen), Kapitel 3 die Daten. Für unendlich viele Beobachtungen stimmen die empirischen Größen mit den theoretischen überein; für einen konkreten Datensatz <b>schätzen</b> sie diese.</p></div></div>
+<table class="tbl is-g"><tr><th>Konzept</th><th>Modell (Kap. 2, theoretisch)</th><th>Daten (Kap. 3, empirisch)</th><th>R / Python</th></tr>
+<tr><td>Verteilungsform</td><td>Dichte \(\ff(x)\)</td><td>Histogramm (normiert)</td><td><code>hist(x, freq=FALSE)</code> / <code>plt.hist(x, density=True)</code></td></tr>
+<tr><td>kumulativ</td><td>Verteilungsfunktion \(\FF(x)\)</td><td>empirische VF \(\FF_n(x)\)</td><td><code>ecdf(x)</code> / <code>np.mean(x &lt;= t)</code></td></tr>
+<tr><td>Lage</td><td>Erwartungswert \(\EE[\mX]\)</td><td>arithm. Mittel \(\bar x\)</td><td><code>mean</code> / <code>np.mean</code></td></tr>
+<tr><td>Streuung</td><td>Varianz \(\Var(\mX)\)</td><td>empirische Varianz \(s^2\)</td><td><code>var</code> / <code>np.var(ddof=1)</code></td></tr>
+<tr><td>Lage (robust)</td><td>Quantil \(q_\alpha\), Median</td><td>empirisches Quantil, Median</td><td><code>quantile(type=2)</code></td></tr>
+<tr><td>Zusammenhang</td><td>Korrelation (Kap. 4)</td><td>empirische Korrelation r</td><td><code>cor</code> / <code>np.corrcoef</code></td></tr></table>
+<p><b>Merksatz:</b> „empirisch“ = aus Daten ermittelt; die roten Kennzahlen sind die Schätzungen ihrer theoretischen Gegenstücke.</p>
+<div class="viz has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>👁️ Woran erkennbar? Mehr Daten → näher am Modell</b>
+  <div class="ctl"><label>Stichprobenumfang n <input type="range" id="mdN" min="5" max="2000" step="5" value="20"><output for="mdN"></output></label><button class="btn" id="mdNew">🎲 neue Stichprobe</button></div>
+  <div class="two"><div id="mdHist" class="plot"></div><div id="mdEcdf" class="plot"></div></div>
+  <div class="out" id="mdOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> Stichprobe aus \(\Nor(0,1)\). Links normiertes Histogramm gegen die Dichte, rechts \(\FF_n\) gegen \(\Phi\). Für großes n verschmelzen sie (Gesetz der großen Zahlen, Kap. 5).</div>
+</div>
+<h3 id="s3-6-a" data-m="Schema & Beispiele 3|welche Kennzahl/Grafik wann">📐 Schema: welche Kennzahl oder Grafik wann?</h3>
+<ol class="cook"><li>Symmetrische Daten, keine Ausreißer? → Mittel \(\bar x\) und Standardabweichung s.</li><li>Schiefe Daten oder Ausreißer? → Median und IQR (robust). Der Boxplot zeigt beides auf einen Blick.</li><li>Form unbekannt oder mehrere Gipfel? → Histogramm (bimodal erkennbar) oder \(\FF_n\).</li><li>Zwei Größen? → Streudiagramm zuerst, dann r und Ausgleichsgerade.</li></ol>
+<div class="ex3">
+  <div class="ex is-g"><div class="lvl l1">Beispiel 1 · leicht <span class="srcin">📘 Grundlage</span></div><b>Einfach</b>Old Faithful, 10 Werte.<div class="verdict"><b>Verdict:</b> \(\bar x=3.303\) und \(s=1.056\) fassen Lage und Streuung zusammen.</div></div>
+  <div class="ex is-g"><div class="lvl l2">Beispiel 2 · mittel <span class="srcin">📘 Grundlage</span></div><b>Mittel</b>Ein Tippfehler macht aus 4.7 plötzlich 47.<div class="verdict"><b>Verdict:</b> Das Mittel springt von 3.30 auf ≈ 7.5, der Median bleibt bei 3.47: robust wählen.</div></div>
+  <div class="ex is-g"><div class="lvl l3">Beispiel 3 · schwer <span class="srcin">📘 Grundlage</span></div><b>Aufbauend</b>Bimodaler Datensatz.<div class="verdict"><b>Verdict:</b> Der Boxplot sieht „normal“ aus, aber Histogramm/\(\FF_n\) enthüllen zwei Gipfel: Grafik schlägt Kennzahl.</div></div>
+</div>
+</section>
+
+<section id="s3-9" data-m="🌉 Brücke & Lernziele|von Daten zurück zum Modell">
+<h2>🌉 Die große Brücke: von Daten zurück zum Modell</h2>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧵 Fluss-Diagramm</b>
+<svg viewBox="0 0 1200 330" role="img" aria-label="Fluss von Kapitel 3">
+  <defs><marker id="arrK3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="30" y="20" width="250" height="60" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="155" y="45" fill="#f778ba" font-weight="700">Rohdaten x₁,…,xₙ</text><text x="155" y="68" fill="#8b949e">Stichprobe</text>
+    <rect x="330" y="20" width="250" height="60" rx="10" fill="#1c2129" stroke="#d29922"/><text x="455" y="45" fill="#d29922" font-weight="700">ordnen</text><text x="455" y="68" fill="#8b949e">x₍₁₎ ≤ … ≤ x₍ₙ₎</text>
+    <rect x="630" y="10" width="260" height="80" rx="10" fill="#1c2129" stroke="#f85149"/><text x="760" y="35" fill="#f85149" font-weight="700">KENNZAHLEN</text><text x="760" y="58" fill="#e6edf3">x̄ · Median · s² · IQR</text><text x="760" y="80" fill="#8b949e">robust ↔ empfindlich</text>
+    <rect x="930" y="10" width="250" height="80" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="1055" y="35" fill="#bc8cff" font-weight="700">GRAFIKEN</text><text x="1055" y="58" fill="#e6edf3">Histogramm · Boxplot · Fₙ</text><text x="1055" y="80" fill="#8b949e">Form, Gipfel, Ausreißer</text>
+    <rect x="330" y="140" width="540" height="60" rx="10" fill="#1c2129" stroke="#56d4dd"/><text x="600" y="165" fill="#56d4dd" font-weight="700">zwei Größen: Streudiagramm → r → Ausgleichsgerade, R²</text><text x="600" y="188" fill="#8b949e">Regression (Modul) · Test der Steigung in Kap. 8</text>
+    <rect x="180" y="245" width="840" height="70" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="600" y="270" fill="#58a6ff" font-weight="700">Modell vs. Daten: empirisch schätzt theoretisch</text><text x="600" y="295" fill="#e6edf3">x̄ → E[X] · s² → Var(X) · Histogramm → f · Fₙ → F · mehr Daten → näher dran (Kap. 5)</text>
+    <line x1="280" y1="50" x2="328" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="580" y1="50" x2="628" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="890" y1="50" x2="928" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="760" y1="90" x2="700" y2="138" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+    <line x1="600" y1="200" x2="600" y2="243" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK3)"/>
+  </g>
+</svg>
+<p><b>→ Wofür brauchst du das in Kapitel 4?</b> Die empirische Korrelation r und die Kovarianz \(s_{xy}\) haben theoretische Gegenstücke \(\Corr(\mX,\mY)\) und \(\Cov(\mX,\mY)\), die aus der gemeinsamen Verteilung zweier Zufallsvariablen folgen.</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>✅ Lernziele-Check (3.6)</b>
+  <ul><li>Ich kenne die wichtigsten empirischen Kennzahlen, ihre Bedeutung und Gefahren (Robustheit, Informationsverlust).</li>
+  <li>Ich kenne den Zusammenhang jeder empirischen Größe mit ihrer Modellgröße aus Kap. 2.</li>
+  <li>Ich kenne Histogramm, Boxplot und empirische Verteilungsfunktion und kann sie interpretieren.</li>
+  <li>Ich weiß, wann ich robuste Kennzahlen (Median, IQR) statt Mittel/s wähle.</li>
+  <li>Ich interpretiere die Korrelation r nur zusammen mit dem Streudiagramm.</li>
+  <li>Ich kann eine Ausgleichsgerade von Hand und mit R/Python bestimmen und R² deuten (Modul).</li></ul>
+</div>
+</section>
+
+<section id="s3-cheat" data-m="📋 Cheat-Sheet|Formeln Kap. 3 auf einen Blick">
+<h2>📋 Cheat-Sheet Kapitel 3</h2>
+<table class="tbl cheat">
+<tr><th>Kennzahl</th><th>Formel</th><th>R</th><th>Python</th></tr>
+<tr><td>Mittel</td><td>\(\bar x=\frac1n\sum x_i\)</td><td><code>mean(x)</code></td><td><code>np.mean(x)</code></td></tr>
+<tr><td>Varianz, sd</td><td>\(s^2=\frac1{n-1}\sum(x_i-\bar x)^2\)</td><td><code>var(x)</code>, <code>sd(x)</code></td><td><code>np.var(x, ddof=1)</code></td></tr>
+<tr><td>Quantil (Skript)</td><td>\(\alpha n\) ganz → Mittel zweier, sonst \(x_{(\lceil\alpha n\rceil)}\)</td><td><code>quantile(x, a, type=2)</code></td><td><code>np.quantile(x, a, method="averaged_inverted_cdf")</code></td></tr>
+<tr><td>IQR, Ausreißer</td><td>\(q_{0.75}-q_{0.25}\); außerhalb \(q\pm1.5\,\text{IQR}\)</td><td><code>boxplot.stats(x)$out</code></td><td>—</td></tr>
+<tr><td>Sturges</td><td>\(\lceil1+\log_2 n\rceil\) Klassen</td><td><code>nclass.Sturges(x)</code></td><td><code>bins="sturges"</code></td></tr>
+<tr><td>\(\FF_n\)</td><td>\(\frac1n\#\{x_i\le x\}\)</td><td><code>ecdf(x)(t)</code></td><td><code>np.mean(x &lt;= t)</code></td></tr>
+<tr><td>Kovarianz, Korrelation</td><td>\(s_{xy}\), \(r=s_{xy}/(s_xs_y)\)</td><td><code>cov</code>, <code>cor</code></td><td><code>np.cov</code>, <code>np.corrcoef</code></td></tr>
+<tr><td>Ausgleichsgerade</td><td>\(b=S_{xy}/S_{xx}\), \(a=\bar y-b\bar x\), \(R^2=r^2\)</td><td><code>lm(y ~ x)</code></td><td><code>stats.linregress(x, y)</code></td></tr>
+</table>
+</section>
+
+<section id="s3-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-rule">Deskriptive Statistik</span></td><td>descriptive statistics</td><td>Daten darstellen und zusammenfassen</td><td><a href="#s3-1">3.1</a></td></tr>
+<tr><td><span class="kw kw-mem">Grundgesamtheit / Stichprobe</span></td><td>population / sample</td><td>ganze Menge vs. zufällige Teilmenge</td><td><a href="#s3-1">3.1</a></td></tr>
+<tr><td><span class="kw kw-res">arithmetisches Mittel</span></td><td>mean, average</td><td>Schwerpunkt der Daten, nicht robust</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-res">empirische Varianz</span></td><td>sample variance</td><td>\(s^2\) mit Nenner n − 1</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-chg">geordnete Werte</span></td><td>order statistics</td><td>\(x_{(1)}\le\dots\le x_{(n)}\)</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-res">empirisches Quantil</span></td><td>sample quantile</td><td>Wert, unter dem ca. α·100 % liegen</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Median, Quartile, IQR</span></td><td>median, quartiles, interquartile range</td><td>robuste Lage und Streuung</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-rule">robust</span></td><td>robust</td><td>ändert sich durch Ausreißer kaum</td><td><a href="#s3-2">3.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Histogramm</span></td><td>histogram</td><td>Fläche ∝ Anzahl; empirische Dichte</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-rule">bimodal</span></td><td>bimodal</td><td>zwei Gipfel</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Boxplot</span></td><td>box plot</td><td>Box, Median, Whisker, Ausreißer</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-mem">Ausreißer</span></td><td>outlier</td><td>weiter als 1.5·IQR außerhalb</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-res">empirische Verteilungsfunktion</span></td><td>empirical cdf</td><td>Anteil der Daten ≤ x</td><td><a href="#s3-3">3.3</a></td></tr>
+<tr><td><span class="kw kw-res">empirische Korrelation</span></td><td>sample correlation</td><td>r ∈ [−1,1], Stärke des linearen Zusammenhangs</td><td><a href="#s3-4">3.4</a></td></tr>
+<tr><td><span class="kw kw-rule">Anscombe-Quartett</span></td><td>Anscombe's quartet</td><td>gleiches r, völlig andere Bilder</td><td><a href="#s3-4">3.4</a></td></tr>
+<tr><td><span class="kw kw-rule">Methode der kleinsten Quadrate</span></td><td>least squares</td><td>Gerade mit minimaler Residuen-Quadratsumme</td><td><a href="#s3-5">3.4.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Residuum</span></td><td>residual</td><td>\(y_i-\hat y_i\)</td><td><a href="#s3-5">3.4.1</a></td></tr>
+<tr><td><span class="kw kw-res">Bestimmtheitsmaß R²</span></td><td>coefficient of determination</td><td>erklärter Anteil der Streuung, \(=r^2\)</td><td><a href="#s3-5">3.4.1</a></td></tr>
+</table>
+</section>
+
+<section id="s3-train" data-m="🏋 Training|Kennzahlen aus Zufallsdaten">
+<h2>🏋 Training: Kennzahlen aus Zufallsdaten</h2>
+<div class="card has-src " id="qz3"><span class="src n" title="neu ergänzt">✚ Neu</span><b>Zufallsdatensatz</b>
+  <p id="q3Task"></p>
+  <div class="quiz two"><p>x̄ = <input id="q3m"></p><p>s = <input id="q3s"></p><p>Median = <input id="q3md"></p><p>q₀.₂₅ = <input id="q3q1"></p></div>
+  <p><button class="btn" id="q3Chk">Prüfen</button> <button class="btn" id="q3New">Neue Daten</button></p>
+  <div class="out" id="q3Res"></div>
+</div>
+</section>
+
+<footer class="foot">Lernbegleiter Statistik I · Kap. 3 · Deskriptive Statistik · 📘 Grundlage = Inhalt aus dem bisherigen Lernbegleiter (Skript L. Meier, ETH) · ✚ Neu = ergänzt · alle Zahlen per Skript nachgerechnet.</footer>
+</main>
+<script>
+/* =====================================================================
+   Lernbegleiter-Engine (gemeinsam für alle Kapitel)
+   Namensraum window.LB · KaTeX-Makros · Menü · Farbwörter · Tracer
+   Statistik-Funktionen · Plotly-Hilfen · Video-Links · Teilwechsel
+   ===================================================================== */
+(function () {
+'use strict';
+const LB = window.LB = window.LB || {};
+LB.inits = LB.inits || [];
+LB.on = fn => LB.inits.push(fn);                                   // Kapitel-Skripte melden Init-Funktionen an
+
+/* ---------- Rollenfarben (identisch zu :root in base.css) ---------- */
+LB.C = { res: '#f85149', chg: '#d29922', rule: '#bc8cff', par: '#58a6ff', idx: '#3fb950', cond: '#56d4dd', mem: '#f778ba',
+         text: '#e6edf3', muted: '#8b949e', border: '#30363d', card2: '#1c2129' };
+LB.rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+
+/* ---------- KaTeX: eine Konfiguration für alle Aufrufe ---------- */
+LB.KOPT = {
+  delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }],
+  throwOnError: false,
+  macros: {
+    '\\Res': '\\textcolor{f85149}{#1}', '\\Chg': '\\textcolor{d29922}{#1}', '\\Rule': '\\textcolor{bc8cff}{#1}',
+    '\\Par': '\\textcolor{58a6ff}{#1}', '\\Idx': '\\textcolor{3fb950}{#1}', '\\Cond': '\\textcolor{56d4dd}{#1}',
+    '\\Mem': '\\textcolor{f778ba}{#1}',
+    '\\PP': '\\Rule{P}',                                            // Wahrscheinlichkeits-Operator
+    '\\EE': '\\Rule{E}',                                            // Erwartungswert-Operator
+    '\\Var': '\\Rule{\\operatorname{Var}}',
+    '\\Cov': '\\Rule{\\operatorname{Cov}}',
+    '\\Corr': '\\Rule{\\operatorname{Corr}}',
+    '\\sd': '\\Rule{\\sigma}',
+    '\\given': '\\,\\Cond{\\vert}\\,',                              // Bedingungsstrich
+    '\\Om': '\\Mem{\\Omega}',                                       // Grundraum
+    '\\iid': '\\Rule{\\overset{\\text{i.i.d.}}{\\sim}}',
+    '\\dd': '\\,\\mathrm{d}',
+    '\\mA': '\\Mem{A}', '\\mB': '\\Mem{B}', '\\mX': '\\Mem{X}', '\\mY': '\\Mem{Y}',
+    '\\capc': '\\mathbin{\\Chg{\\cap}}', '\\cupc': '\\mathbin{\\Chg{\\cup}}', '\\co': '^{\\Chg{c}}',
+    '\\setm': '\\mathbin{\\Chg{\\setminus}}',
+    '\\pf': '\\Rule{p}', '\\ff': '\\Rule{f}', '\\FF': '\\Rule{F}', '\\WW': '\\Mem{\\mathcal{W}}',
+    '\\mx': '\\Mem{x}', '\\mZ': '\\Mem{Z}', '\\mT': '\\Mem{T}',
+    '\\Bin': '\\Rule{\\operatorname{Bin}}', '\\Pois': '\\Rule{\\operatorname{Pois}}', '\\Geom': '\\Rule{\\operatorname{Geom}}',
+    '\\Bern': '\\Rule{\\operatorname{Bernoulli}}', '\\Uni': '\\Rule{\\operatorname{Uni}}', '\\Nor': '\\Rule{\\mathcal{N}}', '\\Expo': '\\Rule{\\operatorname{Exp}}'
+  }
+};
+LB.tex = el => { if (window.renderMathInElement && el) window.renderMathInElement(el, LB.KOPT); };
+LB.esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+LB.$ = (s, r) => (r || document).querySelector(s);
+LB.$$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+LB.fmt = (v, d) => { if (d === undefined) d = 4; if (!isFinite(v)) return '–'; const s = Number(v).toFixed(d); return s === '-' + (0).toFixed(d) ? (0).toFixed(d) : s; };
+LB.store = {                                                       // localStorage ist unter file:// oft gesperrt
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* egal */ } }
+};
+LB.inFrame = (() => { try { return window.parent !== window; } catch (e) { return true; } })();
+
+/* =====================================================================
+   Statistik-Funktionen (JS-Spiegel der C++-Programme)
+   ===================================================================== */
+const S = LB.S = {};
+S.lgamma = function (x) {                                         // log Γ(x), Lanczos g=7
+  const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
+    12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - S.lgamma(1 - x);
+  x -= 1; let a = c[0]; const t = x + 7.5;
+  for (let i = 1; i < 9; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+};
+S.choose = (n, k) => (k < 0 || k > n) ? 0 : Math.round(Math.exp(S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1)));
+S.lchoose = (n, k) => S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1);
+S.fact = n => { let f = 1; for (let i = 2; i <= n; i++) f *= i; return f; };
+S.gammaP = function (a, x) {                                      // regularisierte untere unvollständige Gamma-Funktion
+  if (x <= 0) return 0;
+  const gln = S.lgamma(a);
+  if (x < a + 1) { let ap = a, sum = 1 / a, del = sum;
+    for (let n = 0; n < 500; n++) { ap++; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-15) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - gln); }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 500; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return 1 - Math.exp(-x + a * Math.log(x) - gln) * h;
+};
+S.betacf = function (a, b, x) {                                    // Kettenbruch für die unvollständige Beta-Funktion
+  const qab = a + b, qap = a + 1, qam = a - 1; let c = 1, d = 1 - qab * x / qap; if (Math.abs(d) < 1e-300) d = 1e-300; d = 1 / d; let h = d;
+  for (let m = 1; m <= 300; m++) { const m2 = 2 * m; let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d;
+    const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return h;
+};
+S.betaI = function (a, b, x) {                                     // regularisierte unvollständige Beta-Funktion I_x(a,b)
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  const bt = Math.exp(S.lgamma(a + b) - S.lgamma(a) - S.lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  return (x < (a + 1) / (a + b + 2)) ? bt * S.betacf(a, b, x) / a : 1 - bt * S.betacf(b, a, 1 - x) / b;
+};
+S.erfc = x => x >= 0 ? 1 - S.gammaP(0.5, x * x) : 1 + S.gammaP(0.5, x * x);
+S.normPdf = (x, mu = 0, s = 1) => { const z = (x - mu) / s; return Math.exp(-0.5 * z * z) / (s * Math.sqrt(2 * Math.PI)); };
+S.Phi = x => 0.5 * S.erfc(-x / Math.SQRT2);                        // Standardnormal-Verteilungsfunktion Φ
+S.normCdf = (x, mu = 0, s = 1) => S.Phi((x - mu) / s);
+S.PhiInv = function (p) {                                          // Φ⁻¹(p): Acklam + zwei Newton-Schritte
+  if (p <= 0) return -Infinity; if (p >= 1) return Infinity;
+  const a = [-3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.383577518672690e2, -3.066479806614716e1, 2.506628277459239e0],
+    b = [-5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1, -1.328068155288572e1],
+    c = [-7.784894002430293e-3, -3.223964580411365e-1, -2.400758277161838e0, -2.549732539343734e0, 4.374664141464968e0, 2.938163982698783e0],
+    d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996e0, 3.754408661907416e0];
+  let q, r, x;
+  if (p < 0.02425) { q = Math.sqrt(-2 * Math.log(p)); x = (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  else if (p <= 1 - 0.02425) { q = p - 0.5; r = q * q; x = (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1); }
+  else { q = Math.sqrt(-2 * Math.log(1 - p)); x = -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  for (let k = 0; k < 2; k++) { const e = S.Phi(x) - p, u = e * Math.sqrt(2 * Math.PI) * Math.exp(x * x / 2); x = x - u / (1 + x * u / 2); }
+  return x;
+};
+S.tPdf = (t, nu) => Math.exp(S.lgamma((nu + 1) / 2) - S.lgamma(nu / 2)) / Math.sqrt(nu * Math.PI) * Math.pow(1 + t * t / nu, -(nu + 1) / 2);
+S.tCdf = (t, nu) => { const p = 0.5 * S.betaI(nu / 2, 0.5, nu / (nu + t * t)); return t > 0 ? 1 - p : p; };
+S.chi2Cdf = (x, k) => x <= 0 ? 0 : S.gammaP(k / 2, x / 2);
+S.chi2Pdf = (x, k) => x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.log(2) - S.lgamma(k / 2));
+S.invert = function (cdf, p, lo, hi) {                             // Quantil per Bisektion einer monotonen Verteilungsfunktion
+  for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (cdf(m) < p) lo = m; else hi = m; if (hi - lo < 1e-12) break; }
+  return (lo + hi) / 2;
+};
+S.tInv = (p, nu) => S.invert(x => S.tCdf(x, nu), p, -1e4, 1e4);
+S.chi2Inv = (p, k) => S.invert(x => S.chi2Cdf(x, k), p, 0, 1e4);
+S.binomPmf = (k, n, p) => { if (k < 0 || k > n || k !== Math.floor(k)) return 0; if (p <= 0) return k === 0 ? 1 : 0; if (p >= 1) return k === n ? 1 : 0;
+  return Math.exp(S.lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)); };
+S.binomCdf = (k, n, p) => { let s = 0; for (let i = 0; i <= Math.min(k, n); i++) s += S.binomPmf(i, n, p); return Math.min(1, s); };
+S.poisPmf = (k, l) => (k < 0 || k !== Math.floor(k)) ? 0 : Math.exp(-l + k * Math.log(l) - S.lgamma(k + 1));
+S.poisCdf = (k, l) => { let s = 0; for (let i = 0; i <= k; i++) s += S.poisPmf(i, l); return Math.min(1, s); };
+S.geomPmf = (k, p) => k < 1 ? 0 : Math.pow(1 - p, k - 1) * p;       // Anzahl Versuche bis zum ersten Erfolg (k = 1, 2, …)
+S.hyperPmf = (k, N, M, n) => Math.exp(S.lchoose(M, k) + S.lchoose(N - M, n - k) - S.lchoose(N, n));
+S.expPdf = (x, l) => x < 0 ? 0 : l * Math.exp(-l * x);
+S.expCdf = (x, l) => x < 0 ? 0 : 1 - Math.exp(-l * x);
+/* Deskriptive Kennzahlen, Quantil-Definition wie im Skript */
+S.sum = a => a.reduce((s, x) => s + x, 0);
+S.mean = a => S.sum(a) / a.length;
+S.var = a => { const m = S.mean(a); return a.reduce((s, x) => s + (x - m) * (x - m), 0) / (a.length - 1); };
+S.sd = a => Math.sqrt(S.var(a));
+S.sorted = a => a.slice().sort((x, y) => x - y);
+S.quantile = function (a, alpha) {                                 // α·n ganzzahlig → Mittel zweier Nachbarn, sonst x_(⌈α n⌉)
+  const s = S.sorted(a), n = s.length, an = alpha * n, r = Math.round(an);
+  if (Math.abs(an - r) < 1e-9) { if (r <= 0) return s[0]; if (r >= n) return s[n - 1]; return 0.5 * (s[r - 1] + s[r]); }
+  return s[Math.ceil(an) - 1];
+};
+S.median = a => S.quantile(a, 0.5);
+S.cor = (x, y) => { const mx = S.mean(x), my = S.mean(y); let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < x.length; i++) { sxy += (x[i] - mx) * (y[i] - my); sxx += (x[i] - mx) ** 2; syy += (y[i] - my) ** 2; }
+  return sxy / Math.sqrt(sxx * syy); };
+S.parse = str => (str || '').split(/[\s,;]+/).map(s => s.trim()).filter(s => s !== '').map(Number).filter(x => !isNaN(x));
+S.rng = function (seed) {                                          // reproduzierbarer Zufall (mulberry32)
+  let t = seed >>> 0;
+  const u = () => { t += 0x6D2B79F5; let r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; };
+  u.norm = () => { let a = 0; while (a === 0) a = u(); return Math.sqrt(-2 * Math.log(a)) * Math.cos(2 * Math.PI * u()); };
+  return u;
+};
+
+/* =====================================================================
+   Plotly-Hilfen (dunkles Layout, Rollenfarben)
+   ===================================================================== */
+LB.PCFG = { displayModeBar: false, responsive: true };
+LB.lay = function (extra) {
+  const L = { margin: { l: 55, r: 18, t: 20, b: 45 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: 'Source Sans 3, Segoe UI, sans-serif', size: 13, color: LB.C.text }, showlegend: false,
+    xaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border }, yaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border },
+    legend: { bgcolor: 'rgba(0,0,0,0)', orientation: 'h', y: 1.12 } };
+  if (extra) for (const k in extra) {
+    if ((k === 'xaxis' || k === 'yaxis') && typeof extra[k] === 'object') L[k] = Object.assign({}, L[k], extra[k]); else L[k] = extra[k];
+  }
+  return L;
+};
+LB.plot = (el, traces, layout) => { if (!window.Plotly) return; const e = typeof el === 'string' ? document.getElementById(el) : el; if (e) Plotly.react(e, traces, LB.lay(layout), LB.PCFG); };
+LB.area = function (f, a, b, color, n) {                           // gefüllte Fläche unter einer Dichte
+  n = n || 120; const xs = [a], ys = [0];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  xs.push(b); ys.push(0);
+  return { x: xs, y: ys, fill: 'toself', mode: 'none', fillcolor: color, hoverinfo: 'skip' };
+};
+LB.curve = function (f, a, b, color, n, extra) {
+  n = n || 200; const xs = [], ys = [];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  return Object.assign({ x: xs, y: ys, mode: 'lines', line: { color: color, width: 2.6 }, hoverinfo: 'skip' }, extra || {});
+};
+/* Regler binden: bind(['id1','id2'], fn) → fn(values) bei jeder Änderung, Ausgabe in <output for=id> */
+LB.bind = function (ids, fn) {
+  const els = ids.map(id => document.getElementById(id));
+  const run = () => {
+    const v = {};
+    els.forEach(e => { if (!e) return; const val = e.type === 'checkbox' ? e.checked : (e.type === 'range' || e.type === 'number' ? parseFloat(e.value) : e.value);
+      v[e.id] = val; const o = document.querySelector('output[for="' + e.id + '"]'); if (o) o.textContent = e.dataset.fmt ? LB.fmt(val, +e.dataset.fmt) : e.value; });
+    fn(v);
+  };
+  els.forEach(e => e && e.addEventListener('input', run));
+  run(); return run;
+};
+
+/* =====================================================================
+   Code-Hervorhebung für R und Python: Kommentare, Strings, Schlüsselwörter,
+   Funktionen, Zahlen, Zuweisung. Marker "#@name" am Zeilenende werden entfernt.
+   ===================================================================== */
+const KW = {
+  R: new Set('function if else for while repeat in return TRUE FALSE NULL NA Inf break next library'.split(' ')),
+  Python: new Set('def if elif else for while in return True False None import from as lambda with and or not pass break continue print'.split(' '))
+};
+LB.stripMark = l => l.replace(/\s*#@[\w-]+\s*$/, '');
+LB.markOf = l => { const m = l.match(/#@([\w-]+)\s*$/); return m ? m[1] : ''; };
+LB.hlLine = function (line, lang) {
+  lang = lang || 'R'; const kws = KW[lang] || KW.R;
+  let out = '', i = 0; const n = line.length;
+  while (i < n) {
+    const ch = line[i];
+    if (ch === '#') { out += '<span class="tok-c">' + LB.esc(line.slice(i)) + '</span>'; break; }
+    if (ch === '"' || ch === "'") { let j = i + 1; while (j < n && line[j] !== ch) { if (line[j] === '\\') j++; j++; }
+      out += '<span class="tok-s">' + LB.esc(line.slice(i, j + 1)) + '</span>'; i = j + 1; continue; }
+    if (line.startsWith('<-', i)) { out += '<span class="tok-a">&lt;-</span>'; i += 2; continue; }
+    if (/[A-Za-z_.]/.test(ch)) { let j = i + 1; while (j < n && /[A-Za-z0-9_.]/.test(line[j])) j++;
+      const w = line.slice(i, j);
+      if (kws.has(w)) out += '<span class="tok-k">' + LB.esc(w) + '</span>';
+      else if (line[j] === '(') out += '<span class="tok-t">' + LB.esc(w) + '</span>';
+      else out += LB.esc(w);
+      i = j; continue; }
+    if (/[0-9]/.test(ch)) { let j = i + 1; while (j < n && /[0-9.eE]/.test(line[j])) j++; out += '<span class="tok-n">' + line.slice(i, j) + '</span>'; i = j; continue; }
+    out += LB.esc(ch); i++;
+  }
+  return out;
+};
+
+/* =====================================================================
+   Code-Tracer: zeichnet alle Schritte einmal auf, spielt dann ab
+   ===================================================================== */
+LB.Tracer = class {
+  constructor(o) {
+    this.o = o; this.root = document.getElementById(o.id); if (!this.root) return;
+    this.langs = o.langs || { R: o.code };                            // {R: [...], Python: [...]}
+    this.lang = LB.store.get('lb-lang', 'R'); if (!this.langs[this.lang]) this.lang = Object.keys(this.langs)[0];
+    this.root.classList.add('tracer');
+    const ex = (o.examples || []).map((e, k) => '<option value="' + k + '">' + LB.esc(e[0]) + '</option>').join('');
+    this.root.innerHTML =
+      '<div class="tr-head"><b>▶ ' + LB.esc(o.title) + '</b>' +
+      '<label>Eingabe <input class="tr-in" value="' + LB.esc(o.input) + '" aria-label="Eingabe"></label>' +
+      (ex ? '<select class="tr-ex" aria-label="Beispiele"><option value="">Beispiele …</option>' + ex + '</select>' : '') +
+      '<span class="seg tr-lang">' + Object.keys(this.langs).map(L => '<button data-lang="' + L + '">' + L + '</button>').join('') + '</span>' +
+      '<button data-a="run">↻ neu starten</button>' + (o.hint ? '<span class="muted small">' + o.hint + '</span>' : '') + '</div>' +
+      '<div class="tr-grid"><pre class="tr-code"></pre><div class="tr-state"></div></div>' +
+      '<div class="tr-ctl"><button data-a="first" title="Anfang">⏮</button><button data-a="prev" title="zurück">◀</button>' +
+      '<input type="range" class="tr-pos" min="0" value="0" aria-label="Schritt">' +
+      '<button data-a="next" title="vor">▶</button><button data-a="last" title="Ende">⏭</button>' +
+      '<button data-a="auto">⏯ auto</button><span class="tr-cnt"></span></div>' +
+      '<div class="tr-msg"></div>';
+    this.q = s => this.root.querySelector(s);
+    this.root.addEventListener('click', e => {
+      const b = e.target.closest('[data-a]'); if (b) this.act(b.dataset.a);
+      const l = e.target.closest('[data-lang]'); if (l) { LB.store.set('lb-lang', l.dataset.lang); LB.$$('.tracer').forEach(t => t._tr && t._tr.setLang(l.dataset.lang)); }
+    });
+    this.root._tr = this;
+    this.q('.tr-pos').addEventListener('input', e => this.show(+e.target.value));
+    this.q('.tr-in').addEventListener('keydown', e => { if (e.key === 'Enter') this.run(); });
+    const sel = this.q('.tr-ex');
+    if (sel) sel.addEventListener('change', () => { if (sel.value !== '') { this.q('.tr-in').value = o.examples[+sel.value][1]; this.run(); } sel.value = ''; });
+    this.run();
+  }
+  setLang(L) { if (!this.langs[L]) return; this.lang = L; this.renderCode(); this.show(this.i || 0); }
+  renderCode() {
+    let lines = this.langs[this.lang];
+    if (this.o.codeFor && this.inp !== undefined) lines = this.o.codeFor(this.inp, this.lang, lines);
+    this.q('.tr-code').innerHTML = lines.map((l, i) =>
+      '<div class="row" data-k="' + LB.markOf(l) + '"><span class="ln">' + (i + 1) + '</span>' + LB.hlLine(LB.stripMark(l), this.lang) + '<span class="hits"></span></div>').join('');
+    LB.$$('[data-lang]', this.root).forEach(b => b.classList.toggle('on', b.dataset.lang === this.lang));
+  }
+  run() {
+    const snaps = [];
+    const rec = { step: (line, msg, st) => snaps.push({ line, msg, st: JSON.parse(JSON.stringify(st)) }) };
+    let inp;
+    try { inp = this.o.parse(this.q('.tr-in').value); }
+    catch (e) { snaps.push({ line: 0, msg: '⚠ Eingabe nicht lesbar: ' + LB.esc(e.message), st: null }); }
+    this.inp = inp; this.renderCode();
+    if (inp !== undefined) { try { this.o.run(rec, inp); } catch (e) { snaps.push({ line: 0, msg: '⚠ ' + LB.esc(e.message), st: null }); } }
+    this.snaps = snaps.length ? snaps : [{ line: 0, msg: '(keine Schritte)', st: null }];
+    this.q('.tr-pos').max = this.snaps.length - 1;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    this.show(0);
+  }
+  act(a) {
+    const n = this.snaps.length - 1;
+    if (a === 'run') this.run();
+    else if (a === 'first') this.show(0);
+    else if (a === 'prev') this.show(Math.max(0, this.i - 1));
+    else if (a === 'next') this.show(Math.min(n, this.i + 1));
+    else if (a === 'last') this.show(n);
+    else if (a === 'auto') {
+      if (this.timer) { clearInterval(this.timer); this.timer = null; return; }
+      if (this.i >= n) this.show(0);
+      this.timer = setInterval(() => { if (this.i >= n) { clearInterval(this.timer); this.timer = null; } else this.show(this.i + 1); }, this.o.speed || 750);
+    }
+  }
+  show(i) {
+    this.i = i; const s = this.snaps[i]; this.q('.tr-pos').value = i;
+    const hits = {};
+    for (let k = 0; k <= i; k++) hits[this.snaps[k].line] = (hits[this.snaps[k].line] || 0) + 1;
+    this.root.querySelectorAll('.tr-code .row').forEach(r => {
+      const k = r.dataset.k; r.classList.toggle('cur', !!k && k === s.line);
+      r.querySelector('.hits').textContent = k && hits[k] ? '×' + hits[k] : '';
+    });
+    const st = this.q('.tr-state'); st.innerHTML = s.st ? this.o.view(s.st) : '';
+    this.q('.tr-msg').innerHTML = s.msg;
+    this.q('.tr-cnt').textContent = 'Schritt ' + i + ' / ' + (this.snaps.length - 1);
+    LB.tex(this.q('.tr-msg')); LB.tex(st);
+  }
+};
+/* Hilfen für Zustandsansichten */
+LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div><i>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span></div>').join('') + '</div>';
+LB.cellsHTML = (arr, cls, base) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
+
+/* =====================================================================
+   Farbige Schlüsselwörter im Fließtext (Wortliste Begriff → Rolle)
+   ===================================================================== */
+LB.KW = LB.KW || [];
+const SKIP = 'pre, code, .katex, h1, h2, h3, h4, h5, button, svg, .vn-badge, .src, .srcin, .vn-res, .kw, a, summary, .lbtop, .lbmenu, .vid, .tracer, .legend, th, label, output, .plot, .anat .sym, select, textarea, .nokw';
+LB.kwColor = function () {
+  if (!LB.KW.length) return;
+  const terms = LB.KW.slice().sort((a, b) => b[0].length - a[0].length);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp('(?<![\\p{L}\\p{N}])(' + terms.map(t => esc(t[0])).join('|') + ')(\\p{Ll}{0,3})(?![\\p{L}\\p{N}])', 'u');
+  const role = {}; terms.forEach(t => role[t[0]] = t[1]);
+  const blocks = LB.$$('main p, main li, main td, main .vn-step > div, main .vn-task, main .pt-grid > div, main .ptq, main .anat > div > span:last-child, main .read, main .why, main .recog, main .verdict, main .trap, main .gblk > div');
+  blocks.forEach(bl => {
+    if (bl.closest(SKIP)) return;
+    const used = new Set(); let count = 0;
+    const walker = document.createTreeWalker(bl, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.parentElement && n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      if (count >= 6) break;
+      let txt = node.nodeValue, m, frag = null, last = 0, off = 0;
+      while (count < 6 && (m = re.exec(txt.slice(off))) !== null) {
+        const start = off + m.index, word = m[0], base = m[1];
+        off = start + word.length;
+        if (used.has(base)) continue;
+        used.add(base); count++;
+        if (!frag) frag = document.createDocumentFragment();
+        frag.appendChild(document.createTextNode(txt.slice(last, start)));
+        const sp = document.createElement('span'); sp.className = 'kw kw-' + role[base]; sp.textContent = word; frag.appendChild(sp);
+        last = start + word.length;
+      }
+      if (frag) { frag.appendChild(document.createTextNode(txt.slice(last))); node.parentNode.replaceChild(frag, node); }
+    }
+  });
+};
+
+/* =====================================================================
+   Menü, Grundlage-Hervorhebung, Teilwechsel
+   ===================================================================== */
+LB.menu = open => document.body.classList.toggle('menu-open', open);
+function initMenu() {
+  const m = document.getElementById('lbMenu'); if (!m) return;
+  LB.$$('#lbOpen, #lbFab').forEach(b => b.addEventListener('click', () => LB.menu(true)));
+  m.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (a && a.dataset.part !== undefined && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'part', i: +a.dataset.part }, '*'); LB.menu(false); return; }
+    if (e.target.closest('[data-close]') || a || e.target.id === 'lbMenu') LB.menu(false);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') LB.menu(false);
+    if ((e.key === 't' || e.key === 'T') && !e.target.closest('input, textarea, select') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (LB.inFrame) window.parent.postMessage({ lb: 'overview' }, '*'); else LB.menu(!document.body.classList.contains('menu-open'));
+    }
+  });
+  const hl = document.getElementById('lbHlG');
+  if (hl) { hl.checked = LB.store.get('lb-hlg', '0') === '1'; document.body.classList.toggle('hl-g', hl.checked);
+    hl.addEventListener('change', () => { document.body.classList.toggle('hl-g', hl.checked); LB.store.set('lb-hlg', hl.checked ? '1' : '0'); }); }
+}
+
+/* =====================================================================
+   Video-Links auf lokale .mp4-Dateien (Linux Mint, file://)
+   Standard: Ordner „videos/" neben der HTML-Datei (Symlink genügt),
+   sonst absoluten Pfad im ☰-Menü eintragen.
+   ===================================================================== */
+LB.vbase = LB.store.get('lb-vbase', 'videos/');
+LB.vbaseAbs = null;                                                // von der Gesamtdatei gesetzt
+function vurl(f) {
+  const enc = f.split('/').map(encodeURIComponent).join('/');
+  let base = LB.vbaseAbs || LB.vbase || 'videos/';
+  if (!/\/$/.test(base)) base += '/';
+  if (/^\//.test(base)) base = 'file://' + base;                   // /home/… → file:///home/…
+  try { return new URL(base + enc, LB.vbaseAbs ? undefined : document.baseURI).href; } catch (e) { return base + enc; }
+}
+LB.vpath = f => { const u = vurl(f); try { return decodeURIComponent(new URL(u).pathname); } catch (e) { return u; } };
+function initVideos() {
+  const upd = () => LB.$$('.vid').forEach(v => { const a = v.querySelector('a.vopen'); if (a) a.href = vurl(v.dataset.f); });
+  upd();
+  document.addEventListener('click', e => {
+    const a = e.target.closest('.vid a.vopen');
+    if (a && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'open', f: a.closest('.vid').dataset.f }, '*'); return; }
+    const c = e.target.closest('.vid .vcopy');
+    if (c) {
+      const p = LB.vpath(c.closest('.vid').dataset.f);
+      const done = () => { c.textContent = '✓ kopiert'; setTimeout(() => { c.textContent = '📋 Pfad'; }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(p).then(done, () => window.prompt('Pfad (Strg+C):', p));
+      else window.prompt('Pfad (Strg+C):', p);
+    }
+  });
+  const inp = document.getElementById('lbVbase');
+  if (inp) { inp.value = LB.vbase; inp.addEventListener('change', () => { LB.vbase = inp.value.trim() || 'videos/'; LB.store.set('lb-vbase', LB.vbase); upd();
+    if (LB.inFrame) window.parent.postMessage({ lb: 'vbase', v: LB.vbase }, '*'); }); }
+  window.addEventListener('message', e => {
+    const d = e.data || {};
+    if (d.lb === 'vbase') { LB.vbaseAbs = d.abs; LB.vbase = d.v; if (inp) inp.value = d.v; upd(); }
+    if (d.lb === 'menu') LB.menu(true);
+  });
+  LB.updVideos = upd;
+}
+
+/* =====================================================================
+   Start
+   ===================================================================== */
+function start() {
+  initMenu(); initVideos();
+  LB.$$('.code pre .row').forEach(r => { const ln = r.querySelector('.ln'); const txt = r.dataset.src !== undefined ? r.dataset.src : ''; r.innerHTML = ''; r.appendChild(ln); r.insertAdjacentHTML('beforeend', LB.hlLine(txt, r.closest('.code').dataset.lang)); });
+  LB.inits.forEach(fn => { try { fn(); } catch (e) { console.error(e); if (window.__lbErrors) window.__lbErrors.push(String(e)); throw e; } });
+  LB.tex(document.body);
+  LB.kwColor();
+  document.addEventListener('toggle', e => { if (window.Plotly && e.target.open) LB.$$('.js-plotly-plot', e.target).forEach(p => Plotly.Plots.resize(p)); }, true);
+  if (LB.inFrame) window.parent.postMessage({ lb: 'ready' }, '*');
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+</script>
+<script>
+/* Kapitel 3 · Deskriptive Statistik: Visuals, Tracer, Training */
+LB.KW = [
+  ['Stichprobe', 'mem'], ['Grundgesamtheit', 'mem'], ['Daten', 'mem'], ['Beobachtungen', 'mem'], ['Ausreißer', 'mem'],
+  ['arithmetische Mittel', 'res'], ['Mittelwert', 'res'], ['Standardabweichung', 'res'], ['Kennzahl', 'res'],
+  ['Median', 'rule'], ['Quantil', 'rule'], ['Quartil', 'rule'], ['Quartilsdifferenz', 'rule'], ['Histogramm', 'rule'], ['Boxplot', 'rule'],
+  ['robust', 'rule'], ['Sturges', 'rule'], ['Korrelation', 'rule'], ['Kovarianz', 'rule'], ['Bestimmtheitsmaß', 'rule'], ['kleinsten Quadrate', 'rule'],
+  ['Residuen', 'chg'], ['Residuum', 'chg'], ['ordnen', 'chg'], ['Abweichung', 'chg'],
+  ['Streudiagramm', 'cond'], ['empirisch', 'idx']
+];
+const S = LB.S, C = LB.C;
+/* bimodaler Beispieldatensatz, reproduzierbar */
+const BIMODAL = (() => { const r = S.rng(11), a = []; for (let i = 0; i < 120; i++) a.push(2 + 0.5 * r.norm()); for (let i = 0; i < 80; i++) a.push(4.3 + 0.45 * r.norm()); return a.map(x => Math.round(x * 100) / 100); })();
+
+/* ---------------------------------------------------------------- robust vs. empfindlich */
+LB.on(function robust() {
+  if (!document.getElementById('rbPlot')) return;
+  const base = [1.800, 1.950, 2.283, 2.883, 3.333, 3.600, 3.600, 4.350, 4.533];
+  LB.bind(['rbX'], v => {
+    const d = base.concat([v.rbX]), m = S.mean(d), md = S.median(d);
+    LB.plot('rbPlot', [{ x: d, y: d.map(() => 0), mode: 'markers', marker: { color: d.map((x, i) => i === d.length - 1 ? C.chg : C.mem), size: 13 }, hovertemplate: '%{x}<extra></extra>' },
+      { x: [m, m], y: [-0.8, 0.8], mode: 'lines', line: { color: C.res, width: 3 }, name: 'Mittel' },
+      { x: [md, md], y: [-0.8, 0.8], mode: 'lines', line: { color: C.idx, width: 3, dash: 'dash' }, name: 'Median' }],
+      { height: 220, showlegend: true, xaxis: { title: 'Wert', range: [0, 61] }, yaxis: { visible: false, range: [-1, 1] } });
+    document.getElementById('rbOut').innerHTML = 'Mittel <b class="kw-res">' + LB.fmt(m, 3) + '</b> · Median <b class="kw-idx">' + LB.fmt(md, 4) + '</b> · s = ' + LB.fmt(S.sd(d), 3) + ' · IQR = ' + LB.fmt(S.quantile(d, 0.75) - S.quantile(d, 0.25), 3);
+  });
+});
+
+/* ---------------------------------------------------------------- Histogramm */
+LB.on(function histo() {
+  if (!document.getElementById('hiPlot')) return;
+  const lo = Math.min(...BIMODAL), hi = Math.max(...BIMODAL), st = Math.ceil(1 + Math.log2(BIMODAL.length));
+  LB.bind(['hiK'], v => {
+    const k = v.hiK, w = (hi - lo) / k, cnt = new Array(k).fill(0);
+    BIMODAL.forEach(x => cnt[Math.min(k - 1, Math.floor((x - lo) / w))]++);
+    const xs = cnt.map((_, i) => lo + (i + 0.5) * w), ys = cnt.map(c => c / (BIMODAL.length * w));
+    LB.plot('hiPlot', [{ type: 'bar', x: xs, y: ys, width: w * 0.98, marker: { color: LB.rgba(C.rule, 0.75) }, hovertemplate: 'Klasse um %{x:.2f}: Dichte %{y:.3f}<extra></extra>' }],
+      { height: 300, xaxis: { title: 'Wert · Sturges: ' + st + ' Klassen (n = 200)' }, yaxis: { title: 'Dichte (Fläche 1)' },
+        shapes: [{ type: 'line', x0: 0, x1: 1, xref: 'paper', y0: 0, y1: 0, line: { color: C.border } }],
+        annotations: [{ xref: 'paper', yref: 'paper', x: 0.99, y: 0.98, text: k === st ? '= Sturges-Empfehlung' : (k < st ? 'weniger als Sturges' : 'mehr als Sturges'), showarrow: false, font: { color: k === st ? C.idx : C.chg } }] });
+  });
+});
+
+/* ---------------------------------------------------------------- Boxplot-Baukasten */
+LB.on(function boxb() {
+  if (!document.getElementById('bxPlot')) return;
+  const base = [11, 12, 13, 14, 15, 16, 18];
+  LB.bind(['bxV'], v => {
+    const d = base.concat([v.bxV]), q1 = S.quantile(d, 0.25), q3 = S.quantile(d, 0.75), md = S.median(d), iqr = q3 - q1, lo = q1 - 1.5 * iqr, hi = q3 + 1.5 * iqr;
+    const inside = d.filter(x => x >= lo && x <= hi), out = d.filter(x => x < lo || x > hi), wl = Math.min(...inside), wh = Math.max(...inside);
+    const shapes = [
+      { type: 'rect', x0: q1, x1: q3, y0: -0.4, y1: 0.4, line: { color: C.rule, width: 2 }, fillcolor: LB.rgba(C.rule, 0.18) },
+      { type: 'line', x0: md, x1: md, y0: -0.4, y1: 0.4, line: { color: C.idx, width: 3 } },
+      { type: 'line', x0: wl, x1: q1, y0: 0, y1: 0, line: { color: C.text, width: 2 } }, { type: 'line', x0: q3, x1: wh, y0: 0, y1: 0, line: { color: C.text, width: 2 } },
+      { type: 'line', x0: wl, x1: wl, y0: -0.2, y1: 0.2, line: { color: C.text, width: 2 } }, { type: 'line', x0: wh, x1: wh, y0: -0.2, y1: 0.2, line: { color: C.text, width: 2 } },
+      { type: 'line', x0: lo, x1: lo, y0: -0.7, y1: 0.7, line: { color: C.cond, dash: 'dot' } }, { type: 'line', x0: hi, x1: hi, y0: -0.7, y1: 0.7, line: { color: C.cond, dash: 'dot' } }];
+    LB.plot('bxPlot', [{ x: inside, y: inside.map(() => -0.6), mode: 'markers', marker: { color: C.mem, size: 8 }, hovertemplate: '%{x}<extra></extra>' },
+      { x: out, y: out.map(() => 0), mode: 'markers', marker: { color: C.res, size: 13, symbol: 'circle-open', line: { width: 3 } }, hovertemplate: 'Ausreißer %{x}<extra></extra>' }],
+      { height: 220, shapes, xaxis: { range: [-22, 62], title: 'Wert' }, yaxis: { visible: false, range: [-1, 1] } });
+    document.getElementById('bxOut').innerHTML = 'q₀.₂₅ = ' + q1 + ' · Median = ' + md + ' · q₀.₇₅ = ' + q3 + ' · IQR = ' + iqr + ' · Grenzen [' + LB.fmt(lo, 3) + ', ' + LB.fmt(hi, 3) + '] · Whisker ' + wl + ' bis ' + wh + ' · Ausreißer: <b class="kw-res">' + (out.length ? out.join(', ') : 'keine') + '</b>';
+  });
+});
+
+/* ---------------------------------------------------------------- empirische Verteilungsfunktion */
+LB.on(function ecdfv() {
+  if (!document.getElementById('ecPlot')) return;
+  const s = S.sorted(BIMODAL), n = s.length, x = [s[0] - 0.5], y = [0];
+  s.forEach((v, i) => { x.push(v, v); y.push(i / n, (i + 1) / n); }); x.push(s[n - 1] + 0.5); y.push(1);
+  LB.plot('ecPlot', [{ x, y, mode: 'lines', line: { color: C.chg, width: 2 }, hoverinfo: 'skip' },
+    { x: s, y: s.map(() => -0.03), mode: 'markers', marker: { symbol: 'line-ns-open', color: C.mem, size: 10 }, hoverinfo: 'skip' }],
+    { height: 300, xaxis: { title: 'x' }, yaxis: { title: 'Fₙ(x)', range: [-0.06, 1.03] } });
+});
+
+/* ---------------------------------------------------------------- Korrelation */
+LB.on(function corr() {
+  if (!document.getElementById('coPlot')) return;
+  let seed = 5;
+  const run = LB.bind(['coR'], v => {
+    const r0 = Math.max(-0.999, Math.min(0.999, v.coR)), rr = S.rng(seed), n = 60, x = [], y = [];
+    for (let i = 0; i < n; i++) { const a = rr.norm(), b = rr.norm(); x.push(a); y.push(r0 * a + Math.sqrt(1 - r0 * r0) * b); }
+    const r = S.cor(x, y), mx = S.mean(x), my = S.mean(y), bb = r * S.sd(y) / S.sd(x);
+    LB.plot('coPlot', [{ x, y, mode: 'markers', marker: { color: C.mem, size: 8 } },
+      { x: [-3, 3], y: [my + bb * (-3 - mx), my + bb * (3 - mx)], mode: 'lines', line: { color: C.chg, width: 2 } }],
+      { height: 330, xaxis: { range: [-3.2, 3.2], title: 'x' }, yaxis: { range: [-3.5, 3.5], title: 'y' } });
+    document.getElementById('coOut').innerHTML = 'empirisches r dieser 60 Punkte = <b class="kw-res">' + LB.fmt(r, 3) + '</b> · Stärke: ' + (Math.abs(r) > 0.8 ? 'stark' : Math.abs(r) > 0.5 ? 'mittel' : Math.abs(r) > 0.2 ? 'schwach' : 'kaum linear') + ', Richtung: ' + (r > 0 ? 'gleichläufig' : 'gegenläufig');
+  });
+  document.getElementById('coNew').addEventListener('click', () => { seed++; run(); });
+});
+
+/* ---------------------------------------------------------------- Anscombe */
+LB.on(function anscombe() {
+  if (!document.getElementById('anPlot')) return;
+  const x1 = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5], x4 = [8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8];
+  const Y = [[8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68], [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74],
+    [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73], [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]];
+  const tr = [], ann = [];
+  Y.forEach((y, k) => {
+    const x = k === 3 ? x4 : x1, r = S.cor(x, y), ax = k ? 'x' + (k + 1) : 'x', ay = k ? 'y' + (k + 1) : 'y';
+    tr.push({ x, y, mode: 'markers', marker: { color: C.mem, size: 8 }, xaxis: ax, yaxis: ay });
+    tr.push({ x: [3, 20], y: [3 + 0.5 * 3, 3 + 0.5 * 20], mode: 'lines', line: { color: C.chg, width: 1.5 }, xaxis: ax, yaxis: ay });
+    ann.push({ text: ['I', 'II', 'III', 'IV'][k] + ': r = ' + LB.fmt(r, 3), xref: ax + ' domain', yref: ay + ' domain', x: 0.03, y: 0.97, showarrow: false, font: { color: C.res } });
+  });
+  const L = { height: 420, grid: { rows: 2, columns: 2, pattern: 'independent' }, annotations: ann, margin: { l: 40, r: 10, t: 10, b: 30 } };
+  ['xaxis', 'xaxis2', 'xaxis3', 'xaxis4'].forEach(a => L[a] = { range: [2, 20], gridcolor: '#252b33', zeroline: false });
+  ['yaxis', 'yaxis2', 'yaxis3', 'yaxis4'].forEach(a => L[a] = { range: [2, 14], gridcolor: '#252b33', zeroline: false });
+  LB.plot('anPlot', tr, L);
+});
+
+/* ---------------------------------------------------------------- Regression per Klick */
+LB.on(function regClick() {
+  const el = document.getElementById('rgPlot'); if (!el || !window.Plotly) return;
+  const ex = () => [[1, 2], [2, 4], [3, 5], [4, 4], [5, 5]];
+  let pts = ex();
+  const draw = () => {
+    const tr = [{ x: pts.map(p => p[0]), y: pts.map(p => p[1]), mode: 'markers', marker: { color: C.mem, size: 11 }, hoverinfo: 'x+y' }];
+    let msg = 'Mindestens zwei Punkte mit verschiedenen x setzen.';
+    if (pts.length >= 2) {
+      const x = pts.map(p => p[0]), y = pts.map(p => p[1]), mx = S.mean(x), my = S.mean(y);
+      const Sxx = S.sum(x.map(v => (v - mx) ** 2)), Sxy = S.sum(x.map((v, i) => (v - mx) * (y[i] - my)));
+      if (Sxx > 1e-12) {
+        const b = Sxy / Sxx, a = my - b * mx, yh = x.map(v => a + b * v), sse = S.sum(y.map((v, i) => (v - yh[i]) ** 2)), sst = S.sum(y.map(v => (v - my) ** 2));
+        const rx = [], ry = []; x.forEach((v, i) => { rx.push(v, v, null); ry.push(y[i], yh[i], null); });
+        tr.push({ x: rx, y: ry, mode: 'lines', line: { color: C.res, dash: 'dot', width: 1.5 }, hoverinfo: 'skip' });
+        tr.push({ x: [0, 10], y: [a, a + 10 * b], mode: 'lines', line: { color: C.chg, width: 2.5 }, hoverinfo: 'skip' });
+        tr.push({ x: [mx], y: [my], mode: 'markers', marker: { symbol: 'x', color: C.par, size: 12 }, hoverinfo: 'skip' });
+        msg = 'n = ' + pts.length + ' · \\(\\hat y=\\Res{' + LB.fmt(a, 3) + '}+\\Res{' + LB.fmt(b, 3) + '}\\,x\\) · SSE = ' + LB.fmt(sse, 3) + ' · \\(R^2=' + (sst > 0 ? LB.fmt(1 - sse / sst, 4) : '–') + '\\) · \\(r=' + (sst > 0 ? LB.fmt(S.cor(x, y), 4) : '–') + '\\) · blaues ✕ = Schwerpunkt';
+      }
+    }
+    LB.plot(el, tr, { height: 360, xaxis: { range: [0, 10], title: 'x', fixedrange: true }, yaxis: { range: [0, 10], title: 'y', fixedrange: true }, dragmode: false });
+    const o = document.getElementById('rgOut'); o.innerHTML = msg; LB.tex(o);
+  };
+  draw();
+  el.addEventListener('click', e => {
+    const fl = el._fullLayout; if (!fl) return;
+    const bb = el.getBoundingClientRect(), xa = fl.xaxis, ya = fl.yaxis;
+    const px = e.clientX - bb.left - xa._offset, py = e.clientY - bb.top - ya._offset;
+    if (px < 0 || py < 0 || px > xa._length || py > ya._length) return;
+    pts.push([Math.round(xa.p2l(px) * 10) / 10, Math.round(ya.p2l(py) * 10) / 10]); draw();
+  });
+  document.getElementById('rgUndo').addEventListener('click', () => { pts.pop(); draw(); });
+  document.getElementById('rgReset').addEventListener('click', () => { pts = ex(); draw(); });
+  document.getElementById('rgClear').addEventListener('click', () => { pts = []; draw(); });
+});
+
+/* ---------------------------------------------------------------- Modell vs. Daten */
+LB.on(function modelData() {
+  if (!document.getElementById('mdHist')) return;
+  let seed = 21;
+  const run = LB.bind(['mdN'], v => {
+    const n = v.mdN, r = S.rng(seed), d = []; for (let i = 0; i < n; i++) d.push(r.norm());
+    const k = Math.max(4, Math.ceil(1 + Math.log2(n))), lo = -4, w = 8 / k, cnt = new Array(k).fill(0);
+    d.forEach(x => { const j = Math.floor((x - lo) / w); if (j >= 0 && j < k) cnt[j]++; });
+    LB.plot('mdHist', [{ type: 'bar', x: cnt.map((_, i) => lo + (i + 0.5) * w), y: cnt.map(c => c / (n * w)), width: w * 0.97, marker: { color: LB.rgba(C.mem, 0.6) } }, LB.curve(x => S.normPdf(x), -4, 4, C.rule)],
+      { height: 280, xaxis: { range: [-4, 4], title: 'Histogramm vs. Dichte' }, yaxis: { rangemode: 'tozero' } });
+    const s = S.sorted(d), x = [-4], y = [0]; s.forEach((q, i) => { x.push(q, q); y.push(i / n, (i + 1) / n); }); x.push(4); y.push(1);
+    LB.plot('mdEcdf', [{ x, y, mode: 'lines', line: { color: C.chg, width: 2 } }, LB.curve(t => S.Phi(t), -4, 4, C.rule)],
+      { height: 280, xaxis: { range: [-4, 4], title: 'Fₙ vs. Φ' }, yaxis: { range: [0, 1.02] } });
+    let ks = 0; s.forEach((q, i) => { ks = Math.max(ks, Math.abs((i + 1) / n - S.Phi(q)), Math.abs(i / n - S.Phi(q))); });
+    const o = document.getElementById('mdOut');
+    o.innerHTML = 'n = ' + n + ': \\(\\bar x=' + LB.fmt(S.mean(d), 3) + '\\) (Modell 0), \\(s^2=' + LB.fmt(S.var(d), 3) + '\\) (Modell 1), größter Abstand \\(|\\FF_n-\\Phi|=' + LB.fmt(ks, 3) + '\\)';
+    LB.tex(o);
+  });
+  document.getElementById('mdNew').addEventListener('click', () => { seed++; run(); });
+});
+
+/* ================================================================ Tracer */
+LB.on(function tracers3() {
+  const vR = a => 'c(' + a.join(', ') + ')', vP = a => '[' + a.join(', ') + ']';
+  new LB.Tracer({
+    id: 'trKz', title: 'x̄, s², s und Quartile nach Skript', langs: {"R": ["# Kennzahlen einer Stichprobe von Hand: Mittel, Varianz, Quantile wie im Skript", "x <- c(12, 15, 11, 18, 14, 13, 30, 16)      # Daten x_1 bis x_n #@data", "n <- length(x)                             # Stichprobenumfang #@n", "summe <- 0                                 # Summe aller Werte #@s0", "for (i in 1:n) summe <- summe + x[i]       # aufsummieren #@sum", "xbar <- summe / n                          # arithmetisches Mittel #@mean", "q <- 0                                     # Summe der quadrierten Abweichungen #@q0", "for (i in 1:n) q <- q + (x[i] - xbar)^2    # Abstand zum Mittel, quadriert #@sq", "s2 <- q / (n - 1)                          # empirische Varianz mit Nenner n - 1 #@s2", "s <- sqrt(s2)                              # empirische Standardabweichung #@s", "xs <- sort(x)                              # geordnete Werte x_(1) <= ... <= x_(n) #@sort", "quant <- function(alpha) {                 # empirisches Quantil nach Skript #@qf", "  k <- alpha * n                           # Position alpha * n #@pos", "  if (k == round(k)) (xs[k] + xs[k + 1]) / 2 else xs[ceiling(k)]   # ganzzahlig: mitteln #@case", "}", "c(xbar, s2, s, quant(0.25), quant(0.5), quant(0.75))   #@out", "# eingebaut: mean(x); var(x); sd(x); quantile(x, c(.25, .5, .75), type = 2)  (type 2 = Skript!)"], "Python": ["# Kennzahlen einer Stichprobe von Hand: Mittel, Varianz, Quantile wie im Skript", "import math", "import numpy as np", "", "x = [12, 15, 11, 18, 14, 13, 30, 16]       # Daten x_1 bis x_n #@data", "n = len(x)                                 # Stichprobenumfang #@n", "summe = 0                                  # Summe aller Werte #@s0", "for i in range(n): summe += x[i]           # aufsummieren #@sum", "xbar = summe / n                           # arithmetisches Mittel #@mean", "q = 0.0                                    # Summe der quadrierten Abweichungen #@q0", "for i in range(n): q += (x[i] - xbar) ** 2 # Abstand zum Mittel, quadriert #@sq", "s2 = q / (n - 1)                           # empirische Varianz mit Nenner n - 1 #@s2", "s = math.sqrt(s2)                          # empirische Standardabweichung #@s", "xs = sorted(x)                             # geordnete Werte x_(1) <= ... <= x_(n) #@sort", "def quant(alpha):                          # empirisches Quantil nach Skript #@qf", "    k = alpha * n                          # Position alpha * n #@pos", "    return (xs[round(k) - 1] + xs[round(k)]) / 2 if k == round(k) else xs[math.ceil(k) - 1]   # Python zählt ab 0 #@case", "print(xbar, s2, s, quant(0.25), quant(0.5), quant(0.75))   #@out", "# eingebaut: np.mean(x); np.var(x, ddof=1); np.std(x, ddof=1)", "print(np.quantile(x, [.25, .5, .75], method=\"averaged_inverted_cdf\"))   # = Skript-Definition"]},
+    input: '12 15 11 18 14 13 30 16', hint: 'beliebige Zahlen (2 bis 25)',
+    examples: [['acht Werte mit Ausreißer', '12 15 11 18 14 13 30 16'], ['Rohr-Durchmesser', '3 7 7 9 4'], ['Old Faithful', '3.6 1.8 3.333 2.283 4.533 2.883 4.7 3.6 1.95 4.35'], ['Grundlage n = 8', '2 3 5 6 8 9 11 14']],
+    parse: s => { const x = S.parse(s); if (x.length < 2 || x.length > 25) throw new Error('2 bis 25 Zahlen'); return x; },
+    codeFor: (x, L, lines) => lines.map(l => /#@data\s*$/.test(l) ? (L === 'R' ? 'x <- ' + vR(x) : 'x = ' + vP(x)) + '   # Daten #@data' : l),
+    run(rec, x) {
+      const n = x.length; let sum = 0, i = -1, xbar = null, q = 0, s2 = null, s = null, xs = null, qs = {}; const cur = { a: null, pos: null };
+      const st = () => ({ x, n, sum, i, xbar, q, s2, s, xs, qs: Object.assign({}, qs), cur: Object.assign({}, cur) });
+      rec.step('data', 'Daten eingelesen.', st());
+      rec.step('n', '\\(\\Par{n}=' + n + '\\).', st());
+      rec.step('s0', 'Summe = 0.', st());
+      for (i = 0; i < n; i++) { sum += x[i]; rec.step('sum', '+ \\(x_{' + (i + 1) + '}=' + x[i] + '\\) → Summe ' + LB.fmt(sum, 4), st()); }
+      i = -1; xbar = sum / n; rec.step('mean', '\\(\\Res{\\bar x}=\\tfrac{' + LB.fmt(sum, 4) + '}{' + n + '}=\\Res{' + LB.fmt(xbar, 4) + '}\\)', st());
+      rec.step('q0', 'Quadratsumme = 0.', st());
+      for (i = 0; i < n; i++) { const d = x[i] - xbar; q += d * d; rec.step('sq', '\\((' + x[i] + '-' + LB.fmt(xbar, 3) + ')^2=' + LB.fmt(d * d, 4) + '\\) → ' + LB.fmt(q, 4), st()); }
+      i = -1; s2 = q / (n - 1); rec.step('s2', '\\(\\Res{s^2}=\\tfrac{' + LB.fmt(q, 4) + '}{' + (n - 1) + '}=\\Res{' + LB.fmt(s2, 4) + '}\\)', st());
+      s = Math.sqrt(s2); rec.step('s', '\\(\\Res{s}=' + LB.fmt(s, 4) + '\\)', st());
+      xs = S.sorted(x); rec.step('sort', 'Geordnet: ' + xs.join(', '), st());
+      rec.step('qf', 'Quantil-Funktion nach Skript definiert.', st());
+      [0.25, 0.5, 0.75].forEach(a => {
+        const k = a * n; cur.a = a; cur.pos = k;
+        rec.step('pos', '\\(\\alpha=' + a + '\\): Position \\(\\alpha n=' + LB.fmt(k, 2) + '\\) ' + (Math.abs(k - Math.round(k)) < 1e-9 ? '(ganzzahlig)' : '(nicht ganzzahlig)'), st());
+        qs[a] = S.quantile(x, a);
+        rec.step('case', Math.abs(k - Math.round(k)) < 1e-9 ? '\\(q_{' + a + '}=\\tfrac12(x_{(' + k + ')}+x_{(' + (k + 1) + ')})=' + LB.fmt(qs[a], 4) + '\\)' : '\\(q_{' + a + '}=x_{(\\lceil' + LB.fmt(k, 2) + '\\rceil)}=x_{(' + Math.ceil(k) + ')}=' + LB.fmt(qs[a], 4) + '\\)', st());
+      });
+      cur.a = null; cur.pos = null;
+      rec.step('out', 'Ergebnis: \\(\\bar x=' + LB.fmt(xbar, 4) + ',\\ s^2=' + LB.fmt(s2, 4) + ',\\ s=' + LB.fmt(s, 4) + ',\\ q_{0.25}=' + qs[0.25] + ',\\ \\text{Median}=' + qs[0.5] + ',\\ q_{0.75}=' + qs[0.75] + '\\)', st());
+    },
+    view: s => (s.xs ? '<div class="small muted">geordnet x₍ᵢ₎:</div>' + LB.cellsHTML(s.xs.map(v => v), k => s.cur.pos !== null && (k === Math.ceil(s.cur.pos) - 1 || (Math.abs(s.cur.pos - Math.round(s.cur.pos)) < 1e-9 && (k === s.cur.pos - 1 || k === s.cur.pos))) ? 'o' : '', 1) :
+      '<div class="small muted">Daten x_i:</div>' + LB.cellsHTML(s.x, k => k === s.i ? 'o' : '', 1)) +
+      LB.kvHTML([['Summe', LB.fmt(s.sum, 4)], ['x̄', s.xbar === null ? '–' : LB.fmt(s.xbar, 4), 'res'], ['Σ(x−x̄)²', LB.fmt(s.q, 4)], ['s²', s.s2 === null ? '–' : LB.fmt(s.s2, 4), 'res'], ['s', s.s === null ? '–' : LB.fmt(s.s, 4), 'res'],
+        ['q₀.₂₅', s.qs[0.25] === undefined ? '–' : s.qs[0.25], 'res'], ['Median', s.qs[0.5] === undefined ? '–' : s.qs[0.5], 'res'], ['q₀.₇₅', s.qs[0.75] === undefined ? '–' : s.qs[0.75], 'res']])
+  });
+
+  const pairParse = s => { const [a, b] = s.split(';'); if (b === undefined) throw new Error('Format: x-Werte ; y-Werte'); const x = S.parse(a), y = S.parse(b);
+    if (x.length < 2 || x.length !== y.length || x.length > 15) throw new Error('gleich viele x und y (2 bis 15)'); return { x, y }; };
+  const pairCode = (d, L, lines) => lines.map(l => /#@x\s*$/.test(l) ? (L === 'R' ? 'x <- ' + vR(d.x) : 'x = np.array(' + vP(d.x) + ')') + '   # x-Werte #@x' : /#@y\s*$/.test(l) ? (L === 'R' ? 'y <- ' + vR(d.y) : 'y = np.array(' + vP(d.y) + ')') + '   # y-Werte #@y' : l);
+  const PEX = [['fünf Paare', '1 2 3 4 5 ; 2 4 5 4 5'], ['perfekt steigend', '1 2 3 4 ; 3 5 7 9'], ['U-Form', '-2 -1 0 1 2 ; 4 1 0 1 4'], ['gegenläufig', '1 2 3 4 5 6 ; 10 8 9 5 4 2']];
+
+  new LB.Tracer({
+    id: 'trKor', title: 'Kovarianz und Korrelation', langs: {"R": ["# Empirische Kovarianz und Korrelation Schritt für Schritt", "x <- c(1, 2, 3, 4, 5)                      # erste Messgröße #@x", "y <- c(2, 4, 5, 4, 5)                      # zweite Messgröße, paarweise zu x #@y", "n <- length(x); mx <- mean(x); my <- mean(y)   # Umfang und Mittelwerte #@m", "sxy <- 0; sxx <- 0; syy <- 0               # drei Summen #@init", "for (i in 1:n) {                           # jedes Paar einmal #@loop", "  dx <- x[i] - mx; dy <- y[i] - my         # Abweichungen vom jeweiligen Mittel #@d", "  sxy <- sxy + dx * dy                     # gemeinsame Abweichung #@xy", "  sxx <- sxx + dx^2; syy <- syy + dy^2     # quadrierte Abweichungen #@xx", "}", "r <- sxy / sqrt(sxx * syy)                 # r = s_xy / (s_x s_y), Nenner n - 1 kürzt sich #@r", "cat(\"s_xy =\", sxy / (n - 1), \" r =\", r, \"\\n\")   #@out", "# eingebaut: cov(x, y); cor(x, y); plot(x, y)"], "Python": ["# Empirische Kovarianz und Korrelation Schritt für Schritt", "import numpy as np", "", "x = np.array([1, 2, 3, 4, 5])              # erste Messgröße #@x", "y = np.array([2, 4, 5, 4, 5])              # zweite Messgröße, paarweise zu x #@y", "n, mx, my = len(x), x.mean(), y.mean()     # Umfang und Mittelwerte #@m", "sxy = sxx = syy = 0.0                      # drei Summen #@init", "for i in range(n):                         # jedes Paar einmal #@loop", "    dx, dy = x[i] - mx, y[i] - my          # Abweichungen vom jeweiligen Mittel #@d", "    sxy += dx * dy                         # gemeinsame Abweichung #@xy", "    sxx += dx ** 2; syy += dy ** 2         # quadrierte Abweichungen #@xx", "r = sxy / np.sqrt(sxx * syy)               # r = s_xy / (s_x s_y), Nenner n - 1 kürzt sich #@r", "print(\"s_xy =\", sxy / (n - 1), \" r =\", r)  #@out", "# eingebaut: np.cov(x, y)[0, 1]; np.corrcoef(x, y)[0, 1]"]}, input: '1 2 3 4 5 ; 2 4 5 4 5', hint: 'x-Werte ; y-Werte', examples: PEX, parse: pairParse, codeFor: pairCode,
+    run(rec, d) {
+      const n = d.x.length, mx = S.mean(d.x), my = S.mean(d.y); let sxy = 0, sxx = 0, syy = 0, i = -1, r = null; const rows = [];
+      const st = () => ({ d, mx, my, sxy, sxx, syy, i, r, rows: rows.slice() });
+      rec.step('x', 'x-Werte.', st()); rec.step('y', 'y-Werte.', st());
+      rec.step('m', '\\(\\bar x=' + LB.fmt(mx, 4) + ',\\ \\bar y=' + LB.fmt(my, 4) + '\\)', st());
+      rec.step('init', 'Drei Summen = 0.', st());
+      for (i = 0; i < n; i++) {
+        rec.step('loop', 'Paar \\(\\Idx{i}=' + (i + 1) + '\\): (' + d.x[i] + ', ' + d.y[i] + ').', st());
+        const dx = d.x[i] - mx, dy = d.y[i] - my; rows.push([dx, dy]);
+        rec.step('d', 'Abweichungen \\(' + LB.fmt(dx, 3) + '\\) und \\(' + LB.fmt(dy, 3) + '\\).', st());
+        sxy += dx * dy; rec.step('xy', 'Produkt \\(' + LB.fmt(dx * dy, 4) + '\\) → \\(S_{xy}=' + LB.fmt(sxy, 4) + '\\)' + (dx * dy > 0 ? ' (gleichläufig)' : dx * dy < 0 ? ' (gegenläufig)' : ''), st());
+        sxx += dx * dx; syy += dy * dy; rec.step('xx', '\\(S_{xx}=' + LB.fmt(sxx, 4) + ',\\ S_{yy}=' + LB.fmt(syy, 4) + '\\)', st());
+      }
+      i = -1; r = sxy / Math.sqrt(sxx * syy);
+      rec.step('r', '\\(\\Res{r}=\\tfrac{' + LB.fmt(sxy, 4) + '}{\\sqrt{' + LB.fmt(sxx, 4) + '\\cdot' + LB.fmt(syy, 4) + '}}=\\Res{' + LB.fmt(r, 4) + '}\\)', st());
+      rec.step('out', 'Ausgabe: \\(s_{xy}=' + LB.fmt(sxy / (n - 1), 4) + '\\), r = ' + LB.fmt(r, 4), st());
+    },
+    view: s => '<table class="tbl"><tr><th>i</th><th class="r">x</th><th class="r">y</th><th class="r">x−x̄</th><th class="r">y−ȳ</th><th class="r">Produkt</th></tr>' +
+      s.d.x.map((x, k) => '<tr' + (k === s.i ? ' style="outline:1px solid var(--chg)"' : '') + '><td class="kw-idx">' + (k + 1) + '</td><td class="r kw-mem">' + x + '</td><td class="r kw-mem">' + s.d.y[k] + '</td>' +
+        (s.rows[k] ? '<td class="r">' + LB.fmt(s.rows[k][0], 3) + '</td><td class="r">' + LB.fmt(s.rows[k][1], 3) + '</td><td class="r ' + (s.rows[k][0] * s.rows[k][1] >= 0 ? 'ok' : 'bad') + '">' + LB.fmt(s.rows[k][0] * s.rows[k][1], 3) + '</td>' : '<td></td><td></td><td></td>') + '</tr>').join('') +
+      '</table>' + LB.kvHTML([['S_xy', LB.fmt(s.sxy, 4)], ['S_xx', LB.fmt(s.sxx, 4)], ['S_yy', LB.fmt(s.syy, 4)], ['r', s.r === null ? '–' : LB.fmt(s.r, 4), 'res']])
+  });
+
+  new LB.Tracer({
+    id: 'trReg', title: 'Ausgleichsgerade und R²', langs: {"R": ["# Einfache lineare Regression mit der Methode der kleinsten Quadrate", "x <- c(1, 2, 3, 4, 5)                      # erklärende Variable #@x", "y <- c(2, 4, 5, 4, 5)                      # Zielgröße #@y", "mx <- mean(x); my <- mean(y)               # Schwerpunkt der Punktwolke #@m", "Sxy <- sum((x - mx) * (y - my))            # Summe der Kreuzprodukte #@sxy", "Sxx <- sum((x - mx)^2)                     # Summe der Quadrate in x #@sxx", "b <- Sxy / Sxx                             # Steigung #@b", "a <- my - b * mx                           # Achsenabschnitt: Gerade geht durch (mx, my) #@a", "yhat <- a + b * x                          # vorhergesagte Werte auf der Geraden #@yhat", "res <- y - yhat                            # Residuen: Abstand senkrecht zur x-Achse #@res", "R2 <- 1 - sum(res^2) / sum((y - my)^2)     # Bestimmtheitsmaß #@R2", "cat(\"y =\", a, \"+\", b, \"x   R^2 =\", R2, \"\\n\")   #@out", "fit <- lm(y ~ x); coef(fit); summary(fit)$r.squared   # eingebaut", "plot(x, y); abline(fit)                    # Punktwolke mit Ausgleichsgerade"], "Python": ["# Einfache lineare Regression mit der Methode der kleinsten Quadrate", "import numpy as np", "from scipy import stats", "", "x = np.array([1, 2, 3, 4, 5])              # erklärende Variable #@x", "y = np.array([2, 4, 5, 4, 5])              # Zielgröße #@y", "mx, my = x.mean(), y.mean()                # Schwerpunkt der Punktwolke #@m", "Sxy = np.sum((x - mx) * (y - my))          # Summe der Kreuzprodukte #@sxy", "Sxx = np.sum((x - mx) ** 2)                # Summe der Quadrate in x #@sxx", "b = Sxy / Sxx                              # Steigung #@b", "a = my - b * mx                            # Achsenabschnitt: Gerade geht durch (mx, my) #@a", "yhat = a + b * x                           # vorhergesagte Werte auf der Geraden #@yhat", "res = y - yhat                             # Residuen: Abstand senkrecht zur x-Achse #@res", "R2 = 1 - np.sum(res ** 2) / np.sum((y - my) ** 2)   # Bestimmtheitsmaß #@R2", "print(f\"y = {a:.4f} + {b:.4f} x   R^2 = {R2:.4f}\")   #@out", "fit = stats.linregress(x, y); print(fit.intercept, fit.slope, fit.rvalue ** 2)   # eingebaut"]}, input: '1 2 3 4 5 ; 2 4 5 4 5', hint: 'x-Werte ; y-Werte', examples: PEX, parse: pairParse, codeFor: pairCode,
+    run(rec, d) {
+      const n = d.x.length, mx = S.mean(d.x), my = S.mean(d.y); let Sxy = null, Sxx = null, b = null, a = null, yh = null, res = null, R2 = null;
+      const st = () => ({ d, mx, my, Sxy, Sxx, b, a, yh, res, R2 });
+      rec.step('x', 'x-Werte.', st()); rec.step('y', 'y-Werte.', st());
+      rec.step('m', 'Schwerpunkt \\((\\bar x,\\bar y)=(' + LB.fmt(mx, 3) + ',' + LB.fmt(my, 3) + ')\\).', st());
+      Sxy = S.sum(d.x.map((v, i) => (v - mx) * (d.y[i] - my))); rec.step('sxy', '\\(S_{xy}=' + LB.fmt(Sxy, 4) + '\\)', st());
+      Sxx = S.sum(d.x.map(v => (v - mx) ** 2)); rec.step('sxx', '\\(S_{xx}=' + LB.fmt(Sxx, 4) + '\\)', st());
+      if (Sxx === 0) { rec.step('b', '⚠ alle x gleich: keine Steigung bestimmbar.', st()); return; }
+      b = Sxy / Sxx; rec.step('b', '\\(\\Res{b}=\\tfrac{' + LB.fmt(Sxy, 4) + '}{' + LB.fmt(Sxx, 4) + '}=\\Res{' + LB.fmt(b, 4) + '}\\)', st());
+      a = my - b * mx; rec.step('a', '\\(\\Res{a}=' + LB.fmt(my, 4) + '-' + LB.fmt(b, 4) + '\\cdot' + LB.fmt(mx, 4) + '=\\Res{' + LB.fmt(a, 4) + '}\\)', st());
+      yh = d.x.map(v => a + b * v); rec.step('yhat', 'Vorhersagen \\(\\hat y_i\\) berechnet.', st());
+      res = d.y.map((v, i) => v - yh[i]); rec.step('res', 'Residuen \\(e_i=y_i-\\hat y_i\\), Summe \\(=' + LB.fmt(S.sum(res), 6) + '\\).', st());
+      const sse = S.sum(res.map(e => e * e)), sst = S.sum(d.y.map(v => (v - my) ** 2)); R2 = sst > 0 ? 1 - sse / sst : NaN;
+      rec.step('R2', '\\(\\Res{R^2}=1-\\tfrac{' + LB.fmt(sse, 4) + '}{' + LB.fmt(sst, 4) + '}=\\Res{' + LB.fmt(R2, 4) + '}\\)', st());
+      rec.step('out', '\\(\\hat y=' + LB.fmt(a, 4) + '+' + LB.fmt(b, 4) + 'x\\), \\(R^2=' + LB.fmt(R2, 4) + '\\)', st());
+    },
+    view: s => {
+      const d = s.d, W = 420, H = 190, xmn = Math.min(...d.x) - 1, xmx = Math.max(...d.x) + 1, ymn = Math.min(...d.y) - 1, ymx = Math.max(...d.y) + 1;
+      const X = x => 20 + (x - xmn) / (xmx - xmn) * (W - 30), Y = y => H - 15 - (y - ymn) / (ymx - ymn) * (H - 25);
+      let g = '<svg viewBox="0 0 ' + W + ' ' + H + '"><rect x="0" y="0" width="' + W + '" height="' + H + '" fill="none"/>';
+      if (s.b !== null) g += '<line x1="' + X(xmn) + '" y1="' + Y(s.a + s.b * xmn) + '" x2="' + X(xmx) + '" y2="' + Y(s.a + s.b * xmx) + '" stroke="' + C.chg + '" stroke-width="2"/>';
+      if (s.res) d.x.forEach((x, i) => { g += '<line x1="' + X(x) + '" y1="' + Y(d.y[i]) + '" x2="' + X(x) + '" y2="' + Y(s.yh[i]) + '" stroke="' + C.res + '" stroke-dasharray="3 3"/>'; });
+      d.x.forEach((x, i) => { g += '<circle cx="' + X(x) + '" cy="' + Y(d.y[i]) + '" r="5" fill="' + C.mem + '"/>'; });
+      g += '<text x="' + X(s.mx) + '" y="' + (Y(s.my) + 5) + '" fill="' + C.par + '" font-size="16" text-anchor="middle">✕</text></svg>';
+      return g + LB.kvHTML([['b', s.b === null ? '–' : LB.fmt(s.b, 4), 'res'], ['a', s.a === null ? '–' : LB.fmt(s.a, 4), 'res'], ['R²', s.R2 === null ? '–' : LB.fmt(s.R2, 4), 'res']]);
+    }
+  });
+});
+
+/* ---------------------------------------------------------------- Training */
+LB.on(function train3() {
+  if (!document.getElementById('q3Task')) return;
+  const r = S.rng(Date.now() % 77777); let d;
+  const neu = () => {
+    const n = 5 + Math.floor(r() * 6); d = []; for (let i = 0; i < n; i++) d.push(1 + Math.floor(r() * 20));
+    document.getElementById('q3Task').innerHTML = 'Daten (n = ' + n + '): <b>' + d.join(', ') + '</b>. Berechne Mittel, Standardabweichung, Median und unteres Quartil (Skript-Definition), je 2 Nachkommastellen.';
+    ['q3m', 'q3s', 'q3md', 'q3q1'].forEach(id => document.getElementById(id).value = ''); document.getElementById('q3Res').innerHTML = '';
+  };
+  document.getElementById('q3New').addEventListener('click', neu);
+  document.getElementById('q3Chk').addEventListener('click', () => {
+    const want = [S.mean(d), S.sd(d), S.median(d), S.quantile(d, 0.25)], ids = ['q3m', 'q3s', 'q3md', 'q3q1'], names = ['x̄', 's', 'Median', 'q₀.₂₅'];
+    document.getElementById('q3Res').innerHTML = ids.map((id, k) => { const v = parseFloat(document.getElementById(id).value.replace(',', '.')); const ok = Math.abs(v - want[k]) < 0.006;
+      return (ok ? '<span class="ok">✔ ' : '<span class="bad">✗ ') + names[k] + ' = ' + LB.fmt(want[k], 4) + '</span>'; }).join(' · ') + '<br>geordnet: ' + S.sorted(d).join(', ') + ' · n·0.25 = ' + LB.fmt(d.length * 0.25, 2);
+  });
+  neu();
+});
+
+</script>
+</body>
+</html>
