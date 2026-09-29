@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kap. 7 · Statistische Tests und Vertrauensintervalle · Lernbegleiter Statistik I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+/* ================================================================
+   Lernbegleiter Statistik I · gemeinsamer Stil (dunkler Bildatlas)
+   Farbe = Rolle, überall gleich: Formel, Code, Plot, Fließtext.
+   ================================================================ */
+:root{
+  --bg:#0d1117; --card:#161b22; --card2:#1c2129; --panel:#11161d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+  --res:#f85149;  /* Ergebnis / gesuchte Größe                 rot    */
+  --chg:#d29922;  /* Änderung / Operation / Transformation     orange */
+  --rule:#bc8cff; /* Regel / Operator P,E,Var / Verteilung     lila   */
+  --par:#58a6ff;  /* Parameter / Eingabe  p, λ, μ, σ, n, α     blau   */
+  --idx:#3fb950;  /* Index / Zähler / Freiheitsgrad / „richtig" grün  */
+  --cond:#56d4dd; /* Bedingung / Vergleich / Hypothese         cyan   */
+  --mem:#f778ba;  /* Ereignis / Zufallsvariable / Daten        pink   */
+  --gl:#6e9fd8;   /* Kennzeichen „Grundlage"                          */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{hyphens:auto;overflow-wrap:break-word;margin:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.6}
+a{color:var(--par)}
+.wrap{max-width:1640px;margin:0 auto;padding:1.2rem 1.6rem 5rem}
+h1{font-family:'Crimson Pro',Georgia,serif;font-size:2.4rem;line-height:1.15;margin:.4rem 0 .4rem}
+h2{font-size:1.6rem;margin:2.6rem 0 .7rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h2 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.5rem}
+h3{font-size:1.25rem;margin:1.9rem 0 .5rem}
+h3 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.4rem}
+h4{font-size:1.05rem;margin:1.2rem 0 .4rem}
+.one{color:var(--muted);margin:-.3rem 0 .8rem}
+p{margin:.5rem 0}
+code{hyphens:none;font-family:'JetBrains Mono',Consolas,monospace;font-size:.86em;background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:0 .3rem}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--border);padding:.3rem .55rem;text-align:left;vertical-align:top}
+th{background:var(--card2);color:var(--muted);font-weight:600}
+td.r,th.r{text-align:right}
+.tbl{max-width:100%}
+svg{max-width:100%;height:auto}
+.katex-display{margin:.5rem 0;max-width:100%}
+.katex{font-size:1.07em}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0;position:relative}
+.card>b:first-child,.ctitle{display:block;font-size:1.08rem;margin-bottom:.35rem}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin:.15rem 0}
+
+/* ---------- Farbige Schlüsselwörter im Fließtext ---------- */
+.kw{font-weight:600}
+.kw-res{color:var(--res)} .kw-chg{color:var(--chg)} .kw-rule{color:var(--rule)} .kw-par{color:var(--par)}
+.kw-idx{color:var(--idx)} .kw-cond{color:var(--cond)} .kw-mem{color:var(--mem)}
+
+/* ---------- Herkunfts-Kennzeichen ---------- */
+.src{position:absolute;top:.55rem;right:.7rem;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.05rem .45rem;border:1px solid var(--border);color:var(--muted);background:var(--bg)}
+.src.g{color:var(--gl);border-color:var(--gl)}
+.src.n{color:var(--idx);border-color:color-mix(in srgb,var(--idx) 60%,transparent)}
+.srcin{display:inline-block;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.02rem .42rem;border:1px solid var(--gl);color:var(--gl);vertical-align:middle;margin-left:.35rem}
+.srcin.n{border-color:var(--idx);color:var(--idx)}
+.gblk{border-left:3px solid color-mix(in srgb,var(--gl) 70%,transparent);padding-left:.8rem;margin:.6rem 0}
+body.hl-g .is-g{box-shadow:0 0 0 2px var(--gl)}
+body.hl-g .gblk{background:color-mix(in srgb,var(--gl) 9%,transparent)}
+.has-src{padding-top:1.5rem}
+
+/* ---------- Kopf: NICHT sticky ---------- */
+.lbtop{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.1rem;padding:.8rem 1.4rem;border-bottom:1px solid var(--border);background:var(--card)}
+.lbtop .lbt{min-width:0;flex:1 1 280px}
+.lbtop .lbt b{font-size:1.05rem;margin-right:.6rem}
+.lbtop .lbt span{color:var(--muted);font-size:.85rem;display:block}
+.lbq{display:flex;flex-wrap:wrap;gap:.3rem .45rem;flex:1 1 520px}
+.lbq a{font-size:.8rem;text-decoration:none;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.12rem .5rem;white-space:nowrap}
+.lbq a:hover{border-color:var(--rule);color:var(--rule)}
+.lbq a small{color:var(--muted);margin-left:.3rem}
+.lbburger,.lbfab{font:inherit;font-weight:700;cursor:pointer;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--text);padding:.3rem .75rem}
+.lbfab{position:fixed;right:18px;bottom:18px;z-index:300;border-radius:50%;width:48px;height:48px;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.lbmenu{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.6);display:none;overflow:auto;padding:2.2rem 2rem}
+body.menu-open .lbmenu{display:block}
+.lbm-in{max-width:1640px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.4rem 1.4rem}
+.lbm-head{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-bottom:.6rem}
+.lbm-head .sp{margin-left:auto}
+.lbm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.9rem 1.4rem}
+.lbm-grid h5{margin:.2rem 0 .3rem;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--rule)}
+.lbm-grid a{display:flex;gap:.5rem;align-items:baseline;text-decoration:none;color:var(--text);padding:.16rem .35rem;border-radius:6px;font-size:.9rem}
+.lbm-grid a:hover{background:var(--card2)}
+.lbm-grid a span{color:var(--muted);font-size:.8rem}
+.lbm-grid a.sub{padding-left:1.1rem;font-size:.86rem}
+.lbm-opts{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;align-items:center;margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--border);font-size:.88rem;color:var(--muted)}
+.lbm-opts input[type=text]{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:min(30rem,100%)}
+.lbm-parts{display:flex;flex-wrap:wrap;gap:.35rem .5rem;align-items:center;margin:.2rem 0 .8rem;font-size:.86rem}
+.lbm-parts a{border:1px solid var(--border);border-radius:7px;padding:.1rem .5rem;text-decoration:none;color:var(--text)}
+.lbm-parts a.cur{border-color:var(--rule);color:var(--rule)}
+
+/* ---------- Titelbereich ---------- */
+.hero{padding:1rem 0 .4rem}
+.hero .kick{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rule);font-weight:700}
+.hero .lead{font-size:1.1rem;color:#c9d1d9;max-width:1100px}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.45rem .9rem;margin:.6rem 0}
+.legend div{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.35rem .6rem;font-size:.92rem}
+.legend b{font-family:'JetBrains Mono',monospace}
+
+/* ---------- Anatomie ---------- */
+.anat-f{text-align:center;font-size:1.15rem;margin:.3rem 0 .6rem}
+.anat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.45rem 1.2rem}
+.anat>div{display:grid;grid-template-columns:minmax(4.2rem,auto) minmax(0,1fr);gap:.6rem;align-items:baseline;background:var(--card2);border-radius:8px;padding:.35rem .6rem}
+.anat .sym{font-weight:600;text-align:center}
+.anat>div>span{min-width:0}
+.read{border-left:4px solid var(--rule);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+.why{border-left:4px solid var(--chg);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+
+/* ---------- Von-null-Karte ---------- */
+.vonnull{border:1.6px solid var(--rule);border-radius:14px;background:var(--panel);padding:1rem 1.2rem .8rem;margin:1.1rem 0 1.4rem;position:relative}
+.vonnull .vn-ttl{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem;font-size:1.2rem;font-weight:700;padding-right:6rem}
+.vn-badge{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#fff;background:var(--rule);border-radius:6px;padding:.16rem .55rem;font-weight:600}
+.vonnull .vn-task{border-left:4px solid var(--res);background:var(--card2);border-radius:8px;padding:.6rem .9rem;margin:.5rem 0 .6rem}
+details>summary{cursor:pointer;font-weight:700;color:var(--rule);padding:.35rem 0}
+.vn-step{display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.65rem;align-items:start;margin:.55rem 0}
+.vnn{display:inline-flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--rule);color:#fff;font-weight:700;font-size:.85rem}
+.vn-res{margin:.6rem 0 .3rem;padding:.45rem .85rem;border-radius:9px;font-weight:700;border:1.5px solid var(--idx);color:var(--idx);background:color-mix(in srgb,var(--idx) 8%,transparent)}
+.trap{margin:.5rem 0;padding:.45rem .85rem;border-radius:9px;border:1.3px solid var(--chg);background:color-mix(in srgb,var(--chg) 8%,transparent)}
+.trap b:first-child{color:var(--chg)}
+.blsol{border-color:var(--par)}
+.blsol .vn-badge{background:var(--par)}
+
+/* ---------- Prüfungs-Trainer (aus der Grundlage) ---------- */
+.pt{border:1px dashed color-mix(in srgb,var(--gl) 70%,transparent);border-radius:12px;padding:.7rem 1rem;margin:.9rem 0;background:#121a24;position:relative}
+.pt .ptq{padding-right:6rem}
+.pt .ptq b:first-child{color:var(--gl)}
+.pt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-top:.4rem}
+.pt-grid>div{background:var(--card2);border-radius:8px;padding:.4rem .6rem;font-size:.95rem}
+.pt-grid>div>i{display:block;font-style:normal;font-size:.78rem;color:var(--muted);font-weight:700;letter-spacing:.04em}
+
+/* ---------- Bausteine ---------- */
+.idea{border-left:4px solid var(--rule);background:var(--card);border-radius:10px;padding:.6rem 1rem;margin:.8rem 0}
+.idea>b:first-child{color:var(--rule)}
+.cook{counter-reset:ck;list-style:none;padding-left:0}
+.cook>li{counter-increment:ck;position:relative;padding-left:2.3rem;margin:.4rem 0}
+.cook>li::before{content:counter(ck);position:absolute;left:0;top:.05rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--card2);border:1px solid var(--rule);color:var(--rule);font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.ex3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem}
+.ex{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.7rem .9rem}
+.ex .lvl{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.ex .lvl.l1{color:var(--idx)} .ex .lvl.l2{color:var(--chg)} .ex .lvl.l3{color:var(--res)}
+.verdict{margin-top:.5rem;border-top:1px solid var(--border);padding-top:.4rem}
+.verdict b{color:var(--idx)}
+.vs{border:1.3px solid var(--cond);border-radius:12px;padding:.6rem 1rem;margin:.8rem 0;background:color-mix(in srgb,var(--cond) 6%,transparent)}
+.vs>b:first-child{color:var(--cond)}
+.cheat td:first-child{white-space:normal}
+
+/* ---------- Video-Chips ---------- */
+.vids{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}
+.vid{display:inline-flex;flex-wrap:wrap;align-items:center;gap:.35rem;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.2rem .35rem .2rem .6rem;font-size:.86rem;max-width:100%}
+.vid .vt{color:var(--text)}
+.vid .vs2{color:var(--muted);font-size:.74rem;font-family:'JetBrains Mono',monospace}
+.vid a,.vid button{font:inherit;font-size:.8rem;cursor:pointer;border:1px solid var(--border);border-radius:6px;padding:0 .4rem;background:var(--bg);color:var(--text);text-decoration:none}
+.vid a:hover{border-color:var(--chg);color:var(--chg)}
+
+/* ---------- Code ---------- */
+.code{margin:.7rem 0;border:1px solid var(--border);border-radius:10px;background:#0b0f14;overflow:hidden}
+.code .ch{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;background:var(--card2);padding:.3rem .8rem;font-size:.85rem;border-bottom:1px solid var(--border)}
+.code .ch b{color:var(--text)}
+.code .ch span{color:var(--muted)}
+.code pre{margin:0;padding:.5rem 0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.83rem;line-height:1.5}
+.code .row,.tr-code .row{white-space:pre-wrap;word-break:break-word;padding:0 .7rem 0 3.4em;text-indent:-2.7em}
+.code .ln,.tr-code .ln{display:inline-block;width:2.2em;text-indent:0;color:#5c6370;margin-right:.5em;text-align:right;user-select:none}
+.tok-c{color:#7d8590;font-style:italic}
+.tok-k{color:#ff7b72}
+.tok-t{color:#79c0ff}
+.tok-s{color:#a5d6ff}
+.tok-n{color:#e3b341}
+.tok-a{color:var(--chg);font-weight:700}
+
+/* ---------- Tracer ---------- */
+.tracer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0}
+.tr-head{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-bottom:.6rem}
+.tr-head input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.2rem .5rem;width:min(28rem,100%)}
+.tr-head select{max-width:100%;font:inherit;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .4rem}
+.tracer button,.btn{font:inherit;cursor:pointer;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.2rem .6rem}
+.tracer button:hover,.btn:hover{border-color:var(--chg)}
+.btn.on,.tracer button.on{border-color:var(--rule);color:var(--rule);background:color-mix(in srgb,var(--rule) 14%,transparent)}
+.tr-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1rem}
+.tr-code{margin:0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.82rem;background:#0b0f14;border:1px solid var(--border);border-radius:10px;padding:.5rem 0;line-height:1.5}
+.tr-code .row.cur{background:color-mix(in srgb,var(--chg) 22%,transparent);outline:1px solid var(--chg)}
+.tr-code .hits{color:var(--idx);margin-left:.6em;font-size:.75rem}
+.tr-state{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.6rem .8rem;min-width:0}
+.tr-ctl{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-top:.6rem}
+.tr-ctl input[type=range]{flex:1 1 200px}
+.tr-cnt{color:var(--muted);font-size:.85rem}
+.tr-msg{margin-top:.5rem;border-left:4px solid var(--chg);padding:.3rem .8rem;background:var(--card2);border-radius:6px;min-height:2.2rem}
+.cells{display:flex;flex-wrap:wrap;gap:3px;margin:.2rem 0 .4rem}
+.cells .c{min-width:2.4rem;text-align:center;border:1px solid var(--border);border-radius:5px;padding:.1rem .25rem;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem}
+.cells .c i{display:block;font-style:normal;font-size:.62rem;font-weight:400;color:var(--muted)}
+.cells .c.m{border-color:var(--idx);background:color-mix(in srgb,var(--idx) 22%,transparent)}
+.cells .c.h{border-color:var(--res);background:color-mix(in srgb,var(--res) 18%,transparent)}
+.cells .c.o{border-color:var(--chg);background:color-mix(in srgb,var(--chg) 20%,transparent)}
+.cells .c.out{opacity:.3}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.35rem;margin:.3rem 0}
+.kv div{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.2rem .45rem;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.kv div i{display:block;font-style:normal;color:var(--muted);font-size:.7rem;font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Visuals / Regler ---------- */
+.viz{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0;position:relative}
+.viz .ctl{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;align-items:center;margin:.3rem 0 .5rem}
+.viz .ctl label{display:flex;align-items:center;gap:.5rem;font-size:.92rem;flex:1 1 230px}
+.viz .ctl input[type=range]{flex:1 1 120px;accent-color:var(--par)}
+.viz .ctl output{font-family:'JetBrains Mono',monospace;color:var(--par);min-width:3.5rem}
+.viz input[type=number],.viz input[type=text],.viz textarea{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;max-width:100%}
+.viz textarea{width:100%;min-height:3rem}
+.plot{width:100%;min-height:280px}
+.recog{margin-top:.4rem;font-size:.92rem;color:#c9d1d9}
+.recog b:first-child{color:var(--chg)}
+.out{font-family:'JetBrains Mono',monospace;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .6rem;margin:.4rem 0}
+.ok{color:var(--idx)} .bad{color:var(--res)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:.25rem}
+
+/* ---------- Brücke ---------- */
+.bridge svg text{font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Training ---------- */
+.quiz input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:8rem}
+
+footer.foot{color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem;padding-top:1rem}
+
+@media(max-width:900px){
+  .wrap{padding:1rem .9rem 5rem}
+  .tr-grid,.anat,.two,.three,.ex3,.pt-grid{grid-template-columns:minmax(0,1fr)}
+  .lbmenu{padding:1rem .6rem}
+  h1{font-size:1.8rem}
+  .vonnull .vn-ttl,.pt .ptq{padding-right:0;padding-top:1rem}
+}
+@media(max-width:640px){
+  /* Tabellen werden zu gestapelten Karten: nie seitwärts scrollen */
+  .tbl,.tbl tbody,.tbl tr,.tbl td,.tbl th{display:block;width:100%}
+  .tbl tr{border:1px solid var(--border);border-radius:8px;margin:.4rem 0;padding:.2rem}
+  .tbl td,.tbl th{border:0;padding:.15rem .4rem;text-align:left!important}
+  .tbl th{background:none}
+  .dgrid{grid-template-columns:2.2rem repeat(6,minmax(0,1fr))}
+  body{font-size:16px}
+  .katex-display{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+  .anat>div{grid-template-columns:minmax(0,1fr)}
+  .anat>div>span,.pt-grid>div,.vn-step>div,td{overflow-x:auto}
+  .katex{font-size:1em}
+}
+
+
+</style>
+</head>
+<body>
+<header class="lbtop">
+  <button class="lbburger" id="lbOpen" aria-label="Inhalt öffnen">☰ Inhalt</button>
+  <div class="lbt"><b>Kap. 7 · Statistische Tests und Vertrauensintervalle</b><span>H₀/H_A, Fehler 1./2. Art, α, Verwerfungsbereich, Binomial-, Z-, t-Test, Macht, P-Wert, VI-Dualität, Vorzeichen, Wilcoxon</span></div>
+  <nav class="lbq"><a href="#s7-0">🔬 Master-Anatomie<small>Leitfragen</small></a><a href="#s7-1">7.1 Binomialtest<small>H₀</small></a><a href="#s7-2">7.2 Z-Test &amp; t-Test<small>Z bei σ bekannt</small></a><a href="#s7-3">7.3 Macht &amp; P-Wert<small>1−β</small></a><a href="#s7-4">7.4 VI &amp; Dualität<small>x̄ ± t·s/√n</small></a><a href="#s7-5">7.5 Nicht normal<small>Vorzeichen-Test</small></a><a href="#s7-9">🌉 Brücke &amp; Lernziele<small>Sollwert → Entscheidung</small></a><a href="#s7-cheat">📋 Cheat-Sheet<small>Tests auf einen Blick</small></a><a href="#s7-glossar">📚 Glossar<small>Fachwörter deutsch/englisch</small></a><a href="#s7-train">🏋 Training<small>Tests mit Zufallszahlen</small></a></nav>
+</header>
+<div class="lbmenu" id="lbMenu"><div class="lbm-in">
+  <div class="lbm-head"><b>☰ Inhalt · Kap. 7 · Statistische Tests und Vertrauensintervalle</b><button class="lbburger sp" data-close>✕ schließen</button></div>
+  <div class="lbm-parts"><span class="muted">Teil wechseln:</span><a href="01_Grundlagen_Wahrscheinlichkeit.html" data-part="0">Kap. 1 · Grundlagen W-Rechnung</a><a href="02_Verteilungen.html" data-part="1">Kap. 2 · Verteilungen</a><a href="03_Deskriptive_Statistik.html" data-part="2">Kap. 3 · Deskriptive Statistik</a><a href="04_Mehrdimensionale_Verteilungen.html" data-part="3">Kap. 4 · Mehrdimensional</a><a href="05_Grenzwertsaetze.html" data-part="4">Kap. 5 · Grenzwertsätze</a><a href="06_Parameterschaetzung.html" data-part="5">Kap. 6 · Parameterschätzung</a><a href="07_Tests_und_Vertrauensintervalle.html" data-part="6" class="cur">Kap. 7 · Tests &amp; VI</a><a href="08_Zwei_Stichproben.html" data-part="7">Kap. 8 · Zwei Stichproben</a><a href="09_Rechner.html" data-part="8">🧰 Statistik-Rechner</a></div>
+  <div class="lbm-grid"><div><h5>🔬 Master-Anatomie</h5><a href="#s7-0"><b>🔬 Master-Anatomie</b><span>Leitfragen, Test-Rezept</span></a></div><div><h5>7.1 Binomialtest</h5><a href="#s7-1"><b>7.1 Binomialtest</b><span>H₀, H_A, Fehler 1./2. Art, α, K</span></a><a href="#s7-1-a" class="sub"><b>Binomialtest-Tracer</b><span>K schrittweise konstruieren</span></a></div><div><h5>7.2 Z-Test &amp; t-Test</h5><a href="#s7-2"><b>7.2 Z-Test &amp; t-Test</b><span>Z bei σ bekannt, T ~ t_{n−1}</span></a><a href="#s7-2-a" class="sub"><b>t-Test-Tracer</b><span>x̄, s, SE, t, krit, p, VI</span></a></div><div><h5>7.3 Macht &amp; P-Wert</h5><a href="#s7-3"><b>7.3 Macht &amp; P-Wert</b><span>1−β, benötigtes n, p ≤ α, Signifikanz</span></a></div><div><h5>7.4 VI &amp; Dualität</h5><a href="#s7-4"><b>7.4 VI &amp; Dualität</b><span>x̄ ± t·s/√n, μ₀ ∈ I ⇔ nicht verwerfen, Relevanz</span></a></div><div><h5>7.5 Nicht normal</h5><a href="#s7-5"><b>7.5 Nicht normal</b><span>Vorzeichen-Test, Wilcoxon-Test</span></a><a href="#s7-5-a" class="sub"><b>Schema 6 Schritte</b><span>Rezept und 3 Beispiele</span></a></div><div><h5>🌉 Brücke &amp; Lernziele</h5><a href="#s7-9"><b>🌉 Brücke &amp; Lernziele</b><span>Sollwert → Entscheidung</span></a></div><div><h5>📋 Cheat-Sheet</h5><a href="#s7-cheat"><b>📋 Cheat-Sheet</b><span>Tests auf einen Blick</span></a></div><div><h5>📚 Glossar</h5><a href="#s7-glossar"><b>📚 Glossar</b><span>Fachwörter deutsch/englisch</span></a></div><div><h5>🏋 Training</h5><a href="#s7-train"><b>🏋 Training</b><span>Tests mit Zufallszahlen</span></a></div></div>
+  <div class="lbm-opts">
+    <label><input type="checkbox" id="lbHlG"> 📘 Grundlage-Inhalte hervorheben</label>
+    <label>🎬 Video-Ordner <input type="text" id="lbVbase" value="videos/" title="relativ zur HTML-Datei (z. B. Symlink „videos") oder absolut, z. B. /home/NAME/Videos/Statistik/"></label>
+    <span>Esc schließt · T = Teile</span>
+  </div>
+</div></div>
+<button class="lbfab" id="lbFab" aria-label="Inhalt öffnen">☰</button>
+<main class="wrap">
+<!-- title: Kap. 7 · Statistische Tests und Vertrauensintervalle -->
+<!-- sub: H₀/H_A, Fehler 1./2. Art, α, Verwerfungsbereich, Binomial-, Z-, t-Test, Macht, P-Wert, VI-Dualität, Vorzeichen, Wilcoxon -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 7 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Statistische Tests und Vertrauensintervalle</h1>
+  <p class="lead">Ist ein <b>Sollwert</b> mit den Daten verträglich? Ein Test entscheidet das rezeptartig: <b>Hypothesen</b>, <b>Niveau α</b>, <b>Verwerfungsbereich</b>, Entscheidung. Dazu <b>Fehler 1. und 2. Art</b>, <b>Macht</b>, <b>P-Wert</b> (Signifikanz), die <b>Dualität</b> zum Vertrauensintervall und die verteilungsfreien <b>Vorzeichen-</b> und <b>Wilcoxon-Tests</b>.</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Grundlage, hier vertieft und erweitert">📘 Grundlage ✚ erweitert</span><b>🎨 Farblegende für Kapitel 7</b>
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis/Verwerfen</b>: Teststatistik-Wert, P-Wert, Verwerfungsbereich \(\Res{K}\)</div>
+    <div><b class="kw-chg">orange · Standardisierung</b>: \(\Chg{Z=\frac{\bar X-\mu_0}{\sigma/\sqrt n}}\), Ränge, Vorzeichen</div>
+    <div><b class="kw-rule">lila · Verteilung/Quantil</b>: \(\Nor(0,1)\), \(t_{n-1}\), \(\Bin\), \(z_{1-\alpha}\), \(t_{n-1,1-\alpha/2}\), Macht</div>
+    <div><b class="kw-par">blau · Parameter/Niveau</b>: \(\Par{\mu},\Par{\mu_0},\Par{p_0},\Par{\alpha},\Par{\beta},\Par{n}\)</div>
+    <div><b class="kw-idx">grün · Index/Freiheitsgrade</b>: \(\Idx{i}\), \(\Idx{n-1}\), Rang</div>
+    <div><b class="kw-cond">cyan · Hypothesen</b>: \(\Cond{H_0}\), \(\Cond{H_A}\), Vergleich \(\Cond{\ge}\), \(\Cond{\ne}\)</div>
+    <div><b class="kw-mem">pink · Daten</b>: \(\Mem{x_i}\), \(\Mem{\bar x}\), \(\Mem{s}\), Beobachtung</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Roter Faden:</b> Modell und Hypothesen aufstellen → Niveau α wählen → Verwerfungsbereich K unter H₀ bilden → prüfen, ob die Teststatistik in K fällt. Der P-Wert fasst das in einer Zahl zusammen; das Vertrauensintervall ist die Menge aller nicht verworfenen Sollwerte.</div>
+</div>
+<div class="bridge"><svg viewBox="0 0 1638 128" role="img" aria-label="Brücke durch Statistik I"><defs><marker id="arrC1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs><rect x="10" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="105" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 1 · Grundlagen</text><text x="105" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Ω, P, Bayes</text><line x1="200" y1="73" x2="213" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="214" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="309" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 2 · Verteilungen</text><text x="309" y="90" fill="#8b949e" font-size="14" text-anchor="middle">X, E, Var</text><line x1="404" y1="73" x2="417" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="418" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="513" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 3 · Deskriptiv</text><text x="513" y="90" fill="#8b949e" font-size="14" text-anchor="middle">x̄, s, Quantile</text><line x1="608" y1="73" x2="621" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="622" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="717" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 4 · Mehrdim.</text><text x="717" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Cov, Corr</text><line x1="812" y1="73" x2="825" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="826" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="921" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 5 · Grenzwerte</text><text x="921" y="90" fill="#8b949e" font-size="14" text-anchor="middle">GGZ, ZGS</text><line x1="1016" y1="73" x2="1029" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="1030" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1125" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 6 · Schätzen</text><text x="1125" y="90" fill="#8b949e" font-size="14" text-anchor="middle">MoM, ML, SE</text><line x1="1220" y1="73" x2="1233" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="1234" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#bc8cff" stroke-width="3"/><text x="1329" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 7 · Tests & VI</text><text x="1329" y="90" fill="#8b949e" font-size="14" text-anchor="middle">H₀, p, VI</text><line x1="1424" y1="73" x2="1437" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><text x="1329" y="28" fill="#bc8cff" font-size="16" font-weight="700" text-anchor="middle">▼ DU BIST HIER</text><rect x="1438" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1533" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 8 · Zwei Stichpr.</text><text x="1533" y="90" fill="#8b949e" font-size="14" text-anchor="middle">gepaart, t</text></svg></div>
+
+<section id="s7-0" data-m="🔬 Master-Anatomie|Leitfragen, Test-Rezept">
+<h2><span class="num">7.0</span>Master-Anatomie</h2>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: jeder Test in einer Zeile</b><div class="anat-f">\[ \underbrace{\Cond{H_0}:\theta=\Par{\theta_0}}_{\text{Status quo}}\ \text{vs.}\ \underbrace{\Cond{H_A}}_{\text{Vermutung}}\ \xrightarrow{\ \Par{\alpha}\ }\ \Res{K}\ \text{mit}\ \PP_{H_0}(\text{Statistik}\in K)\le\Par{\alpha}\ \xrightarrow{\text{Daten}}\ \text{Statistik}\in\Res{K}\ ? \]</div><div class="anat"><div><span class="sym">\(H_0\)</span><span>Nullhypothese: der Sollwert, den wir anzweifeln</span></div><div><span class="sym">\(H_A\)</span><span>Alternative: was wir nachweisen wollen; bestimmt die Form von K</span></div><div><span class="sym">\(\alpha\)</span><span>Niveau: maximale W'keit, H₀ fälschlich zu verwerfen</span></div><div><span class="sym">\(K\)</span><span>Verwerfungsbereich, <b>vor</b> dem Blick auf die Daten unter H₀ konstruiert</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Wir legen H null und die Alternative fest, wählen alpha, bauen K unter H null und verwerfen, wenn die Statistik in K liegt.“</div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🎓 Das agnostische Spitzenwerkzeug für JEDE Testfrage</b>
+  <ol class="cook"><li><b>ERKENNEN:</b> Daten und ein Sollwert (\(\mu_0\), \(p_0\)). Ist die Abweichung signifikant (Test)? Welche Werte sind plausibel (VI)?</li>
+  <li><b>WÄHLEN:</b> Bin → Binomialtest · Normal, σ bekannt → Z-Test · Normal, σ unbekannt → t-Test · nicht normal → Vorzeichen-/Wilcoxon-Test. Alternative ein-/zweiseitig. Niveau α (meist 0.05).</li>
+  <li><b>RECHNEN:</b> Teststatistik bilden, Verwerfungsbereich aus den Quantilen, prüfen ob Statistik ∈ K, oder P-Wert mit α vergleichen.</li>
+  <li><b>ARTIKULIEREN:</b> „Die Teststatistik ist […]; sie liegt (nicht) in K / der P-Wert ist […] &lt; α. Also verwerfen wir H₀ und haben H_A statistisch nachgewiesen / können H₀ nicht verwerfen.“</li></ol>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧭 Die 7 Leitfragen dieses Kapitels</b>
+  <ol class="cook"><li><b>Was will ein Test entscheiden?</b> Ob ein Sollwert mit den Daten verträglich ist.</li><li><b>H₀ und H_A?</b> Status quo vs. was wir zeigen wollen.</li><li><b>Fehler 1. und 2. Art?</b> H₀ fälschlich verwerfen vs. fälschlich beibehalten.</li><li><b>Niveau α?</b> Kontrolliert die W'keit für einen Fehler 1. Art.</li><li><b>Wie entscheidet man?</b> Teststatistik in K → verwerfen.</li><li><b>P-Wert?</b> Das kleinste α, bei dem man gerade noch verwirft.</li><li><b>Vertrauensintervall?</b> Die Menge aller nicht verworfenen H₀, dual zum Test.</li></ol>
+</div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/Hypothesis Testing and The Null Hypothesis, Clearly Explained!!! [0oc49DyA3hU].mp4"><span class="vt">🎬 Hypothesis Testing and The Null Hypothesis, Clearly Explained!!!</span> <span class="muted small">Nullhypothese</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Hypothesis Testing and The Null Hypothesis, Clearly Explained!!! [0oc49DyA3hU].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Hypothesis Testing in Statistics [vVDahuv1bq8].mp4"><span class="vt">🎬 Hypothesis Testing in Statistics</span> <span class="muted small">Hypothesentests</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Hypothesis Testing in Statistics [vVDahuv1bq8].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Hypothesis Testing Procedure [WYifBkNg1r8].mp4"><span class="vt">🎬 Hypothesis Testing Procedure</span> <span class="muted small">Test-Rezept</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Hypothesis Testing Procedure [WYifBkNg1r8].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 7.1 -->
+<section id="s7-1" data-vn data-m="7.1 Binomialtest|H₀, H_A, Fehler 1./2. Art, α, K">
+<h2><span class="num">7.1</span>Die Konzepte am Binomialtest</h2>
+<div class="vonnull" id="vn-7-1" data-sec="7.1"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 7.1</span>Hält der Lieferant seine 5-%-Zusage ein?</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Ein Lieferant garantiert höchstens 5 % Ausschuss. In einer Stichprobe von n = 50 Teilen sind x = 6 defekt. Teste zum Niveau α = 0.05, ob der Ausschussanteil größer als 5 % ist: (a) Modell und Hypothesen, (b) Verwerfungsbereich K, (c) Entscheidung und P-Wert, (d) was wäre ein Fehler 1. und 2. Art?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) Modell und Hypothesen.</b> \(\Mem{X}\) = Anzahl defekt \(\sim\Bin(50,p)\). \(\Cond{H_0}:p=\Par{0.05}\) (Zusage stimmt), \(\Cond{H_A}:p>0.05\) (wir vermuten mehr).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(b) K nach oben, kleinstes c mit P(X ≥ c) ≤ α.</b> 
+  \[\begin{aligned}
+  \PP_{p_0}(X\ge5) &= 0.1036 && > 0.05\ \text{zu groß} \\
+  \PP_{p_0}(X\ge6) &= 0.0378 && \le 0.05\ \text{passt} \\
+  \Res{K} &= \{6,7,\dots,50\} && \text{Form wie }H_A\text{ (nach oben)}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(c) Entscheidung.</b> \(x=6\in K\) → <b>H₀ verwerfen</b>. P-Wert \(=\PP_{p_0}(X\ge6)=\Res{0.0378}\le0.05\).</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(d) Fehlerarten.</b> Fehler 1. Art: wir werfen dem Lieferanten zu Unrecht mehr Ausschuss vor (W'keit ≤ 0.05, hier 0.0378). Fehler 2. Art: er liefert tatsächlich mehr, aber unser Test bemerkt es nicht.</div></div>
+  <div class="vn-res">✔ K = {6, …, 50}; x = 6 ∈ K → H₀ verworfen, P-Wert ≈ 0.038. „Der Ausschussanteil ist statistisch signifikant größer als 5 %.“</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Das tatsächliche Niveau (0.0378) ist bei diskreten Tests meist kleiner als α; man kann α nicht exakt ausschöpfen.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Beispiel: Ein Hersteller sagt, höchstens 10 % der Bauteile sind Ausschuss (\(p_0=0.1\)). Wir vermuten, es sind mehr. Ist unsere Beobachtung mit seiner Behauptung verträglich?</p></div></div>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: Null- und Alternativhypothese</b>\Par{p_0}}_{\text{was wir zeigen wollen}}" src="G"><div class="anat"><div><span class="sym">\(H_0\)</span><span>die Nullhypothese: der Normal-/Sollzustand. Wir nehmen sie zunächst an und prüfen, ob die Daten dazu passen</span></div><div><span class="sym">\(H_A\)</span><span>die Alternative: zweiseitig (\(p\ne p_0\)), einseitig nach oben (\(p>p_0\)) oder unten (\(p<p_0\))</span></div><div><span class="sym">\(\text{Logik}\)</span><span>H₀ verwerfen, wenn die Beobachtung unter H₀ zu unwahrscheinlich wäre. Nicht-Verwerfen ist kein Beweis für H₀: „absence of evidence is not evidence of absence“</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Nullhypothese: p ist gleich p null. Alternative: p ist größer als p null.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Ein Labor vermutet, dass ein Grenzwert von 50 µg/l überschritten wird. Formuliere H₀ und H_A.</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Nachweisen will man die Überschreitung → Alternative, einseitig nach oben.</div><div><i>⚙️ LÖSEN</i>H₀: µ = 50; H_A: µ &gt; 50.</div><div><i>🗣️ SAGEN</i>„Nullhypothese: mü gleich 50; Alternative einseitig: mü größer 50.“</div></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: die zwei Fehlerarten und das Niveau α</b><div class="anat-f">\[ \PP_{p_0}(\text{Fehler 1. Art})=\PP_{p_0}(X\in\Res{K})\le\Par{\alpha} \]</div><table class="tbl" style="max-width:640px;margin:.4rem auto .7rem"><tr><th></th><th>Entscheidung: H₀</th><th>Entscheidung: H_A</th></tr><tr><td>Wahrheit: H₀</td><td class="ok">kein Fehler</td><td class="bad">Fehler 1. Art (α)</td></tr><tr><td>Wahrheit: H_A</td><td class="bad">Fehler 2. Art (β)</td><td class="ok">kein Fehler (Macht)</td></tr></table><div class="anat"><div><span class="sym">\(\text{Fehler 1. Art}\)</span><span>H₀ fälschlich verwerfen. Genau diesen Fehler kontrollieren wir direkt</span></div><div><span class="sym">\(\text{Fehler 2. Art}\)</span><span>H₀ fälschlich beibehalten. Nicht direkt kontrolliert</span></div><div><span class="sym">\(\alpha\)</span><span>Signifikanzniveau: erlaubte Obergrenze für einen Fehler 1. Art (meist 0.05 oder 0.01)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Die W'keit, unter H null im Verwerfungsbereich zu landen, ist höchstens alpha.“</div></div>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡 Merke:</b> Man wählt das kleinste c, sodass \(\PP_{p_0}(X\ge c)\le\alpha\). Der Verwerfungsbereich K hat immer dieselbe „Form“ wie die Alternative (nach oben / unten / beidseitig).</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Ein Test verwirft H₀, obwohl H₀ stimmt. Wie heißt dieser Fehler, und welche Größe steuert seine W'keit?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Fälschlich verwerfen = Fehler 1. Art.</div><div><i>⚙️ LÖSEN</i>Fehler 1. Art; seine W'keit ist durch α begrenzt.</div><div><i>🗣️ SAGEN</i>„Das ist ein Fehler erster Art; seine W'keit wird durch alpha kontrolliert.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? Verwerfungsbereich beim Binomialtest</b>
+  <div class="ctl"><span class="seg" id="btSeg"><button class="btn on" data-s="gt">H_A: p &gt; p₀</button><button class="btn" data-s="lt">H_A: p &lt; p₀</button><button class="btn" data-s="ne">H_A: p ≠ p₀</button></span>
+  <label>n <input type="range" id="btN" min="5" max="100" value="20"><output for="btN"></output></label>
+  <label>p₀ <input type="range" id="btP" min="0.05" max="0.95" step="0.05" value="0.1" data-fmt="2"><output for="btP"></output></label>
+  <label>α <input type="range" id="btA" min="0.01" max="0.2" step="0.01" value="0.05" data-fmt="2"><output for="btA"></output></label>
+  <label>Beobachtung x <input type="range" id="btX" min="0" max="100" value="5"><output for="btX"></output></label></div>
+  <div id="btPlot" class="plot"></div>
+  <div class="out" id="btOut"></div>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: Binomialtest der Bauteile</b>
+  <p>H₀: p = 0.1, H_A: p &gt; 0.1, n = 20, x = 5, α = 0.05.</p>
+  <table class="tbl" style="max-width:520px"><tr><th>x</th><th class="r">3</th><th class="r">4</th><th class="r">5</th><th class="r">6</th></tr><tr><td>P(X ≤ x)</td><td class="r">0.87</td><td class="r">0.96</td><td class="r">0.99</td><td class="r">1.00</td></tr></table>
+  \[\begin{aligned}
+  \PP_{p_0}(X\ge4) &= 1-0.87=0.13,\quad \PP_{p_0}(X\ge5)=1-0.96=0.04 && \text{obere Schwänze} \\
+  \Res{K} &= \{5,6,\dots,20\} && \text{da }0.04\le0.05 \\
+  x &= 5\in K\ \Rightarrow\ H_0\ \text{verwerfen} && \text{Entscheidung}
+  \end{aligned}\]
+</div>
+<h3 id="s7-1-a" data-m="Binomialtest-Tracer|K schrittweise konstruieren">Code: den Verwerfungsbereich suchen</h3>
+<div id="trBt"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Binomialtest</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Binomialtest einseitig nach oben: Verwerfungsbereich K = {g, ..., n} konstruieren"><span class="ln">1</span># Binomialtest einseitig nach oben: Verwerfungsbereich K = {g, ..., n} konstruieren</div><div class="row" data-src="n &lt;- 50; p0 &lt;- 0.05; alpha &lt;- 0.05; x &lt;- 6   # H0: p = p0, HA: p &gt; p0, Beobachtung x"><span class="ln">2</span>n &lt;- 50; p0 &lt;- 0.05; alpha &lt;- 0.05; x &lt;- 6   # H0: p = p0, HA: p &gt; p0, Beobachtung x</div><div class="row" data-src="g &lt;- 0                                     # Kandidat g für die Grenze von K"><span class="ln">3</span>g &lt;- 0                                     # Kandidat g für die Grenze von K</div><div class="row" data-src="repeat {                                   # kleinstes g mit P(X &gt;= g) &lt;= alpha suchen"><span class="ln">4</span>repeat {                                   # kleinstes g mit P(X &gt;= g) &lt;= alpha suchen</div><div class="row" data-src="  schwanz &lt;- 1 - pbinom(g - 1, n, p0)      # P_{p0}(X &gt;= g), W&#x27;keit für Fehler 1. Art"><span class="ln">5</span>  schwanz &lt;- 1 - pbinom(g - 1, n, p0)      # P_{p0}(X &gt;= g), W&#x27;keit für Fehler 1. Art</div><div class="row" data-src="  if (schwanz &lt;= alpha) break              # klein genug: gefunden"><span class="ln">6</span>  if (schwanz &lt;= alpha) break              # klein genug: gefunden</div><div class="row" data-src="  g &lt;- g + 1                               # sonst Grenze nach rechts schieben"><span class="ln">7</span>  g &lt;- g + 1                               # sonst Grenze nach rechts schieben</div><div class="row" data-src="}"><span class="ln">8</span>}</div><div class="row" data-src="pwert &lt;- 1 - pbinom(x - 1, n, p0)          # P-Wert: P(X &gt;= x) unter H0"><span class="ln">9</span>pwert &lt;- 1 - pbinom(x - 1, n, p0)          # P-Wert: P(X &gt;= x) unter H0</div><div class="row" data-src="cat(&quot;K = {&quot;, g, &quot;,...,&quot;, n, &quot;}  x in K:&quot;, x &gt;= g, &quot; p =&quot;, pwert, &quot;\n&quot;)"><span class="ln">10</span>cat(&quot;K = {&quot;, g, &quot;,...,&quot;, n, &quot;}  x in K:&quot;, x &gt;= g, &quot; p =&quot;, pwert, &quot;\n&quot;)</div><div class="row" data-src="binom.test(x, n, p0, alternative = &quot;greater&quot;)   # eingebaut"><span class="ln">11</span>binom.test(x, n, p0, alternative = &quot;greater&quot;)   # eingebaut</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Binomialtest</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Binomialtest einseitig nach oben: Verwerfungsbereich K = {g, ..., n} konstruieren"><span class="ln">1</span># Binomialtest einseitig nach oben: Verwerfungsbereich K = {g, ..., n} konstruieren</div><div class="row" data-src="from scipy import stats"><span class="ln">2</span>from scipy import stats</div><div class="row" data-src=""><span class="ln">3</span></div><div class="row" data-src="n, p0, alpha, x = 50, 0.05, 0.05, 6        # H0: p = p0, HA: p &gt; p0, Beobachtung x"><span class="ln">4</span>n, p0, alpha, x = 50, 0.05, 0.05, 6        # H0: p = p0, HA: p &gt; p0, Beobachtung x</div><div class="row" data-src="g = 0                                      # Kandidat g für die Grenze von K"><span class="ln">5</span>g = 0                                      # Kandidat g für die Grenze von K</div><div class="row" data-src="while True:                                # kleinstes g mit P(X &gt;= g) &lt;= alpha suchen"><span class="ln">6</span>while True:                                # kleinstes g mit P(X &gt;= g) &lt;= alpha suchen</div><div class="row" data-src="    schwanz = stats.binom.sf(g - 1, n, p0) # P_{p0}(X &gt;= g), W&#x27;keit für Fehler 1. Art"><span class="ln">7</span>    schwanz = stats.binom.sf(g - 1, n, p0) # P_{p0}(X &gt;= g), W&#x27;keit für Fehler 1. Art</div><div class="row" data-src="    if schwanz &lt;= alpha: break             # klein genug: gefunden"><span class="ln">8</span>    if schwanz &lt;= alpha: break             # klein genug: gefunden</div><div class="row" data-src="    g += 1                                 # sonst Grenze nach rechts schieben"><span class="ln">9</span>    g += 1                                 # sonst Grenze nach rechts schieben</div><div class="row" data-src="pwert = stats.binom.sf(x - 1, n, p0)       # P-Wert: P(X &gt;= x) unter H0"><span class="ln">10</span>pwert = stats.binom.sf(x - 1, n, p0)       # P-Wert: P(X &gt;= x) unter H0</div><div class="row" data-src="print(f&quot;K = {{{g},...,{n}}}  x in K: {x &gt;= g}  p = {pwert:.4f}&quot;)"><span class="ln">11</span>print(f&quot;K = {{{g},...,{n}}}  x in K: {x &gt;= g}  p = {pwert:.4f}&quot;)</div><div class="row" data-src="print(stats.binomtest(x, n, p0, alternative=&quot;greater&quot;))            # eingebaut"><span class="ln">12</span>print(stats.binomtest(x, n, p0, alternative=&quot;greater&quot;))            # eingebaut</div></pre></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/The Binomial Distribution and Test, Clearly Explained!!! [J8jNoF-K8E8].mp4"><span class="vt">🎬 The Binomial Distribution and Test, Clearly Explained!!!</span> <span class="muted small">Binomialtest</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/The Binomial Distribution and Test, Clearly Explained!!! [J8jNoF-K8E8].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Alternative Hypotheses： Main Ideas!!! [5koKb5B_YWo].mp4"><span class="vt">🎬 Alternative Hypotheses: Main Ideas!!!</span> <span class="muted small">Alternativhypothese</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Alternative Hypotheses： Main Ideas!!! [5koKb5B_YWo].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Hypothesis Testing： Type I and Type II Errors [129NuU3A7rM].mp4"><span class="vt">🎬 Hypothesis Testing: Type I and Type II Errors</span> <span class="muted small">Fehler 1./2. Art</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Hypothesis Testing： Type I and Type II Errors [129NuU3A7rM].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 7.2 -->
+<section id="s7-2" data-vn data-m="7.2 Z-Test & t-Test|Z bei σ bekannt, T ~ t_{n−1}">
+<h2><span class="num">7.2</span>Tests bei normalverteilten Daten: Z-Test und t-Test</h2>
+<div class="vonnull" id="vn-7-2" data-sec="7.2"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 7.2</span>t-Test aus acht Messwerten, komplett von Hand</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Acht Messungen einer Konzentration: 5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4. Weicht der Erwartungswert vom Sollwert \(\mu_0=5\) ab? Teste zweiseitig mit α = 0.05 (Normalverteilung angenommen, σ unbekannt).</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Welcher Test?</b> Normal, σ unbekannt → <b>t-Test</b> mit \(n-1=7\) Freiheitsgraden. \(H_0:\mu=5\), \(H_A:\mu\ne5\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">Kennzahlen.</b> \(\bar x=\tfrac{42.8}{8}=5.35\); \(s=0.2878\) (Nenner 7); \(\operatorname{SE}=s/\sqrt8=0.1018\).</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">Teststatistik.</b> 
+  \[\begin{aligned}
+  \Res{t} &= \frac{\bar x-\mu_0}{s/\sqrt n}=\frac{5.35-5}{0.1018} && \text{Abweichung in Standardfehlern} \\
+  &\approx \Res{3.44} && \text{ausgerechnet}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">Verwerfungsbereich.</b> \(t_{7,\,0.975}=2.365\) → \(K=(-\infty,-2.365]\cup[2.365,\infty)\).</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">Entscheidung.</b> \(|3.44|\ge2.365\) → <b>H₀ verwerfen</b>. P-Wert \(=2\,\PP(T_7\ge3.44)\approx\Res{0.011}\).</div></div>
+  <div class="vn-res">✔ t ≈ 3.44 > 2.365, P ≈ 0.011: der Erwartungswert weicht signifikant von 5 ab. R: <code>t.test(x, mu = 5)</code>.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Mit dem z-Quantil 1.96 statt 2.365 wäre man zu großzügig: bei geschätztem σ ist die t-Verteilung breiter.</div>
+</details></div>
+<div class="gblk is-g"><div><p>n unabhängige Messungen aus \(\Nor(\mu,\sigma^2)\), getestet wird der Erwartungswert. Ist σ bekannt → Z-Test; ist σ unbekannt (der Normalfall) → t-Test.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: die standardisierte Teststatistik Z (σ bekannt)</b><div class="anat-f">\[ \Chg{Z}=\frac{\Mem{\bar X_n}-\Par{\mu_0}}{\Par{\sigma}/\sqrt n}=\frac{\text{beobachtet}-\text{erwartet}}{\text{Standardfehler}}\ \sim\ \Nor(0,1)\ \text{unter }H_0 \]</div><div class="anat"><div><span class="sym">\(Z\)</span><span>wie viele Standardfehler das Mittel vom Sollwert entfernt ist</span></div><div><span class="sym">\(\text{Verwerfen}\)</span><span>\(|z|\ge z_{1-\alpha/2}\) (zweiseitig), \(z\ge z_{1-\alpha}\) (oben), \(z\le z_\alpha\) (unten)</span></div><div><span class="sym">\(z_{1-\alpha}\)</span><span>Quantil der Standardnormal: die feste kritische Grenze, z. B. 1.645 (einseitig) oder 1.96 (zweiseitig) bei α = 0.05</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Z ist X-quer minus mü null, geteilt durch Sigma durch Wurzel n.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> n = 25, x̄ = 51.2, σ = 4 bekannt, µ₀ = 50, H_A: µ &gt; 50, α = 0.05. Berechne z und entscheide.</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>σ bekannt → Z-Test, einseitig → 1.645.</div><div><i>⚙️ LÖSEN</i>\(z=\tfrac{1.2}{0.8}=\Res{1.50}<1.645\) → nicht verwerfen.</div><div><i>🗣️ SAGEN</i>„z ist 1.50, kleiner als 1.645, also können wir H₀ nicht verwerfen.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? Verwerfungsbereich und Fehler 1. Art (Z-Test)</b>
+  <div class="ctl"><span class="seg" id="ztSeg"><button class="btn on" data-s="ne">zweiseitig (≠)</button><button class="btn" data-s="gt">einseitig (&gt;)</button><button class="btn" data-s="lt">einseitig (&lt;)</button></span>
+  <label>α <input type="range" id="ztA" min="0.01" max="0.2" step="0.005" value="0.05" data-fmt="3"><output for="ztA"></output></label>
+  <label>beobachtetes z <input type="range" id="ztZ" min="-4" max="4" step="0.05" value="2.1" data-fmt="2"><output for="ztZ"></output></label></div>
+  <div id="ztPlot" class="plot"></div>
+  <div class="out" id="ztOut"></div>
+</div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: die Teststatistik T (σ unbekannt) und die t-Verteilung</b><div class="anat-f">\[ \Chg{T}=\frac{\Mem{\bar X_n}-\Par{\mu_0}}{\Mem{S_n}/\sqrt n}=\frac{\text{beobachtet}-\text{erwartet}}{\text{geschätzter Standardfehler}}\ \sim\ \Rule{t}_{\Idx{n-1}}\ \text{unter }H_0 \]</div><div class="anat"><div><span class="sym">\(T\)</span><span>wie Z, aber σ durch den Schätzer \(S_n\) ersetzt; diese zusätzliche Streuung macht T langschwänziger</span></div><div><span class="sym">\(t_{n-1}\)</span><span>t-Verteilung mit n − 1 Freiheitsgraden (pro geschätztem Parameter einen „bezahlen“); für \(n\to\infty\) wird sie zur Standardnormal</span></div><div><span class="sym">\(\text{Verwerfen}\)</span><span>\(|t|\ge t_{n-1,1-\alpha/2}\) (zweiseitig) usw.: gleiche Regel wie beim Z-Test, nur t-Quantile</span></div></div><div class="read">📖 <b>Vorlesen:</b> „T ist X-quer minus mü null, geteilt durch S durch Wurzel n; unter H null t-verteilt mit n minus eins Freiheitsgraden.“</div></div>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡 Kernaussage:</b> Der t-Test ist bei normalverteilten Daten der optimale Test. Weil man σ schätzen muss, nimmt man breitere t-Quantile statt z-Quantile: man ist vorsichtiger.</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> n = 16, x̄ = 102, s = 6, µ₀ = 100, zweiseitig, α = 0.05. t und Entscheidung?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>σ unbekannt → t-Test, df = 15, Grenze 2.131.</div><div><i>⚙️ LÖSEN</i>\(t=\tfrac{2}{1.5}=\Res{1.333}<2.131\) → nicht verwerfen.</div><div><i>🗣️ SAGEN</i>„t ist 1.33, betragsmäßig kleiner als 2.131: wir verwerfen H₀ nicht.“</div></div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: t-Test der Abfüllmaschine</b>
+  <p>Sollwert 1000 g, n = 10, x̄ = 1002.63, s = 1.23; H₀: μ = 1000, H_A: μ ≠ 1000, α = 0.05.</p>
+  \[\begin{aligned}
+  t &= \frac{1002.63-1000}{1.23/\sqrt{10}}=\Res{6.76} && \text{Teststatistik} \\
+  K &= (-\infty,-2.262]\cup[2.262,\infty) && t_{9,0.975}=2.262 \\
+  6.76 &\ge 2.262\ \Rightarrow\ H_0\ \text{verwerfen} && \text{Entscheidung}
+  \end{aligned}\]
+  <p>Bei bekanntem σ = 1.23 wäre es ein Z-Test mit Grenze 1.96. Die Maschine ist nachweislich falsch kalibriert.</p>
+</div>
+<div class="card has-src "><span class="src n" title="neu ergänzt">✚ Neu</span><b>📋 t-Quantile \(t_{\text{df},\,q}\) (Formelsammlung)</b><div id="tTab"></div><p class="small muted">Mit der Seite berechnet (unvollständige Beta-Funktion). Letzte Zeile ∞ = Standardnormal.</p></div>
+<h3 id="s7-2-a" data-m="t-Test-Tracer|x̄, s, SE, t, krit, p, VI">Code: t-Test Schritt für Schritt</h3>
+<div id="trTt"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · t-Test</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# t-Test für den Erwartungswert, Schritt für Schritt"><span class="ln">1</span># t-Test für den Erwartungswert, Schritt für Schritt</div><div class="row" data-src="x &lt;- c(5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4)   # Messwerte"><span class="ln">2</span>x &lt;- c(5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4)   # Messwerte</div><div class="row" data-src="mu0 &lt;- 5; alpha &lt;- 0.05                    # Sollwert und Niveau, zweiseitig"><span class="ln">3</span>mu0 &lt;- 5; alpha &lt;- 0.05                    # Sollwert und Niveau, zweiseitig</div><div class="row" data-src="n &lt;- length(x)                             # Stichprobenumfang"><span class="ln">4</span>n &lt;- length(x)                             # Stichprobenumfang</div><div class="row" data-src="xbar &lt;- mean(x); s &lt;- sd(x)                # Mittel und Standardabweichung (n - 1)"><span class="ln">5</span>xbar &lt;- mean(x); s &lt;- sd(x)                # Mittel und Standardabweichung (n - 1)</div><div class="row" data-src="se &lt;- s / sqrt(n)                          # geschätzter Standardfehler"><span class="ln">6</span>se &lt;- s / sqrt(n)                          # geschätzter Standardfehler</div><div class="row" data-src="t &lt;- (xbar - mu0) / se                     # Teststatistik: Abweichung in Standardfehlern"><span class="ln">7</span>t &lt;- (xbar - mu0) / se                     # Teststatistik: Abweichung in Standardfehlern</div><div class="row" data-src="krit &lt;- qt(1 - alpha / 2, df = n - 1)      # kritischer Wert t_{n-1, 1-alpha/2}"><span class="ln">8</span>krit &lt;- qt(1 - alpha / 2, df = n - 1)      # kritischer Wert t_{n-1, 1-alpha/2}</div><div class="row" data-src="p &lt;- 2 * (1 - pt(abs(t), df = n - 1))      # zweiseitiger P-Wert"><span class="ln">9</span>p &lt;- 2 * (1 - pt(abs(t), df = n - 1))      # zweiseitiger P-Wert</div><div class="row" data-src="vi &lt;- xbar + c(-1, 1) * krit * se          # Vertrauensintervall (Dualität)"><span class="ln">10</span>vi &lt;- xbar + c(-1, 1) * krit * se          # Vertrauensintervall (Dualität)</div><div class="row" data-src="cat(&quot;t =&quot;, t, &quot; krit =&quot;, krit, &quot; p =&quot;, p, &quot; verwerfen:&quot;, abs(t) &gt;= krit, &quot;\n&quot;)"><span class="ln">11</span>cat(&quot;t =&quot;, t, &quot; krit =&quot;, krit, &quot; p =&quot;, p, &quot; verwerfen:&quot;, abs(t) &gt;= krit, &quot;\n&quot;)</div><div class="row" data-src="t.test(x, mu = mu0)                        # eingebaut: gleiche Zahlen"><span class="ln">12</span>t.test(x, mu = mu0)                        # eingebaut: gleiche Zahlen</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · t-Test</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# t-Test für den Erwartungswert, Schritt für Schritt"><span class="ln">1</span># t-Test für den Erwartungswert, Schritt für Schritt</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src="from scipy import stats"><span class="ln">3</span>from scipy import stats</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="x = np.array([5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4])   # Messwerte"><span class="ln">5</span>x = np.array([5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4])   # Messwerte</div><div class="row" data-src="mu0, alpha = 5, 0.05                       # Sollwert und Niveau, zweiseitig"><span class="ln">6</span>mu0, alpha = 5, 0.05                       # Sollwert und Niveau, zweiseitig</div><div class="row" data-src="n = len(x)                                 # Stichprobenumfang"><span class="ln">7</span>n = len(x)                                 # Stichprobenumfang</div><div class="row" data-src="xbar, s = x.mean(), x.std(ddof=1)          # Mittel und Standardabweichung (n - 1)"><span class="ln">8</span>xbar, s = x.mean(), x.std(ddof=1)          # Mittel und Standardabweichung (n - 1)</div><div class="row" data-src="se = s / np.sqrt(n)                        # geschätzter Standardfehler"><span class="ln">9</span>se = s / np.sqrt(n)                        # geschätzter Standardfehler</div><div class="row" data-src="t = (xbar - mu0) / se                      # Teststatistik: Abweichung in Standardfehlern"><span class="ln">10</span>t = (xbar - mu0) / se                      # Teststatistik: Abweichung in Standardfehlern</div><div class="row" data-src="krit = stats.t.ppf(1 - alpha / 2, df=n - 1)   # kritischer Wert t_{n-1, 1-alpha/2}"><span class="ln">11</span>krit = stats.t.ppf(1 - alpha / 2, df=n - 1)   # kritischer Wert t_{n-1, 1-alpha/2}</div><div class="row" data-src="p = 2 * stats.t.sf(abs(t), df=n - 1)       # zweiseitiger P-Wert"><span class="ln">12</span>p = 2 * stats.t.sf(abs(t), df=n - 1)       # zweiseitiger P-Wert</div><div class="row" data-src="vi = xbar + np.array([-1, 1]) * krit * se  # Vertrauensintervall (Dualität)"><span class="ln">13</span>vi = xbar + np.array([-1, 1]) * krit * se  # Vertrauensintervall (Dualität)</div><div class="row" data-src="print(f&quot;t = {t:.4f}  krit = {krit:.4f}  p = {p:.4f}  verwerfen: {abs(t) &gt;= krit}&quot;)"><span class="ln">14</span>print(f&quot;t = {t:.4f}  krit = {krit:.4f}  p = {p:.4f}  verwerfen: {abs(t) &gt;= krit}&quot;)</div><div class="row" data-src="print(stats.ttest_1samp(x, mu0))           # eingebaut: gleiche Zahlen"><span class="ln">15</span>print(stats.ttest_1samp(x, mu0))           # eingebaut: gleiche Zahlen</div></pre></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init2/Student&#x27;s t-distribution in Statistics [kQoPUR0hQNo].mp4"><span class="vt">🎬 Student&#x27;s t-distribution in Statistics</span> <span class="muted small">t-Verteilung</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Student&#x27;s t-distribution in Statistics [kQoPUR0hQNo].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Properties of Chi-Squared and Student&#x27;s t Distributions [so04ygeccwk].mp4"><span class="vt">🎬 Properties of Chi-Squared and Student&#x27;s t Distributions</span> <span class="muted small">nur t-Teil; χ² erst Statistik II</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Properties of Chi-Squared and Student&#x27;s t Distributions [so04ygeccwk].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Hypothesis Testing Revisited： Normal, t, and Chi-Squared Distribution Tests [u793OrRvZBk].mp4"><span class="vt">🎬 Hypothesis Testing Revisited: Normal, t, and Chi-Squared Distribution Tests</span> <span class="muted small">Z- und t-Teil</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Hypothesis Testing Revisited： Normal, t, and Chi-Squared Distribution Tests [u793OrRvZBk].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Could Tobacco be Good for you？  Two Sided Rejection Regions in Hypothesis Testing [znnim8MTl0c].mp4"><span class="vt">🎬 Could Tobacco be Good for you？  Two Sided Rejection Regions in Hypothesis Testing</span> <span class="muted small">zweiseitige Bereiche</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Could Tobacco be Good for you？  Two Sided Rejection Regions in Hypothesis Testing [znnim8MTl0c].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 7.3 -->
+<section id="s7-3" data-vn data-m="7.3 Macht & P-Wert|1−β, benötigtes n, p ≤ α, Signifikanz">
+<h2><span class="num">7.3</span>Eigenschaften von Tests: Macht und P-Wert</h2>
+<div class="vonnull" id="vn-7-3" data-sec="7.3"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 7.3</span>Macht eines Z-Tests und nötiger Stichprobenumfang</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Einseitiger Z-Test \(H_0:\mu=50\) gegen \(H_A:\mu>50\), σ = 4, n = 25, α = 0.05. (a) Ab welchem \(\bar x\) wird verworfen? (b) Wie groß ist die Macht, falls in Wahrheit μ = 52? (c) Wie groß muss n sein für eine Macht von 0.90? (d) Ein Versuch liefert z = 1.5. P-Wert?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) Grenze auf der x̄-Skala.</b> Verwerfen, wenn \(z\ge1.645\), also \(\bar x\ge50+1.645\cdot\tfrac{4}{5}=\Res{51.32}\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(b) Macht: jetzt aus Sicht μ = 52.</b> 
+  \[\begin{aligned}
+  1-\beta &= \PP_{\mu=52}(\bar X\ge51.32) && \text{Verwerfungsbereich bleibt} \\
+  &= 1-\Phi\Big(\frac{51.32-52}{0.8}\Big)=1-\Phi(-0.855) && \text{unter }\mu=52\text{ standardisiert} \\
+  &\approx \Res{0.804} && \text{kompakt: }1-\Phi\big(z_{1-\alpha}-\tfrac{\mu_1-\mu_0}{\sigma/\sqrt n}\big)
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(c) n für Macht 0.9.</b> 
+  \[n\ge\Big(\frac{(z_{1-\alpha}+z_{0.9})\,\sigma}{\mu_1-\mu_0}\Big)^2=\Big(\frac{(1.645+1.282)\cdot4}{2}\Big)^2\approx34.3\ \Rightarrow\ n=\Res{35}\]</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(d) P-Wert einseitig.</b> \(p=\PP(Z\ge1.5)=1-\Phi(1.5)\approx\Res{0.067}>0.05\) → nicht verwerfen.</div></div>
+  <div class="vn-res">✔ Grenze x̄ ≥ 51.32; Macht ≈ 0.80; n = 35; p ≈ 0.067.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Der P-Wert ist <b>nicht</b> die W'keit, dass H₀ stimmt. Er wird unter der Annahme berechnet, dass H₀ gilt.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Der Test kontrolliert den Fehler 1. Art über α. Aber wie gut findet er eine echte Abweichung? Das misst die <b>Macht</b>. Und der <b>P-Wert</b> fasst das Ergebnis in einer Zahl.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Macht (Power)</b><div class="anat-f">\[ \underbrace{1-\Par{\beta}(\theta)}_{\text{Macht}}=\PP\big(\text{Test verwirft }H_0\ \text{für}\ \theta\in H_A\big) \]</div><div class="anat"><div><span class="sym">\(\beta(\theta)\)</span><span>W'keit für einen Fehler 2. Art: H₀ beibehalten, obwohl θ gilt</span></div><div><span class="sym">\(1-\beta\)</span><span>Macht: W'keit, eine echte Abweichung nachzuweisen; wächst mit Abstand θ − μ₀ und mit n</span></div><div><span class="sym">\(\text{Sicht}\)</span><span>beim Niveau die Sicht von H₀; bei der Macht die eigene Sicht (ein bestimmtes θ ∈ H_A). Reine „Was-wäre-wenn“-Rechnung, keine Daten nötig</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Macht ist die W'keit, H null zu verwerfen, wenn in Wahrheit die Alternative gilt“, z. B. Münze, K = {9, 10}: unter p = 0.75 ist die Macht P(X ≥ 9) = 0.244.</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Einseitiger Z-Test, α = 0.05, Effekt d = 0.8σ, n = 25. Macht?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Macht = 1 − Φ(z₁₋α − d√n).</div><div><i>⚙️ LÖSEN</i>\(d\sqrt n=4\); \(1-\Phi(1.645-4)=\Phi(2.355)\approx\Res{0.991}\).</div><div><i>🗣️ SAGEN</i>„Die Macht ist rund 99 Prozent.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? die Macht als Fläche zweier Verteilungen</b>
+  <div class="ctl"><label>Effekt (μ₁ − μ₀)/σ <input type="range" id="pwD" min="0" max="2" step="0.05" value="1" data-fmt="2"><output for="pwD"></output></label>
+  <label>n <input type="range" id="pwN" min="2" max="60" value="10"><output for="pwN"></output></label>
+  <label>α <input type="range" id="pwA" min="0.01" max="0.2" step="0.01" value="0.05" data-fmt="2"><output for="pwA"></output></label></div>
+  <div id="pwPlot" class="plot"></div>
+  <div class="out" id="pwOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> lila die Teststatistik unter H₀, blau unter der Alternative (verschoben um \(d\sqrt n\)). Der Verwerfungsbereich rechts der roten Grenze kommt allein aus H₀. Die grüne Fläche ist die Macht.</div>
+</div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: der P-Wert</b><div class="anat-f">\[ \Res{p}=\PP_{H_0}\big(\text{ein mindestens so extremes Ereignis wie das beobachtete}\big) \]</div><div class="anat"><div><span class="sym">\(\text{Definition}\)</span><span>das kleinste Niveau α, bei dem man H₀ gerade noch verwirft</span></div><div><span class="sym">\(\text{Entscheidung}\)</span><span>\(p\le\alpha\Rightarrow\) verwerfen („signifikant“), sonst nicht. Enthält mehr Information als der reine Testentscheid</span></div><div><span class="sym">\(\text{Achtung}\)</span><span>nicht die W'keit, dass H₀ stimmt</span></div><div><span class="sym">\(\text{Rechnen}\)</span><span>diskret: Summe der W'keiten extremerer Ausgänge; stetig: Schwanzfläche. Münze x = 7: einseitig \(\PP_{p_0}(X\ge7)=0.172\)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Der P-Wert ist die W'keit, unter H null etwas mindestens so Extremes zu sehen.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Zweiseitiger t-Test (df = 20) liefert t = 2.4. P-Wert und Entscheidung bei α = 0.05?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Zweiseitig → beide Schwänze.</div><div><i>⚙️ LÖSEN</i>\(p=2\,\PP(T_{20}\ge2.4)\approx\Res{0.026}<0.05\) → verwerfen.</div><div><i>🗣️ SAGEN</i>„Der P-Wert ist etwa 0.026, also verwerfen wir H₀ auf dem 5-Prozent-Niveau.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? der P-Wert als Schwanzfläche</b>
+  <div class="ctl"><span class="seg" id="pvSeg"><button class="btn on" data-s="ne">zweiseitig</button><button class="btn" data-s="gt">einseitig (&gt;)</button></span>
+  <label>beobachtetes t <input type="range" id="pvT" min="-5" max="5" step="0.05" value="1.7" data-fmt="2"><output for="pvT"></output></label>
+  <label>df <input type="range" id="pvD" min="1" max="60" value="9"><output for="pvD"></output></label>
+  <label>α <input type="range" id="pvA" min="0.01" max="0.2" step="0.01" value="0.05" data-fmt="2"><output for="pvA"></output></label></div>
+  <div id="pvPlot" class="plot"></div>
+  <div class="out" id="pvOut"></div>
+</div>
+<div class="trap"><b>⚠ ✚ P-Hacking:</b> Wer viele Tests macht und nur die signifikanten berichtet, findet bei α = 0.05 im Schnitt einen „Treffer“ pro 20 Tests, auch wenn nichts dahinter ist. Hypothese und α werden deshalb <b>vor</b> dem Blick auf die Daten festgelegt.</div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/p-values： What they are and how to interpret them [vemZtEM63GY].mp4"><span class="vt">🎬 p-values: What they are and how to interpret them</span> <span class="muted small">P-Werte deuten</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/p-values： What they are and how to interpret them [vemZtEM63GY].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/How to calculate p-values [JQc3yx0-Q9E].mp4"><span class="vt">🎬 How to calculate p-values</span> <span class="muted small">P-Werte rechnen</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/How to calculate p-values [JQc3yx0-Q9E].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/StatQuest：  One or Two Tailed P-Values [bsZGt-caXO4].mp4"><span class="vt">🎬 StatQuest:  One or Two Tailed P-Values</span> <span class="muted small">ein-/zweiseitig</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/StatQuest：  One or Two Tailed P-Values [bsZGt-caXO4].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/StatQuickie： Thresholds for Significance [KEofcJ1tfkI].mp4"><span class="vt">🎬 StatQuickie: Thresholds for Significance</span> <span class="muted small">Signifikanzschwellen</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/StatQuickie： Thresholds for Significance [KEofcJ1tfkI].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Statistical Power, Clearly Explained!!! [Rsc5znwR5FA].mp4"><span class="vt">🎬 Statistical Power, Clearly Explained!!!</span> <span class="muted small">Macht</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Statistical Power, Clearly Explained!!! [Rsc5znwR5FA].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Power Analysis, Clearly Explained!!! [VX_M3tIyiYk].mp4"><span class="vt">🎬 Power Analysis, Clearly Explained!!!</span> <span class="muted small">Fallzahlplanung</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Power Analysis, Clearly Explained!!! [VX_M3tIyiYk].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 7.4 -->
+<section id="s7-4" data-vn data-m="7.4 VI & Dualität|x̄ ± t·s/√n, μ₀ ∈ I ⇔ nicht verwerfen, Relevanz">
+<h2><span class="num">7.4</span>Vertrauensintervalle und die Dualität zum Test</h2>
+<div class="vonnull" id="vn-7-4" data-sec="7.4"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 7.4</span>Aus dem Vertrauensintervall mehrere Tests auf einmal ablesen</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Für die acht Messwerte aus 7.2 (\(\bar x=5.35\), s = 0.2878, n = 8): (a) Bestimme das 95-%-Vertrauensintervall für μ. (b) Werden \(H_0:\mu=5\), \(H_0:\mu=5.2\), \(H_0:\mu=5.6\) zweiseitig bei α = 0.05 verworfen? (c) Fachlich relevant sind nur Abweichungen über 0.5 vom Sollwert 5. Ist das Ergebnis relevant?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) Intervall mit t-Quantil.</b> 
+  \[\begin{aligned}
+  I &= \bar x\pm t_{7,0.975}\,\frac{s}{\sqrt n}=5.35\pm2.365\cdot0.1018 && \text{Rezept} \\
+  &= 5.35\pm0.241=\Res{[5.109;\ 5.591]} && \text{eingesetzt}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(b) Dualität: μ₀ ∈ I ⇔ nicht verworfen.</b> 5 ∉ I → verwerfen (wie in 7.2). 5.2 ∈ I → nicht verwerfen. 5.6 ∉ I (knapp) → verwerfen.</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(c) Relevanz.</b> Irrelevanter Bereich [4.5; 5.5]. Das VI [5.109; 5.591] ragt über 5.5 hinaus, liegt aber nicht ganz darüber: <b>signifikant</b>, Relevanz <b>nicht gesichert</b>.</div></div>
+  <div class="vn-res">✔ I = [5.11; 5.59]; μ₀ = 5 und 5.6 verworfen, 5.2 nicht; signifikant, aber Relevanz offen.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Der Test sagt für einen Sollwert ja/nein. Das Vertrauensintervall sammelt alle Sollwerte, die man nicht verwerfen würde: der volle Bereich plausibler Parameter.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Vertrauensintervall und Dualität</b><div class="anat-f">\[ \Res{I}=\{\Par{\mu_0}:\ H_0:\mu=\mu_0\ \text{wird nicht verworfen}\}\ \Longrightarrow\ I=\Mem{\bar X_n}\pm\frac{\Mem{S_n}}{\sqrt n}\,\Rule{t}_{n-1,1-\alpha/2} \]</div><div class="anat"><div><span class="sym">\(\text{Dualität}\)</span><span>\(\mu_0\in I\iff H_0:\mu=\mu_0\) wird nicht verworfen</span></div><div><span class="sym">\(\text{Überdeckung}\)</span><span>\(\PP(I\ni\theta)=1-\alpha\): das zufällige Intervall fängt den wahren Wert in \((1-\alpha)\cdot100\) % der Wiederholungen</span></div><div><span class="sym">\(\text{Form}\)</span><span>t-Test: \(\bar X\pm\frac{S}{\sqrt n}t_{n-1,1-\alpha/2}\). Z-Test: dasselbe mit σ und \(z_{1-\alpha/2}\)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Das Vertrauensintervall ist X-quer plus/minus S durch Wurzel n mal das t-Quantil.“</div></div>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>📖 Informationsgehalt:</b> Testentscheid ⪯ P-Wert ⪯ Vertrauensintervall. Das Intervall zeigt zugleich, welche H₀ verworfen werden und wie genau geschätzt wurde.</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Das 95-%-VI für µ ist [48.5, 53.5]. Wird H₀: µ = 50 verworfen? Und H₀: µ = 54?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>µ₀ im VI ⟺ nicht verworfen.</div><div><i>⚙️ LÖSEN</i>50 ∈ I → nicht verworfen; 54 ∉ I → verworfen.</div><div><i>🗣️ SAGEN</i>„50 liegt im Intervall, 54 außerhalb: direkt aus dem VI ablesbar.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? VI ↔ Test-Dualität</b>
+  <div class="ctl"><label>Sollwert μ₀ <input type="range" id="duM" min="998" max="1006" step="0.05" value="1000" data-fmt="2"><output for="duM"></output></label>
+  <label>1 − α <input type="range" id="duL" min="0.8" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="duL"></output></label></div>
+  <div id="duPlot" class="plot" style="min-height:200px"></div>
+  <div class="out" id="duOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> feste Daten (x̄ = 1002.63, s = 1.23, n = 10). Liegt μ₀ im blauen Band, wird nicht verworfen (grün), sonst verworfen (rot). An der Bandgrenze ist der P-Wert genau α.</div>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: 95-%-VI für die Abfüllmaschine</b>
+  \[\begin{aligned}
+  I &= 1002.63\pm\frac{1.23}{\sqrt{10}}\cdot2.262=\Res{[1001.75;\ 1003.51]} && \text{Intervall} \\
+  1000 &\notin I\ \Rightarrow\ H_0:\mu=1000\ \text{verwerfen} && \text{Testentscheid abgelesen}
+  \end{aligned}\]
+</div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: statistische Signifikanz ≠ fachliche Relevanz</b><div class="anat"><div><span class="sym">\(\text{Signifikanz}\)</span><span>bei sehr großem n wird jede noch so kleine Abweichung signifikant; signifikant heißt nur: statistisch nachweisbar</span></div><div><span class="sym">\(\text{Relevanz}\)</span><span>ob eine Abweichung fachlich zählt, legt Fachwissen fest (Relevanzgrenze δ, irrelevanter Bereich \(\mu_0\pm\delta\))</span></div><div><span class="sym">\(\text{Beurteilen}\)</span><span>VI gegen den Relevanzbereich halten: VI [1001.75; 1003.51] bei irrelevantem Bereich [995; 1005] → signifikant, aber nicht relevant</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Statistik und Fachwissen kombinieren: das Vertrauensintervall gegen den Relevanzbereich halten.“</div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/Confidence Intervals, Clearly Explained!!! [TqOeMYtOc1w].mp4"><span class="vt">🎬 Confidence Intervals, Clearly Explained!!!</span> <span class="muted small">VI</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Confidence Intervals, Clearly Explained!!! [TqOeMYtOc1w].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Hypothesis Testing Example： Salk Vaccine Trial [V3aYG8mLmkI].mp4"><span class="vt">🎬 Hypothesis Testing Example: Salk Vaccine Trial</span> <span class="muted small">Fallbeispiel Impfstudie</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Hypothesis Testing Example： Salk Vaccine Trial [V3aYG8mLmkI].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 7.5 -->
+<section id="s7-5" data-vn data-m="7.5 Nicht normal|Vorzeichen-Test, Wilcoxon-Test">
+<h2><span class="num">7.5</span>Tests bei nicht normalverteilten Daten</h2>
+<div class="vonnull" id="vn-7-5" data-sec="7.5"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 7.5</span>Vorzeichen- und Wilcoxon-Test für zehn Füllmengen</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Zehn Füllmengen (g): 1002.1, 1003.4, 999.2, 1001.8, 1004.0, 1002.9, 1000.6, 1003.1, 1001.2, 1002.5. Test von \(H_0\): Median = 1000 gegen ≠, α = 0.05. (a) Vorzeichen-Test. (b) Wilcoxon-Test (für n = 10 zweiseitig K = {W ≤ 8} ∪ {W ≥ 47}).</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Abweichungen \(d_i=x_i-1000\).</b> 2.1, 3.4, −0.8, 1.8, 4.0, 2.9, 0.6, 3.1, 1.2, 2.5.</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(a) Vorzeichen.</b> \(Q\) = Anzahl positiver = 9. Unter H₀: \(Q\sim\Bin(10,0.5)\). \(p=2\,\PP(Q\ge9)=2(10+1)/1024=\Res{0.0215}<0.05\) → verwerfen.</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(b) Ränge der Beträge.</b> Sortierte |d|: 0.6 (R1), 0.8 (R2), 1.2 (R3), 1.8 (R4), 2.1 (R5), 2.5 (R6), 2.9 (R7), 3.1 (R8), 3.4 (R9), 4.0 (R10). Nur 0.8 gehört zu einem negativen d.</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(b) W = Rangsumme der positiven.</b> \(W=55-2=\Res{53}\ge47\) → verwerfen (Software: p ≈ 0.0059).</div></div>
+  <div class="vn-res">✔ Vorzeichen: Q = 9, p ≈ 0.022; Wilcoxon: W = 53, p ≈ 0.006; beide verwerfen (t-Test: p ≈ 0.0013).</div>
+</details></div>
+<div class="gblk is-g"><div><p>Sind die Daten nicht normal, braucht man Tests mit schwächeren Annahmen. Sie testen den <b>Median</b> und können dann viel besser sein als der t-Test.</p></div></div>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: Vorzeichen-Test</b>\Par{\mu_0}\}\ \sim\ \Bin(n,\ 0.5)\quad\text{unter }H_0:\text{Median}=\mu_0" src="G"><div class="anat"><div><span class="sym">\(Q\)</span><span>Anzahl positiver Vorzeichen von \(X_i-\mu_0\); nur die Vorzeichen zählen</span></div><div><span class="sym">\(\text{Idee}\)</span><span>stimmt μ₀ als Median, liegt jeder Wert mit W'keit 0.5 darüber → Binomialtest aus 7.1!</span></div><div><span class="sym">\(\text{Vor-/Nachteil}\)</span><span>keine Verteilungsannahme außer dem Median; verschenkt aber die Information der Beträge</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Q zählt die Werte über mü null; unter H null ist Q binomial mit n und einhalb.“</div></div>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: Wilcoxon-Test (der Kompromiss)</b>\mu_0" src="G"><div class="anat"><div><span class="sym">\(W\)</span><span>Summe der Ränge der Abstände, nur für die Werte über μ₀</span></div><div><span class="sym">\(\text{Annahme}\)</span><span>nur eine um μ₀ symmetrische Verteilung; W zu groß oder zu klein → verwerfen (Schranken aus Tabellen)</span></div><div><span class="sym">\(\text{Praxis}\)</span><span>meist dem t- und Vorzeichen-Test vorzuziehen; nur bei sehr gut normalen Daten (Normalplot!) ist der t-Test voll tauglich</span></div></div><div class="read">📖 <b>Vorlesen:</b> „W ist die Summe der Ränge der Beträge, gezählt nur bei positiven Abweichungen.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Kleine Stichprobe, Normalplot zeigt klare Abweichungen. Median-Test gesucht. Welcher Test?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Nicht normal → t-Test riskant; Vorzeichen verschenkt Information.</div><div><i>⚙️ LÖSEN</i>Wilcoxon: verteilungsfrei (Symmetrie), nutzt Ränge, meist mehr Macht.</div><div><i>🗣️ SAGEN</i>„Ich nehme Wilcoxon: verteilungsfrei, nutzt die Ränge und ist bei nicht-normalen Daten am zuverlässigsten.“</div></div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🎯 Drei Tests, ein Datensatz (Grundlage: Abfüllmaschine)</b>
+  <table class="tbl"><tr><th>Test</th><th>nutzt</th><th>Statistik</th><th class="r">P-Wert</th><th>Entscheid</th></tr>
+  <tr><td>t-Test</td><td>exakte Werte (Normal!)</td><td>t = 6.76</td><td class="r">&lt; 0.001</td><td>verwerfen</td></tr>
+  <tr><td>Wilcoxon</td><td>Ränge</td><td>W = 54</td><td class="r">0.004</td><td>verwerfen</td></tr>
+  <tr><td>Vorzeichen</td><td>nur Vorzeichen</td><td>Q = 9</td><td class="r">0.0215</td><td>verwerfen</td></tr></table>
+  <p>Mehr genutzte Information → i. d. R. kleinerer P-Wert, mehr Macht. Aber der t-Test setzt Normalverteilung voraus; sonst ist Wilcoxon die sichere Wahl.</p>
+</div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Vorzeichen, Wilcoxon, Macht</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Vorzeichen-Test, Wilcoxon-Test und Macht (Power)"><span class="ln">1</span># Vorzeichen-Test, Wilcoxon-Test und Macht (Power)</div><div class="row" data-src="y &lt;- c(1002.1, 1003.4, 999.2, 1001.8, 1004.0, 1002.9, 1000.6, 1003.1, 1001.2, 1002.5)"><span class="ln">2</span>y &lt;- c(1002.1, 1003.4, 999.2, 1001.8, 1004.0, 1002.9, 1000.6, 1003.1, 1001.2, 1002.5)</div><div class="row" data-src="d &lt;- y - 1000                              # Abweichungen vom Sollwert"><span class="ln">3</span>d &lt;- y - 1000                              # Abweichungen vom Sollwert</div><div class="row" data-src="Q &lt;- sum(d &gt; 0)                            # Vorzeichen-Test: Anzahl positiver Vorzeichen"><span class="ln">4</span>Q &lt;- sum(d &gt; 0)                            # Vorzeichen-Test: Anzahl positiver Vorzeichen</div><div class="row" data-src="binom.test(Q, length(d), 0.5)              # Q ~ Bin(n, 0.5) unter H0, p = 0.0215"><span class="ln">5</span>binom.test(Q, length(d), 0.5)              # Q ~ Bin(n, 0.5) unter H0, p = 0.0215</div><div class="row" data-src="W &lt;- sum(rank(abs(d))[d &gt; 0])              # Wilcoxon: Rangsumme der positiven Abweichungen"><span class="ln">6</span>W &lt;- sum(rank(abs(d))[d &gt; 0])              # Wilcoxon: Rangsumme der positiven Abweichungen</div><div class="row" data-src="W; wilcox.test(y, mu = 1000)               # W = 53, p = 0.0059"><span class="ln">7</span>W; wilcox.test(y, mu = 1000)               # W = 53, p = 0.0059</div><div class="row" data-src="t.test(y, mu = 1000)$p.value               # t-Test zum Vergleich"><span class="ln">8</span>t.test(y, mu = 1000)$p.value               # t-Test zum Vergleich</div><div class="row" data-src="# Macht des einseitigen Z-Tests: sigma = 4, n = 25, mu0 = 50, wahres mu1 = 52"><span class="ln">9</span># Macht des einseitigen Z-Tests: sigma = 4, n = 25, mu0 = 50, wahres mu1 = 52</div><div class="row" data-src="1 - pnorm(qnorm(0.95) - (52 - 50) / (4 / sqrt(25)))    # 0.804"><span class="ln">10</span>1 - pnorm(qnorm(0.95) - (52 - 50) / (4 / sqrt(25)))    # 0.804</div><div class="row" data-src="power.t.test(delta = 2, sd = 4, power = 0.9, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)   # nötiges n (t-Version)"><span class="ln">11</span>power.t.test(delta = 2, sd = 4, power = 0.9, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)   # nötiges n (t-Version)</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Vorzeichen, Wilcoxon, Macht</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Vorzeichen-Test, Wilcoxon-Test und Macht (Power)"><span class="ln">1</span># Vorzeichen-Test, Wilcoxon-Test und Macht (Power)</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src="from scipy import stats"><span class="ln">3</span>from scipy import stats</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="y = np.array([1002.1, 1003.4, 999.2, 1001.8, 1004.0, 1002.9, 1000.6, 1003.1, 1001.2, 1002.5])"><span class="ln">5</span>y = np.array([1002.1, 1003.4, 999.2, 1001.8, 1004.0, 1002.9, 1000.6, 1003.1, 1001.2, 1002.5])</div><div class="row" data-src="d = y - 1000                               # Abweichungen vom Sollwert"><span class="ln">6</span>d = y - 1000                               # Abweichungen vom Sollwert</div><div class="row" data-src="Q = int(np.sum(d &gt; 0))                     # Vorzeichen-Test: Anzahl positiver Vorzeichen"><span class="ln">7</span>Q = int(np.sum(d &gt; 0))                     # Vorzeichen-Test: Anzahl positiver Vorzeichen</div><div class="row" data-src="print(stats.binomtest(Q, len(d), 0.5).pvalue)             # Q ~ Bin(n, 0.5) unter H0, p = 0.0215"><span class="ln">8</span>print(stats.binomtest(Q, len(d), 0.5).pvalue)             # Q ~ Bin(n, 0.5) unter H0, p = 0.0215</div><div class="row" data-src="W = stats.rankdata(np.abs(d))[d &gt; 0].sum() # Wilcoxon: Rangsumme der positiven Abweichungen"><span class="ln">9</span>W = stats.rankdata(np.abs(d))[d &gt; 0].sum() # Wilcoxon: Rangsumme der positiven Abweichungen</div><div class="row" data-src="print(W, stats.wilcoxon(d).pvalue)         # W = 53, p = 0.0059 (scipy meldet min(W+, W-) = 2)"><span class="ln">10</span>print(W, stats.wilcoxon(d).pvalue)         # W = 53, p = 0.0059 (scipy meldet min(W+, W-) = 2)</div><div class="row" data-src="print(stats.ttest_1samp(y, 1000).pvalue)   # t-Test zum Vergleich"><span class="ln">11</span>print(stats.ttest_1samp(y, 1000).pvalue)   # t-Test zum Vergleich</div><div class="row" data-src="# Macht des einseitigen Z-Tests: sigma = 4, n = 25, mu0 = 50, wahres mu1 = 52"><span class="ln">12</span># Macht des einseitigen Z-Tests: sigma = 4, n = 25, mu0 = 50, wahres mu1 = 52</div><div class="row" data-src="print(stats.norm.sf(stats.norm.ppf(0.95) - (52 - 50) / (4 / np.sqrt(25))))   # 0.804"><span class="ln">13</span>print(stats.norm.sf(stats.norm.ppf(0.95) - (52 - 50) / (4 / np.sqrt(25))))   # 0.804</div></pre></div></div>
+<h3 id="s7-5-a" data-m="Schema 6 Schritte|Rezept und 3 Beispiele">📐 Schema: statistischer Test in 6 Schritten</h3>
+<ol class="cook is-g"><li>Modell für die Daten wählen.</li><li>Nullhypothese \(H_0:\theta=\theta_0\) festlegen.</li><li>Alternative (zwei-/einseitig) spezifizieren: sie bestimmt die Form von K.</li><li>Niveau α wählen (0.05 oder 0.01).</li><li>Verwerfungsbereich K unter H₀ konstruieren, sodass P(Fehler 1. Art) ≤ α.</li><li>Erst jetzt die Teststatistik betrachten: in K → verwerfen; sonst H₀ belassen (kein Beweis für H₀).</li></ol>
+<div class="ex3">
+  <div class="ex is-g"><div class="lvl l1">Beispiel 1 · leicht <span class="srcin">📘 Grundlage</span></div><b>Diskret</b>Binomialtest: n = 20, p₀ = 0.1, x = 5.<div class="verdict"><b>Verdict:</b> K = {5, …, 20}, x ∈ K → verwerfen.</div></div>
+  <div class="ex is-g"><div class="lvl l2">Beispiel 2 · mittel <span class="srcin">📘 Grundlage</span></div><b>Stetig</b>t-Test: x̄ = 1002.63, s = 1.23, n = 10.<div class="verdict"><b>Verdict:</b> t = 6.76 &gt; 2.262 → verwerfen.</div></div>
+  <div class="ex is-g"><div class="lvl l3">Beispiel 3 · schwer <span class="srcin">📘 Grundlage</span></div><b>Dual/robust</b>95-%-VI [1001.75; 1003.51].<div class="verdict"><b>Verdict:</b> ∌ 1000 → verwerfen; robust bestätigt durch Wilcoxon (p = 0.004).</div></div>
+</div>
+</section>
+
+<section id="s7-9" data-m="🌉 Brücke & Lernziele|Sollwert → Entscheidung">
+<h2>🌉 Die große Brücke: vom Sollwert zur Entscheidung</h2>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧵 Fluss-Diagramm</b>
+<svg viewBox="0 0 1200 290" role="img" aria-label="Fluss von Kapitel 7">
+  <defs><marker id="arrK7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="10" y="20" width="220" height="60" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="120" y="45" fill="#f778ba" font-weight="700">Daten + Sollwert θ₀</text><text x="120" y="68" fill="#8b949e">z. B. 10 Messungen</text>
+    <rect x="260" y="20" width="220" height="60" rx="10" fill="#1c2129" stroke="#56d4dd"/><text x="370" y="45" fill="#56d4dd" font-weight="700">H₀ vs. H_A, α</text><text x="370" y="68" fill="#8b949e">ein-/zweiseitig</text>
+    <rect x="510" y="20" width="230" height="60" rx="10" fill="#1c2129" stroke="#f85149"/><text x="625" y="45" fill="#f85149" font-weight="700">K unter H₀</text><text x="625" y="68" fill="#8b949e">Form aus H_A, Fläche ≤ α</text>
+    <rect x="770" y="20" width="200" height="60" rx="10" fill="#1c2129" stroke="#d29922"/><text x="870" y="45" fill="#d29922" font-weight="700">Statistik ∈ K?</text><text x="870" y="68" fill="#8b949e">Z · T · Q · W</text>
+    <rect x="1000" y="20" width="190" height="60" rx="10" fill="#1c2129" stroke="#3fb950"/><text x="1095" y="45" fill="#3fb950" font-weight="700">Entscheid</text><text x="1095" y="68" fill="#8b949e">verwerfen / nicht</text>
+    <rect x="300" y="140" width="260" height="56" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="430" y="164" fill="#bc8cff" font-weight="700">P-Wert</text><text x="430" y="186" fill="#8b949e">p ≤ α ?</text>
+    <rect x="640" y="140" width="260" height="56" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="770" y="164" fill="#58a6ff" font-weight="700">Vertrauensintervall</text><text x="770" y="186" fill="#8b949e">alle nicht verworfenen θ₀</text>
+    <text x="600" y="240" fill="#bc8cff" font-weight="700">Informationsgehalt: Testentscheid ⪯ P-Wert ⪯ Vertrauensintervall</text>
+    <text x="600" y="270" fill="#8b949e">→ Kap. 8: dasselbe Rezept für zwei Gruppen (gepaart / ungepaart)</text>
+    <line x1="230" y1="50" x2="258" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="480" y1="50" x2="508" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="740" y1="50" x2="768" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="970" y1="50" x2="998" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="870" y1="80" x2="440" y2="138" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="880" y1="80" x2="780" y2="138" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+  </g>
+</svg>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>✅ Lernziele-Check (7.7)</b>
+  <ul><li>Ich kann einen Test rezeptartig durchführen (H₀/H_A, α, K, Entscheidung).</li><li>Ich kenne Binomial-, Z- und t-Test und wähle den passenden.</li><li>Ich verstehe Fehler 1./2. Art, Macht und P-Wert und ihre Interpretation (Signifikanz).</li><li>Ich kann ein Vertrauensintervall bilden und die Dualität zum Test nutzen.</li><li>Ich kenne Vorzeichen- und Wilcoxon-Test für nicht normale Daten.</li></ul>
+</div>
+</section>
+
+<section id="s7-cheat" data-m="📋 Cheat-Sheet|Tests auf einen Blick">
+<h2>📋 Cheat-Sheet Kapitel 7</h2>
+<table class="tbl cheat">
+<tr><th>Test</th><th>Statistik unter H₀</th><th>Verwerfen (zweiseitig)</th><th>R</th><th>Python</th></tr>
+<tr><td>Binomial</td><td>\(X\sim\Bin(n,p_0)\)</td><td>kleinstes K mit \(\PP_{p_0}(X\in K)\le\alpha\)</td><td><code>binom.test(x, n, p0)</code></td><td><code>stats.binomtest(x, n, p0)</code></td></tr>
+<tr><td>Z (σ bekannt)</td><td>\(\frac{\bar X-\mu_0}{\sigma/\sqrt n}\sim\Nor(0,1)\)</td><td>\(|z|\ge z_{1-\alpha/2}\) (1.96)</td><td><code>qnorm(0.975)</code></td><td><code>norm.ppf(0.975)</code></td></tr>
+<tr><td>t (σ unbekannt)</td><td>\(\frac{\bar X-\mu_0}{S/\sqrt n}\sim t_{n-1}\)</td><td>\(|t|\ge t_{n-1,1-\alpha/2}\)</td><td><code>t.test(x, mu = m0)</code></td><td><code>stats.ttest_1samp(x, m0)</code></td></tr>
+<tr><td>Vorzeichen</td><td>\(Q\sim\Bin(n,0.5)\)</td><td>Binomialtest</td><td><code>binom.test(Q, n)</code></td><td><code>stats.binomtest(Q, n)</code></td></tr>
+<tr><td>Wilcoxon</td><td>Rangsumme W (Tabelle)</td><td>W ≤ c₁ oder W ≥ c₂</td><td><code>wilcox.test(x, mu = m0)</code></td><td><code>stats.wilcoxon(x - m0)</code></td></tr>
+<tr><td>VI (t)</td><td colspan="2">\(\bar x\pm t_{n-1,1-\alpha/2}\,s/\sqrt n\)</td><td><code>t.test(x)$conf.int</code></td><td><code>stats.t.interval(...)</code></td></tr>
+<tr><td>Macht (Z, einseitig)</td><td colspan="2">\(1-\Phi\big(z_{1-\alpha}-\frac{\mu_1-\mu_0}{\sigma/\sqrt n}\big)\); \(n\ge\big(\frac{(z_{1-\alpha}+z_{1-\beta})\sigma}{\mu_1-\mu_0}\big)^2\)</td><td><code>power.t.test(...)</code></td><td>—</td></tr>
+</table>
+</section>
+
+<section id="s7-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-cond">Nullhypothese H₀</span></td><td>null hypothesis</td><td>Status quo, den wir anzweifeln</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-cond">Alternativhypothese H_A</span></td><td>alternative hypothesis</td><td>was wir zeigen wollen</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Fehler 1. Art</span></td><td>type I error</td><td>H₀ fälschlich verwerfen (≤ α)</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Fehler 2. Art</span></td><td>type II error</td><td>H₀ fälschlich beibehalten (β)</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-par">Signifikanzniveau α</span></td><td>significance level</td><td>Obergrenze für Fehler 1. Art</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-res">Verwerfungsbereich K</span></td><td>rejection region</td><td>hier wird H₀ verworfen</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Teststatistik</span></td><td>test statistic</td><td>(beobachtet − erwartet)/SE</td><td><a href="#s7-2">7.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Z-Test / t-Test</span></td><td>z-test / t-test</td><td>σ bekannt / geschätzt</td><td><a href="#s7-2">7.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Macht</span></td><td>power</td><td>echten Effekt finden</td><td><a href="#s7-3">7.3</a></td></tr>
+<tr><td><span class="kw kw-res">P-Wert</span></td><td>p-value</td><td>kleinstes α, bei dem verworfen wird</td><td><a href="#s7-3">7.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Signifikanz / Relevanz</span></td><td>significance / relevance</td><td>nachweisbar vs. fachlich wichtig</td><td><a href="#s7-4">7.4</a></td></tr>
+<tr><td><span class="kw kw-res">Vertrauensintervall</span></td><td>confidence interval</td><td>alle nicht verworfenen θ₀</td><td><a href="#s7-4">7.4</a></td></tr>
+<tr><td><span class="kw kw-rule">Vorzeichen- / Wilcoxon-Test</span></td><td>sign / Wilcoxon signed-rank test</td><td>Median-Tests ohne Normalannahme</td><td><a href="#s7-5">7.5</a></td></tr>
+</table>
+</section>
+
+<section id="s7-train" data-m="🏋 Training|Tests mit Zufallszahlen">
+<h2>🏋 Training</h2>
+<div class="card has-src " id="qz7"><span class="src n" title="neu ergänzt">✚ Neu</span><b>Zufällige Testaufgabe</b>
+  <p id="q7Task"></p>
+  <div class="quiz two"><p>Teststatistik = <input id="q7s"></p><p>P-Wert = <input id="q7p"></p></div>
+  <p><button class="btn" id="q7Chk">Prüfen</button> <button class="btn" id="q7New">Neue Aufgabe</button></p>
+  <div class="out" id="q7Res"></div>
+</div>
+</section>
+
+<footer class="foot">Lernbegleiter Statistik I · Kap. 7 · Statistische Tests und Vertrauensintervalle · 📘 Grundlage = Inhalt aus dem bisherigen Lernbegleiter (Skript L. Meier, ETH) · ✚ Neu = ergänzt · alle Zahlen per Skript nachgerechnet.</footer>
+</main>
+<script>
+/* =====================================================================
+   Lernbegleiter-Engine (gemeinsam für alle Kapitel)
+   Namensraum window.LB · KaTeX-Makros · Menü · Farbwörter · Tracer
+   Statistik-Funktionen · Plotly-Hilfen · Video-Links · Teilwechsel
+   ===================================================================== */
+(function () {
+'use strict';
+const LB = window.LB = window.LB || {};
+LB.inits = LB.inits || [];
+LB.on = fn => LB.inits.push(fn);                                   // Kapitel-Skripte melden Init-Funktionen an
+
+/* ---------- Rollenfarben (identisch zu :root in base.css) ---------- */
+LB.C = { res: '#f85149', chg: '#d29922', rule: '#bc8cff', par: '#58a6ff', idx: '#3fb950', cond: '#56d4dd', mem: '#f778ba',
+         text: '#e6edf3', muted: '#8b949e', border: '#30363d', card2: '#1c2129' };
+LB.rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+
+/* ---------- KaTeX: eine Konfiguration für alle Aufrufe ---------- */
+LB.KOPT = {
+  delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }],
+  throwOnError: false,
+  macros: {
+    '\\Res': '\\textcolor{f85149}{#1}', '\\Chg': '\\textcolor{d29922}{#1}', '\\Rule': '\\textcolor{bc8cff}{#1}',
+    '\\Par': '\\textcolor{58a6ff}{#1}', '\\Idx': '\\textcolor{3fb950}{#1}', '\\Cond': '\\textcolor{56d4dd}{#1}',
+    '\\Mem': '\\textcolor{f778ba}{#1}',
+    '\\PP': '\\Rule{P}',                                            // Wahrscheinlichkeits-Operator
+    '\\EE': '\\Rule{E}',                                            // Erwartungswert-Operator
+    '\\Var': '\\Rule{\\operatorname{Var}}',
+    '\\Cov': '\\Rule{\\operatorname{Cov}}',
+    '\\Corr': '\\Rule{\\operatorname{Corr}}',
+    '\\sd': '\\Rule{\\sigma}',
+    '\\given': '\\,\\Cond{\\vert}\\,',                              // Bedingungsstrich
+    '\\Om': '\\Mem{\\Omega}',                                       // Grundraum
+    '\\iid': '\\Rule{\\overset{\\text{i.i.d.}}{\\sim}}',
+    '\\dd': '\\,\\mathrm{d}',
+    '\\mA': '\\Mem{A}', '\\mB': '\\Mem{B}', '\\mX': '\\Mem{X}', '\\mY': '\\Mem{Y}',
+    '\\capc': '\\mathbin{\\Chg{\\cap}}', '\\cupc': '\\mathbin{\\Chg{\\cup}}', '\\co': '^{\\Chg{c}}',
+    '\\setm': '\\mathbin{\\Chg{\\setminus}}',
+    '\\pf': '\\Rule{p}', '\\ff': '\\Rule{f}', '\\FF': '\\Rule{F}', '\\WW': '\\Mem{\\mathcal{W}}',
+    '\\mx': '\\Mem{x}', '\\mZ': '\\Mem{Z}', '\\mT': '\\Mem{T}',
+    '\\Bin': '\\Rule{\\operatorname{Bin}}', '\\Pois': '\\Rule{\\operatorname{Pois}}', '\\Geom': '\\Rule{\\operatorname{Geom}}',
+    '\\Bern': '\\Rule{\\operatorname{Bernoulli}}', '\\Uni': '\\Rule{\\operatorname{Uni}}', '\\Nor': '\\Rule{\\mathcal{N}}', '\\Expo': '\\Rule{\\operatorname{Exp}}'
+  }
+};
+LB.tex = el => { if (window.renderMathInElement && el) window.renderMathInElement(el, LB.KOPT); };
+LB.esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+LB.$ = (s, r) => (r || document).querySelector(s);
+LB.$$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+LB.fmt = (v, d) => { if (d === undefined) d = 4; if (!isFinite(v)) return '–'; const s = Number(v).toFixed(d); return s === '-' + (0).toFixed(d) ? (0).toFixed(d) : s; };
+LB.store = {                                                       // localStorage ist unter file:// oft gesperrt
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* egal */ } }
+};
+LB.inFrame = (() => { try { return window.parent !== window; } catch (e) { return true; } })();
+
+/* =====================================================================
+   Statistik-Funktionen (JS-Spiegel der C++-Programme)
+   ===================================================================== */
+const S = LB.S = {};
+S.lgamma = function (x) {                                         // log Γ(x), Lanczos g=7
+  const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
+    12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - S.lgamma(1 - x);
+  x -= 1; let a = c[0]; const t = x + 7.5;
+  for (let i = 1; i < 9; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+};
+S.choose = (n, k) => (k < 0 || k > n) ? 0 : Math.round(Math.exp(S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1)));
+S.lchoose = (n, k) => S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1);
+S.fact = n => { let f = 1; for (let i = 2; i <= n; i++) f *= i; return f; };
+S.gammaP = function (a, x) {                                      // regularisierte untere unvollständige Gamma-Funktion
+  if (x <= 0) return 0;
+  const gln = S.lgamma(a);
+  if (x < a + 1) { let ap = a, sum = 1 / a, del = sum;
+    for (let n = 0; n < 500; n++) { ap++; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-15) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - gln); }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 500; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return 1 - Math.exp(-x + a * Math.log(x) - gln) * h;
+};
+S.betacf = function (a, b, x) {                                    // Kettenbruch für die unvollständige Beta-Funktion
+  const qab = a + b, qap = a + 1, qam = a - 1; let c = 1, d = 1 - qab * x / qap; if (Math.abs(d) < 1e-300) d = 1e-300; d = 1 / d; let h = d;
+  for (let m = 1; m <= 300; m++) { const m2 = 2 * m; let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d;
+    const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return h;
+};
+S.betaI = function (a, b, x) {                                     // regularisierte unvollständige Beta-Funktion I_x(a,b)
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  const bt = Math.exp(S.lgamma(a + b) - S.lgamma(a) - S.lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  return (x < (a + 1) / (a + b + 2)) ? bt * S.betacf(a, b, x) / a : 1 - bt * S.betacf(b, a, 1 - x) / b;
+};
+S.erfc = x => x >= 0 ? 1 - S.gammaP(0.5, x * x) : 1 + S.gammaP(0.5, x * x);
+S.normPdf = (x, mu = 0, s = 1) => { const z = (x - mu) / s; return Math.exp(-0.5 * z * z) / (s * Math.sqrt(2 * Math.PI)); };
+S.Phi = x => 0.5 * S.erfc(-x / Math.SQRT2);                        // Standardnormal-Verteilungsfunktion Φ
+S.normCdf = (x, mu = 0, s = 1) => S.Phi((x - mu) / s);
+S.PhiInv = function (p) {                                          // Φ⁻¹(p): Acklam + zwei Newton-Schritte
+  if (p <= 0) return -Infinity; if (p >= 1) return Infinity;
+  const a = [-3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.383577518672690e2, -3.066479806614716e1, 2.506628277459239e0],
+    b = [-5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1, -1.328068155288572e1],
+    c = [-7.784894002430293e-3, -3.223964580411365e-1, -2.400758277161838e0, -2.549732539343734e0, 4.374664141464968e0, 2.938163982698783e0],
+    d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996e0, 3.754408661907416e0];
+  let q, r, x;
+  if (p < 0.02425) { q = Math.sqrt(-2 * Math.log(p)); x = (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  else if (p <= 1 - 0.02425) { q = p - 0.5; r = q * q; x = (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1); }
+  else { q = Math.sqrt(-2 * Math.log(1 - p)); x = -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  for (let k = 0; k < 2; k++) { const e = S.Phi(x) - p, u = e * Math.sqrt(2 * Math.PI) * Math.exp(x * x / 2); x = x - u / (1 + x * u / 2); }
+  return x;
+};
+S.tPdf = (t, nu) => Math.exp(S.lgamma((nu + 1) / 2) - S.lgamma(nu / 2)) / Math.sqrt(nu * Math.PI) * Math.pow(1 + t * t / nu, -(nu + 1) / 2);
+S.tCdf = (t, nu) => { const p = 0.5 * S.betaI(nu / 2, 0.5, nu / (nu + t * t)); return t > 0 ? 1 - p : p; };
+S.chi2Cdf = (x, k) => x <= 0 ? 0 : S.gammaP(k / 2, x / 2);
+S.chi2Pdf = (x, k) => x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.log(2) - S.lgamma(k / 2));
+S.invert = function (cdf, p, lo, hi) {                             // Quantil per Bisektion einer monotonen Verteilungsfunktion
+  for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (cdf(m) < p) lo = m; else hi = m; if (hi - lo < 1e-12) break; }
+  return (lo + hi) / 2;
+};
+S.tInv = (p, nu) => S.invert(x => S.tCdf(x, nu), p, -1e4, 1e4);
+S.chi2Inv = (p, k) => S.invert(x => S.chi2Cdf(x, k), p, 0, 1e4);
+S.binomPmf = (k, n, p) => { if (k < 0 || k > n || k !== Math.floor(k)) return 0; if (p <= 0) return k === 0 ? 1 : 0; if (p >= 1) return k === n ? 1 : 0;
+  return Math.exp(S.lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)); };
+S.binomCdf = (k, n, p) => { let s = 0; for (let i = 0; i <= Math.min(k, n); i++) s += S.binomPmf(i, n, p); return Math.min(1, s); };
+S.poisPmf = (k, l) => (k < 0 || k !== Math.floor(k)) ? 0 : Math.exp(-l + k * Math.log(l) - S.lgamma(k + 1));
+S.poisCdf = (k, l) => { let s = 0; for (let i = 0; i <= k; i++) s += S.poisPmf(i, l); return Math.min(1, s); };
+S.geomPmf = (k, p) => k < 1 ? 0 : Math.pow(1 - p, k - 1) * p;       // Anzahl Versuche bis zum ersten Erfolg (k = 1, 2, …)
+S.hyperPmf = (k, N, M, n) => Math.exp(S.lchoose(M, k) + S.lchoose(N - M, n - k) - S.lchoose(N, n));
+S.expPdf = (x, l) => x < 0 ? 0 : l * Math.exp(-l * x);
+S.expCdf = (x, l) => x < 0 ? 0 : 1 - Math.exp(-l * x);
+/* Deskriptive Kennzahlen, Quantil-Definition wie im Skript */
+S.sum = a => a.reduce((s, x) => s + x, 0);
+S.mean = a => S.sum(a) / a.length;
+S.var = a => { const m = S.mean(a); return a.reduce((s, x) => s + (x - m) * (x - m), 0) / (a.length - 1); };
+S.sd = a => Math.sqrt(S.var(a));
+S.sorted = a => a.slice().sort((x, y) => x - y);
+S.quantile = function (a, alpha) {                                 // α·n ganzzahlig → Mittel zweier Nachbarn, sonst x_(⌈α n⌉)
+  const s = S.sorted(a), n = s.length, an = alpha * n, r = Math.round(an);
+  if (Math.abs(an - r) < 1e-9) { if (r <= 0) return s[0]; if (r >= n) return s[n - 1]; return 0.5 * (s[r - 1] + s[r]); }
+  return s[Math.ceil(an) - 1];
+};
+S.median = a => S.quantile(a, 0.5);
+S.cor = (x, y) => { const mx = S.mean(x), my = S.mean(y); let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < x.length; i++) { sxy += (x[i] - mx) * (y[i] - my); sxx += (x[i] - mx) ** 2; syy += (y[i] - my) ** 2; }
+  return sxy / Math.sqrt(sxx * syy); };
+S.parse = str => (str || '').split(/[\s,;]+/).map(s => s.trim()).filter(s => s !== '').map(Number).filter(x => !isNaN(x));
+S.rng = function (seed) {                                          // reproduzierbarer Zufall (mulberry32)
+  let t = seed >>> 0;
+  const u = () => { t += 0x6D2B79F5; let r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; };
+  u.norm = () => { let a = 0; while (a === 0) a = u(); return Math.sqrt(-2 * Math.log(a)) * Math.cos(2 * Math.PI * u()); };
+  return u;
+};
+
+/* =====================================================================
+   Plotly-Hilfen (dunkles Layout, Rollenfarben)
+   ===================================================================== */
+LB.PCFG = { displayModeBar: false, responsive: true };
+LB.lay = function (extra) {
+  const L = { margin: { l: 55, r: 18, t: 20, b: 45 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: 'Source Sans 3, Segoe UI, sans-serif', size: 13, color: LB.C.text }, showlegend: false,
+    xaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border }, yaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border },
+    legend: { bgcolor: 'rgba(0,0,0,0)', orientation: 'h', y: 1.12 } };
+  if (extra) for (const k in extra) {
+    if ((k === 'xaxis' || k === 'yaxis') && typeof extra[k] === 'object') L[k] = Object.assign({}, L[k], extra[k]); else L[k] = extra[k];
+  }
+  return L;
+};
+LB.plot = (el, traces, layout) => { if (!window.Plotly) return; const e = typeof el === 'string' ? document.getElementById(el) : el; if (e) Plotly.react(e, traces, LB.lay(layout), LB.PCFG); };
+LB.area = function (f, a, b, color, n) {                           // gefüllte Fläche unter einer Dichte
+  n = n || 120; const xs = [a], ys = [0];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  xs.push(b); ys.push(0);
+  return { x: xs, y: ys, fill: 'toself', mode: 'none', fillcolor: color, hoverinfo: 'skip' };
+};
+LB.curve = function (f, a, b, color, n, extra) {
+  n = n || 200; const xs = [], ys = [];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  return Object.assign({ x: xs, y: ys, mode: 'lines', line: { color: color, width: 2.6 }, hoverinfo: 'skip' }, extra || {});
+};
+/* Regler binden: bind(['id1','id2'], fn) → fn(values) bei jeder Änderung, Ausgabe in <output for=id> */
+LB.bind = function (ids, fn) {
+  const els = ids.map(id => document.getElementById(id));
+  const run = () => {
+    const v = {};
+    els.forEach(e => { if (!e) return; const val = e.type === 'checkbox' ? e.checked : (e.type === 'range' || e.type === 'number' ? parseFloat(e.value) : e.value);
+      v[e.id] = val; const o = document.querySelector('output[for="' + e.id + '"]'); if (o) o.textContent = e.dataset.fmt ? LB.fmt(val, +e.dataset.fmt) : e.value; });
+    fn(v);
+  };
+  els.forEach(e => e && e.addEventListener('input', run));
+  run(); return run;
+};
+
+/* =====================================================================
+   Code-Hervorhebung für R und Python: Kommentare, Strings, Schlüsselwörter,
+   Funktionen, Zahlen, Zuweisung. Marker "#@name" am Zeilenende werden entfernt.
+   ===================================================================== */
+const KW = {
+  R: new Set('function if else for while repeat in return TRUE FALSE NULL NA Inf break next library'.split(' ')),
+  Python: new Set('def if elif else for while in return True False None import from as lambda with and or not pass break continue print'.split(' '))
+};
+LB.stripMark = l => l.replace(/\s*#@[\w-]+\s*$/, '');
+LB.markOf = l => { const m = l.match(/#@([\w-]+)\s*$/); return m ? m[1] : ''; };
+LB.hlLine = function (line, lang) {
+  lang = lang || 'R'; const kws = KW[lang] || KW.R;
+  let out = '', i = 0; const n = line.length;
+  while (i < n) {
+    const ch = line[i];
+    if (ch === '#') { out += '<span class="tok-c">' + LB.esc(line.slice(i)) + '</span>'; break; }
+    if (ch === '"' || ch === "'") { let j = i + 1; while (j < n && line[j] !== ch) { if (line[j] === '\\') j++; j++; }
+      out += '<span class="tok-s">' + LB.esc(line.slice(i, j + 1)) + '</span>'; i = j + 1; continue; }
+    if (line.startsWith('<-', i)) { out += '<span class="tok-a">&lt;-</span>'; i += 2; continue; }
+    if (/[A-Za-z_.]/.test(ch)) { let j = i + 1; while (j < n && /[A-Za-z0-9_.]/.test(line[j])) j++;
+      const w = line.slice(i, j);
+      if (kws.has(w)) out += '<span class="tok-k">' + LB.esc(w) + '</span>';
+      else if (line[j] === '(') out += '<span class="tok-t">' + LB.esc(w) + '</span>';
+      else out += LB.esc(w);
+      i = j; continue; }
+    if (/[0-9]/.test(ch)) { let j = i + 1; while (j < n && /[0-9.eE]/.test(line[j])) j++; out += '<span class="tok-n">' + line.slice(i, j) + '</span>'; i = j; continue; }
+    out += LB.esc(ch); i++;
+  }
+  return out;
+};
+
+/* =====================================================================
+   Code-Tracer: zeichnet alle Schritte einmal auf, spielt dann ab
+   ===================================================================== */
+LB.Tracer = class {
+  constructor(o) {
+    this.o = o; this.root = document.getElementById(o.id); if (!this.root) return;
+    this.langs = o.langs || { R: o.code };                            // {R: [...], Python: [...]}
+    this.lang = LB.store.get('lb-lang', 'R'); if (!this.langs[this.lang]) this.lang = Object.keys(this.langs)[0];
+    this.root.classList.add('tracer');
+    const ex = (o.examples || []).map((e, k) => '<option value="' + k + '">' + LB.esc(e[0]) + '</option>').join('');
+    this.root.innerHTML =
+      '<div class="tr-head"><b>▶ ' + LB.esc(o.title) + '</b>' +
+      '<label>Eingabe <input class="tr-in" value="' + LB.esc(o.input) + '" aria-label="Eingabe"></label>' +
+      (ex ? '<select class="tr-ex" aria-label="Beispiele"><option value="">Beispiele …</option>' + ex + '</select>' : '') +
+      '<span class="seg tr-lang">' + Object.keys(this.langs).map(L => '<button data-lang="' + L + '">' + L + '</button>').join('') + '</span>' +
+      '<button data-a="run">↻ neu starten</button>' + (o.hint ? '<span class="muted small">' + o.hint + '</span>' : '') + '</div>' +
+      '<div class="tr-grid"><pre class="tr-code"></pre><div class="tr-state"></div></div>' +
+      '<div class="tr-ctl"><button data-a="first" title="Anfang">⏮</button><button data-a="prev" title="zurück">◀</button>' +
+      '<input type="range" class="tr-pos" min="0" value="0" aria-label="Schritt">' +
+      '<button data-a="next" title="vor">▶</button><button data-a="last" title="Ende">⏭</button>' +
+      '<button data-a="auto">⏯ auto</button><span class="tr-cnt"></span></div>' +
+      '<div class="tr-msg"></div>';
+    this.q = s => this.root.querySelector(s);
+    this.root.addEventListener('click', e => {
+      const b = e.target.closest('[data-a]'); if (b) this.act(b.dataset.a);
+      const l = e.target.closest('[data-lang]'); if (l) { LB.store.set('lb-lang', l.dataset.lang); LB.$$('.tracer').forEach(t => t._tr && t._tr.setLang(l.dataset.lang)); }
+    });
+    this.root._tr = this;
+    this.q('.tr-pos').addEventListener('input', e => this.show(+e.target.value));
+    this.q('.tr-in').addEventListener('keydown', e => { if (e.key === 'Enter') this.run(); });
+    const sel = this.q('.tr-ex');
+    if (sel) sel.addEventListener('change', () => { if (sel.value !== '') { this.q('.tr-in').value = o.examples[+sel.value][1]; this.run(); } sel.value = ''; });
+    this.run();
+  }
+  setLang(L) { if (!this.langs[L]) return; this.lang = L; this.renderCode(); this.show(this.i || 0); }
+  renderCode() {
+    let lines = this.langs[this.lang];
+    if (this.o.codeFor && this.inp !== undefined) lines = this.o.codeFor(this.inp, this.lang, lines);
+    this.q('.tr-code').innerHTML = lines.map((l, i) =>
+      '<div class="row" data-k="' + LB.markOf(l) + '"><span class="ln">' + (i + 1) + '</span>' + LB.hlLine(LB.stripMark(l), this.lang) + '<span class="hits"></span></div>').join('');
+    LB.$$('[data-lang]', this.root).forEach(b => b.classList.toggle('on', b.dataset.lang === this.lang));
+  }
+  run() {
+    const snaps = [];
+    const rec = { step: (line, msg, st) => snaps.push({ line, msg, st: JSON.parse(JSON.stringify(st)) }) };
+    let inp;
+    try { inp = this.o.parse(this.q('.tr-in').value); }
+    catch (e) { snaps.push({ line: 0, msg: '⚠ Eingabe nicht lesbar: ' + LB.esc(e.message), st: null }); }
+    this.inp = inp; this.renderCode();
+    if (inp !== undefined) { try { this.o.run(rec, inp); } catch (e) { snaps.push({ line: 0, msg: '⚠ ' + LB.esc(e.message), st: null }); } }
+    this.snaps = snaps.length ? snaps : [{ line: 0, msg: '(keine Schritte)', st: null }];
+    this.q('.tr-pos').max = this.snaps.length - 1;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    this.show(0);
+  }
+  act(a) {
+    const n = this.snaps.length - 1;
+    if (a === 'run') this.run();
+    else if (a === 'first') this.show(0);
+    else if (a === 'prev') this.show(Math.max(0, this.i - 1));
+    else if (a === 'next') this.show(Math.min(n, this.i + 1));
+    else if (a === 'last') this.show(n);
+    else if (a === 'auto') {
+      if (this.timer) { clearInterval(this.timer); this.timer = null; return; }
+      if (this.i >= n) this.show(0);
+      this.timer = setInterval(() => { if (this.i >= n) { clearInterval(this.timer); this.timer = null; } else this.show(this.i + 1); }, this.o.speed || 750);
+    }
+  }
+  show(i) {
+    this.i = i; const s = this.snaps[i]; this.q('.tr-pos').value = i;
+    const hits = {};
+    for (let k = 0; k <= i; k++) hits[this.snaps[k].line] = (hits[this.snaps[k].line] || 0) + 1;
+    this.root.querySelectorAll('.tr-code .row').forEach(r => {
+      const k = r.dataset.k; r.classList.toggle('cur', !!k && k === s.line);
+      r.querySelector('.hits').textContent = k && hits[k] ? '×' + hits[k] : '';
+    });
+    const st = this.q('.tr-state'); st.innerHTML = s.st ? this.o.view(s.st) : '';
+    this.q('.tr-msg').innerHTML = s.msg;
+    this.q('.tr-cnt').textContent = 'Schritt ' + i + ' / ' + (this.snaps.length - 1);
+    LB.tex(this.q('.tr-msg')); LB.tex(st);
+  }
+};
+/* Hilfen für Zustandsansichten */
+LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div><i>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span></div>').join('') + '</div>';
+LB.cellsHTML = (arr, cls, base) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
+
+/* =====================================================================
+   Farbige Schlüsselwörter im Fließtext (Wortliste Begriff → Rolle)
+   ===================================================================== */
+LB.KW = LB.KW || [];
+const SKIP = 'pre, code, .katex, h1, h2, h3, h4, h5, button, svg, .vn-badge, .src, .srcin, .vn-res, .kw, a, summary, .lbtop, .lbmenu, .vid, .tracer, .legend, th, label, output, .plot, .anat .sym, select, textarea, .nokw';
+LB.kwColor = function () {
+  if (!LB.KW.length) return;
+  const terms = LB.KW.slice().sort((a, b) => b[0].length - a[0].length);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp('(?<![\\p{L}\\p{N}])(' + terms.map(t => esc(t[0])).join('|') + ')(\\p{Ll}{0,3})(?![\\p{L}\\p{N}])', 'u');
+  const role = {}; terms.forEach(t => role[t[0]] = t[1]);
+  const blocks = LB.$$('main p, main li, main td, main .vn-step > div, main .vn-task, main .pt-grid > div, main .ptq, main .anat > div > span:last-child, main .read, main .why, main .recog, main .verdict, main .trap, main .gblk > div');
+  blocks.forEach(bl => {
+    if (bl.closest(SKIP)) return;
+    const used = new Set(); let count = 0;
+    const walker = document.createTreeWalker(bl, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.parentElement && n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      if (count >= 6) break;
+      let txt = node.nodeValue, m, frag = null, last = 0, off = 0;
+      while (count < 6 && (m = re.exec(txt.slice(off))) !== null) {
+        const start = off + m.index, word = m[0], base = m[1];
+        off = start + word.length;
+        if (used.has(base)) continue;
+        used.add(base); count++;
+        if (!frag) frag = document.createDocumentFragment();
+        frag.appendChild(document.createTextNode(txt.slice(last, start)));
+        const sp = document.createElement('span'); sp.className = 'kw kw-' + role[base]; sp.textContent = word; frag.appendChild(sp);
+        last = start + word.length;
+      }
+      if (frag) { frag.appendChild(document.createTextNode(txt.slice(last))); node.parentNode.replaceChild(frag, node); }
+    }
+  });
+};
+
+/* =====================================================================
+   Menü, Grundlage-Hervorhebung, Teilwechsel
+   ===================================================================== */
+LB.menu = open => document.body.classList.toggle('menu-open', open);
+function initMenu() {
+  const m = document.getElementById('lbMenu'); if (!m) return;
+  LB.$$('#lbOpen, #lbFab').forEach(b => b.addEventListener('click', () => LB.menu(true)));
+  m.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (a && a.dataset.part !== undefined && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'part', i: +a.dataset.part }, '*'); LB.menu(false); return; }
+    if (e.target.closest('[data-close]') || a || e.target.id === 'lbMenu') LB.menu(false);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') LB.menu(false);
+    if ((e.key === 't' || e.key === 'T') && !e.target.closest('input, textarea, select') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (LB.inFrame) window.parent.postMessage({ lb: 'overview' }, '*'); else LB.menu(!document.body.classList.contains('menu-open'));
+    }
+  });
+  const hl = document.getElementById('lbHlG');
+  if (hl) { hl.checked = LB.store.get('lb-hlg', '0') === '1'; document.body.classList.toggle('hl-g', hl.checked);
+    hl.addEventListener('change', () => { document.body.classList.toggle('hl-g', hl.checked); LB.store.set('lb-hlg', hl.checked ? '1' : '0'); }); }
+}
+
+/* =====================================================================
+   Video-Links auf lokale .mp4-Dateien (Linux Mint, file://)
+   Standard: Ordner „videos/" neben der HTML-Datei (Symlink genügt),
+   sonst absoluten Pfad im ☰-Menü eintragen.
+   ===================================================================== */
+LB.vbase = LB.store.get('lb-vbase', 'videos/');
+LB.vbaseAbs = null;                                                // von der Gesamtdatei gesetzt
+function vurl(f) {
+  const enc = f.split('/').map(encodeURIComponent).join('/');
+  let base = LB.vbaseAbs || LB.vbase || 'videos/';
+  if (!/\/$/.test(base)) base += '/';
+  if (/^\//.test(base)) base = 'file://' + base;                   // /home/… → file:///home/…
+  try { return new URL(base + enc, LB.vbaseAbs ? undefined : document.baseURI).href; } catch (e) { return base + enc; }
+}
+LB.vpath = f => { const u = vurl(f); try { return decodeURIComponent(new URL(u).pathname); } catch (e) { return u; } };
+function initVideos() {
+  const upd = () => LB.$$('.vid').forEach(v => { const a = v.querySelector('a.vopen'); if (a) a.href = vurl(v.dataset.f); });
+  upd();
+  document.addEventListener('click', e => {
+    const a = e.target.closest('.vid a.vopen');
+    if (a && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'open', f: a.closest('.vid').dataset.f }, '*'); return; }
+    const c = e.target.closest('.vid .vcopy');
+    if (c) {
+      const p = LB.vpath(c.closest('.vid').dataset.f);
+      const done = () => { c.textContent = '✓ kopiert'; setTimeout(() => { c.textContent = '📋 Pfad'; }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(p).then(done, () => window.prompt('Pfad (Strg+C):', p));
+      else window.prompt('Pfad (Strg+C):', p);
+    }
+  });
+  const inp = document.getElementById('lbVbase');
+  if (inp) { inp.value = LB.vbase; inp.addEventListener('change', () => { LB.vbase = inp.value.trim() || 'videos/'; LB.store.set('lb-vbase', LB.vbase); upd();
+    if (LB.inFrame) window.parent.postMessage({ lb: 'vbase', v: LB.vbase }, '*'); }); }
+  window.addEventListener('message', e => {
+    const d = e.data || {};
+    if (d.lb === 'vbase') { LB.vbaseAbs = d.abs; LB.vbase = d.v; if (inp) inp.value = d.v; upd(); }
+    if (d.lb === 'menu') LB.menu(true);
+  });
+  LB.updVideos = upd;
+}
+
+/* =====================================================================
+   Start
+   ===================================================================== */
+function start() {
+  initMenu(); initVideos();
+  LB.$$('.code pre .row').forEach(r => { const ln = r.querySelector('.ln'); const txt = r.dataset.src !== undefined ? r.dataset.src : ''; r.innerHTML = ''; r.appendChild(ln); r.insertAdjacentHTML('beforeend', LB.hlLine(txt, r.closest('.code').dataset.lang)); });
+  LB.inits.forEach(fn => { try { fn(); } catch (e) { console.error(e); if (window.__lbErrors) window.__lbErrors.push(String(e)); throw e; } });
+  LB.tex(document.body);
+  LB.kwColor();
+  document.addEventListener('toggle', e => { if (window.Plotly && e.target.open) LB.$$('.js-plotly-plot', e.target).forEach(p => Plotly.Plots.resize(p)); }, true);
+  if (LB.inFrame) window.parent.postMessage({ lb: 'ready' }, '*');
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+</script>
+<script>
+/* Kapitel 7 · Tests und Vertrauensintervalle: Visuals, Tracer, Training */
+LB.KW = [
+  ['Nullhypothese', 'cond'], ['Alternative', 'cond'], ['Alternativhypothese', 'cond'], ['Sollwert', 'par'], ['Niveau', 'par'], ['Signifikanzniveau', 'par'],
+  ['Verwerfungsbereich', 'res'], ['P-Wert', 'res'], ['Vertrauensintervall', 'res'], ['verwerfen', 'res'], ['Teststatistik', 'chg'],
+  ['Fehler 1. Art', 'rule'], ['Fehler 2. Art', 'rule'], ['Macht', 'rule'], ['t-Test', 'rule'], ['Z-Test', 'rule'], ['Binomialtest', 'rule'],
+  ['Wilcoxon', 'rule'], ['Vorzeichen-Test', 'rule'], ['Dualität', 'rule'], ['signifikant', 'rule'], ['Relevanz', 'rule'], ['Daten', 'mem']
+];
+const S = LB.S, C = LB.C;
+const segBind = (id, cb) => { let v = document.querySelector('#' + id + ' .btn.on').dataset.s; document.getElementById(id).addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (!b) return; v = b.dataset.s; LB.$$('#' + id + ' .btn').forEach(x => x.classList.toggle('on', x === b)); cb(); }); return () => v; };
+
+/* ---------------------------------------------------------------- Binomialtest-Bereich */
+LB.on(function binTest() {
+  if (!document.getElementById('btPlot')) return;
+  let side = () => 'gt';
+  const run = () => {
+    const n = +document.getElementById('btN').value, p = +document.getElementById('btP').value, a = +document.getElementById('btA').value, x = Math.min(+document.getElementById('btX').value, n), sd = side();
+    ['btN', 'btP', 'btA', 'btX'].forEach(id => { const o = document.querySelector('output[for="' + id + '"]'); const e = document.getElementById(id); o.textContent = e.dataset.fmt ? LB.fmt(+e.value, +e.dataset.fmt) : e.value; });
+    const pm = [], F = []; let c = 0; for (let k = 0; k <= n; k++) { pm.push(S.binomPmf(k, n, p)); c += pm[k]; F.push(c); }
+    const up = k => 1 - (k > 0 ? F[k - 1] : 0), lo = k => F[k];
+    let inK;
+    if (sd === 'gt') { let g = n + 1; for (let k = 0; k <= n; k++) if (up(k) <= a) { g = k; break; } inK = k => k >= g; }
+    else if (sd === 'lt') { let g = -1; for (let k = n; k >= 0; k--) if (lo(k) <= a) { g = k; break; } inK = k => k <= g; }
+    else { let gu = n + 1, gl = -1; for (let k = 0; k <= n; k++) if (up(k) <= a / 2) { gu = k; break; } for (let k = n; k >= 0; k--) if (lo(k) <= a / 2) { gl = k; break; } inK = k => k >= gu || k <= gl; }
+    const ks = pm.map((_, k) => k), lvl = S.sum(ks.filter(inK).map(k => pm[k]));
+    const pv = sd === 'gt' ? up(x) : sd === 'lt' ? lo(x) : Math.min(1, 2 * Math.min(up(x), lo(x)));
+    LB.plot('btPlot', [{ type: 'bar', x: ks, y: pm, marker: { color: ks.map(k => inK(k) ? C.res : C.rule), line: { color: ks.map(k => k === x ? C.idx : 'rgba(0,0,0,0)'), width: 3 } } }],
+      { height: 300, xaxis: { title: 'Anzahl x unter H₀: Bin(' + n + ', ' + LB.fmt(p, 2) + ')' }, yaxis: { title: 'P(X = x)' } });
+    const K = ks.filter(inK), ks2 = K.length ? (K.length > 8 ? '{' + K.slice(0, 3).join(', ') + ', …, ' + K.slice(-2).join(', ') + '}' : '{' + K.join(', ') + '}') : '∅';
+    document.getElementById('btOut').innerHTML = 'K = ' + ks2 + ' · tatsächliches Niveau P(X ∈ K) = ' + LB.fmt(lvl, 4) + ' ≤ α · Beobachtung x = ' + x + (inK(x) ? ' ∈ K → <b class="bad">H₀ verwerfen</b>' : ' ∉ K → <b class="ok">H₀ nicht verwerfen</b>') + ' · P-Wert = ' + LB.fmt(pv, 4);
+  };
+  side = segBind('btSeg', run);
+  ['btN', 'btP', 'btA', 'btX'].forEach(id => document.getElementById(id).addEventListener('input', run)); run();
+});
+
+/* ---------------------------------------------------------------- Z-Test */
+LB.on(function zTest() {
+  if (!document.getElementById('ztPlot')) return;
+  let side = () => 'ne';
+  const run = () => {
+    const a = +document.getElementById('ztA').value, z = +document.getElementById('ztZ').value, sd = side();
+    document.querySelector('output[for="ztA"]').textContent = LB.fmt(a, 3); document.querySelector('output[for="ztZ"]').textContent = LB.fmt(z, 2);
+    const f = x => S.normPdf(x), tr = [LB.curve(f, -4.5, 4.5, C.rule)];
+    let crit, rej, pv;
+    if (sd === 'ne') { crit = S.PhiInv(1 - a / 2); tr.push(LB.area(f, crit, 4.5, LB.rgba(C.res, 0.5)), LB.area(f, -4.5, -crit, LB.rgba(C.res, 0.5))); rej = Math.abs(z) >= crit; pv = 2 * (1 - S.Phi(Math.abs(z))); }
+    else if (sd === 'gt') { crit = S.PhiInv(1 - a); tr.push(LB.area(f, crit, 4.5, LB.rgba(C.res, 0.5))); rej = z >= crit; pv = 1 - S.Phi(z); }
+    else { crit = S.PhiInv(a); tr.push(LB.area(f, -4.5, crit, LB.rgba(C.res, 0.5))); rej = z <= crit; pv = S.Phi(z); }
+    tr.push({ x: [z, z], y: [0, 0.42], mode: 'lines', line: { color: C.idx, width: 3 } });
+    LB.plot('ztPlot', tr, { height: 280, xaxis: { title: 'Z unter H₀ ~ N(0,1)', range: [-4.5, 4.5] }, yaxis: { rangemode: 'tozero' } });
+    const o = document.getElementById('ztOut');
+    o.innerHTML = 'kritischer Wert \\(' + (sd === 'ne' ? '\\pm' : '') + LB.fmt(sd === 'lt' ? crit : crit, 3) + '\\) · rote Fläche = α = W\'keit für Fehler 1. Art · z = ' + LB.fmt(z, 2) + (rej ? ' → <b class="bad">verwerfen</b>' : ' → <b class="ok">nicht verwerfen</b>') + ' · P-Wert = ' + LB.fmt(pv, 4);
+    LB.tex(o);
+  };
+  side = segBind('ztSeg', run);
+  ['ztA', 'ztZ'].forEach(id => document.getElementById(id).addEventListener('input', run)); run();
+  const tab = document.getElementById('tTab');
+  if (tab) { const qs = [0.9, 0.95, 0.975, 0.99, 0.995], dfs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 25, 30, 40, 60, 100, Infinity];
+    tab.innerHTML = '<table class="tbl" style="font-family:JetBrains Mono,monospace;font-size:.8rem"><tr><th>df</th>' + qs.map(q => '<th class="r">' + q + '</th>').join('') + '</tr>' +
+      dfs.map(d => '<tr><td><b>' + (d === Infinity ? '∞' : d) + '</b></td>' + qs.map(q => '<td class="r">' + (d === Infinity ? S.PhiInv(q) : S.tInv(q, d)).toFixed(3) + '</td>').join('') + '</tr>').join('') + '</table>'; }
+});
+
+/* ---------------------------------------------------------------- Macht */
+LB.on(function power() {
+  if (!document.getElementById('pwPlot')) return;
+  LB.bind(['pwD', 'pwN', 'pwA'], v => {
+    const sh = v.pwD * Math.sqrt(v.pwN), c = S.PhiInv(1 - v.pwA), lo = -4, hi = Math.max(5, sh + 4);
+    const pw = 1 - S.Phi(c - sh);
+    LB.plot('pwPlot', [LB.area(x => S.normPdf(x, sh), c, hi, LB.rgba(C.idx, 0.4)), LB.area(x => S.normPdf(x), c, hi, LB.rgba(C.res, 0.6)),
+      LB.curve(x => S.normPdf(x), lo, hi, C.rule, 300, { name: 'unter H₀' }), LB.curve(x => S.normPdf(x, sh), lo, hi, C.par, 300, { name: 'unter H_A' }),
+      { x: [c, c], y: [0, 0.42], mode: 'lines', line: { color: C.res, width: 2.5 } }],
+      { height: 300, showlegend: false, xaxis: { title: 'Teststatistik Z', range: [lo, hi] }, yaxis: { rangemode: 'tozero' } });
+    const nd = Math.ceil(((S.PhiInv(1 - v.pwA) + S.PhiInv(0.9)) / Math.max(v.pwD, 1e-9)) ** 2);
+    const o = document.getElementById('pwOut');
+    o.innerHTML = 'Verschiebung \\(d\\sqrt n=' + LB.fmt(sh, 3) + '\\) · Grenze \\(z_{1-\\alpha}=' + LB.fmt(c, 3) + '\\) · <b class="ok">Macht \\(1-\\beta=' + LB.fmt(pw, 4) + '\\)</b> · \\(\\beta=' + LB.fmt(1 - pw, 4) + '\\) · für Macht 0.9 bräuchte man n = ' + (v.pwD > 0 ? nd : '∞');
+    LB.tex(o);
+  });
+});
+
+/* ---------------------------------------------------------------- P-Wert */
+LB.on(function pval() {
+  if (!document.getElementById('pvPlot')) return;
+  let side = () => 'ne';
+  const run = () => {
+    const t = +document.getElementById('pvT').value, df = +document.getElementById('pvD').value, a = +document.getElementById('pvA').value, sd = side();
+    document.querySelector('output[for="pvT"]').textContent = LB.fmt(t, 2); document.querySelector('output[for="pvD"]').textContent = df; document.querySelector('output[for="pvA"]').textContent = LB.fmt(a, 2);
+    const f = x => S.tPdf(x, df), tr = [LB.curve(f, -6, 6, C.rule, 300)];
+    let pv;
+    if (sd === 'ne') { const at = Math.abs(t); tr.push(LB.area(f, at, 6, LB.rgba(C.par, 0.5)), LB.area(f, -6, -at, LB.rgba(C.par, 0.5))); pv = 2 * (1 - S.tCdf(at, df)); }
+    else { tr.push(LB.area(f, t, 6, LB.rgba(C.par, 0.5))); pv = 1 - S.tCdf(t, df); }
+    tr.push({ x: [t, t], y: [0, 0.42], mode: 'lines', line: { color: C.idx, width: 3 } });
+    LB.plot('pvPlot', tr, { height: 280, xaxis: { title: 'T unter H₀ ~ t_' + df, range: [-6, 6] }, yaxis: { rangemode: 'tozero' } });
+    document.getElementById('pvOut').innerHTML = 'P-Wert (blaue Fläche) = <b class="kw-res">' + LB.fmt(pv, 4) + '</b> ' + (pv <= a ? '≤ α → <span class="bad">🔴 verwerfen (signifikant)</span>' : '&gt; α → <span class="ok">🟢 nicht verwerfen</span>') + ' · kritischer Wert ' + LB.fmt(sd === 'ne' ? S.tInv(1 - a / 2, df) : S.tInv(1 - a, df), 3);
+  };
+  side = segBind('pvSeg', run);
+  ['pvT', 'pvD', 'pvA'].forEach(id => document.getElementById(id).addEventListener('input', run)); run();
+});
+
+/* ---------------------------------------------------------------- Dualität */
+LB.on(function duality() {
+  if (!document.getElementById('duPlot')) return;
+  LB.bind(['duM', 'duL'], v => {
+    const m = 1002.63, s = 1.23, n = 10, se = s / Math.sqrt(n), q = S.tInv(1 - (1 - v.duL) / 2, n - 1), lo = m - q * se, hi = m + q * se, mu0 = v.duM;
+    const inI = mu0 >= lo && mu0 <= hi, t = (m - mu0) / se, pv = 2 * (1 - S.tCdf(Math.abs(t), n - 1));
+    LB.plot('duPlot', [{ x: [lo, hi, hi, lo, lo], y: [0.6, 0.6, 1.4, 1.4, 0.6], fill: 'toself', mode: 'none', fillcolor: LB.rgba(C.par, 0.3) }, { x: [m], y: [1], mode: 'markers', marker: { color: C.mem, size: 12, symbol: 'diamond' } },
+      { x: [mu0, mu0], y: [0.2, 1.8], mode: 'lines', line: { color: inI ? C.idx : C.res, width: 4 } }],
+      { height: 200, xaxis: { range: [998, 1006], title: 'μ' }, yaxis: { visible: false, range: [0, 2] } });
+    document.getElementById('duOut').innerHTML = 'VI = [' + LB.fmt(lo, 3) + '; ' + LB.fmt(hi, 3) + '] · μ₀ = ' + LB.fmt(mu0, 2) + (inI ? ' liegt drin → <b class="ok">nicht verwerfen</b>' : ' liegt außerhalb → <b class="bad">verwerfen</b>') + ' · t = ' + LB.fmt(t, 3) + ', P-Wert = ' + LB.fmt(pv, 4) + ' (Grenze α = ' + LB.fmt(1 - v.duL, 2) + ')';
+  });
+});
+
+/* ================================================================ Tracer */
+LB.on(function tracers7() {
+  new LB.Tracer({
+    id: 'trBt', title: 'Verwerfungsbereich K = {g, …, n} suchen', langs: {"R": ["# Binomialtest einseitig nach oben: Verwerfungsbereich K = {g, ..., n} konstruieren", "n <- 50; p0 <- 0.05; alpha <- 0.05; x <- 6   # H0: p = p0, HA: p > p0, Beobachtung x #@par", "g <- 0                                     # Kandidat g für die Grenze von K #@c0", "repeat {                                   # kleinstes g mit P(X >= g) <= alpha suchen #@loop", "  schwanz <- 1 - pbinom(g - 1, n, p0)      # P_{p0}(X >= g), W'keit für Fehler 1. Art #@tail", "  if (schwanz <= alpha) break              # klein genug: gefunden #@if", "  g <- g + 1                               # sonst Grenze nach rechts schieben #@inc", "}", "pwert <- 1 - pbinom(x - 1, n, p0)          # P-Wert: P(X >= x) unter H0 #@p", "cat(\"K = {\", g, \",...,\", n, \"}  x in K:\", x >= g, \" p =\", pwert, \"\\n\")   #@out", "binom.test(x, n, p0, alternative = \"greater\")   # eingebaut"], "Python": ["# Binomialtest einseitig nach oben: Verwerfungsbereich K = {g, ..., n} konstruieren", "from scipy import stats", "", "n, p0, alpha, x = 50, 0.05, 0.05, 6        # H0: p = p0, HA: p > p0, Beobachtung x #@par", "g = 0                                      # Kandidat g für die Grenze von K #@c0", "while True:                                # kleinstes g mit P(X >= g) <= alpha suchen #@loop", "    schwanz = stats.binom.sf(g - 1, n, p0) # P_{p0}(X >= g), W'keit für Fehler 1. Art #@tail", "    if schwanz <= alpha: break             # klein genug: gefunden #@if", "    g += 1                                 # sonst Grenze nach rechts schieben #@inc", "pwert = stats.binom.sf(x - 1, n, p0)       # P-Wert: P(X >= x) unter H0 #@p", "print(f\"K = {{{g},...,{n}}}  x in K: {x >= g}  p = {pwert:.4f}\")   #@out", "print(stats.binomtest(x, n, p0, alternative=\"greater\"))            # eingebaut"]}, input: '50 0.05 0.05 6', hint: 'n p₀ α x', speed: 500,
+    examples: [['Lieferant 5 %', '50 0.05 0.05 6'], ['Grundlage Bauteile', '20 0.1 0.05 5'], ['Münze 10 Würfe, x = 7', '10 0.5 0.05 7']],
+    parse: s => { const v = S.parse(s); if (v.length !== 4) throw new Error('Format: n p0 alpha x'); const [n, p, a, x] = v; if (n < 1 || n > 200 || p <= 0 || p >= 1 || a <= 0 || a >= 0.5 || x < 0 || x > n) throw new Error('Wertebereiche prüfen'); return { n: Math.round(n), p, a, x: Math.round(x) }; },
+    codeFor: (d, L, lines) => lines.map(l => /#@par\s*$/.test(l) ? (L === 'R' ? 'n <- ' + d.n + '; p0 <- ' + d.p + '; alpha <- ' + d.a + '; x <- ' + d.x : 'n, p0, alpha, x = ' + d.n + ', ' + d.p + ', ' + d.a + ', ' + d.x) + '   # H0: p = p0, HA: p > p0 #@par' : l),
+    run(rec, d) {
+      let g = 0, tail = null, pv = null; const tried = []; const st = () => ({ d, g, tail, tried: tried.slice(), pv });
+      rec.step('par', '\\(H_0:p=' + d.p + '\\), \\(H_A:p>' + d.p + '\\), n = ' + d.n + ', α = ' + d.a + '.', st());
+      rec.step('c0', 'Grenze g beginnt bei 0.', st());
+      while (true) {
+        rec.step('loop', 'Kandidat \\(g=' + g + '\\).', st());
+        tail = 1 - S.binomCdf(g - 1, d.n, d.p); tried.push([g, tail]);
+        rec.step('tail', '\\(\\PP_{p_0}(X\\ge' + g + ')=' + LB.fmt(tail, 4) + '\\)', st());
+        if (tail <= d.a) { rec.step('if', LB.fmt(tail, 4) + ' ≤ α → gefunden: \\(K=\\{' + g + ',\\dots,' + d.n + '\\}\\).', st()); break; }
+        rec.step('if', LB.fmt(tail, 4) + ' &gt; α → noch zu wahrscheinlich.', st());
+        g++; rec.step('inc', 'g = ' + g + '.', st());
+      }
+      pv = 1 - S.binomCdf(d.x - 1, d.n, d.p);
+      rec.step('p', 'P-Wert \\(=\\PP_{p_0}(X\\ge' + d.x + ')=\\Res{' + LB.fmt(pv, 4) + '}\\)', st());
+      rec.step('out', 'x = ' + d.x + (d.x >= g ? ' ∈ K → <b class="bad">H₀ verwerfen</b>' : ' ∉ K → <b class="ok">H₀ nicht verwerfen</b>'), st());
+    },
+    view: s => '<table class="tbl"><tr><th>g</th><th class="r">P(X ≥ g)</th><th>≤ α?</th></tr>' + s.tried.map(r => '<tr><td class="kw-idx">' + r[0] + '</td><td class="r">' + LB.fmt(r[1], 4) + '</td><td>' + (r[1] <= s.d.a ? '<span class="ok">ja</span>' : 'nein') + '</td></tr>').join('') + '</table>' +
+      LB.kvHTML([['g', s.g, 'idx'], ['α', s.d.a, 'par'], ['x', s.d.x, 'mem'], ['P-Wert', s.pv === null ? '–' : LB.fmt(s.pv, 4), 'res']])
+  });
+
+  new LB.Tracer({
+    id: 'trTt', title: 't-Test Schritt für Schritt', langs: {"R": ["# t-Test für den Erwartungswert, Schritt für Schritt", "x <- c(5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4)   # Messwerte #@data", "mu0 <- 5; alpha <- 0.05                    # Sollwert und Niveau, zweiseitig #@par", "n <- length(x)                             # Stichprobenumfang #@n", "xbar <- mean(x); s <- sd(x)                # Mittel und Standardabweichung (n - 1) #@ms", "se <- s / sqrt(n)                          # geschätzter Standardfehler #@se", "t <- (xbar - mu0) / se                     # Teststatistik: Abweichung in Standardfehlern #@t", "krit <- qt(1 - alpha / 2, df = n - 1)      # kritischer Wert t_{n-1, 1-alpha/2} #@krit", "p <- 2 * (1 - pt(abs(t), df = n - 1))      # zweiseitiger P-Wert #@p", "vi <- xbar + c(-1, 1) * krit * se          # Vertrauensintervall (Dualität) #@vi", "cat(\"t =\", t, \" krit =\", krit, \" p =\", p, \" verwerfen:\", abs(t) >= krit, \"\\n\")   #@out", "t.test(x, mu = mu0)                        # eingebaut: gleiche Zahlen"], "Python": ["# t-Test für den Erwartungswert, Schritt für Schritt", "import numpy as np", "from scipy import stats", "", "x = np.array([5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4])   # Messwerte #@data", "mu0, alpha = 5, 0.05                       # Sollwert und Niveau, zweiseitig #@par", "n = len(x)                                 # Stichprobenumfang #@n", "xbar, s = x.mean(), x.std(ddof=1)          # Mittel und Standardabweichung (n - 1) #@ms", "se = s / np.sqrt(n)                        # geschätzter Standardfehler #@se", "t = (xbar - mu0) / se                      # Teststatistik: Abweichung in Standardfehlern #@t", "krit = stats.t.ppf(1 - alpha / 2, df=n - 1)   # kritischer Wert t_{n-1, 1-alpha/2} #@krit", "p = 2 * stats.t.sf(abs(t), df=n - 1)       # zweiseitiger P-Wert #@p", "vi = xbar + np.array([-1, 1]) * krit * se  # Vertrauensintervall (Dualität) #@vi", "print(f\"t = {t:.4f}  krit = {krit:.4f}  p = {p:.4f}  verwerfen: {abs(t) >= krit}\")   #@out", "print(stats.ttest_1samp(x, mu0))           # eingebaut: gleiche Zahlen"]}, input: '5.1 4.9 5.6 5.8 5.3 5.5 5.2 5.4 ; 5 ; 0.05', hint: 'Daten ; μ₀ ; α (zweiseitig)',
+    examples: [['acht Messungen', '5.1 4.9 5.6 5.8 5.3 5.5 5.2 5.4 ; 5 ; 0.05'], ['Füllmengen', '1002.1 1003.4 999.2 1001.8 1004.0 1002.9 1000.6 1003.1 1001.2 1002.5 ; 1000 ; 0.05'], ['kein Effekt', '10.2 9.8 10.1 9.7 10.3 9.9 ; 10 ; 0.05']],
+    parse: s => { const p = s.split(';'); if (p.length !== 3) throw new Error('Format: Daten ; mu0 ; alpha'); const x = S.parse(p[0]), m0 = parseFloat(p[1]), a = parseFloat(p[2]);
+      if (x.length < 2 || isNaN(m0) || !(a > 0 && a < 0.5)) throw new Error('mindestens 2 Werte, 0 < α < 0.5'); return { x, m0, a }; },
+    codeFor: (d, L, lines) => lines.map(l => /#@data\s*$/.test(l) ? (L === 'R' ? 'x <- c(' + d.x.join(', ') + ')' : 'x = np.array([' + d.x.join(', ') + '])') + '   # Messwerte #@data' :
+      /#@par\s*$/.test(l) ? (L === 'R' ? 'mu0 <- ' + d.m0 + '; alpha <- ' + d.a : 'mu0, alpha = ' + d.m0 + ', ' + d.a) + '   # Sollwert, Niveau #@par' : l),
+    run(rec, d) {
+      const n = d.x.length, v = { xbar: null, s: null, se: null, t: null, k: null, p: null, lo: null, hi: null }; const st = () => Object.assign({ n }, v);
+      rec.step('data', n + ' Messwerte.', st());
+      rec.step('par', '\\(H_0:\\mu=' + d.m0 + '\\), \\(H_A:\\mu\\ne' + d.m0 + '\\), α = ' + d.a + '.', st());
+      rec.step('n', 'n = ' + n + ', Freiheitsgrade ' + (n - 1) + '.', st());
+      v.xbar = S.mean(d.x); v.s = S.sd(d.x); rec.step('ms', '\\(\\bar x=' + LB.fmt(v.xbar, 4) + '\\), \\(s=' + LB.fmt(v.s, 4) + '\\)', st());
+      v.se = v.s / Math.sqrt(n); rec.step('se', '\\(\\operatorname{SE}=' + LB.fmt(v.se, 4) + '\\)', st());
+      v.t = (v.xbar - d.m0) / v.se; rec.step('t', '\\(\\Res{t}=\\tfrac{' + LB.fmt(v.xbar, 4) + '-' + d.m0 + '}{' + LB.fmt(v.se, 4) + '}=\\Res{' + LB.fmt(v.t, 4) + '}\\)', st());
+      v.k = S.tInv(1 - d.a / 2, n - 1); rec.step('krit', '\\(t_{' + (n - 1) + ',' + LB.fmt(1 - d.a / 2, 3) + '}=' + LB.fmt(v.k, 4) + '\\)', st());
+      v.p = 2 * (1 - S.tCdf(Math.abs(v.t), n - 1)); rec.step('p', 'P-Wert \\(=' + LB.fmt(v.p, 4) + '\\)', st());
+      v.lo = v.xbar - v.k * v.se; v.hi = v.xbar + v.k * v.se; rec.step('vi', 'VI \\(=[' + LB.fmt(v.lo, 4) + ';\\ ' + LB.fmt(v.hi, 4) + ']\\)' + (d.m0 >= v.lo && d.m0 <= v.hi ? ', enthält μ₀' : ', enthält μ₀ nicht'), st());
+      rec.step('out', Math.abs(v.t) >= v.k ? '<b class="bad">|t| ≥ kritischer Wert → H₀ verwerfen</b>' : '<b class="ok">|t| &lt; kritischer Wert → H₀ nicht verwerfen</b>', st());
+    },
+    view: s => LB.kvHTML([['x̄', s.xbar === null ? '–' : LB.fmt(s.xbar, 4), 'mem'], ['s', s.s === null ? '–' : LB.fmt(s.s, 4), 'mem'], ['SE', s.se === null ? '–' : LB.fmt(s.se, 4), 'rule'], ['t', s.t === null ? '–' : LB.fmt(s.t, 4), 'res'],
+      ['krit', s.k === null ? '–' : LB.fmt(s.k, 4), 'rule'], ['P-Wert', s.p === null ? '–' : LB.fmt(s.p, 4), 'res'], ['VI unten', s.lo === null ? '–' : LB.fmt(s.lo, 4), 'res'], ['VI oben', s.hi === null ? '–' : LB.fmt(s.hi, 4), 'res']])
+  });
+});
+
+/* ---------------------------------------------------------------- Training */
+LB.on(function train7() {
+  if (!document.getElementById('q7Task')) return;
+  const r = S.rng(Date.now() % 4242); let cur; const pick = a => a[Math.floor(r() * a.length)];
+  const neu = () => {
+    const kind = pick(['z', 't']), n = pick([9, 16, 25, 36]), m0 = pick([50, 100, 20]), sd = pick([4, 6, 10]), off = pick([-1.5, -0.6, 0.4, 1, 2]) * sd / Math.sqrt(n), xb = Math.round((m0 + off) * 100) / 100;
+    const stat = (xb - m0) / (sd / Math.sqrt(n)), p = kind === 'z' ? 2 * (1 - S.Phi(Math.abs(stat))) : 2 * (1 - S.tCdf(Math.abs(stat), n - 1));
+    cur = { stat, p, kind, n };
+    document.getElementById('q7Task').innerHTML = 'n = ' + n + ' Messungen, x̄ = ' + xb + ', ' + (kind === 'z' ? 'σ = ' + sd + ' <b>bekannt</b>' : 's = ' + sd + ' (σ <b>unbekannt</b>)') + '. Teste zweiseitig \\(H_0:\\mu=' + m0 + '\\). Gib die Teststatistik und den P-Wert an (4 Stellen).';
+    LB.tex(document.getElementById('q7Task'));
+    ['q7s', 'q7p'].forEach(id => document.getElementById(id).value = ''); document.getElementById('q7Res').innerHTML = '';
+  };
+  document.getElementById('q7New').addEventListener('click', neu);
+  document.getElementById('q7Chk').addEventListener('click', () => {
+    const a = parseFloat(document.getElementById('q7s').value.replace(',', '.')), b = parseFloat(document.getElementById('q7p').value.replace(',', '.'));
+    document.getElementById('q7Res').innerHTML = (Math.abs(a - cur.stat) < 6e-3 ? '<span class="ok">✔ ' : '<span class="bad">✗ ') + (cur.kind === 'z' ? 'z' : 't') + ' = ' + LB.fmt(cur.stat, 4) + '</span> · ' +
+      (Math.abs(b - cur.p) < 2e-3 ? '<span class="ok">✔ ' : '<span class="bad">✗ ') + 'P-Wert = ' + LB.fmt(cur.p, 4) + '</span> · ' + (cur.kind === 'z' ? 'Z-Test, Φ' : 't-Test mit df = ' + (cur.n - 1)) + ' · Entscheidung bei α = 0.05: ' + (cur.p <= 0.05 ? 'verwerfen' : 'nicht verwerfen');
+  });
+  neu();
+});
+
+</script>
+</body>
+</html>

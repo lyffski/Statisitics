@@ -1,0 +1,369 @@
+<!-- title: Kap. 7 · Statistische Tests und Vertrauensintervalle -->
+<!-- sub: H₀/H_A, Fehler 1./2. Art, α, Verwerfungsbereich, Binomial-, Z-, t-Test, Macht, P-Wert, VI-Dualität, Vorzeichen, Wilcoxon -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 7 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Statistische Tests und Vertrauensintervalle</h1>
+  <p class="lead">Ist ein <b>Sollwert</b> mit den Daten verträglich? Ein Test entscheidet das rezeptartig: <b>Hypothesen</b>, <b>Niveau α</b>, <b>Verwerfungsbereich</b>, Entscheidung. Dazu <b>Fehler 1. und 2. Art</b>, <b>Macht</b>, <b>P-Wert</b> (Signifikanz), die <b>Dualität</b> zum Vertrauensintervall und die verteilungsfreien <b>Vorzeichen-</b> und <b>Wilcoxon-Tests</b>.</p>
+</div>
+<x-card t="🎨 Farblegende für Kapitel 7" src="GN">
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis/Verwerfen</b>: Teststatistik-Wert, P-Wert, Verwerfungsbereich \(\Res{K}\)</div>
+    <div><b class="kw-chg">orange · Standardisierung</b>: \(\Chg{Z=\frac{\bar X-\mu_0}{\sigma/\sqrt n}}\), Ränge, Vorzeichen</div>
+    <div><b class="kw-rule">lila · Verteilung/Quantil</b>: \(\Nor(0,1)\), \(t_{n-1}\), \(\Bin\), \(z_{1-\alpha}\), \(t_{n-1,1-\alpha/2}\), Macht</div>
+    <div><b class="kw-par">blau · Parameter/Niveau</b>: \(\Par{\mu},\Par{\mu_0},\Par{p_0},\Par{\alpha},\Par{\beta},\Par{n}\)</div>
+    <div><b class="kw-idx">grün · Index/Freiheitsgrade</b>: \(\Idx{i}\), \(\Idx{n-1}\), Rang</div>
+    <div><b class="kw-cond">cyan · Hypothesen</b>: \(\Cond{H_0}\), \(\Cond{H_A}\), Vergleich \(\Cond{\ge}\), \(\Cond{\ne}\)</div>
+    <div><b class="kw-mem">pink · Daten</b>: \(\Mem{x_i}\), \(\Mem{\bar x}\), \(\Mem{s}\), Beobachtung</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Roter Faden:</b> Modell und Hypothesen aufstellen → Niveau α wählen → Verwerfungsbereich K unter H₀ bilden → prüfen, ob die Teststatistik in K fällt. Der P-Wert fasst das in einer Zahl zusammen; das Vertrauensintervall ist die Menge aller nicht verworfenen Sollwerte.</div>
+</x-card>
+<x-course cur="7"/>
+
+<section id="s7-0" data-m="🔬 Master-Anatomie|Leitfragen, Test-Rezept">
+<h2><span class="num">7.0</span>Master-Anatomie</h2>
+<x-anat t="jeder Test in einer Zeile" f="\underbrace{\Cond{H_0}:\theta=\Par{\theta_0}}_{\text{Status quo}}\ \text{vs.}\ \underbrace{\Cond{H_A}}_{\text{Vermutung}}\ \xrightarrow{\ \Par{\alpha}\ }\ \Res{K}\ \text{mit}\ \PP_{H_0}(\text{Statistik}\in K)\le\Par{\alpha}\ \xrightarrow{\text{Daten}}\ \text{Statistik}\in\Res{K}\ ?">
+  <x-a s="H_0">Nullhypothese: der Sollwert, den wir anzweifeln</x-a>
+  <x-a s="H_A">Alternative: was wir nachweisen wollen; bestimmt die Form von K</x-a>
+  <x-a s="\alpha">Niveau: maximale W'keit, H₀ fälschlich zu verwerfen</x-a>
+  <x-a s="K">Verwerfungsbereich, <b>vor</b> dem Blick auf die Daten unter H₀ konstruiert</x-a>
+  <x-read>„Wir legen H null und die Alternative fest, wählen alpha, bauen K unter H null und verwerfen, wenn die Statistik in K liegt.“</x-read>
+</x-anat>
+<x-card t="🎓 Das agnostische Spitzenwerkzeug für JEDE Testfrage" src="G">
+  <ol class="cook"><li><b>ERKENNEN:</b> Daten und ein Sollwert (\(\mu_0\), \(p_0\)). Ist die Abweichung signifikant (Test)? Welche Werte sind plausibel (VI)?</li>
+  <li><b>WÄHLEN:</b> Bin → Binomialtest · Normal, σ bekannt → Z-Test · Normal, σ unbekannt → t-Test · nicht normal → Vorzeichen-/Wilcoxon-Test. Alternative ein-/zweiseitig. Niveau α (meist 0.05).</li>
+  <li><b>RECHNEN:</b> Teststatistik bilden, Verwerfungsbereich aus den Quantilen, prüfen ob Statistik ∈ K, oder P-Wert mit α vergleichen.</li>
+  <li><b>ARTIKULIEREN:</b> „Die Teststatistik ist […]; sie liegt (nicht) in K / der P-Wert ist […] &lt; α. Also verwerfen wir H₀ und haben H_A statistisch nachgewiesen / können H₀ nicht verwerfen.“</li></ol>
+</x-card>
+<x-card t="🧭 Die 7 Leitfragen dieses Kapitels" src="G">
+  <ol class="cook"><li><b>Was will ein Test entscheiden?</b> Ob ein Sollwert mit den Daten verträglich ist.</li><li><b>H₀ und H_A?</b> Status quo vs. was wir zeigen wollen.</li><li><b>Fehler 1. und 2. Art?</b> H₀ fälschlich verwerfen vs. fälschlich beibehalten.</li><li><b>Niveau α?</b> Kontrolliert die W'keit für einen Fehler 1. Art.</li><li><b>Wie entscheidet man?</b> Teststatistik in K → verwerfen.</li><li><b>P-Wert?</b> Das kleinste α, bei dem man gerade noch verwirft.</li><li><b>Vertrauensintervall?</b> Die Menge aller nicht verworfenen H₀, dual zum Test.</li></ol>
+</x-card>
+<x-vids><x-vid f="statquest/Hypothesis Testing and The Null Hypothesis, Clearly Explained!!! [0oc49DyA3hU].mp4" n="Nullhypothese"/><x-vid f="init2/Hypothesis Testing in Statistics [vVDahuv1bq8].mp4" n="Hypothesentests"/><x-vid f="init2/Hypothesis Testing Procedure [WYifBkNg1r8].mp4" n="Test-Rezept"/></x-vids>
+</section>
+
+<!-- ============================================================ 7.1 -->
+<section id="s7-1" data-vn data-m="7.1 Binomialtest|H₀, H_A, Fehler 1./2. Art, α, K">
+<h2><span class="num">7.1</span>Die Konzepte am Binomialtest</h2>
+<x-vn id="vn-7-1" sec="7.1" q="Hält der Lieferant seine 5-%-Zusage ein?">
+  <x-task>Ein Lieferant garantiert höchstens 5 % Ausschuss. In einer Stichprobe von n = 50 Teilen sind x = 6 defekt. Teste zum Niveau α = 0.05, ob der Ausschussanteil größer als 5 % ist: (a) Modell und Hypothesen, (b) Verwerfungsbereich K, (c) Entscheidung und P-Wert, (d) was wäre ein Fehler 1. und 2. Art?</x-task>
+  <x-step h="(a) Modell und Hypothesen.">\(\Mem{X}\) = Anzahl defekt \(\sim\Bin(50,p)\). \(\Cond{H_0}:p=\Par{0.05}\) (Zusage stimmt), \(\Cond{H_A}:p>0.05\) (wir vermuten mehr).</x-step>
+  <x-step h="(b) K nach oben, kleinstes c mit P(X ≥ c) ≤ α.">
+  \[\begin{aligned}
+  \PP_{p_0}(X\ge5) &= 0.1036 && > 0.05\ \text{zu groß} \\
+  \PP_{p_0}(X\ge6) &= 0.0378 && \le 0.05\ \text{passt} \\
+  \Res{K} &= \{6,7,\dots,50\} && \text{Form wie }H_A\text{ (nach oben)}
+  \end{aligned}\]</x-step>
+  <x-step h="(c) Entscheidung.">\(x=6\in K\) → <b>H₀ verwerfen</b>. P-Wert \(=\PP_{p_0}(X\ge6)=\Res{0.0378}\le0.05\).</x-step>
+  <x-step h="(d) Fehlerarten.">Fehler 1. Art: wir werfen dem Lieferanten zu Unrecht mehr Ausschuss vor (W'keit ≤ 0.05, hier 0.0378). Fehler 2. Art: er liefert tatsächlich mehr, aber unser Test bemerkt es nicht.</x-step>
+  <x-res>K = {6, …, 50}; x = 6 ∈ K → H₀ verworfen, P-Wert ≈ 0.038. „Der Ausschussanteil ist statistisch signifikant größer als 5 %.“</x-res>
+  <x-trap>Das tatsächliche Niveau (0.0378) ist bei diskreten Tests meist kleiner als α; man kann α nicht exakt ausschöpfen.</x-trap>
+</x-vn>
+<x-g><p>Beispiel: Ein Hersteller sagt, höchstens 10 % der Bauteile sind Ausschuss (\(p_0=0.1\)). Wir vermuten, es sind mehr. Ist unsere Beobachtung mit seiner Behauptung verträglich?</p></x-g>
+<x-anat t="Null- und Alternativhypothese" f="\underbrace{\Cond{H_0}:\ p=\Par{p_0}}_{\text{Status quo (Sollwert)}}\qquad\underbrace{\Cond{H_A}:\ p>\Par{p_0}}_{\text{was wir zeigen wollen}}" src="G">
+  <x-a s="H_0">die Nullhypothese: der Normal-/Sollzustand. Wir nehmen sie zunächst an und prüfen, ob die Daten dazu passen</x-a>
+  <x-a s="H_A">die Alternative: zweiseitig (\(p\ne p_0\)), einseitig nach oben (\(p>p_0\)) oder unten (\(p<p_0\))</x-a>
+  <x-a s="\text{Logik}">H₀ verwerfen, wenn die Beobachtung unter H₀ zu unwahrscheinlich wäre. Nicht-Verwerfen ist kein Beweis für H₀: „absence of evidence is not evidence of absence“</x-a>
+  <x-read>„Nullhypothese: p ist gleich p null. Alternative: p ist größer als p null.“</x-read>
+</x-anat>
+<x-pt><x-q>Ein Labor vermutet, dass ein Grenzwert von 50 µg/l überschritten wird. Formuliere H₀ und H_A.</x-q><x-e>Nachweisen will man die Überschreitung → Alternative, einseitig nach oben.</x-e><x-l>H₀: µ = 50; H_A: µ &gt; 50.</x-l><x-s>„Nullhypothese: mü gleich 50; Alternative einseitig: mü größer 50.“</x-s></x-pt>
+<x-anat t="die zwei Fehlerarten und das Niveau α" f="\PP_{p_0}(\text{Fehler 1. Art})=\PP_{p_0}(X\in\Res{K})\le\Par{\alpha}" src="G">
+  <table class="tbl" style="max-width:640px;margin:.4rem auto .7rem"><tr><th></th><th>Entscheidung: H₀</th><th>Entscheidung: H_A</th></tr><tr><td>Wahrheit: H₀</td><td class="ok">kein Fehler</td><td class="bad">Fehler 1. Art (α)</td></tr><tr><td>Wahrheit: H_A</td><td class="bad">Fehler 2. Art (β)</td><td class="ok">kein Fehler (Macht)</td></tr></table>
+  <x-a s="\text{Fehler 1. Art}">H₀ fälschlich verwerfen. Genau diesen Fehler kontrollieren wir direkt</x-a>
+  <x-a s="\text{Fehler 2. Art}">H₀ fälschlich beibehalten. Nicht direkt kontrolliert</x-a>
+  <x-a s="\alpha">Signifikanzniveau: erlaubte Obergrenze für einen Fehler 1. Art (meist 0.05 oder 0.01)</x-a>
+  <x-read>„Die W'keit, unter H null im Verwerfungsbereich zu landen, ist höchstens alpha.“</x-read>
+</x-anat>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡 Merke:</b> Man wählt das kleinste c, sodass \(\PP_{p_0}(X\ge c)\le\alpha\). Der Verwerfungsbereich K hat immer dieselbe „Form“ wie die Alternative (nach oben / unten / beidseitig).</div>
+<x-pt><x-q>Ein Test verwirft H₀, obwohl H₀ stimmt. Wie heißt dieser Fehler, und welche Größe steuert seine W'keit?</x-q><x-e>Fälschlich verwerfen = Fehler 1. Art.</x-e><x-l>Fehler 1. Art; seine W'keit ist durch α begrenzt.</x-l><x-s>„Das ist ein Fehler erster Art; seine W'keit wird durch alpha kontrolliert.“</x-s></x-pt>
+<x-viz t="Verwerfungsbereich beim Binomialtest" src="G">
+  <div class="ctl"><span class="seg" id="btSeg"><button class="btn on" data-s="gt">H_A: p &gt; p₀</button><button class="btn" data-s="lt">H_A: p &lt; p₀</button><button class="btn" data-s="ne">H_A: p ≠ p₀</button></span>
+  <label>n <input type="range" id="btN" min="5" max="100" value="20"><output for="btN"></output></label>
+  <label>p₀ <input type="range" id="btP" min="0.05" max="0.95" step="0.05" value="0.1" data-fmt="2"><output for="btP"></output></label>
+  <label>α <input type="range" id="btA" min="0.01" max="0.2" step="0.01" value="0.05" data-fmt="2"><output for="btA"></output></label>
+  <label>Beobachtung x <input type="range" id="btX" min="0" max="100" value="5"><output for="btX"></output></label></div>
+  <div id="btPlot" class="plot"></div>
+  <div class="out" id="btOut"></div>
+</x-viz>
+<x-card t="🧱 Bauplan: Binomialtest der Bauteile" src="G">
+  <p>H₀: p = 0.1, H_A: p &gt; 0.1, n = 20, x = 5, α = 0.05.</p>
+  <table class="tbl" style="max-width:520px"><tr><th>x</th><th class="r">3</th><th class="r">4</th><th class="r">5</th><th class="r">6</th></tr><tr><td>P(X ≤ x)</td><td class="r">0.87</td><td class="r">0.96</td><td class="r">0.99</td><td class="r">1.00</td></tr></table>
+  \[\begin{aligned}
+  \PP_{p_0}(X\ge4) &= 1-0.87=0.13,\quad \PP_{p_0}(X\ge5)=1-0.96=0.04 && \text{obere Schwänze} \\
+  \Res{K} &= \{5,6,\dots,20\} && \text{da }0.04\le0.05 \\
+  x &= 5\in K\ \Rightarrow\ H_0\ \text{verwerfen} && \text{Entscheidung}
+  \end{aligned}\]
+</x-card>
+<h3 id="s7-1-a" data-m="Binomialtest-Tracer|K schrittweise konstruieren">Code: den Verwerfungsbereich suchen</h3>
+<div id="trBt"></div>
+<x-code2 f="k7_binomtest" t="Binomialtest"/>
+<x-vids><x-vid f="statquest/The Binomial Distribution and Test, Clearly Explained!!! [J8jNoF-K8E8].mp4" n="Binomialtest"/><x-vid f="statquest/Alternative Hypotheses： Main Ideas!!! [5koKb5B_YWo].mp4" n="Alternativhypothese"/><x-vid f="init2/Hypothesis Testing： Type I and Type II Errors [129NuU3A7rM].mp4" n="Fehler 1./2. Art"/></x-vids>
+</section>
+
+<!-- ============================================================ 7.2 -->
+<section id="s7-2" data-vn data-m="7.2 Z-Test & t-Test|Z bei σ bekannt, T ~ t_{n−1}">
+<h2><span class="num">7.2</span>Tests bei normalverteilten Daten: Z-Test und t-Test</h2>
+<x-vn id="vn-7-2" sec="7.2" q="t-Test aus acht Messwerten, komplett von Hand">
+  <x-task>Acht Messungen einer Konzentration: 5.1, 4.9, 5.6, 5.8, 5.3, 5.5, 5.2, 5.4. Weicht der Erwartungswert vom Sollwert \(\mu_0=5\) ab? Teste zweiseitig mit α = 0.05 (Normalverteilung angenommen, σ unbekannt).</x-task>
+  <x-step h="Welcher Test?">Normal, σ unbekannt → <b>t-Test</b> mit \(n-1=7\) Freiheitsgraden. \(H_0:\mu=5\), \(H_A:\mu\ne5\).</x-step>
+  <x-step h="Kennzahlen.">\(\bar x=\tfrac{42.8}{8}=5.35\); \(s=0.2878\) (Nenner 7); \(\operatorname{SE}=s/\sqrt8=0.1018\).</x-step>
+  <x-step h="Teststatistik.">
+  \[\begin{aligned}
+  \Res{t} &= \frac{\bar x-\mu_0}{s/\sqrt n}=\frac{5.35-5}{0.1018} && \text{Abweichung in Standardfehlern} \\
+  &\approx \Res{3.44} && \text{ausgerechnet}
+  \end{aligned}\]</x-step>
+  <x-step h="Verwerfungsbereich.">\(t_{7,\,0.975}=2.365\) → \(K=(-\infty,-2.365]\cup[2.365,\infty)\).</x-step>
+  <x-step h="Entscheidung.">\(|3.44|\ge2.365\) → <b>H₀ verwerfen</b>. P-Wert \(=2\,\PP(T_7\ge3.44)\approx\Res{0.011}\).</x-step>
+  <x-res>t ≈ 3.44 > 2.365, P ≈ 0.011: der Erwartungswert weicht signifikant von 5 ab. R: <code>t.test(x, mu = 5)</code>.</x-res>
+  <x-trap>Mit dem z-Quantil 1.96 statt 2.365 wäre man zu großzügig: bei geschätztem σ ist die t-Verteilung breiter.</x-trap>
+</x-vn>
+<x-g><p>n unabhängige Messungen aus \(\Nor(\mu,\sigma^2)\), getestet wird der Erwartungswert. Ist σ bekannt → Z-Test; ist σ unbekannt (der Normalfall) → t-Test.</p></x-g>
+<x-anat t="die standardisierte Teststatistik Z (σ bekannt)" f="\Chg{Z}=\frac{\Mem{\bar X_n}-\Par{\mu_0}}{\Par{\sigma}/\sqrt n}=\frac{\text{beobachtet}-\text{erwartet}}{\text{Standardfehler}}\ \sim\ \Nor(0,1)\ \text{unter }H_0" src="G">
+  <x-a s="Z">wie viele Standardfehler das Mittel vom Sollwert entfernt ist</x-a>
+  <x-a s="\text{Verwerfen}">\(|z|\ge z_{1-\alpha/2}\) (zweiseitig), \(z\ge z_{1-\alpha}\) (oben), \(z\le z_\alpha\) (unten)</x-a>
+  <x-a s="z_{1-\alpha}">Quantil der Standardnormal: die feste kritische Grenze, z. B. 1.645 (einseitig) oder 1.96 (zweiseitig) bei α = 0.05</x-a>
+  <x-read>„Z ist X-quer minus mü null, geteilt durch Sigma durch Wurzel n.“</x-read>
+</x-anat>
+<x-pt><x-q>n = 25, x̄ = 51.2, σ = 4 bekannt, µ₀ = 50, H_A: µ &gt; 50, α = 0.05. Berechne z und entscheide.</x-q><x-e>σ bekannt → Z-Test, einseitig → 1.645.</x-e><x-l>\(z=\tfrac{1.2}{0.8}=\Res{1.50}<1.645\) → nicht verwerfen.</x-l><x-s>„z ist 1.50, kleiner als 1.645, also können wir H₀ nicht verwerfen.“</x-s></x-pt>
+<x-viz t="Verwerfungsbereich und Fehler 1. Art (Z-Test)" src="G">
+  <div class="ctl"><span class="seg" id="ztSeg"><button class="btn on" data-s="ne">zweiseitig (≠)</button><button class="btn" data-s="gt">einseitig (&gt;)</button><button class="btn" data-s="lt">einseitig (&lt;)</button></span>
+  <label>α <input type="range" id="ztA" min="0.01" max="0.2" step="0.005" value="0.05" data-fmt="3"><output for="ztA"></output></label>
+  <label>beobachtetes z <input type="range" id="ztZ" min="-4" max="4" step="0.05" value="2.1" data-fmt="2"><output for="ztZ"></output></label></div>
+  <div id="ztPlot" class="plot"></div>
+  <div class="out" id="ztOut"></div>
+</x-viz>
+<x-anat t="die Teststatistik T (σ unbekannt) und die t-Verteilung" f="\Chg{T}=\frac{\Mem{\bar X_n}-\Par{\mu_0}}{\Mem{S_n}/\sqrt n}=\frac{\text{beobachtet}-\text{erwartet}}{\text{geschätzter Standardfehler}}\ \sim\ \Rule{t}_{\Idx{n-1}}\ \text{unter }H_0" src="G">
+  <x-a s="T">wie Z, aber σ durch den Schätzer \(S_n\) ersetzt; diese zusätzliche Streuung macht T langschwänziger</x-a>
+  <x-a s="t_{n-1}">t-Verteilung mit n − 1 Freiheitsgraden (pro geschätztem Parameter einen „bezahlen“); für \(n\to\infty\) wird sie zur Standardnormal</x-a>
+  <x-a s="\text{Verwerfen}">\(|t|\ge t_{n-1,1-\alpha/2}\) (zweiseitig) usw.: gleiche Regel wie beim Z-Test, nur t-Quantile</x-a>
+  <x-read>„T ist X-quer minus mü null, geteilt durch S durch Wurzel n; unter H null t-verteilt mit n minus eins Freiheitsgraden.“</x-read>
+</x-anat>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡 Kernaussage:</b> Der t-Test ist bei normalverteilten Daten der optimale Test. Weil man σ schätzen muss, nimmt man breitere t-Quantile statt z-Quantile: man ist vorsichtiger.</div>
+<x-pt><x-q>n = 16, x̄ = 102, s = 6, µ₀ = 100, zweiseitig, α = 0.05. t und Entscheidung?</x-q><x-e>σ unbekannt → t-Test, df = 15, Grenze 2.131.</x-e><x-l>\(t=\tfrac{2}{1.5}=\Res{1.333}<2.131\) → nicht verwerfen.</x-l><x-s>„t ist 1.33, betragsmäßig kleiner als 2.131: wir verwerfen H₀ nicht.“</x-s></x-pt>
+<x-card t="🧱 Bauplan: t-Test der Abfüllmaschine" src="G">
+  <p>Sollwert 1000 g, n = 10, x̄ = 1002.63, s = 1.23; H₀: μ = 1000, H_A: μ ≠ 1000, α = 0.05.</p>
+  \[\begin{aligned}
+  t &= \frac{1002.63-1000}{1.23/\sqrt{10}}=\Res{6.76} && \text{Teststatistik} \\
+  K &= (-\infty,-2.262]\cup[2.262,\infty) && t_{9,0.975}=2.262 \\
+  6.76 &\ge 2.262\ \Rightarrow\ H_0\ \text{verwerfen} && \text{Entscheidung}
+  \end{aligned}\]
+  <p>Bei bekanntem σ = 1.23 wäre es ein Z-Test mit Grenze 1.96. Die Maschine ist nachweislich falsch kalibriert.</p>
+</x-card>
+<x-card t="📋 t-Quantile \(t_{\text{df},\,q}\) (Formelsammlung)"><div id="tTab"></div><p class="small muted">Mit der Seite berechnet (unvollständige Beta-Funktion). Letzte Zeile ∞ = Standardnormal.</p></x-card>
+<h3 id="s7-2-a" data-m="t-Test-Tracer|x̄, s, SE, t, krit, p, VI">Code: t-Test Schritt für Schritt</h3>
+<div id="trTt"></div>
+<x-code2 f="k7_ttest" t="t-Test"/>
+<x-vids><x-vid f="init2/Student's t-distribution in Statistics [kQoPUR0hQNo].mp4" n="t-Verteilung"/><x-vid f="init2/Properties of Chi-Squared and Student's t Distributions [so04ygeccwk].mp4" n="nur t-Teil; χ² erst Statistik II"/><x-vid f="init2/Hypothesis Testing Revisited： Normal, t, and Chi-Squared Distribution Tests [u793OrRvZBk].mp4" n="Z- und t-Teil"/><x-vid f="init2/Could Tobacco be Good for you？  Two Sided Rejection Regions in Hypothesis Testing [znnim8MTl0c].mp4" n="zweiseitige Bereiche"/></x-vids>
+</section>
+
+<!-- ============================================================ 7.3 -->
+<section id="s7-3" data-vn data-m="7.3 Macht & P-Wert|1−β, benötigtes n, p ≤ α, Signifikanz">
+<h2><span class="num">7.3</span>Eigenschaften von Tests: Macht und P-Wert</h2>
+<x-vn id="vn-7-3" sec="7.3" q="Macht eines Z-Tests und nötiger Stichprobenumfang">
+  <x-task>Einseitiger Z-Test \(H_0:\mu=50\) gegen \(H_A:\mu>50\), σ = 4, n = 25, α = 0.05. (a) Ab welchem \(\bar x\) wird verworfen? (b) Wie groß ist die Macht, falls in Wahrheit μ = 52? (c) Wie groß muss n sein für eine Macht von 0.90? (d) Ein Versuch liefert z = 1.5. P-Wert?</x-task>
+  <x-step h="(a) Grenze auf der x̄-Skala.">Verwerfen, wenn \(z\ge1.645\), also \(\bar x\ge50+1.645\cdot\tfrac{4}{5}=\Res{51.32}\).</x-step>
+  <x-step h="(b) Macht: jetzt aus Sicht μ = 52.">
+  \[\begin{aligned}
+  1-\beta &= \PP_{\mu=52}(\bar X\ge51.32) && \text{Verwerfungsbereich bleibt} \\
+  &= 1-\Phi\Big(\frac{51.32-52}{0.8}\Big)=1-\Phi(-0.855) && \text{unter }\mu=52\text{ standardisiert} \\
+  &\approx \Res{0.804} && \text{kompakt: }1-\Phi\big(z_{1-\alpha}-\tfrac{\mu_1-\mu_0}{\sigma/\sqrt n}\big)
+  \end{aligned}\]</x-step>
+  <x-step h="(c) n für Macht 0.9.">
+  \[n\ge\Big(\frac{(z_{1-\alpha}+z_{0.9})\,\sigma}{\mu_1-\mu_0}\Big)^2=\Big(\frac{(1.645+1.282)\cdot4}{2}\Big)^2\approx34.3\ \Rightarrow\ n=\Res{35}\]</x-step>
+  <x-step h="(d) P-Wert einseitig.">\(p=\PP(Z\ge1.5)=1-\Phi(1.5)\approx\Res{0.067}>0.05\) → nicht verwerfen.</x-step>
+  <x-res>Grenze x̄ ≥ 51.32; Macht ≈ 0.80; n = 35; p ≈ 0.067.</x-res>
+  <x-trap>Der P-Wert ist <b>nicht</b> die W'keit, dass H₀ stimmt. Er wird unter der Annahme berechnet, dass H₀ gilt.</x-trap>
+</x-vn>
+<x-g><p>Der Test kontrolliert den Fehler 1. Art über α. Aber wie gut findet er eine echte Abweichung? Das misst die <b>Macht</b>. Und der <b>P-Wert</b> fasst das Ergebnis in einer Zahl.</p></x-g>
+<x-anat t="Macht (Power)" f="\underbrace{1-\Par{\beta}(\theta)}_{\text{Macht}}=\PP\big(\text{Test verwirft }H_0\ \text{für}\ \theta\in H_A\big)" src="G">
+  <x-a s="\beta(\theta)">W'keit für einen Fehler 2. Art: H₀ beibehalten, obwohl θ gilt</x-a>
+  <x-a s="1-\beta">Macht: W'keit, eine echte Abweichung nachzuweisen; wächst mit Abstand θ − μ₀ und mit n</x-a>
+  <x-a s="\text{Sicht}">beim Niveau die Sicht von H₀; bei der Macht die eigene Sicht (ein bestimmtes θ ∈ H_A). Reine „Was-wäre-wenn“-Rechnung, keine Daten nötig</x-a>
+  <x-read>„Macht ist die W'keit, H null zu verwerfen, wenn in Wahrheit die Alternative gilt“, z. B. Münze, K = {9, 10}: unter p = 0.75 ist die Macht P(X ≥ 9) = 0.244.</x-read>
+</x-anat>
+<x-pt><x-q>Einseitiger Z-Test, α = 0.05, Effekt d = 0.8σ, n = 25. Macht?</x-q><x-e>Macht = 1 − Φ(z₁₋α − d√n).</x-e><x-l>\(d\sqrt n=4\); \(1-\Phi(1.645-4)=\Phi(2.355)\approx\Res{0.991}\).</x-l><x-s>„Die Macht ist rund 99 Prozent.“</x-s></x-pt>
+<x-viz t="die Macht als Fläche zweier Verteilungen" src="G">
+  <div class="ctl"><label>Effekt (μ₁ − μ₀)/σ <input type="range" id="pwD" min="0" max="2" step="0.05" value="1" data-fmt="2"><output for="pwD"></output></label>
+  <label>n <input type="range" id="pwN" min="2" max="60" value="10"><output for="pwN"></output></label>
+  <label>α <input type="range" id="pwA" min="0.01" max="0.2" step="0.01" value="0.05" data-fmt="2"><output for="pwA"></output></label></div>
+  <div id="pwPlot" class="plot"></div>
+  <div class="out" id="pwOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> lila die Teststatistik unter H₀, blau unter der Alternative (verschoben um \(d\sqrt n\)). Der Verwerfungsbereich rechts der roten Grenze kommt allein aus H₀. Die grüne Fläche ist die Macht.</div>
+</x-viz>
+<x-anat t="der P-Wert" f="\Res{p}=\PP_{H_0}\big(\text{ein mindestens so extremes Ereignis wie das beobachtete}\big)" src="G">
+  <x-a s="\text{Definition}">das kleinste Niveau α, bei dem man H₀ gerade noch verwirft</x-a>
+  <x-a s="\text{Entscheidung}">\(p\le\alpha\Rightarrow\) verwerfen („signifikant“), sonst nicht. Enthält mehr Information als der reine Testentscheid</x-a>
+  <x-a s="\text{Achtung}">nicht die W'keit, dass H₀ stimmt</x-a>
+  <x-a s="\text{Rechnen}">diskret: Summe der W'keiten extremerer Ausgänge; stetig: Schwanzfläche. Münze x = 7: einseitig \(\PP_{p_0}(X\ge7)=0.172\)</x-a>
+  <x-read>„Der P-Wert ist die W'keit, unter H null etwas mindestens so Extremes zu sehen.“</x-read>
+</x-anat>
+<x-pt><x-q>Zweiseitiger t-Test (df = 20) liefert t = 2.4. P-Wert und Entscheidung bei α = 0.05?</x-q><x-e>Zweiseitig → beide Schwänze.</x-e><x-l>\(p=2\,\PP(T_{20}\ge2.4)\approx\Res{0.026}<0.05\) → verwerfen.</x-l><x-s>„Der P-Wert ist etwa 0.026, also verwerfen wir H₀ auf dem 5-Prozent-Niveau.“</x-s></x-pt>
+<x-viz t="der P-Wert als Schwanzfläche" src="G">
+  <div class="ctl"><span class="seg" id="pvSeg"><button class="btn on" data-s="ne">zweiseitig</button><button class="btn" data-s="gt">einseitig (&gt;)</button></span>
+  <label>beobachtetes t <input type="range" id="pvT" min="-5" max="5" step="0.05" value="1.7" data-fmt="2"><output for="pvT"></output></label>
+  <label>df <input type="range" id="pvD" min="1" max="60" value="9"><output for="pvD"></output></label>
+  <label>α <input type="range" id="pvA" min="0.01" max="0.2" step="0.01" value="0.05" data-fmt="2"><output for="pvA"></output></label></div>
+  <div id="pvPlot" class="plot"></div>
+  <div class="out" id="pvOut"></div>
+</x-viz>
+<div class="trap"><b>⚠ ✚ P-Hacking:</b> Wer viele Tests macht und nur die signifikanten berichtet, findet bei α = 0.05 im Schnitt einen „Treffer“ pro 20 Tests, auch wenn nichts dahinter ist. Hypothese und α werden deshalb <b>vor</b> dem Blick auf die Daten festgelegt.</div>
+<x-vids><x-vid f="statquest/p-values： What they are and how to interpret them [vemZtEM63GY].mp4" n="P-Werte deuten"/><x-vid f="statquest/How to calculate p-values [JQc3yx0-Q9E].mp4" n="P-Werte rechnen"/><x-vid f="statquest/StatQuest：  One or Two Tailed P-Values [bsZGt-caXO4].mp4" n="ein-/zweiseitig"/><x-vid f="statquest/StatQuickie： Thresholds for Significance [KEofcJ1tfkI].mp4" n="Signifikanzschwellen"/><x-vid f="statquest/Statistical Power, Clearly Explained!!! [Rsc5znwR5FA].mp4" n="Macht"/><x-vid f="statquest/Power Analysis, Clearly Explained!!! [VX_M3tIyiYk].mp4" n="Fallzahlplanung"/></x-vids>
+</section>
+
+<!-- ============================================================ 7.4 -->
+<section id="s7-4" data-vn data-m="7.4 VI & Dualität|x̄ ± t·s/√n, μ₀ ∈ I ⇔ nicht verwerfen, Relevanz">
+<h2><span class="num">7.4</span>Vertrauensintervalle und die Dualität zum Test</h2>
+<x-vn id="vn-7-4" sec="7.4" q="Aus dem Vertrauensintervall mehrere Tests auf einmal ablesen">
+  <x-task>Für die acht Messwerte aus 7.2 (\(\bar x=5.35\), s = 0.2878, n = 8): (a) Bestimme das 95-%-Vertrauensintervall für μ. (b) Werden \(H_0:\mu=5\), \(H_0:\mu=5.2\), \(H_0:\mu=5.6\) zweiseitig bei α = 0.05 verworfen? (c) Fachlich relevant sind nur Abweichungen über 0.5 vom Sollwert 5. Ist das Ergebnis relevant?</x-task>
+  <x-step h="(a) Intervall mit t-Quantil.">
+  \[\begin{aligned}
+  I &= \bar x\pm t_{7,0.975}\,\frac{s}{\sqrt n}=5.35\pm2.365\cdot0.1018 && \text{Rezept} \\
+  &= 5.35\pm0.241=\Res{[5.109;\ 5.591]} && \text{eingesetzt}
+  \end{aligned}\]</x-step>
+  <x-step h="(b) Dualität: μ₀ ∈ I ⇔ nicht verworfen.">5 ∉ I → verwerfen (wie in 7.2). 5.2 ∈ I → nicht verwerfen. 5.6 ∉ I (knapp) → verwerfen.</x-step>
+  <x-step h="(c) Relevanz.">Irrelevanter Bereich [4.5; 5.5]. Das VI [5.109; 5.591] ragt über 5.5 hinaus, liegt aber nicht ganz darüber: <b>signifikant</b>, Relevanz <b>nicht gesichert</b>.</x-step>
+  <x-res>I = [5.11; 5.59]; μ₀ = 5 und 5.6 verworfen, 5.2 nicht; signifikant, aber Relevanz offen.</x-res>
+</x-vn>
+<x-g><p>Der Test sagt für einen Sollwert ja/nein. Das Vertrauensintervall sammelt alle Sollwerte, die man nicht verwerfen würde: der volle Bereich plausibler Parameter.</p></x-g>
+<x-anat t="Vertrauensintervall und Dualität" f="\Res{I}=\{\Par{\mu_0}:\ H_0:\mu=\mu_0\ \text{wird nicht verworfen}\}\ \Longrightarrow\ I=\Mem{\bar X_n}\pm\frac{\Mem{S_n}}{\sqrt n}\,\Rule{t}_{n-1,1-\alpha/2}" src="G">
+  <x-a s="\text{Dualität}">\(\mu_0\in I\iff H_0:\mu=\mu_0\) wird nicht verworfen</x-a>
+  <x-a s="\text{Überdeckung}">\(\PP(I\ni\theta)=1-\alpha\): das zufällige Intervall fängt den wahren Wert in \((1-\alpha)\cdot100\) % der Wiederholungen</x-a>
+  <x-a s="\text{Form}">t-Test: \(\bar X\pm\frac{S}{\sqrt n}t_{n-1,1-\alpha/2}\). Z-Test: dasselbe mit σ und \(z_{1-\alpha/2}\)</x-a>
+  <x-read>„Das Vertrauensintervall ist X-quer plus/minus S durch Wurzel n mal das t-Quantil.“</x-read>
+</x-anat>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>📖 Informationsgehalt:</b> Testentscheid ⪯ P-Wert ⪯ Vertrauensintervall. Das Intervall zeigt zugleich, welche H₀ verworfen werden und wie genau geschätzt wurde.</div>
+<x-pt><x-q>Das 95-%-VI für µ ist [48.5, 53.5]. Wird H₀: µ = 50 verworfen? Und H₀: µ = 54?</x-q><x-e>µ₀ im VI ⟺ nicht verworfen.</x-e><x-l>50 ∈ I → nicht verworfen; 54 ∉ I → verworfen.</x-l><x-s>„50 liegt im Intervall, 54 außerhalb: direkt aus dem VI ablesbar.“</x-s></x-pt>
+<x-viz t="VI ↔ Test-Dualität" src="G">
+  <div class="ctl"><label>Sollwert μ₀ <input type="range" id="duM" min="998" max="1006" step="0.05" value="1000" data-fmt="2"><output for="duM"></output></label>
+  <label>1 − α <input type="range" id="duL" min="0.8" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="duL"></output></label></div>
+  <div id="duPlot" class="plot" style="min-height:200px"></div>
+  <div class="out" id="duOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> feste Daten (x̄ = 1002.63, s = 1.23, n = 10). Liegt μ₀ im blauen Band, wird nicht verworfen (grün), sonst verworfen (rot). An der Bandgrenze ist der P-Wert genau α.</div>
+</x-viz>
+<x-card t="🧱 Bauplan: 95-%-VI für die Abfüllmaschine" src="G">
+  \[\begin{aligned}
+  I &= 1002.63\pm\frac{1.23}{\sqrt{10}}\cdot2.262=\Res{[1001.75;\ 1003.51]} && \text{Intervall} \\
+  1000 &\notin I\ \Rightarrow\ H_0:\mu=1000\ \text{verwerfen} && \text{Testentscheid abgelesen}
+  \end{aligned}\]
+</x-card>
+<x-anat t="statistische Signifikanz ≠ fachliche Relevanz" src="G">
+  <x-a s="\text{Signifikanz}">bei sehr großem n wird jede noch so kleine Abweichung signifikant; signifikant heißt nur: statistisch nachweisbar</x-a>
+  <x-a s="\text{Relevanz}">ob eine Abweichung fachlich zählt, legt Fachwissen fest (Relevanzgrenze δ, irrelevanter Bereich \(\mu_0\pm\delta\))</x-a>
+  <x-a s="\text{Beurteilen}">VI gegen den Relevanzbereich halten: VI [1001.75; 1003.51] bei irrelevantem Bereich [995; 1005] → signifikant, aber nicht relevant</x-a>
+  <x-read>„Statistik und Fachwissen kombinieren: das Vertrauensintervall gegen den Relevanzbereich halten.“</x-read>
+</x-anat>
+<x-vids><x-vid f="statquest/Confidence Intervals, Clearly Explained!!! [TqOeMYtOc1w].mp4" n="VI"/><x-vid f="init2/Hypothesis Testing Example： Salk Vaccine Trial [V3aYG8mLmkI].mp4" n="Fallbeispiel Impfstudie"/></x-vids>
+</section>
+
+<!-- ============================================================ 7.5 -->
+<section id="s7-5" data-vn data-m="7.5 Nicht normal|Vorzeichen-Test, Wilcoxon-Test">
+<h2><span class="num">7.5</span>Tests bei nicht normalverteilten Daten</h2>
+<x-vn id="vn-7-5" sec="7.5" q="Vorzeichen- und Wilcoxon-Test für zehn Füllmengen">
+  <x-task>Zehn Füllmengen (g): 1002.1, 1003.4, 999.2, 1001.8, 1004.0, 1002.9, 1000.6, 1003.1, 1001.2, 1002.5. Test von \(H_0\): Median = 1000 gegen ≠, α = 0.05. (a) Vorzeichen-Test. (b) Wilcoxon-Test (für n = 10 zweiseitig K = {W ≤ 8} ∪ {W ≥ 47}).</x-task>
+  <x-step h="Abweichungen \(d_i=x_i-1000\).">2.1, 3.4, −0.8, 1.8, 4.0, 2.9, 0.6, 3.1, 1.2, 2.5.</x-step>
+  <x-step h="(a) Vorzeichen.">\(Q\) = Anzahl positiver = 9. Unter H₀: \(Q\sim\Bin(10,0.5)\). \(p=2\,\PP(Q\ge9)=2(10+1)/1024=\Res{0.0215}<0.05\) → verwerfen.</x-step>
+  <x-step h="(b) Ränge der Beträge.">Sortierte |d|: 0.6 (R1), 0.8 (R2), 1.2 (R3), 1.8 (R4), 2.1 (R5), 2.5 (R6), 2.9 (R7), 3.1 (R8), 3.4 (R9), 4.0 (R10). Nur 0.8 gehört zu einem negativen d.</x-step>
+  <x-step h="(b) W = Rangsumme der positiven.">\(W=55-2=\Res{53}\ge47\) → verwerfen (Software: p ≈ 0.0059).</x-step>
+  <x-res>Vorzeichen: Q = 9, p ≈ 0.022; Wilcoxon: W = 53, p ≈ 0.006; beide verwerfen (t-Test: p ≈ 0.0013).</x-res>
+</x-vn>
+<x-g><p>Sind die Daten nicht normal, braucht man Tests mit schwächeren Annahmen. Sie testen den <b>Median</b> und können dann viel besser sein als der t-Test.</p></x-g>
+<x-anat t="Vorzeichen-Test" f="\Chg{Q}=\#\{\Idx{i}:\ \Mem{X_{\Idx{i}}}>\Par{\mu_0}\}\ \sim\ \Bin(n,\ 0.5)\quad\text{unter }H_0:\text{Median}=\mu_0" src="G">
+  <x-a s="Q">Anzahl positiver Vorzeichen von \(X_i-\mu_0\); nur die Vorzeichen zählen</x-a>
+  <x-a s="\text{Idee}">stimmt μ₀ als Median, liegt jeder Wert mit W'keit 0.5 darüber → Binomialtest aus 7.1!</x-a>
+  <x-a s="\text{Vor-/Nachteil}">keine Verteilungsannahme außer dem Median; verschenkt aber die Information der Beträge</x-a>
+  <x-read>„Q zählt die Werte über mü null; unter H null ist Q binomial mit n und einhalb.“</x-read>
+</x-anat>
+<x-anat t="Wilcoxon-Test (der Kompromiss)" f="\Chg{W}=\sum_{\Idx{i}=1}^{n}\operatorname{Rang}(|X_{\Idx{i}}-\mu_0|)\cdot V_{\Idx{i}},\qquad V_i=1\ \text{falls}\ X_i>\mu_0" src="G">
+  <x-a s="W">Summe der Ränge der Abstände, nur für die Werte über μ₀</x-a>
+  <x-a s="\text{Annahme}">nur eine um μ₀ symmetrische Verteilung; W zu groß oder zu klein → verwerfen (Schranken aus Tabellen)</x-a>
+  <x-a s="\text{Praxis}">meist dem t- und Vorzeichen-Test vorzuziehen; nur bei sehr gut normalen Daten (Normalplot!) ist der t-Test voll tauglich</x-a>
+  <x-read>„W ist die Summe der Ränge der Beträge, gezählt nur bei positiven Abweichungen.“</x-read>
+</x-anat>
+<x-pt><x-q>Kleine Stichprobe, Normalplot zeigt klare Abweichungen. Median-Test gesucht. Welcher Test?</x-q><x-e>Nicht normal → t-Test riskant; Vorzeichen verschenkt Information.</x-e><x-l>Wilcoxon: verteilungsfrei (Symmetrie), nutzt Ränge, meist mehr Macht.</x-l><x-s>„Ich nehme Wilcoxon: verteilungsfrei, nutzt die Ränge und ist bei nicht-normalen Daten am zuverlässigsten.“</x-s></x-pt>
+<x-card t="🎯 Drei Tests, ein Datensatz (Grundlage: Abfüllmaschine)" src="G">
+  <table class="tbl"><tr><th>Test</th><th>nutzt</th><th>Statistik</th><th class="r">P-Wert</th><th>Entscheid</th></tr>
+  <tr><td>t-Test</td><td>exakte Werte (Normal!)</td><td>t = 6.76</td><td class="r">&lt; 0.001</td><td>verwerfen</td></tr>
+  <tr><td>Wilcoxon</td><td>Ränge</td><td>W = 54</td><td class="r">0.004</td><td>verwerfen</td></tr>
+  <tr><td>Vorzeichen</td><td>nur Vorzeichen</td><td>Q = 9</td><td class="r">0.0215</td><td>verwerfen</td></tr></table>
+  <p>Mehr genutzte Information → i. d. R. kleinerer P-Wert, mehr Macht. Aber der t-Test setzt Normalverteilung voraus; sonst ist Wilcoxon die sichere Wahl.</p>
+</x-card>
+<x-code2 f="k7_robust" t="Vorzeichen, Wilcoxon, Macht"/>
+<h3 id="s7-5-a" data-m="Schema 6 Schritte|Rezept und 3 Beispiele">📐 Schema: statistischer Test in 6 Schritten</h3>
+<ol class="cook is-g"><li>Modell für die Daten wählen.</li><li>Nullhypothese \(H_0:\theta=\theta_0\) festlegen.</li><li>Alternative (zwei-/einseitig) spezifizieren: sie bestimmt die Form von K.</li><li>Niveau α wählen (0.05 oder 0.01).</li><li>Verwerfungsbereich K unter H₀ konstruieren, sodass P(Fehler 1. Art) ≤ α.</li><li>Erst jetzt die Teststatistik betrachten: in K → verwerfen; sonst H₀ belassen (kein Beweis für H₀).</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Diskret" src="G">Binomialtest: n = 20, p₀ = 0.1, x = 5.<x-v>K = {5, …, 20}, x ∈ K → verwerfen.</x-v></x-ex>
+  <x-ex l="2" t="Stetig" src="G">t-Test: x̄ = 1002.63, s = 1.23, n = 10.<x-v>t = 6.76 &gt; 2.262 → verwerfen.</x-v></x-ex>
+  <x-ex l="3" t="Dual/robust" src="G">95-%-VI [1001.75; 1003.51].<x-v>∌ 1000 → verwerfen; robust bestätigt durch Wilcoxon (p = 0.004).</x-v></x-ex>
+</x-ex3>
+</section>
+
+<section id="s7-9" data-m="🌉 Brücke & Lernziele|Sollwert → Entscheidung">
+<h2>🌉 Die große Brücke: vom Sollwert zur Entscheidung</h2>
+<x-card t="🧵 Fluss-Diagramm" src="G">
+<svg viewBox="0 0 1200 290" role="img" aria-label="Fluss von Kapitel 7">
+  <defs><marker id="arrK7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="10" y="20" width="220" height="60" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="120" y="45" fill="#f778ba" font-weight="700">Daten + Sollwert θ₀</text><text x="120" y="68" fill="#8b949e">z. B. 10 Messungen</text>
+    <rect x="260" y="20" width="220" height="60" rx="10" fill="#1c2129" stroke="#56d4dd"/><text x="370" y="45" fill="#56d4dd" font-weight="700">H₀ vs. H_A, α</text><text x="370" y="68" fill="#8b949e">ein-/zweiseitig</text>
+    <rect x="510" y="20" width="230" height="60" rx="10" fill="#1c2129" stroke="#f85149"/><text x="625" y="45" fill="#f85149" font-weight="700">K unter H₀</text><text x="625" y="68" fill="#8b949e">Form aus H_A, Fläche ≤ α</text>
+    <rect x="770" y="20" width="200" height="60" rx="10" fill="#1c2129" stroke="#d29922"/><text x="870" y="45" fill="#d29922" font-weight="700">Statistik ∈ K?</text><text x="870" y="68" fill="#8b949e">Z · T · Q · W</text>
+    <rect x="1000" y="20" width="190" height="60" rx="10" fill="#1c2129" stroke="#3fb950"/><text x="1095" y="45" fill="#3fb950" font-weight="700">Entscheid</text><text x="1095" y="68" fill="#8b949e">verwerfen / nicht</text>
+    <rect x="300" y="140" width="260" height="56" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="430" y="164" fill="#bc8cff" font-weight="700">P-Wert</text><text x="430" y="186" fill="#8b949e">p ≤ α ?</text>
+    <rect x="640" y="140" width="260" height="56" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="770" y="164" fill="#58a6ff" font-weight="700">Vertrauensintervall</text><text x="770" y="186" fill="#8b949e">alle nicht verworfenen θ₀</text>
+    <text x="600" y="240" fill="#bc8cff" font-weight="700">Informationsgehalt: Testentscheid ⪯ P-Wert ⪯ Vertrauensintervall</text>
+    <text x="600" y="270" fill="#8b949e">→ Kap. 8: dasselbe Rezept für zwei Gruppen (gepaart / ungepaart)</text>
+    <line x1="230" y1="50" x2="258" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="480" y1="50" x2="508" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="740" y1="50" x2="768" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="970" y1="50" x2="998" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="870" y1="80" x2="440" y2="138" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+    <line x1="880" y1="80" x2="780" y2="138" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK7)"/>
+  </g>
+</svg>
+</x-card>
+<x-card t="✅ Lernziele-Check (7.7)" src="G">
+  <ul><li>Ich kann einen Test rezeptartig durchführen (H₀/H_A, α, K, Entscheidung).</li><li>Ich kenne Binomial-, Z- und t-Test und wähle den passenden.</li><li>Ich verstehe Fehler 1./2. Art, Macht und P-Wert und ihre Interpretation (Signifikanz).</li><li>Ich kann ein Vertrauensintervall bilden und die Dualität zum Test nutzen.</li><li>Ich kenne Vorzeichen- und Wilcoxon-Test für nicht normale Daten.</li></ul>
+</x-card>
+</section>
+
+<section id="s7-cheat" data-m="📋 Cheat-Sheet|Tests auf einen Blick">
+<h2>📋 Cheat-Sheet Kapitel 7</h2>
+<table class="tbl cheat">
+<tr><th>Test</th><th>Statistik unter H₀</th><th>Verwerfen (zweiseitig)</th><th>R</th><th>Python</th></tr>
+<tr><td>Binomial</td><td>\(X\sim\Bin(n,p_0)\)</td><td>kleinstes K mit \(\PP_{p_0}(X\in K)\le\alpha\)</td><td><code>binom.test(x, n, p0)</code></td><td><code>stats.binomtest(x, n, p0)</code></td></tr>
+<tr><td>Z (σ bekannt)</td><td>\(\frac{\bar X-\mu_0}{\sigma/\sqrt n}\sim\Nor(0,1)\)</td><td>\(|z|\ge z_{1-\alpha/2}\) (1.96)</td><td><code>qnorm(0.975)</code></td><td><code>norm.ppf(0.975)</code></td></tr>
+<tr><td>t (σ unbekannt)</td><td>\(\frac{\bar X-\mu_0}{S/\sqrt n}\sim t_{n-1}\)</td><td>\(|t|\ge t_{n-1,1-\alpha/2}\)</td><td><code>t.test(x, mu = m0)</code></td><td><code>stats.ttest_1samp(x, m0)</code></td></tr>
+<tr><td>Vorzeichen</td><td>\(Q\sim\Bin(n,0.5)\)</td><td>Binomialtest</td><td><code>binom.test(Q, n)</code></td><td><code>stats.binomtest(Q, n)</code></td></tr>
+<tr><td>Wilcoxon</td><td>Rangsumme W (Tabelle)</td><td>W ≤ c₁ oder W ≥ c₂</td><td><code>wilcox.test(x, mu = m0)</code></td><td><code>stats.wilcoxon(x - m0)</code></td></tr>
+<tr><td>VI (t)</td><td colspan="2">\(\bar x\pm t_{n-1,1-\alpha/2}\,s/\sqrt n\)</td><td><code>t.test(x)$conf.int</code></td><td><code>stats.t.interval(...)</code></td></tr>
+<tr><td>Macht (Z, einseitig)</td><td colspan="2">\(1-\Phi\big(z_{1-\alpha}-\frac{\mu_1-\mu_0}{\sigma/\sqrt n}\big)\); \(n\ge\big(\frac{(z_{1-\alpha}+z_{1-\beta})\sigma}{\mu_1-\mu_0}\big)^2\)</td><td><code>power.t.test(...)</code></td><td>—</td></tr>
+</table>
+</section>
+
+<section id="s7-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-cond">Nullhypothese H₀</span></td><td>null hypothesis</td><td>Status quo, den wir anzweifeln</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-cond">Alternativhypothese H_A</span></td><td>alternative hypothesis</td><td>was wir zeigen wollen</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Fehler 1. Art</span></td><td>type I error</td><td>H₀ fälschlich verwerfen (≤ α)</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Fehler 2. Art</span></td><td>type II error</td><td>H₀ fälschlich beibehalten (β)</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-par">Signifikanzniveau α</span></td><td>significance level</td><td>Obergrenze für Fehler 1. Art</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-res">Verwerfungsbereich K</span></td><td>rejection region</td><td>hier wird H₀ verworfen</td><td><a href="#s7-1">7.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Teststatistik</span></td><td>test statistic</td><td>(beobachtet − erwartet)/SE</td><td><a href="#s7-2">7.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Z-Test / t-Test</span></td><td>z-test / t-test</td><td>σ bekannt / geschätzt</td><td><a href="#s7-2">7.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Macht</span></td><td>power</td><td>echten Effekt finden</td><td><a href="#s7-3">7.3</a></td></tr>
+<tr><td><span class="kw kw-res">P-Wert</span></td><td>p-value</td><td>kleinstes α, bei dem verworfen wird</td><td><a href="#s7-3">7.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Signifikanz / Relevanz</span></td><td>significance / relevance</td><td>nachweisbar vs. fachlich wichtig</td><td><a href="#s7-4">7.4</a></td></tr>
+<tr><td><span class="kw kw-res">Vertrauensintervall</span></td><td>confidence interval</td><td>alle nicht verworfenen θ₀</td><td><a href="#s7-4">7.4</a></td></tr>
+<tr><td><span class="kw kw-rule">Vorzeichen- / Wilcoxon-Test</span></td><td>sign / Wilcoxon signed-rank test</td><td>Median-Tests ohne Normalannahme</td><td><a href="#s7-5">7.5</a></td></tr>
+</table>
+</section>
+
+<section id="s7-train" data-m="🏋 Training|Tests mit Zufallszahlen">
+<h2>🏋 Training</h2>
+<x-card t="Zufällige Testaufgabe" id="qz7">
+  <p id="q7Task"></p>
+  <div class="quiz two"><p>Teststatistik = <input id="q7s"></p><p>P-Wert = <input id="q7p"></p></div>
+  <p><button class="btn" id="q7Chk">Prüfen</button> <button class="btn" id="q7New">Neue Aufgabe</button></p>
+  <div class="out" id="q7Res"></div>
+</x-card>
+</section>
