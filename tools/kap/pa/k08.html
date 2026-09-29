@@ -21,13 +21,13 @@
   <x-part h="(a) Differenzen" ref="8.2">
     <x-step h="u = a − b.">−0.8, −0.6, −0.3, 0.1, −1.1, 0.2.</x-step>
     <x-res>\(\bar u=-0.417\), \(s_U=0.512\), n = 6.</x-res>
-  </x-part>
+  <x-say>Mit Sohle A ist der Abrieb im Mittel um 0.42 mm geringer als mit B.</x-say></x-part>
   <x-part h="(b) t-Test" ref="8.2">
     <x-step h="Statistik.">\(t=\tfrac{-0.417}{0.512/\sqrt6}=\tfrac{-0.417}{0.209}=-2.00\), df 5.</x-step>
     <x-res>\(|t|=2.00<t_{5,0.975}=2.571\) → nicht verwerfen (P-Wert 0.103).</x-res>
-  </x-part>
-  <x-part h="(c) VI" ref="8.2"><x-res>\(-0.417\pm2.571\cdot0.209=[-0.95;\ 0.12]\): enthält 0, passend zu (b).</x-res></x-part>
-  <x-part h="(d) Robust" ref="8.2"><x-res>Vorzeichen: 2 von 6 positiv, \(\PP(Q\le2)\cdot2=0.69\). Wilcoxon: W = 3 (Ränge der positiven Differenzen 0.1 → 1 und 0.2 → 2), P-Wert 0.16. Kein Test verwirft; mit 6 Paaren ist die Macht klein.</x-res></x-part>
+  <x-say>Mit nur 6 Kindern ist dieser Unterschied nicht signifikant; er könnte Zufall sein.</x-say></x-part>
+  <x-part h="(c) VI" ref="8.2"><x-res>\(-0.417\pm2.571\cdot0.209=[-0.95;\ 0.12]\): enthält 0, passend zu (b).</x-res><x-say>Der wahre mittlere Unterschied liegt plausibel zwischen −0.95 und +0.12 mm: A könnte besser sein, sicher ist es nicht.</x-say></x-part>
+  <x-part h="(d) Robust" ref="8.2"><x-res>Vorzeichen: 2 von 6 positiv, \(\PP(Q\le2)\cdot2=0.69\). Wilcoxon: W = 3 (Ränge der positiven Differenzen 0.1 → 1 und 0.2 → 2), P-Wert 0.16. Kein Test verwirft; mit 6 Paaren ist die Macht klein.</x-res><x-say>Auch die robusten Tests zeigen keinen gesicherten Unterschied.</x-say></x-part>
 </x-pa>
 <!-- @s8-3 -->
 <h3 id="pa-8-3-h" data-m="🎓 Prüfungsaufgabe 8.3|alles aus 8.3 von null">🎓 Prüfungsaufgabe: alles aus 8.3 von null</h3>
@@ -41,9 +41,9 @@
     <x-step h="Gepoolt.">\(S^2_{\text{pool}}=\tfrac{11\cdot3.2^2+9\cdot2.8^2}{20}=9.16\), \(S_{\text{pool}}=3.03\).</x-step>
     <x-step h="SE und t.">\(\operatorname{SE}=3.03\sqrt{\tfrac1{12}+\tfrac1{10}}=1.296\); \(t=\tfrac{2.8}{1.296}=2.16\), df 20.</x-step>
     <x-res>\(2.16\ge t_{20,0.975}=2.086\) → verwerfen (P-Wert 0.043).</x-res>
-  </x-part>
-  <x-part h="(c) VI" ref="8.3"><x-res>\(2.8\pm2.086\cdot1.296=[0.10;\ 5.50]\): knapp ohne 0.</x-res></x-part>
-  <x-part h="(d) Einseitig" ref="8.3"><x-res>Grenze \(t_{20,0.95}=1.725\), P-Wert 0.022 → erst recht verwerfen.</x-res></x-part>
+  <x-say>Klasse X schneidet im Mittel signifikant besser ab als Klasse Y.</x-say></x-part>
+  <x-part h="(c) VI" ref="8.3"><x-res>\(2.8\pm2.086\cdot1.296=[0.10;\ 5.50]\): knapp ohne 0.</x-res><x-say>Der wahre Vorsprung von X liegt plausibel zwischen 0.1 und 5.5 Punkten, also knapp über 0.</x-say></x-part>
+  <x-part h="(d) Einseitig" ref="8.3"><x-res>Grenze \(t_{20,0.95}=1.725\), P-Wert 0.022 → erst recht verwerfen.</x-res><x-say>Wer schon vorher vermutet hat, dass X besser ist, hat einen noch klareren Beleg (P = 0.02).</x-say></x-part>
   <x-part h="(e) Welch" ref="8.3"><x-res>Ohne Annahme gleicher Varianzen: \(\operatorname{SE}=\sqrt{\tfrac{s_X^2}n+\tfrac{s_Y^2}m}\), \(t=2.19\), df ≈ 19.9. Nehmen, wenn die Streuungen deutlich verschieden sind (R rechnet standardmäßig Welch).</x-res></x-part>
 </x-pa>
 <!-- @s8-4 -->
@@ -53,8 +53,8 @@
   <li>(b) Warum ist der Unterschied so groß?</li>
   <li>(c) Welcher Test? (1) eine Stichprobe, σ bekannt; (2) gepaart, Differenzen stark schief; (3) zwei Gruppen, normal; (4) zwei Gruppen, klar nicht normal.</li></ol></x-task>
   <x-cover>gepaart vs. ungepaart am selben Datensatz (a, b) · Landkarte aller Tests (c)</x-cover>
-  <x-part h="(a) Ungepaart gerechnet" ref="8.4"><x-res>\(s_A=2.91\), \(s_B=3.03\): \(t=-0.24\), df 10, P-Wert 0.81 statt 0.10 gepaart.</x-res></x-part>
-  <x-part h="(b) Warum?" ref="8.4"><x-res>Der Zähler ist gleich (−0.417), aber ungepaart steckt die riesige Streuung zwischen Kindern (s ≈ 3) im Nenner; gepaart nur die kleine Streuung der Differenzen (0.51).</x-res></x-part>
+  <x-part h="(a) Ungepaart gerechnet" ref="8.4"><x-res>\(s_A=2.91\), \(s_B=3.03\): \(t=-0.24\), df 10, P-Wert 0.81 statt 0.10 gepaart.</x-res><x-say>Ungepaart ausgewertet sieht man überhaupt keinen Unterschied mehr (P = 0.81).</x-say></x-part>
+  <x-part h="(b) Warum?" ref="8.4"><x-res>Der Zähler ist gleich (−0.417), aber ungepaart steckt die riesige Streuung zwischen Kindern (s ≈ 3) im Nenner; gepaart nur die kleine Streuung der Differenzen (0.51).</x-res><x-say>Die Unterschiede zwischen den Kindern überdecken den kleinen Unterschied zwischen den Sohlen.</x-say></x-part>
   <x-part h="(c) Landkarte" ref="8.4"><x-res>(1) Z-Test. (2) Vorzeichen-Test auf den Differenzen (Wilcoxon braucht Symmetrie). (3) Zwei-Stichproben-t-Test (bzw. Welch). (4) Mann-Whitney (Zwei-Stichproben-Wilcoxon).</x-res></x-part>
 </x-pa>
 <!-- @s8-5 -->
@@ -69,8 +69,8 @@
     <x-step h="Fehlervarianz.">\(\hat\sigma^2=\tfrac{3.333}{6-2}=0.833\).</x-step>
     <x-step h="SE.">\(S_{xx}=17.5\): \(\operatorname{SE}(b)=\sqrt{0.833/17.5}=0.218\).</x-step>
     <x-res>\(t=\tfrac{1}{0.218}=4.58\), df 4, Grenze 2.776 → verwerfen (P-Wert 0.010).</x-res>
-  </x-part>
-  <x-part h="(c) VI" ref="8.5"><x-res>\(1\pm2.776\cdot0.218=[0.39;\ 1.61]\) Punkte pro Stunde.</x-res></x-part>
+  <x-say>Die Punkte steigen signifikant mit der Lernzeit.</x-say></x-part>
+  <x-part h="(c) VI" ref="8.5"><x-res>\(1\pm2.776\cdot0.218=[0.39;\ 1.61]\) Punkte pro Stunde.</x-res><x-say>Pro Lernstunde steigen die Punkte plausibel um 0.4 bis 1.6.</x-say></x-part>
   <x-part h="(d) Kontrolle" ref="8.5"><x-res>\(t=\tfrac{r\sqrt{n-2}}{\sqrt{1-r^2}}=\tfrac{0.917\cdot2}{\sqrt{0.16}}=4.58\) ✓.</x-res></x-part>
   <x-part h="(e) Code" ref="8.5"><x-res>R: <code>summary(lm(y ~ x))</code> (Zeile x: Estimate, Std. Error, t value, Pr). Python: <code>stats.linregress(x, y)</code> (slope, stderr, pvalue).</x-res></x-part>
 </x-pa>
@@ -88,13 +88,13 @@
   <x-part h="(b) Gepaart" ref="8.2">
     <x-step h="Differenzen.">4, 5, 2, 5, 3, 5: \(\bar u=4\), \(s_U=1.265\), SE \(=0.516\).</x-step>
     <x-res>\(t=\tfrac{4}{0.516}=7.75\), df 5, Grenze 2.571 → verwerfen (P = 0.0006). VI \(4\pm2.571\cdot0.516=[2.67;\ 5.33]\) kg.</x-res>
-  </x-part>
+  <x-say>Mit Diät und Sport haben die Personen signifikant abgenommen, im Mittel 4 kg (plausibel 2.7 bis 5.3 kg).</x-say></x-part>
   <x-part h="(c) Ungepaart" ref="8.3">
     <x-step h="Kennzahlen.">A: 4.0, s = 1.265; B: 2.17, s = 1.169. \(S^2_{\text{pool}}=\tfrac{1.6+1.367}{2}=1.483\).</x-step>
     <x-step h="t.">SE \(=\sqrt{1.483}\sqrt{\tfrac16+\tfrac16}=0.703\); \(t=\tfrac{1.83}{0.703}=2.61\), df 10.</x-step>
     <x-res>\(2.61\ge2.228\) → verwerfen (P = 0.026). VI \([0.27;\ 3.40]\) kg Mehrverlust durch Sport.</x-res>
-  </x-part>
-  <x-part h="(d) Falsch ungepaart" ref="8.4"><x-res>Die Körpergewichte streuen um etwa 6 kg zwischen Personen; dieser Unterschied landet im Nenner, t wird klein, der deutliche Effekt von 4 kg ginge unter. Richtig ist gepaart.</x-res></x-part>
-  <x-part h="(e) Regression" ref="8.5"><x-res>\(t=\tfrac{0.831}{0.110}=7.56\), df 4, Grenze 2.776 → verwerfen (P = 0.002): pro Trainingsstunde etwa 0.8 kg mehr Verlust.</x-res></x-part>
+  <x-say>Mit Sport verliert man signifikant mehr als nur mit Diät, im Mittel etwa 1.8 kg mehr (plausibel 0.3 bis 3.4 kg).</x-say></x-part>
+  <x-part h="(d) Falsch ungepaart" ref="8.4"><x-res>Die Körpergewichte streuen um etwa 6 kg zwischen Personen; dieser Unterschied landet im Nenner, t wird klein, der deutliche Effekt von 4 kg ginge unter. Richtig ist gepaart.</x-res><x-say>Ungepaart ginge der klare Effekt in der Streuung der Körpergewichte unter.</x-say></x-part>
+  <x-part h="(e) Regression" ref="8.5"><x-res>\(t=\tfrac{0.831}{0.110}=7.56\), df 4, Grenze 2.776 → verwerfen (P = 0.002): pro Trainingsstunde etwa 0.8 kg mehr Verlust.</x-res><x-say>Wer mehr trainiert, verliert signifikant mehr Gewicht, etwa 0.8 kg pro Trainingsstunde pro Woche.</x-say></x-part>
 </x-pa>
 </section>

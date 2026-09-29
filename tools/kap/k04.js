@@ -93,6 +93,12 @@ LB.on(function tracers4() {
   const vR = a => 'c(' + a.join(', ') + ')', vP = a => 'np.array([' + a.join(', ') + '])';
   new LB.Tracer({
     id: 'trTab', title: 'Ränder, E[XY], Cov, Corr aus einer Tabelle', langs: CODE('k4_tabelle'),
+    vars: [['x|y', 'mem', 'Werte von X (Zeilen) und Y (Spalten)'], ['P', 'par', 'gemeinsame Tabelle P(X = x, Y = y)'], ['pX|pY', 'chg', 'Randverteilungen: Zeilen- bzw. Spaltensummen'],
+      ['EX|EY', 'chg', 'Erwartungswerte aus den Rändern'], ['i|j', 'idx', 'Zeile und Spalte des aktuellen Feldes'], ['EXY', 'chg', 'E[XY]: braucht die ganze Tabelle'], ['covXY', 'res', 'Kovarianz E[XY] − E[X]E[Y]'],
+      ['VX|VY', 'chg', 'Varianzen aus den Rändern'], ['rho', 'res', 'Korrelation, zwischen −1 und 1'], ['unabh', 'res', 'ist jedes Feld gleich dem Produkt seiner Ränder?']],
+    together: 'Die Ränder (<span class="kw-chg">pX</span>, <span class="kw-chg">pY</span>) reichen für E[X], E[Y] und die Varianzen. Für <span class="kw-chg">EXY</span> muss jedes Feld (<span class="kw-idx">i</span>, <span class="kw-idx">j</span>) besucht werden. Kovarianz = EXY minus Produkt der Erwartungen; geteilt durch die Standardabweichungen ergibt sich <span class="kw-res">rho</span>. Unabhängigkeit ist strenger: jedes Feld muss Produkt der Ränder sein.',
+    say: s => 'Die Kovarianz ist ' + LB.fmt(s.cov, 4) + ', die Korrelation ρ = ' + LB.fmt(s.rho, 3) + ': ' + (Math.abs(s.rho) < 0.05 ? 'praktisch kein linearer Zusammenhang' : (s.rho > 0 ? 'große X gehen tendenziell mit großen Y einher' : 'große X gehen tendenziell mit kleinen Y einher') + (Math.abs(s.rho) < 0.3 ? ' (schwach)' : '')) + '. X und Y sind ' + (s.ind ? '<b>unabhängig</b>: Wissen über X ändert nichts an der Verteilung von Y.' : '<b>abhängig</b>: die Verteilung von Y hängt davon ab, welches x vorliegt' + (Math.abs(s.cov) < 1e-9 ? ', obwohl die Kovarianz 0 ist (unkorreliert ≠ unabhängig).' : '.')),
+   
     input: '0 1 2 ; 0 1 ; 0.10 0.20 0.15 0.25 0.05 0.25', hint: 'x-Werte ; y-Werte ; Tabelle zeilenweise',
     examples: [['Kinder und Auto', '0 1 2 ; 0 1 ; 0.10 0.20 0.15 0.25 0.05 0.25'], ['2×2 (Grundlage)', '0 1 ; 0 1 ; 0.4 0.1 0.2 0.3'], ['unabhängig', '0 1 ; 0 1 ; 0.12 0.28 0.18 0.42'], ['X, Y = X² (unkorreliert!)', '-1 0 1 ; 0 1 ; 0 0.3333333 0.3333334 0 0 0.3333333']],
     parse: s => { const p = s.split(';').map(S.parse); if (p.length !== 3) throw new Error('Format: x ; y ; Tabelle');
@@ -136,12 +142,18 @@ LB.on(function tracers4() {
       let h = '<table class="tbl"><tr><th>X \\ Y</th>' + s.y.map(v => '<th class="r">' + v + '</th>').join('') + '<th class="r">P(X)</th></tr>';
       s.x.forEach((xv, i) => { h += '<tr><td class="kw-mem">' + xv + '</td>' + s.y.map((_, j) => '<td class="r"' + (s.cur && s.cur[0] === i && s.cur[1] === j ? ' style="outline:2px solid var(--chg)"' : '') + '>' + s.P[i][j] + '</td>').join('') + '<td class="r kw-chg">' + (s.pX ? LB.fmt(s.pX[i], 3) : '·') + '</td></tr>'; });
       h += '<tr><td>P(Y)</td>' + s.y.map((_, j) => '<td class="r kw-chg">' + (s.pY ? LB.fmt(s.pY[j], 3) : '·') + '</td>').join('') + '<td></td></tr></table>';
-      return h + LB.kvHTML([['E[X]', s.EX === null ? '–' : LB.fmt(s.EX, 4)], ['E[Y]', s.EY === null ? '–' : LB.fmt(s.EY, 4)], ['E[XY]', LB.fmt(s.EXY, 4)], ['Cov', s.cov === null ? '–' : LB.fmt(s.cov, 4), 'res'], ['Corr', s.rho === null ? '–' : LB.fmt(s.rho, 4), 'res']]);
+      return h + LB.kvHTML([['EX', s.EX === null ? '–' : LB.fmt(s.EX, 4), 'chg'], ['EY', s.EY === null ? '–' : LB.fmt(s.EY, 4), 'chg'], ['EXY', LB.fmt(s.EXY, 4), 'chg'], ['Cov', s.cov === null ? '–' : LB.fmt(s.cov, 4), 'res'], ['Corr', s.rho === null ? '–' : LB.fmt(s.rho, 4), 'res']]);
     }
   });
 
   new LB.Tracer({
-    id: 'trFalt', title: 'P(S = s) durch Faltung', langs: CODE('k4_faltung'), speed: 350,
+    id: 'trFalt', title: 'P(S = s) durch Faltung', langs: CODE('k4_faltung'),
+    vars: [['pX', 'par', 'Verteilung von X: pX[k] = P(X = k)'], ['pY', 'par', 'Verteilung von Y: pY[j] = P(Y = j)'], ['pS', 'res', 'Ergebnis: pS[s] = P(S = s), wird Summand für Summand aufgefüllt'],
+      ['s', 'idx', 'äußere Schleife: die Summe, deren W\'keit gerade berechnet wird'], ['k', 'chg', 'innere Schleife: Aufteilung s = k + (s − k), also X = k und Y = s − k']],
+    together: 'Für jede Summe <span class="kw-idx">s</span> (außen) werden alle Aufteilungen s = <span class="kw-chg">k</span> + (s − k) durchprobiert (innen). Ist Y = s − k ein möglicher Wert, kommt der Beitrag <span class="kw-par">pX</span>[k] · <span class="kw-par">pY</span>[s − k] dazu: Produkt wegen Unabhängigkeit, Summe weil sich die Aufteilungen gegenseitig ausschließen. Am Ende steht in <span class="kw-res">pS</span> die ganze Verteilung von S = X + Y.',
+    say: s => { let j = 2; s.pS.forEach((v, i) => { if (v > s.pS[j]) j = i; }); const E = LB.S.sum(s.pS.map((p, i) => i * p));
+      return 'Die wahrscheinlichste Summe ist s = ' + j + ' (P = ' + LB.fmt(s.pS[j], 3) + '). Im Mittel ist S = ' + LB.fmt(E, 3) + ', genau E[X] + E[Y]. Die Summe hat mehr mögliche Werte als X und Y einzeln, und die Werte in der Mitte sind häufiger als die Ränder, weil es für sie mehr Aufteilungen gibt.'; },
+    speed: 350,
     input: '1 1 1 1 1 1 ; 1 1 1 1 1 1', hint: 'Gewichte von X ; Gewichte von Y (werden normiert, Werte 1, 2, …)',
     examples: [['zwei faire Würfel', '1 1 1 1 1 1 ; 1 1 1 1 1 1'], ['Münze (1/2) + Würfel', '1 1 ; 1 1 1 1 1 1'], ['gezinkt + fair', '1 1 1 1 1 2 ; 1 1 1 1 1 1']],
     parse: s => { const [a, b] = s.split(';'); if (b === undefined) throw new Error('Format: Gewichte X ; Gewichte Y');
@@ -166,11 +178,20 @@ LB.on(function tracers4() {
       rec.step('out', 'Fertig: \\(\\EE[S]=' + LB.fmt(S.sum(pS.map((p, i) => i * p)), 4) + '\\), Summe aller W\'keiten = ' + LB.fmt(S.sum(pS), 4), st());
     },
     view: st => {
-      const W = 440, H = 150, n = st.pS.length - 1, mx = Math.max(0.2, ...st.pS);
-      let g = '<svg viewBox="0 0 ' + W + ' ' + H + '">';
-      for (let s = 2; s <= n; s++) { const x = 20 + (s - 2) / (n - 1) * (W - 40), h = st.pS[s] / mx * (H - 40);
-        g += '<rect x="' + (x - 10) + '" y="' + (H - 22 - h) + '" width="20" height="' + h + '" fill="' + (s === st.s ? C.chg : C.rule) + '"/><text x="' + x + '" y="' + (H - 6) + '" fill="' + C.muted + '" font-size="12" text-anchor="middle">' + s + '</text>'; }
-      return g + '</svg>' + LB.kvHTML([['s', st.s || '–', 'idx'], ['k (X)', st.k || '–', 'idx'], ['P(S=s)', st.s ? LB.fmt(st.pS[st.s], 4) : '–', 'res']]);
+      const W = 460, H = 210, n = st.pS.length - 1, mx = Math.max(0.2, ...st.pS), bw = Math.min(26, (W - 60) / (n - 1) - 4);
+      const X = s => 40 + (s - 2) / Math.max(1, n - 2) * (W - 70), B = H - 38;
+      let g = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="P(S = s) als Balken">';
+      g += '<text x="8" y="14" fill="' + C.res + '" font-size="12">Balkenhöhe = pS[s] = P(S = s)</text>';
+      for (let s = 2; s <= n; s++) { const x = X(s), h = st.pS[s] / mx * (B - 30), cur = s === st.s;
+        g += '<rect x="' + (x - bw / 2) + '" y="' + (B - h) + '" width="' + bw + '" height="' + Math.max(h, 0.5) + '" fill="' + LB.rgba(C.res, cur ? 0.95 : 0.55) + '"' + (cur ? ' stroke="' + C.idx + '" stroke-width="2.5"' : '') + '/>';
+        if (st.pS[s] > 0) g += '<text x="' + x + '" y="' + (B - h - 4) + '" fill="' + C.res + '" font-size="10" text-anchor="middle">' + LB.fmt(st.pS[s], 3) + '</text>';
+        g += '<text x="' + x + '" y="' + (B + 15) + '" fill="' + C.idx + '" font-size="12" font-weight="' + (cur ? 700 : 400) + '" text-anchor="middle">' + s + '</text>'; }
+      g += '<line x1="30" x2="' + (W - 20) + '" y1="' + B + '" y2="' + B + '" stroke="' + C.muted + '"/><text x="' + (W / 2) + '" y="' + (H - 4) + '" fill="' + C.idx + '" font-size="12" text-anchor="middle">s = mögliche Summe (grüner Rahmen = gerade in Arbeit)</text></svg>';
+      const d = st.d, ok = st.s && st.k && st.s - st.k >= 1 && st.s - st.k <= d.q.length;
+      return g + LB.kvHTML([['s', st.s || '–', 'idx', 'Summe, deren W\'keit gerade entsteht'], ['k = Wert von X', st.k || '–', 'chg', 'Aufteilung s = k + (s − k)'],
+        ['s − k = Wert von Y', st.k ? st.s - st.k : '–', 'chg', ok ? 'möglich' : (st.k ? 'kein Wert von Y → übersprungen' : '')], ['pX[k]', ok ? LB.fmt(d.p[st.k - 1], 4) : '–', 'par', 'P(X = k)'],
+        ['pY[s − k]', ok ? LB.fmt(d.q[st.s - st.k - 1], 4) : '–', 'par', 'P(Y = s − k)'], ['Beitrag', ok ? LB.fmt(d.p[st.k - 1] * d.q[st.s - st.k - 1], 4) : '–', 'chg', 'pX[k] · pY[s − k] (unabhängig → Produkt)'],
+        ['pS[s] bisher', st.s ? LB.fmt(st.pS[st.s], 4) : '–', 'res', 'Summe aller Beiträge zu dieser Summe']]);
     }
   });
 });

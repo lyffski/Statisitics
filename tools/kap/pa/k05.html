@@ -26,15 +26,15 @@
   <x-part h="(a) Summe" ref="5.2">
     <x-step h="Linearität und Unabhängigkeit.">\(\EE[S_n]=n\mu\), \(\Var(S_n)=n\sigma^2\) (alle Kovarianzen 0).</x-step>
     <x-res>\(\EE=2400\) g, \(\Var=16\cdot400=6400\), \(\sigma_S=80\) g (nicht \(16\cdot20=320\)!).</x-res>
-  </x-part>
+  <x-say>Ein Beutel wiegt im Mittel 2400 g und schwankt typischerweise um 80 g.</x-say></x-part>
   <x-part h="(b) Mittel" ref="5.2">
     <x-step h="Faktor 1/n.">\(\EE[\bar X]=\tfrac1n\,n\mu=\mu\); \(\Var(\bar X)=\tfrac1{n^2}\,n\sigma^2=\tfrac{\sigma^2}n\).</x-step>
     <x-res>\(\EE=150\) g, \(\Var=\tfrac{400}{16}=25\), \(\sigma_{\bar X}=5\) g.</x-res>
-  </x-part>
+  <x-say>Das mittlere Apfelgewicht in einem Beutel liegt typischerweise nur 5 g neben 150 g.</x-say></x-part>
   <x-part h="(c) √n-Gesetz" ref="5.2">
     <x-step h="Auflösen.">\(\tfrac{20}{\sqrt n}=2\) → \(\sqrt n=10\) → \(n=100\).</x-step>
     <x-res>100 Äpfel. Halbe Streuung kostet die vierfache Anzahl.</x-res>
-  </x-part>
+  <x-say>Um das Mittel auf 2 g genau zu kennen, braucht man 100 Äpfel.</x-say></x-part>
   <x-part h="(d) Exakte Fälle" ref="5.2"><x-res>Normal-Summanden → Summe exakt normal; Bernoulli → Binomial; Poisson → Poisson. Sonst hilft der ZGS (5.3).</x-res></x-part>
 </x-pa>
 <!-- @s5-3 -->
@@ -49,19 +49,19 @@
   <x-part h="(a) Aussage" ref="5.3">
     <x-step h="GGZ.">Für i.i.d. mit \(\EE=\mu\) gilt \(\PP(|\bar X_n-\mu|>\varepsilon)\to0\) für jedes \(\varepsilon>0\).</x-step>
     <x-res>\(\bar X_n\to3.5\): Abweichungen werden beliebig unwahrscheinlich. Für Indikatoren ist \(\bar X_n\) die relative Häufigkeit, sie strebt gegen \(p\) (frequentistische Deutung aus 1.1).</x-res>
-  </x-part>
+  <x-say>Je öfter man würfelt, desto sicherer liegt das Mittel nahe 3.5.</x-say></x-part>
   <x-part h="(b) Tschebyschow" ref="5.3">
     <x-step h="Ungleichung.">\(\PP(|\bar X_n-\mu|\ge\varepsilon)\le\dfrac{\Var(\bar X_n)}{\varepsilon^2}=\dfrac{\sigma^2}{n\varepsilon^2}\).</x-step>
     <x-res>\(\le\tfrac{35/12}{100\cdot0.25}=0.117\). Weil die Schranke für \(n\to\infty\) gegen 0 geht, folgt der GGZ.</x-res>
-  </x-part>
+  <x-say>Nach 100 Würfen weicht das Mittel höchstens in etwa 12 von 100 Serien um 0.5 oder mehr von 3.5 ab (grobe Obergrenze).</x-say></x-part>
   <x-part h="(c) Stichprobenumfang" ref="5.3">
     <x-step h="Auflösen.">\(\tfrac{35/12}{n\cdot0.25}\le0.05\) → \(n\ge233.3\).</x-step>
     <x-res>n = 234 (Tschebyschow ist grob; der ZGS liefert viel weniger).</x-res>
-  </x-part>
+  <x-say>Mit 234 Würfen ist eine Abweichung von 0.5 oder mehr garantiert seltener als 5 Prozent.</x-say></x-part>
   <x-part h="(d) Markov" ref="5.3">
     <x-step h="Ungleichung für X ≥ 0.">\(\PP(X\ge a)\le\tfrac{\EE[X]}a=\tfrac{3.5}6=0.583\).</x-step>
     <x-res>Wahr: \(\tfrac16=0.167\). Markov braucht nur den Erwartungswert und ist daher sehr grob.</x-res>
-  </x-part>
+  <x-say>Markov garantiert nur „höchstens 58 Prozent“; tatsächlich kommt die 6 in knapp 17 Prozent der Würfe.</x-say></x-part>
 </x-pa>
 <!-- @s5-4 -->
 <h3 id="pa-5-4-h" data-m="🎓 Prüfungsaufgabe 5.3 ZGS|alles zum Zentralen Grenzwertsatz von null">🎓 Prüfungsaufgabe: alles zum Zentralen Grenzwertsatz von null</h3>
@@ -73,9 +73,9 @@
   <x-part h="(a) ZGS" ref="5.3">
     <x-res>\(S_{36}\approx\Nor(36\cdot2,\ 36\cdot4)=\Nor(72,12^2)\); \(\bar X_{36}\approx\Nor\big(2,\ \tfrac4{36}\big)\), \(\sigma_{\bar X}=\tfrac13\).</x-res>
   </x-part>
-  <x-part h="(b) Summe" ref="5.3"><x-res>\(\PP(S>90)\approx1-\Phi\big(\tfrac{90-72}{12}\big)=1-\Phi(1.5)=0.067\).</x-res></x-part>
-  <x-part h="(c) Mittel" ref="5.3"><x-res>\(\PP(\bar X<1.8)\approx\Phi\big(\tfrac{1.8-2}{1/3}\big)=\Phi(-0.6)=0.274\).</x-res></x-part>
-  <x-part h="(d) Quantil" ref="5.3"><x-res>\(72+1.645\cdot12=91.7\) Minuten.</x-res></x-part>
+  <x-part h="(b) Summe" ref="5.3"><x-res>\(\PP(S>90)\approx1-\Phi\big(\tfrac{90-72}{12}\big)=1-\Phi(1.5)=0.067\).</x-res><x-say>Nur in etwa 7 von 100 Fällen brauchen 36 Kunden zusammen mehr als 90 Minuten.</x-say></x-part>
+  <x-part h="(c) Mittel" ref="5.3"><x-res>\(\PP(\bar X<1.8)\approx\Phi\big(\tfrac{1.8-2}{1/3}\big)=\Phi(-0.6)=0.274\).</x-res><x-say>In gut einem Viertel der Fälle ist die mittlere Bedienzeit kürzer als 1.8 Minuten.</x-say></x-part>
+  <x-part h="(d) Quantil" ref="5.3"><x-res>\(72+1.645\cdot12=91.7\) Minuten.</x-res><x-say>Mit 92 Minuten ist man in 95 von 100 Fällen mit allen 36 Kunden fertig.</x-say></x-part>
   <x-part h="(e) Warum normal?" ref="5.3"><x-res>Der ZGS braucht nur i.i.d. mit endlicher Varianz; die Summe vieler Summanden wird glockenförmig. Kontrolle: der exakte Wert für (b) ist 0.074 statt 0.067, bei schiefen Summanden braucht man größere n.</x-res></x-part>
 </x-pa>
 <!-- @s5-5 -->
@@ -90,15 +90,15 @@
     <x-step h="Mit Korrektur.">\(\Phi\big(\tfrac{55.5-60}{6.48}\big)=\Phi(-0.694)=\Res{0.244}\).</x-step>
     <x-step h="Ohne.">\(\Phi\big(\tfrac{55-60}{6.48}\big)=\Phi(-0.772)=0.220\).</x-step>
     <x-res>Mit Korrektur 0.244 liegt viel näher an 0.2455.</x-res>
-  </x-part>
+  <x-say>Höchstens 55 Erfolge gibt es in etwa 24 von 100 Serien; mit Korrektur trifft die Näherung den exakten Wert.</x-say></x-part>
   <x-part h="(b) Punkt-W'keit" ref="5.3.1">
     <x-step h="Diskreter Punkt → Intervall der Breite 1.">\(\PP(59.5\le\mX\le60.5)\approx\Phi(0.077)-\Phi(-0.077)\).</x-step>
     <x-res>≈ 0.0615 (exakt 0.0615). Ohne Korrektur wäre die Antwort 0.</x-res>
-  </x-part>
+  <x-say>Genau 60 Erfolge kommen in etwa 6 von 100 Serien vor.</x-say></x-part>
   <x-part h="(c) Poisson" ref="5.3.1">
     <x-step h="E = Var = 50.">\(\PP(\mY\ge60)=1-\PP(\mY\le59)\approx1-\Phi\big(\tfrac{59.5-50}{\sqrt{50}}\big)=1-\Phi(1.34)\).</x-step>
     <x-res>≈ 0.090 (exakt 0.092).</x-res>
-  </x-part>
+  <x-say>60 oder mehr Ereignisse kommen bei einem Mittel von 50 in etwa 9 von 100 Fällen vor.</x-say></x-part>
   <x-part h="(d) Schema" ref="5.3.1"><x-res>1. Summe oder Mittel von i.i.d. erkennen (oder Bin/Pois). 2. E und Var bestimmen (nμ, nσ² bzw. μ, σ²/n). 3. Standardisieren, Φ ablesen, bei diskreten Daten ± 0.5 korrigieren.</x-res></x-part>
 </x-pa>
 <!-- @kap -->
@@ -112,13 +112,13 @@
   <li>(e) Die Airline verkauft 210 Tickets für 200 Plätze; jede Person erscheint unabhängig mit W'keit 0.05 nicht. Wie wahrscheinlich ist der Flug überbucht? Normalapproximation mit Stetigkeitskorrektur, exakt 0.393.</li></ol></x-task>
   <x-cover>5.1 i.i.d. (a) · 5.2 Summe, Mittel, √n (b) · 5.3 GGZ, Tschebyschow (c) · 5.3 ZGS (d) · 5.3.1 Normalapproximation (e)</x-cover>
   <x-part h="(a) i.i.d." ref="5.1"><x-res>Jede Person packt unabhängig nach derselben Verteilung. Verletzt z. B. bei Familien (abhängig) oder wenn Geschäftsreisende und Urlauber gemischt sind (nicht identisch).</x-res></x-part>
-  <x-part h="(b) Summe und Mittel" ref="5.2"><x-res>\(\EE[S]=2000\) kg, \(\sigma_S=\sqrt{100}\cdot5=50\) kg; \(\EE[\bar X]=20\) kg, \(\sigma_{\bar X}=\tfrac5{10}=0.5\) kg.</x-res></x-part>
-  <x-part h="(c) Tschebyschow und GGZ" ref="5.3"><x-res>\(\PP(|\bar X-20|\ge1)\le\tfrac{0.25}{1}=0.25\). Mit wachsendem n geht die Schranke \(\tfrac{25}{n}\) gegen 0: \(\bar X\to20\).</x-res></x-part>
-  <x-part h="(d) ZGS" ref="5.3"><x-res>\(\PP(S>2100)\approx1-\Phi\big(\tfrac{100}{50}\big)=1-\Phi(2)=0.023\).</x-res></x-part>
+  <x-part h="(b) Summe und Mittel" ref="5.2"><x-res>\(\EE[S]=2000\) kg, \(\sigma_S=\sqrt{100}\cdot5=50\) kg; \(\EE[\bar X]=20\) kg, \(\sigma_{\bar X}=\tfrac5{10}=0.5\) kg.</x-res><x-say>Das Gepäck eines Flugs wiegt im Mittel 2000 kg, typische Schwankung 50 kg; das Durchschnittsgepäck liegt meist innerhalb von 0.5 kg um 20 kg.</x-say></x-part>
+  <x-part h="(c) Tschebyschow und GGZ" ref="5.3"><x-res>\(\PP(|\bar X-20|\ge1)\le\tfrac{0.25}{1}=0.25\). Mit wachsendem n geht die Schranke \(\tfrac{25}{n}\) gegen 0: \(\bar X\to20\).</x-res><x-say>Mindestens 1 kg Abweichung des Durchschnitts kommt höchstens in 25 von 100 Flügen vor (grobe Schranke).</x-say></x-part>
+  <x-part h="(d) ZGS" ref="5.3"><x-res>\(\PP(S>2100)\approx1-\Phi\big(\tfrac{100}{50}\big)=1-\Phi(2)=0.023\).</x-res><x-say>Nur etwa 2 von 100 Flügen überschreiten die Gepäckgrenze von 2100 kg.</x-say></x-part>
   <x-part h="(e) Überbuchung" ref="5.3.1">
     <x-step h="Modell.">Nicht-Erscheinende \(N\sim\Bin(210,0.05)\): \(\EE=10.5\), \(\Var=9.975\), \(\sigma=3.16\). Überbucht, wenn höchstens 9 fehlen.</x-step>
     <x-step h="Approximieren.">\(\PP(N\le9)\approx\Phi\big(\tfrac{9.5-10.5}{3.16}\big)=\Phi(-0.317)=0.376\).</x-step>
     <x-res>≈ 0.376 (exakt 0.393): in fast 40 Prozent der Flüge bleibt jemand am Boden.</x-res>
-  </x-part>
+  <x-say>Bei 210 verkauften Tickets ist etwa jeder dritte bis vierte Flug überbucht.</x-say></x-part>
 </x-pa>
 </section>

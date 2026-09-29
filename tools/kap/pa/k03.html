@@ -11,7 +11,7 @@
   <x-part h="(b) Zufällig" ref="3.1">
     <x-step h="Idee.">Nur eine Zufallsstichprobe ist repräsentativ: jede Person hat dieselbe Chance, in die Stichprobe zu kommen.</x-step>
     <x-res>Mittags in der Mensa trifft man vor allem Vielesser: die Ausgaben würden systematisch überschätzt (Verzerrung, Bias).</x-res>
-  </x-part>
+  <x-say>Eine Befragung nur mittags in der Mensa würde die Ausgaben systematisch überschätzen; nur die Zufallsstichprobe erlaubt Aussagen über alle Studierenden.</x-say></x-part>
   <x-part h="(c) Datentypen" ref="3.1"><x-res>Ausgaben: metrisch stetig → Mittel/Median, Standardabweichung, Histogramm, Boxplot. Besuche: metrisch diskret → dasselbe oder Häufigkeitstabelle. Lieblingsmenü: kategorial → Häufigkeiten, Balkendiagramm; ein Mittelwert ergibt keinen Sinn.</x-res></x-part>
   <x-part h="(d) Erst plotten" ref="3.1"><x-res>Kennzahlen verstecken Struktur: zwei Gipfel (z. B. Vegetarier/Fleisch), Ausreißer, Tippfehler oder Schiefe sieht man nur in der Grafik. Beispiel: Anscombe (3.4) hat vier völlig verschiedene Bilder mit gleichen Kennzahlen.</x-res></x-part>
 </x-pa>
@@ -28,19 +28,19 @@
     <x-step h="Abweichungsquadrate.">\(\sum(x_i-\bar x)^2=584.9\) (der Wert 30 allein trägt \(22.1^2=488.4\) bei).</x-step>
     <x-step h="Durch n − 1.">\(s^2=\tfrac{584.9}{9}=\Res{64.99}\), \(s=\Res{8.06}\).</x-step>
     <x-res>\(\bar x=7.9\), \(s^2=65.0\), \(s=8.06\).</x-res>
-  </x-part>
+  <x-say>Im Mittel wartet man 7.9 Minuten, die Wartezeiten streuen typischerweise um etwa 8 Minuten; beides wird stark vom Einzelwert 30 geprägt.</x-say></x-part>
   <x-part h="(b) Quantile nach Skript" ref="3.2">
     <x-step h="Ordnen.">2, 3, 4, 5, 5, 6, 7, 8, 9, 30.</x-step>
     <x-step h="Regel.">\(\alpha n\) ganzzahlig → Mittel von \(x_{(\alpha n)}\) und \(x_{(\alpha n+1)}\); sonst \(x_{(\lceil\alpha n\rceil)}\).</x-step>
     <x-step h="Anwenden.">\(q_{0.25}\): \(2.5\) → \(x_{(3)}=4\). Median: \(5\) → \(\tfrac{5+6}2=5.5\). \(q_{0.75}\): \(7.5\) → \(x_{(8)}=8\). \(q_{0.9}\): \(9\) → \(\tfrac{9+30}2=19.5\).</x-step>
     <x-res>Median 5.5, Quartile 4 und 8, IQR = 4, \(q_{0.9}=19.5\).</x-res>
-  </x-part>
+  <x-say>Die Hälfte der Kunden wartet höchstens 5.5 Minuten; die mittlere Hälfte wartet zwischen 4 und 8 Minuten.</x-say></x-part>
   <x-part h="(c) Robustheit" ref="3.2">
     <x-step h="300 statt 30.">Mittel: \(\tfrac{349}{10}=34.9\) (vervierfacht!). Median: bleibt 5.5.</x-step>
     <x-step h="Ohne den Wert.">Mittel 5.44, Median 5, \(s=2.30\).</x-step>
     <x-res>Mittel und s reagieren stark auf einen Ausreißer, Median und IQR kaum: sie sind robust.</x-res>
-  </x-part>
-  <x-part h="(d) Welche Kennzahl?" ref="3.2"><x-res>Schiefe Daten mit Ausreißer → Median 5.5 Minuten und IQR 4 Minuten berichten; das Mittel 7.9 liegt über 8 von 10 Werten.</x-res></x-part>
+  <x-say>Ein einziger Tippfehler vervierfacht das Mittel, der Median bleibt unverändert: Median und IQR sind robust.</x-say></x-part>
+  <x-part h="(d) Welche Kennzahl?" ref="3.2"><x-res>Schiefe Daten mit Ausreißer → Median 5.5 Minuten und IQR 4 Minuten berichten; das Mittel 7.9 liegt über 8 von 10 Werten.</x-res><x-say>„Typischerweise wartet man etwa 5 bis 6 Minuten, die mittlere Hälfte zwischen 4 und 8 Minuten; einzelne Kunden warten deutlich länger.“</x-say></x-part>
   <x-part h="(e) Code" ref="3.2">
     <x-step h="R."><code>x &lt;- c(4, 7, 2, 9, 5, 3, 6, 30, 5, 8); mean(x); var(x); sd(x); quantile(x, c(.25, .5, .75, .9), type = 2); IQR(x, type = 2)</code></x-step>
     <x-res>Python: <code>np.mean(x), np.var(x, ddof=1), np.std(x, ddof=1), np.quantile(x, [.25, .5, .75, .9], method="averaged_inverted_cdf")</code>. Ohne <code>ddof=1</code> teilt numpy durch n!</x-res>
@@ -58,18 +58,18 @@
     <x-step h="Sturges.">\(\lceil1+\log_2 10\rceil=\lceil4.32\rceil=5\) Klassen.</x-step>
     <x-step h="Auszählen (Breite 6).">(0, 6]: 6 Werte · (6, 12]: 3 · (12, 18]: 0 · (18, 24]: 0 · (24, 30]: 1.</x-step>
     <x-res>Rechtsschief mit einer großen Lücke vor dem Einzelwert 30. Bei ungleichen Klassenbreiten muss die Fläche (nicht die Höhe) proportional zur Anzahl sein.</x-res>
-  </x-part>
+  <x-say>Die meisten Wartezeiten liegen unter 6 Minuten, danach wird es schnell seltener, und ein Einzelfall wartet 30 Minuten.</x-say></x-part>
   <x-part h="(b) Boxplot" ref="3.3">
     <x-step h="Box und Strich.">Box von \(q_{0.25}=4\) bis \(q_{0.75}=8\), Strich beim Median 5.5.</x-step>
     <x-step h="Zäune.">\(4-1.5\cdot4=-2\) und \(8+1.5\cdot4=14\).</x-step>
     <x-step h="Whisker und Ausreißer.">Whisker bis zum extremsten Wert innerhalb der Zäune: unten 2, oben 9. Der Wert 30 > 14 ist ein Ausreißerpunkt.</x-step>
     <x-res>Box [4, 8], Median 5.5, Whisker 2 bis 9, Ausreißer 30.</x-res>
-  </x-part>
+  <x-say>Der Boxplot zeigt die typische Wartezeit (4 bis 8 Minuten) und markiert 30 Minuten als auffälligen Ausreißer.</x-say></x-part>
   <x-part h="(c) Empirische Verteilungsfunktion" ref="3.3">
     <x-step h="Definition.">\(\FF_n(x)=\tfrac1n\#\{i:x_i\le x\}\), Treppe mit Sprung \(\tfrac1n\) pro Wert (doppelte Werte: \(\tfrac2n\)).</x-step>
     <x-step h="Werte.">\(\FF_n(5)=\tfrac5{10}=0.5\) (die 5 zählt doppelt), \(\FF_n(5.5)=0.5\), \(\FF_n(6)=0.6\), \(\FF_n(30)=1\).</x-step>
     <x-res>Zwischen 2 und 9 steigt \(\FF_n\) steil (dort liegen die Daten dicht), zwischen 9 und 30 ist sie flach bei 0.9.</x-res>
-  </x-part>
+  <x-say>Die Hälfte der Kunden wartet höchstens 5 Minuten, 90 Prozent höchstens 9 Minuten.</x-say></x-part>
 </x-pa>
 <!-- @s3-4 -->
 <h3 id="pa-3-4-h" data-m="🎓 Prüfungsaufgabe 3.4|alles aus 3.4 von null">🎓 Prüfungsaufgabe: alles aus 3.4 von null</h3>
@@ -83,12 +83,12 @@
     <x-step h="Produktsumme.">\(\sum(x_i-\bar x)(y_i-\bar y)=17.5\), also \(s_{xy}=\tfrac{17.5}5=3.5\).</x-step>
     <x-step h="Standardabweichungen.">\(s_x=\sqrt{17.5/5}=1.871\), \(s_y=\sqrt{20.83/5}=2.041\).</x-step>
     <x-res>\(r=\tfrac{3.5}{1.871\cdot2.041}=\Res{0.917}\).</x-res>
-  </x-part>
-  <x-part h="(b) Deutung" ref="3.4"><x-res>Stark positiv linear: mehr Lernzeit geht mit mehr Punkten einher. Kausalität folgt daraus nicht (z. B. Motivation beeinflusst beides); dafür braucht man ein Experiment.</x-res></x-part>
+  <x-say>Lernzeit und Punkte hängen stark positiv linear zusammen (r = 0.92).</x-say></x-part>
+  <x-part h="(b) Deutung" ref="3.4"><x-res>Stark positiv linear: mehr Lernzeit geht mit mehr Punkten einher. Kausalität folgt daraus nicht (z. B. Motivation beeinflusst beides); dafür braucht man ein Experiment.</x-res><x-say>Wer mehr lernt, hat tendenziell mehr Punkte; ob das Lernen die Ursache ist, zeigen diese Beobachtungsdaten nicht.</x-say></x-part>
   <x-part h="(c) U-Form" ref="3.4">
     <x-step h="Symmetrie.">\(\bar x=0\), \(\sum x_iy_i=\sum x_i^3=0\), also \(s_{xy}=0\).</x-step>
     <x-res>\(r=0\), obwohl y perfekt von x abhängt: r misst nur <b>lineare</b> Zusammenhänge.</x-res>
-  </x-part>
+  <x-say>Obwohl y ganz von x abhängt, ist r = 0: kein linearer Zusammenhang heißt nicht „kein Zusammenhang“.</x-say></x-part>
   <x-part h="(d) Anscombe" ref="3.4"><x-res>Vier Datensätze mit gleichem \(\bar x,\bar y,s_x,s_y,r=0.82\) und gleicher Regressionsgerade sehen völlig verschieden aus (linear, gekrümmt, Ausreißer, Hebelpunkt). Immer das Streudiagramm ansehen.</x-res></x-part>
 </x-pa>
 <!-- @s3-5 -->
@@ -103,16 +103,16 @@
     <x-step h="Ziel.">Minimiere \(\sum(y_i-a-bx_i)^2\). Ableiten nach a und b und null setzen liefert \(b=\tfrac{s_{xy}}{s_x^2}\), \(a=\bar y-b\bar x\).</x-step>
     <x-step h="Einsetzen.">\(b=\tfrac{3.5}{3.5}=1\), \(a=4.833-1\cdot3.5=1.333\).</x-step>
     <x-res>\(\hat y=1.333+1\cdot x\): pro Lernstunde ein Punkt mehr.</x-res>
-  </x-part>
+  <x-say>Pro zusätzlicher Lernstunde steigen die Punkte im Mittel um 1.</x-say></x-part>
   <x-part h="(b) Residuen" ref="3.4.1">
     <x-step h="eᵢ = yᵢ − ŷᵢ.">\(-0.33,\ 0.67,\ 0.67,\ -1.33,\ -0.33,\ 0.67\).</x-step>
     <x-res>Summe 0 (folgt aus der a-Gleichung); \(\text{SSE}=3.333\).</x-res>
-  </x-part>
+  <x-say>Die Punkte weichen typischerweise weniger als 1.5 Punkte von der Geraden ab; über- und unterschätzte Werte gleichen sich aus.</x-say></x-part>
   <x-part h="(c) Bestimmtheitsmaß" ref="3.4.1">
     <x-step h="Gesamtstreuung.">\(\text{SST}=\sum(y_i-\bar y)^2=20.833\).</x-step>
     <x-res>\(R^2=1-\tfrac{3.333}{20.833}=0.84=0.917^2=r^2\) ✓: die Gerade erklärt 84 Prozent der Streuung.</x-res>
-  </x-part>
-  <x-part h="(d) Vorhersage" ref="3.4.1"><x-res>\(\hat y(4.5)=5.83\) Punkte: sinnvoll (im Datenbereich). \(\hat y(20)=21.3\): Extrapolation weit außerhalb [1, 6], nicht verlässlich.</x-res></x-part>
+  <x-say>Die Lernzeit erklärt 84 Prozent der Unterschiede in den Punkten.</x-say></x-part>
+  <x-part h="(d) Vorhersage" ref="3.4.1"><x-res>\(\hat y(4.5)=5.83\) Punkte: sinnvoll (im Datenbereich). \(\hat y(20)=21.3\): Extrapolation weit außerhalb [1, 6], nicht verlässlich.</x-res><x-say>Für 4.5 Stunden sind etwa 5.8 Punkte zu erwarten; für 20 Stunden lässt sich aus diesen Daten nichts Verlässliches sagen.</x-say></x-part>
   <x-part h="(e) Code" ref="3.4.1"><x-res>R: <code>fit &lt;- lm(y ~ x); coef(fit); resid(fit); summary(fit)$r.squared</code>. Python: <code>res = stats.linregress(x, y); res.intercept, res.slope, res.rvalue**2</code>.</x-res></x-part>
 </x-pa>
 <!-- @s3-6 -->
@@ -122,12 +122,12 @@
   <ol class="pa-list"><li>(a) Vergleiche die relativen Häufigkeiten mit \(\pf(k)=\tfrac16\).</li><li>(b) Vergleiche \(\bar x\) mit \(\EE[\mX]\) und \(s^2\) mit \(\Var(\mX)\).</li>
   <li>(c) Vergleiche \(\FF_n(3)\) mit \(\FF(3)\).</li><li>(d) Was passiert bei 6000 Würfen?</li><li>(e) Welche Kennzahl oder Grafik wählst du für: Einkommen; zwei Gruppen vergleichen; Zusammenhang zweier Messgrößen?</li></ol></x-task>
   <x-cover>empirisch vs. theoretisch: Häufigkeit ↔ p (a), x̄ ↔ E, s² ↔ Var (b), F_n ↔ F (c) · mehr Daten → näher am Modell (d) · Schema Kennzahl/Grafik (e)</x-cover>
-  <x-part h="(a) Häufigkeiten" ref="3.5"><x-res>0.133, 0.183, 0.150, 0.200, 0.117, 0.217 gegen je 0.167: Schwankungen um das Modell.</x-res></x-part>
+  <x-part h="(a) Häufigkeiten" ref="3.5"><x-res>0.133, 0.183, 0.150, 0.200, 0.117, 0.217 gegen je 0.167: Schwankungen um das Modell.</x-res><x-say>Die beobachteten Anteile schwanken um 1/6; keine Augenzahl fällt klar aus dem Rahmen.</x-say></x-part>
   <x-part h="(b) Kennzahlen" ref="3.5">
     <x-step h="Empirisch.">\(\bar x=\tfrac{218}{60}=3.633\), \(s^2=2.98\).</x-step>
     <x-res>Theoretisch \(\EE=3.5\), \(\Var=\tfrac{35}{12}=2.917\): die empirischen Größen schätzen die theoretischen.</x-res>
-  </x-part>
-  <x-part h="(c) Verteilungsfunktion" ref="3.5"><x-res>\(\FF_n(3)=\tfrac{28}{60}=0.467\) gegen \(\FF(3)=0.5\).</x-res></x-part>
+  <x-say>Die 60 Würfe haben ein Mittel von 3.63 und Varianz 2.98, nahe an den Modellwerten 3.5 und 2.92: die Daten passen zum fairen Würfel.</x-say></x-part>
+  <x-part h="(c) Verteilungsfunktion" ref="3.5"><x-res>\(\FF_n(3)=\tfrac{28}{60}=0.467\) gegen \(\FF(3)=0.5\).</x-res><x-say>47 Prozent der Würfe zeigten höchstens 3, das Modell sagt 50 Prozent.</x-say></x-part>
   <x-part h="(d) Mehr Daten" ref="3.5"><x-res>Die Abweichungen werden typischerweise etwa 10-mal kleiner (Faktor \(\sqrt{100}\)); Gesetz der großen Zahlen, Kap. 5.</x-res></x-part>
   <x-part h="(e) Schema" ref="3.5"><x-res>Einkommen (schief): Median, IQR, Boxplot/Histogramm. Zwei Gruppen: Boxplots nebeneinander. Zwei Messgrößen: Streudiagramm, r, Regressionsgerade.</x-res></x-part>
 </x-pa>
@@ -149,19 +149,19 @@
     <x-step h="Ordnen.">10, 14, 18, 20, 22, 25, 35, 50; n = 8.</x-step>
     <x-step h="Quantile (αn ganzzahlig → Mittel).">\(q_{0.25}=\tfrac{14+18}2=16\), Median \(\tfrac{20+22}2=21\), \(q_{0.75}=\tfrac{25+35}2=30\).</x-step>
     <x-res>\(\bar y=24.25\), \(s=12.8\), Median 21, IQR = 14.</x-res>
-  </x-part>
+  <x-say>Im Mittel pendeln die Befragten 24 Minuten, die Hälfte höchstens 21 Minuten; die mittlere Hälfte braucht zwischen 16 und 30 Minuten.</x-say></x-part>
   <x-part h="(c) Boxplot und F_n" ref="3.3">
     <x-step h="Zäune.">\(16-21=-5\) und \(30+21=51\).</x-step>
     <x-res>50 < 51: knapp kein Ausreißer, der Whisker reicht bis 50. \(\FF_n(20)=\tfrac48=0.5\), \(\FF_n(21)=0.5\).</x-res>
-  </x-part>
-  <x-part h="(d) Korrelation" ref="3.4"><x-res>\(s_{xy}=55.64\), \(s_x=4.40\), \(s_y=12.81\): \(r=0.987\), fast perfekt positiv linear.</x-res></x-part>
+  <x-say>Die 50 Minuten sind lang, fallen nach der 1.5-IQR-Regel aber knapp nicht als Ausreißer auf; die Hälfte pendelt höchstens 20 bis 21 Minuten.</x-say></x-part>
+  <x-part h="(d) Korrelation" ref="3.4"><x-res>\(s_{xy}=55.64\), \(s_x=4.40\), \(s_y=12.81\): \(r=0.987\), fast perfekt positiv linear.</x-res><x-say>Wer weiter weg wohnt, pendelt fast immer länger (r = 0.99).</x-say></x-part>
   <x-part h="(e) Regression" ref="3.4.1">
     <x-step h="Koeffizienten.">\(b=\tfrac{s_{xy}}{s_x^2}=\tfrac{55.64}{19.36}=2.875\) min/km, \(a=24.25-2.875\cdot7.25=3.41\) min.</x-step>
     <x-res>\(\hat y(10)=3.41+28.75=32.2\) min; \(R^2=r^2=0.974\).</x-res>
-  </x-part>
+  <x-say>Jeder zusätzliche Kilometer kostet im Mittel knapp 3 Minuten; für 10 km sind etwa 32 Minuten zu erwarten.</x-say></x-part>
   <x-part h="(f) Modell vs. Daten" ref="3.5">
     <x-step h="Lage.">\(\bar y=24.25\) gegen \(\mu=25\): passt gut.</x-step>
     <x-res>\(\FF_n(21)=0.5\) gegen \(\Phi\big(\tfrac{21-25}{12}\big)=\Phi(-0.33)=0.37\). Mit n = 8 sind solche Abweichungen normal; zudem sind die Daten rechtsschief (Mittel > Median), was eher gegen die Normalverteilung spricht.</x-res>
-  </x-part>
+  <x-say>Das Mittel passt zum Modell, aber die Daten sind rechtsschief; eine Normalverteilung ist hier fraglich.</x-say></x-part>
 </x-pa>
 </section>

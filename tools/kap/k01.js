@@ -202,6 +202,11 @@ LB.on(function tracers() {
   /* ---- relative Häufigkeit */
   new LB.Tracer({
     id: 'trRel', title: 'relative Häufigkeit f_i(A) Wurf für Wurf', langs: CODE('k1_relhaeuf'),
+    vars: [['wuerfe', 'mem', 'die beobachteten Würfe (Daten), K = Kopf = Ereignis A'], ['n', 'par', 'Anzahl Wiederholungen, fest'], ['i', 'idx', 'Nummer des aktuellen Wurfs, läuft 1, 2, …, n'],
+      ['treffer', 'chg', 'Zähler: wie oft A bisher eingetreten ist'], ['f', 'res', 'relative Häufigkeit nach i Würfen: treffer / i'], ['f_alle', 'res', 'alle f₁ … fₙ auf einmal (vektorisiert)']],
+    together: 'Die Schleife geht Wurf für Wurf (<span class="kw-idx">i</span>). Bei jedem Kopf wächst <span class="kw-chg">treffer</span> um 1, und <span class="kw-res">f</span> teilt diesen Zähler durch die bisherige Anzahl i. So entsteht die Folge f₁, f₂, …, die bei vielen Wiederholungen gegen die wahre Wahrscheinlichkeit P(A) strebt.',
+    say: s => 'In ' + s.n + ' Würfen kam Kopf ' + s.t + '-mal, die relative Häufigkeit ist f = ' + LB.fmt(s.f, 3) + '. Das ist eine <b>Beobachtung</b>, keine Wahrscheinlichkeit: f schätzt P(Kopf). ' + (Math.abs(s.f - 0.5) > 0.15 ? 'Der Abstand zu 0.5 ist groß, bei nur ' + s.n + ' Würfen ist das aber noch kein Beweis gegen eine faire Münze.' : 'Der Wert liegt nahe 0.5, passt also zu einer fairen Münze.') + ' Erst für sehr viele Würfe muss f nahe an P(A) liegen (Gesetz der großen Zahlen).',
+   
     input: 'K Z K K Z Z K Z K K', hint: 'Würfe als K/Z eintippen',
     examples: [['Grundlage-Folge', 'K Z K K Z Z K Z K K'], ['nur Kopf', 'K K K K K'], ['abwechselnd', 'K Z K Z K Z K Z']],
     parse: s => { const w = s.toUpperCase().replace(/[^KZ]/g, '').split(''); if (!w.length) throw new Error('mindestens ein K oder Z'); if (w.length > 40) throw new Error('höchstens 40 Würfe'); return w; },
@@ -222,14 +227,19 @@ LB.on(function tracers() {
       i = n;
       rec.step('vec', 'Vektorisiert entsteht dieselbe Folge mit <code>cumsum</code>. Endwert \\(\\Idx{f_{' + n + '}}=' + LB.fmt(f, 4) + '\\), wahres \\(\\PP(\\mA)=0.5\\).', st());
     },
-    view: s => LB.cellsHTML(s.w, k => k === s.i - 1 ? 'o' : (k < s.i ? (s.w[k] === 'K' ? 'm' : '') : 'out'), 1) +
-      LB.kvHTML([['Wurf i', s.i, 'idx'], ['treffer', s.t, 'idx'], ['n', s.n, 'par'], ['f_i(A)', s.f === null ? '–' : LB.fmt(s.f, 4), 'res']]) +
+    view: s => LB.cellsHTML(s.w, k => k === s.i - 1 ? 'o' : (k < s.i ? (s.w[k] === 'K' ? 'm' : '') : 'out'), 1, { idx: 'Wurf i', val: 'wuerfe[i]', role: 'mem', note: 'grün = Kopf gezählt' }) +
+      LB.kvHTML([['Wurf i', s.i, 'idx'], ['treffer', s.t, 'chg'], ['n', s.n, 'par'], ['f_i(A)', s.f === null ? '–' : LB.fmt(s.f, 4), 'res']]) +
       (s.f === null ? '' : '<div class="bar"><span style="width:' + (100 * s.f) + '%"></span><i style="left:50%"></i></div>')
   });
 
   /* ---- Laplace zwei Würfel */
   new LB.Tracer({
     id: 'trLap', title: 'Laplace: |A| und |Ω| abzählen', langs: CODE('k1_laplace'),
+    vars: [['k', 'par', 'Schwelle: A = „Augensumme mindestens k“'], ['a', 'idx', 'Augenzahl des ersten Würfels (1 bis 6)'], ['b', 'idx', 'Augenzahl des zweiten Würfels; (a, b) ist ein Elementarereignis'],
+      ['moeglich', 'mem', 'zählt jedes Paar: am Ende |Ω| = 36'], ['guenstig', 'chg', 'zählt nur Paare in A: am Ende |A|'], ['P', 'res', 'Laplace: guenstig / moeglich = P(A)']],
+    together: 'Die zwei verschachtelten Schleifen (<span class="kw-idx">a</span> außen, <span class="kw-idx">b</span> innen) erzeugen alle 36 gleich wahrscheinlichen Paare. <span class="kw-mem">moeglich</span> zählt jedes Paar, <span class="kw-chg">guenstig</span> nur die mit a + b ≥ <span class="kw-par">k</span>. Laplace teilt am Ende: <span class="kw-res">P</span> = guenstig / moeglich.',
+    say: s => 'Von 36 gleich wahrscheinlichen Paaren haben ' + s.g + ' eine Augensumme von mindestens ' + s.k + '. Mit zwei fairen Würfeln passiert das also mit Wahrscheinlichkeit ' + s.g + '/36 ≈ ' + LB.fmt(s.g / 36, 3) + ', auf lange Sicht in etwa ' + Math.round(100 * s.g / 36) + ' von 100 Würfen.',
+   
     input: '10', hint: 'Schwelle k für „Summe ≥ k“', speed: 280,
     examples: [['Summe ≥ 10', '10'], ['Summe ≥ 7', '7'], ['Summe ≥ 2 (sicher)', '2'], ['Summe ≥ 13 (unmöglich)', '13']],
     parse: s => { const k = parseInt(s, 10); if (isNaN(k) || k < 0 || k > 20) throw new Error('eine ganze Zahl k zwischen 0 und 20'); return k; },
@@ -254,13 +264,21 @@ LB.on(function tracers() {
     view: s => {
       const map = {}; s.seen.forEach(x => map[x[0] + ',' + x[1]] = x[2]);
       return diceGrid((a, b) => { const k = a + ',' + b; const cur = a === s.a && b === s.b; return [(k in map ? (map[k] ? 'm' : '') : 'out') + (cur ? ' o' : '')]; }) +
-        LB.kvHTML([['a', s.a || '–', 'idx'], ['b', s.b || '–', 'idx'], ['|Ω| bisher', s.m, 'mem'], ['|A| bisher', s.g, 'res']]);
+        LB.kvHTML([['a', s.a || '–', 'idx'], ['b', s.b || '–', 'idx'], ['moeglich = |Ω| bisher', s.m, 'mem'], ['guenstig = |A| bisher', s.g, 'chg'], ['P = |A|/|Ω| bisher', s.m ? LB.fmt(s.g / s.m, 4) : '–', 'res']]);
     }
   });
 
   /* ---- Unabhängigkeit */
   new LB.Tracer({
     id: 'trUnabh', title: 'Produktformel durch Abzählen prüfen', langs: CODE('k1_unabh'),
+    vars: [['A', 'cond', 'Ereignis A als Bedingung an das Paar (a, b)'], ['B', 'cond', 'Ereignis B als Bedingung an das Paar (a, b)'], ['a|b', 'idx', 'Augenzahlen der beiden Würfel, zusammen alle 36 Paare'],
+      ['nA', 'mem', 'zählt Paare in A → |A|'], ['nB', 'par', 'zählt Paare in B → |B|'], ['nAB', 'res', 'zählt Paare in A und B → |A ∩ B|'],
+      ['pA|pB|pAB', 'chg', 'Laplace-W\'keiten: Zähler ÷ 36'], ['unabh', 'res', 'Ergebnis der Produktformel P(A ∩ B) = P(A)·P(B)']],
+    together: 'Jedes der 36 Paare wird einmal besucht und bis zu dreimal gezählt: in A (<span class="kw-mem">nA</span>), in B (<span class="kw-par">nB</span>), in beiden (<span class="kw-res">nAB</span>). Geteilt durch 36 werden daraus W\'keiten. Unabhängig heißt: die Schnitt-W\'keit ist genau das Produkt der Einzel-W\'keiten.',
+    say: s => { const pA = s.nA / 36, pB = s.nB / 36, pAB = s.nAB / 36, u = Math.abs(pAB - pA * pB) < 1e-12;
+      return u ? 'P(A ∩ B) = ' + LB.fmt(pAB, 4) + ' ist genau P(A)·P(B). A und B sind <b>unabhängig</b>: zu wissen, dass A eingetreten ist, ändert die Chance für B nicht (P(B | A) = P(B) = ' + LB.fmt(pB, 3) + ').'
+        : 'P(A ∩ B) = ' + LB.fmt(pAB, 4) + ' ≠ P(A)·P(B) = ' + LB.fmt(pA * pB, 4) + '. A und B sind <b>abhängig</b>: ' + (s.nA ? 'wenn A eingetreten ist, hat B die Chance ' + s.nAB + '/' + s.nA + ' = ' + LB.fmt(s.nAB / s.nA, 3) + ' statt ' + LB.fmt(pB, 3) + '.' : 'A tritt nie ein.'); },
+   
     input: 'A: a%2==0 ; B: a+b==7', speed: 250,
     examples: [['gerade / Summe 7 (unabhängig)', 'A: a%2==0 ; B: a+b==7'], ['a=6 / Summe ≥ 10 (abhängig)', 'A: a==6 ; B: a+b>=10'], ['a gerade / b gerade', 'A: a%2==0 ; B: b%2==0'], ['Pasch / a=1', 'A: a==b ; B: a==1']],
     parse: s => parseAB(s),
@@ -299,6 +317,11 @@ LB.on(function tracers() {
   /* ---- bedingte W'keit */
   new LB.Tracer({
     id: 'trBed', title: 'P(A|B): nur im neuen Grundraum B zählen', langs: CODE('k1_bedingt'),
+    vars: [['A', 'cond', 'Ereignis, dessen W\'keit gesucht ist'], ['B', 'cond', 'Bedingung: was man schon weiß; wird der neue Grundraum'], ['a|b', 'idx', 'Augenzahlen, zusammen alle 36 Paare'],
+      ['nB', 'par', 'zählt Paare in B → Größe des geschrumpften Grundraums'], ['nAB', 'res', 'zählt Paare in B, die auch in A liegen'], ['P', 'res', 'P(A | B) = nAB / nB']],
+    together: 'Paare außerhalb von <span class="kw-cond">B</span> werden übersprungen (next/continue): sie sind durch die Information „B ist eingetreten“ ausgeschlossen. Im Rest zählt <span class="kw-par">nB</span> alle, <span class="kw-res">nAB</span> nur die günstigen. Die bedingte W\'keit ist der Anteil im neuen, kleineren Grundraum.',
+    say: s => s.nB ? 'Weiß man, dass B eingetreten ist, bleiben ' + s.nB + ' gleich wahrscheinliche Paare übrig; davon liegen ' + s.nAB + ' in A. Unter dieser Information tritt A mit Wahrscheinlichkeit ' + s.nAB + '/' + s.nB + ' ≈ ' + LB.fmt(s.nAB / s.nB, 3) + ' ein. Achtung: P(B | A) ist im Allgemeinen eine andere Zahl.' : 'B kann nie eintreten, P(A | B) ist nicht definiert.',
+   
     input: 'A: a+b>=10 ; B: a==6', speed: 250,
     examples: [['Summe ≥ 10 gegeben a = 6', 'A: a+b>=10 ; B: a==6'], ['Pasch gegeben Summe gerade', 'A: a==b ; B: (a+b)%2==0'], ['a = 6 gegeben Summe ≥ 10 (umgedreht!)', 'A: a==6 ; B: a+b>=10']],
     parse: s => parseAB(s),
@@ -335,6 +358,12 @@ LB.on(function tracers() {
   /* ---- Bayes */
   new LB.Tracer({
     id: 'trBayes', title: 'totale W\'keit und Bayes', langs: CODE('k1_bayes'),
+    vars: [['prior', 'par', 'P(Bᵢ): wie häufig jede Ursache vorab ist (Summe 1)'], ['like', 'par', 'P(A | Bᵢ): wie wahrscheinlich die Beobachtung A unter Ursache i ist'], ['k', 'par', 'Anzahl der Ursachen'],
+      ['i', 'idx', 'aktueller Ast des Baums'], ['pfad', 'chg', 'Pfad-W\'keit P(A ∩ Bᵢ) = like · prior'], ['PA', 'res', 'P(A): Summe aller Pfade (totale Wahrscheinlichkeit)'], ['post', 'res', 'P(Bᵢ | A) = pfad / PA (Bayes)']],
+    together: 'Erste Schleife: jeden Ast entlang multiplizieren (<span class="kw-chg">pfad</span> = <span class="kw-par">like</span> · <span class="kw-par">prior</span>) und alle Pfade in <span class="kw-res">PA</span> aufsummieren. Zweite Schleife: jeden Pfad durch PA teilen; das dreht die Bedingung um (<span class="kw-res">post</span>). Die Posteriori summieren sich zu 1.',
+    say: s => { let j = 0; s.po.forEach((v, k) => { if (v > s.po[j]) j = k; });
+      return 'Die Beobachtung A tritt insgesamt mit P(A) = ' + LB.fmt(s.PA, 4) + ' ein. Wurde A beobachtet, ist Ursache B' + (j + 1) + ' am wahrscheinlichsten (P = ' + LB.fmt(s.po[j], 3) + '), vorab hatte sie nur ' + s.pr[j] + '. Die Beobachtung verschiebt das Gewicht zu den Ursachen, unter denen A häufig ist.'; },
+   
     input: '0.5 0.3 0.2 ; 0.01 0.02 0.03', hint: 'P(B_i) ; P(A|B_i)',
     examples: [['drei Maschinen', '0.5 0.3 0.2 ; 0.01 0.02 0.03'], ['Haarriss-Detektor', '0.001 0.999 ; 0.99 0.03'], ['Krankheitstest', '0.01 0.99 ; 0.99 0.05'], ['Straße nass', '0.2 0.8 ; 0.01 0.001']],
     parse: s => { const [a, b] = s.split(';'); if (b === undefined) throw new Error('Format: Vorab-W\'keiten ; Likelihoods');
@@ -371,9 +400,9 @@ LB.on(function tracers() {
       i = -1;
       rec.step('out', 'Fertig. Summe aller Posteriori = ' + LB.fmt(LB.S.sum(po), 4) + ' ✓', st());
     },
-    view: s => '<table class="tbl"><tr><th>i</th><th class="r">P(Bᵢ)</th><th class="r">P(A|Bᵢ)</th><th class="r">Pfad</th><th class="r">P(Bᵢ|A)</th></tr>' +
-      s.pr.map((p, k) => '<tr' + (k === s.i ? ' style="outline:1px solid var(--chg)"' : '') + '><td class="kw-idx">' + (k + 1) + '</td><td class="r kw-par">' + p + '</td><td class="r kw-par">' + s.li[k] + '</td><td class="r">' + (s.pf[k] === null ? '·' : LB.fmt(s.pf[k], 6)) + '</td><td class="r kw-res">' + (s.po[k] === null ? '·' : LB.fmt(s.po[k], 4)) + '</td></tr>').join('') +
-      '</table>' + LB.kvHTML([['P(A) bisher', LB.fmt(s.PA, 6), 'res']])
+    view: s => '<table class="tbl"><tr><th>i</th><th class="r">P(Bᵢ)</th><th class="r">P(A|Bᵢ)</th><th class="r">pfad = P(A∩Bᵢ)</th><th class="r">P(Bᵢ|A)</th></tr>' +
+      s.pr.map((p, k) => '<tr' + (k === s.i ? ' style="outline:1px solid var(--chg)"' : '') + '><td class="kw-idx">' + (k + 1) + '</td><td class="r kw-par">' + p + '</td><td class="r kw-par">' + s.li[k] + '</td><td class="r kw-chg">' + (s.pf[k] === null ? '·' : LB.fmt(s.pf[k], 6)) + '</td><td class="r kw-res">' + (s.po[k] === null ? '·' : LB.fmt(s.po[k], 4)) + '</td></tr>').join('') +
+      '</table>' + LB.kvHTML([['PA = P(A) bisher', LB.fmt(s.PA, 6), 'res']])
   });
 });
 

@@ -167,6 +167,13 @@ LB.on(function tracers3() {
   const vR = a => 'c(' + a.join(', ') + ')', vP = a => '[' + a.join(', ') + ']';
   new LB.Tracer({
     id: 'trKz', title: 'x̄, s², s und Quartile nach Skript', langs: CODE('k3_kennzahlen'),
+    vars: [['x', 'mem', 'die Daten x₁ … xₙ'], ['n', 'par', 'Stichprobenumfang'], ['i', 'idx', 'Laufindex über die Daten'], ['summe', 'chg', 'Summe aller Werte'], ['xbar', 'res', 'Mittel x̄ = summe / n'],
+      ['q', 'chg', 'Summe der quadrierten Abstände zum Mittel'], ['s2', 'res', 'Varianz s² = q / (n − 1)'], ['s', 'res', 'Standardabweichung √s²'], ['xs', 'mem', 'geordnete Daten x₍₁₎ ≤ … ≤ x₍ₙ₎'],
+      ['alpha', 'par', 'gesuchtes Quantil-Niveau (0.25, 0.5, 0.75)'], ['k', 'idx', 'Position α·n in den geordneten Daten']],
+    together: 'Erst wird aufsummiert (<span class="kw-chg">summe</span> → <span class="kw-res">xbar</span>), dann werden die Abstände zu x̄ quadriert und gesammelt (<span class="kw-chg">q</span> → <span class="kw-res">s2</span> → <span class="kw-res">s</span>). Für die Quantile werden die Daten sortiert (<span class="kw-mem">xs</span>); die Position <span class="kw-idx">k</span> = α·n entscheidet: ganzzahlig → Mittel zweier Nachbarn, sonst aufrunden.',
+    say: s => 'Ein typischer Wert liegt bei x̄ = ' + LB.fmt(s.xbar, 3) + '; die Werte streuen im Schnitt etwa s = ' + LB.fmt(s.s, 3) + ' um dieses Mittel. Die mittlere Hälfte der Daten liegt zwischen ' + s.qs[0.25] + ' und ' + s.qs[0.75] + ', der Median ist ' + s.qs[0.5] + '. ' +
+      (Math.abs(s.xbar - s.qs[0.5]) > 0.25 * s.s ? 'Mittel und Median liegen deutlich auseinander: die Daten sind schief oder haben Ausreißer, der Median beschreibt die Mitte hier besser.' : 'Mittel und Median liegen nahe beieinander: die Daten sind etwa symmetrisch.'),
+   
     input: '12 15 11 18 14 13 30 16', hint: 'beliebige Zahlen (2 bis 25)',
     examples: [['acht Werte mit Ausreißer', '12 15 11 18 14 13 30 16'], ['Rohr-Durchmesser', '3 7 7 9 4'], ['Old Faithful', '3.6 1.8 3.333 2.283 4.533 2.883 4.7 3.6 1.95 4.35'], ['Grundlage n = 8', '2 3 5 6 8 9 11 14']],
     parse: s => { const x = S.parse(s); if (x.length < 2 || x.length > 25) throw new Error('2 bis 25 Zahlen'); return x; },
@@ -194,9 +201,9 @@ LB.on(function tracers3() {
       cur.a = null; cur.pos = null;
       rec.step('out', 'Ergebnis: \\(\\bar x=' + LB.fmt(xbar, 4) + ',\\ s^2=' + LB.fmt(s2, 4) + ',\\ s=' + LB.fmt(s, 4) + ',\\ q_{0.25}=' + qs[0.25] + ',\\ \\text{Median}=' + qs[0.5] + ',\\ q_{0.75}=' + qs[0.75] + '\\)', st());
     },
-    view: s => (s.xs ? '<div class="small muted">geordnet x₍ᵢ₎:</div>' + LB.cellsHTML(s.xs.map(v => v), k => s.cur.pos !== null && (k === Math.ceil(s.cur.pos) - 1 || (Math.abs(s.cur.pos - Math.round(s.cur.pos)) < 1e-9 && (k === s.cur.pos - 1 || k === s.cur.pos))) ? 'o' : '', 1) :
-      '<div class="small muted">Daten x_i:</div>' + LB.cellsHTML(s.x, k => k === s.i ? 'o' : '', 1)) +
-      LB.kvHTML([['Summe', LB.fmt(s.sum, 4)], ['x̄', s.xbar === null ? '–' : LB.fmt(s.xbar, 4), 'res'], ['Σ(x−x̄)²', LB.fmt(s.q, 4)], ['s²', s.s2 === null ? '–' : LB.fmt(s.s2, 4), 'res'], ['s', s.s === null ? '–' : LB.fmt(s.s, 4), 'res'],
+    view: s => (s.xs ? '' + LB.cellsHTML(s.xs.map(v => v), k => s.cur.pos !== null && (k === Math.ceil(s.cur.pos) - 1 || (Math.abs(s.cur.pos - Math.round(s.cur.pos)) < 1e-9 && (k === s.cur.pos - 1 || k === s.cur.pos))) ? 'o' : '', 1) :
+      LB.cellsHTML(s.x, k => k === s.i ? 'o' : '', 1, { idx: 'i', val: 'x[i]', role: 'mem', note: 'orange = gerade in der Schleife' })) +
+      LB.kvHTML([['summe', LB.fmt(s.sum, 4), 'chg'], ['x̄', s.xbar === null ? '–' : LB.fmt(s.xbar, 4), 'res'], ['q = Σ(x−x̄)²', LB.fmt(s.q, 4), 'chg'], ['s²', s.s2 === null ? '–' : LB.fmt(s.s2, 4), 'res'], ['s', s.s === null ? '–' : LB.fmt(s.s, 4), 'res'],
         ['q₀.₂₅', s.qs[0.25] === undefined ? '–' : s.qs[0.25], 'res'], ['Median', s.qs[0.5] === undefined ? '–' : s.qs[0.5], 'res'], ['q₀.₇₅', s.qs[0.75] === undefined ? '–' : s.qs[0.75], 'res']])
   });
 
@@ -206,7 +213,13 @@ LB.on(function tracers3() {
   const PEX = [['fünf Paare', '1 2 3 4 5 ; 2 4 5 4 5'], ['perfekt steigend', '1 2 3 4 ; 3 5 7 9'], ['U-Form', '-2 -1 0 1 2 ; 4 1 0 1 4'], ['gegenläufig', '1 2 3 4 5 6 ; 10 8 9 5 4 2']];
 
   new LB.Tracer({
-    id: 'trKor', title: 'Kovarianz und Korrelation', langs: CODE('k3_korrelation'), input: '1 2 3 4 5 ; 2 4 5 4 5', hint: 'x-Werte ; y-Werte', examples: PEX, parse: pairParse, codeFor: pairCode,
+    id: 'trKor', title: 'Kovarianz und Korrelation', langs: CODE('k3_korrelation'),
+    vars: [['x|y', 'mem', 'die gepaarten Messwerte'], ['n', 'par', 'Anzahl Paare'], ['mx|my', 'par', 'Mittelwerte x̄, ȳ'], ['i', 'idx', 'aktuelles Paar'],
+      ['dx|dy', 'chg', 'Abweichungen vom jeweiligen Mittel'], ['sxy', 'chg', 'Summe der Produkte dx·dy: positiv = gleichläufig'], ['sxx|syy', 'chg', 'Quadratsummen: Streuung in x bzw. y'], ['r', 'res', 'Korrelation r = sxy / √(sxx·syy), zwischen −1 und 1']],
+    together: 'Pro Paar (<span class="kw-idx">i</span>) werden die Abweichungen <span class="kw-chg">dx</span>, <span class="kw-chg">dy</span> gebildet. Liegen beide auf derselben Seite ihres Mittels, ist das Produkt positiv und erhöht <span class="kw-chg">sxy</span>. Die Division durch √(sxx·syy) macht daraus die einheitenfreie Korrelation <span class="kw-res">r</span>.',
+    say: s => { const a = Math.abs(s.r), w = a >= 0.8 ? 'starken' : a >= 0.5 ? 'mittleren' : a >= 0.2 ? 'schwachen' : 'kaum einen';
+      return 'Die Daten zeigen ' + (a < 0.2 ? 'kaum einen linearen Zusammenhang' : 'einen ' + w + (s.r > 0 ? ' positiven' : ' negativen') + ' linearen Zusammenhang') + ' (r = ' + LB.fmt(s.r, 3) + ')' + (a >= 0.2 ? ': größere x gehen tendenziell mit ' + (s.r > 0 ? 'größeren' : 'kleineren') + ' y einher' : '') + '. r misst nur lineare Zusammenhänge und sagt nichts über Ursache und Wirkung.'; },
+    input: '1 2 3 4 5 ; 2 4 5 4 5', hint: 'x-Werte ; y-Werte', examples: PEX, parse: pairParse, codeFor: pairCode,
     run(rec, d) {
       const n = d.x.length, mx = S.mean(d.x), my = S.mean(d.y); let sxy = 0, sxx = 0, syy = 0, i = -1, r = null; const rows = [];
       const st = () => ({ d, mx, my, sxy, sxx, syy, i, r, rows: rows.slice() });
@@ -227,11 +240,16 @@ LB.on(function tracers3() {
     view: s => '<table class="tbl"><tr><th>i</th><th class="r">x</th><th class="r">y</th><th class="r">x−x̄</th><th class="r">y−ȳ</th><th class="r">Produkt</th></tr>' +
       s.d.x.map((x, k) => '<tr' + (k === s.i ? ' style="outline:1px solid var(--chg)"' : '') + '><td class="kw-idx">' + (k + 1) + '</td><td class="r kw-mem">' + x + '</td><td class="r kw-mem">' + s.d.y[k] + '</td>' +
         (s.rows[k] ? '<td class="r">' + LB.fmt(s.rows[k][0], 3) + '</td><td class="r">' + LB.fmt(s.rows[k][1], 3) + '</td><td class="r ' + (s.rows[k][0] * s.rows[k][1] >= 0 ? 'ok' : 'bad') + '">' + LB.fmt(s.rows[k][0] * s.rows[k][1], 3) + '</td>' : '<td></td><td></td><td></td>') + '</tr>').join('') +
-      '</table>' + LB.kvHTML([['S_xy', LB.fmt(s.sxy, 4)], ['S_xx', LB.fmt(s.sxx, 4)], ['S_yy', LB.fmt(s.syy, 4)], ['r', s.r === null ? '–' : LB.fmt(s.r, 4), 'res']])
+      '</table>' + LB.kvHTML([['sxy', LB.fmt(s.sxy, 4), 'chg'], ['sxx', LB.fmt(s.sxx, 4), 'chg'], ['syy', LB.fmt(s.syy, 4), 'chg'], ['r', s.r === null ? '–' : LB.fmt(s.r, 4), 'res']])
   });
 
   new LB.Tracer({
-    id: 'trReg', title: 'Ausgleichsgerade und R²', langs: CODE('k3_regression'), input: '1 2 3 4 5 ; 2 4 5 4 5', hint: 'x-Werte ; y-Werte', examples: PEX, parse: pairParse, codeFor: pairCode,
+    id: 'trReg', title: 'Ausgleichsgerade und R²', langs: CODE('k3_regression'),
+    vars: [['x|y', 'mem', 'erklärende Größe x, Zielgröße y'], ['mx|my', 'par', 'Schwerpunkt (x̄, ȳ), die Gerade läuft durch ihn'], ['Sxy|Sxx', 'chg', 'Summe der Kreuzprodukte bzw. der Quadrate in x'],
+      ['b', 'res', 'Steigung = Sxy / Sxx'], ['a', 'res', 'Achsenabschnitt = ȳ − b·x̄'], ['yhat', 'chg', 'Vorhersagen ŷᵢ = a + b·xᵢ'], ['res', 'chg', 'Residuen yᵢ − ŷᵢ (senkrechte Abstände)'], ['R2', 'res', 'Bestimmtheitsmaß: erklärter Anteil der Streuung']],
+    together: 'Aus den Summen <span class="kw-chg">Sxy</span> und <span class="kw-chg">Sxx</span> entsteht die Steigung <span class="kw-res">b</span>; der Achsenabschnitt <span class="kw-res">a</span> sorgt dafür, dass die Gerade durch den Schwerpunkt geht. Die Residuen <span class="kw-chg">res</span> messen, was die Gerade nicht erklärt; <span class="kw-res">R2</span> vergleicht sie mit der Gesamtstreuung von y.',
+    say: s => s.b === null ? 'Keine Gerade bestimmbar.' : 'Pro Einheit mehr x ist y im Mittel um ' + LB.fmt(s.b, 3) + ' ' + (s.b >= 0 ? 'größer' : 'kleiner') + '. Die Gerade ŷ = ' + LB.fmt(s.a, 3) + ' + ' + LB.fmt(s.b, 3) + '·x erklärt ' + Math.round(100 * s.R2) + ' Prozent der Streuung von y; der Rest ist Abweichung um die Gerade. Vorhersagen sind nur im Bereich der beobachteten x (' + Math.min(...s.d.x) + ' bis ' + Math.max(...s.d.x) + ') verlässlich.',
+    input: '1 2 3 4 5 ; 2 4 5 4 5', hint: 'x-Werte ; y-Werte', examples: PEX, parse: pairParse, codeFor: pairCode,
     run(rec, d) {
       const n = d.x.length, mx = S.mean(d.x), my = S.mean(d.y); let Sxy = null, Sxx = null, b = null, a = null, yh = null, res = null, R2 = null;
       const st = () => ({ d, mx, my, Sxy, Sxx, b, a, yh, res, R2 });

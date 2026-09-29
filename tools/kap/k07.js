@@ -110,7 +110,13 @@ LB.on(function duality() {
 /* ================================================================ Tracer */
 LB.on(function tracers7() {
   new LB.Tracer({
-    id: 'trBt', title: 'Verwerfungsbereich K = {g, …, n} suchen', langs: CODE('k7_binomtest'), input: '50 0.05 0.05 6', hint: 'n p₀ α x', speed: 500,
+    id: 'trBt', title: 'Verwerfungsbereich K = {g, …, n} suchen', langs: CODE('k7_binomtest'),
+    vars: [['n', 'par', 'Anzahl geprüfter Teile'], ['p0', 'par', 'Sollwert unter H₀'], ['alpha', 'par', 'Niveau: erlaubte W\'keit für Fehler 1. Art'], ['x', 'mem', 'beobachtete Anzahl'],
+      ['g', 'idx', 'Kandidat für die untere Grenze von K = {g, …, n}'], ['schwanz', 'chg', 'P(X ≥ g) unter H₀: Fehler-1.-Art-W\'keit dieses K'], ['pwert', 'res', 'P-Wert P(X ≥ x) unter H₀']],
+    together: 'Die Grenze <span class="kw-idx">g</span> wird so lange nach rechts geschoben, bis die Schwanz-W\'keit <span class="kw-chg">schwanz</span> ≤ <span class="kw-par">alpha</span> ist: dann ist K = {g, …, n} der kleinste zulässige Verwerfungsbereich. Die Beobachtung <span class="kw-mem">x</span> wird damit verglichen; der <span class="kw-res">pwert</span> sagt dasselbe als Zahl.',
+    say: s => (s.d.x >= s.g ? 'Mit ' + s.d.x + ' von ' + s.d.n + ' ist das Ergebnis unter H₀ (p = ' + s.d.p + ') so selten (P-Wert ' + LB.fmt(s.pv, 4) + ' ≤ ' + s.d.a + '), dass wir H₀ <b>verwerfen</b>: die Daten sprechen signifikant für einen höheren Anteil als ' + s.d.p + '.'
+      : 'Mit ' + s.d.x + ' von ' + s.d.n + ' ist das Ergebnis unter H₀ (p = ' + s.d.p + ') nicht ungewöhnlich genug (P-Wert ' + LB.fmt(s.pv, 4) + ' &gt; ' + s.d.a + '). Wir können H₀ <b>nicht verwerfen</b>; das heißt nicht, dass H₀ bewiesen ist, die Daten reichen nur nicht für das Gegenteil.'),
+    input: '50 0.05 0.05 6', hint: 'n p₀ α x', speed: 500,
     examples: [['Lieferant 5 %', '50 0.05 0.05 6'], ['Grundlage Bauteile', '20 0.1 0.05 5'], ['Münze 10 Würfe, x = 7', '10 0.5 0.05 7']],
     parse: s => { const v = S.parse(s); if (v.length !== 4) throw new Error('Format: n p0 alpha x'); const [n, p, a, x] = v; if (n < 1 || n > 200 || p <= 0 || p >= 1 || a <= 0 || a >= 0.5 || x < 0 || x > n) throw new Error('Wertebereiche prüfen'); return { n: Math.round(n), p, a, x: Math.round(x) }; },
     codeFor: (d, L, lines) => lines.map(l => /#@par\s*$/.test(l) ? (L === 'R' ? 'n <- ' + d.n + '; p0 <- ' + d.p + '; alpha <- ' + d.a + '; x <- ' + d.x : 'n, p0, alpha, x = ' + d.n + ', ' + d.p + ', ' + d.a + ', ' + d.x) + '   # H0: p = p0, HA: p > p0 #@par' : l),
@@ -130,12 +136,18 @@ LB.on(function tracers7() {
       rec.step('p', 'P-Wert \\(=\\PP_{p_0}(X\\ge' + d.x + ')=\\Res{' + LB.fmt(pv, 4) + '}\\)', st());
       rec.step('out', 'x = ' + d.x + (d.x >= g ? ' ∈ K → <b class="bad">H₀ verwerfen</b>' : ' ∉ K → <b class="ok">H₀ nicht verwerfen</b>'), st());
     },
-    view: s => '<table class="tbl"><tr><th>g</th><th class="r">P(X ≥ g)</th><th>≤ α?</th></tr>' + s.tried.map(r => '<tr><td class="kw-idx">' + r[0] + '</td><td class="r">' + LB.fmt(r[1], 4) + '</td><td>' + (r[1] <= s.d.a ? '<span class="ok">ja</span>' : 'nein') + '</td></tr>').join('') + '</table>' +
+    view: s => '<table class="tbl"><tr><th>g</th><th class="r">P(X ≥ g)</th><th>≤ α?</th></tr>' + s.tried.map(r => '<tr><td class="kw-idx">' + r[0] + '</td><td class="r kw-chg">' + LB.fmt(r[1], 4) + '</td><td>' + (r[1] <= s.d.a ? '<span class="ok">ja</span>' : 'nein') + '</td></tr>').join('') + '</table>' +
       LB.kvHTML([['g', s.g, 'idx'], ['α', s.d.a, 'par'], ['x', s.d.x, 'mem'], ['P-Wert', s.pv === null ? '–' : LB.fmt(s.pv, 4), 'res']])
   });
 
   new LB.Tracer({
-    id: 'trTt', title: 't-Test Schritt für Schritt', langs: CODE('k7_ttest'), input: '5.1 4.9 5.6 5.8 5.3 5.5 5.2 5.4 ; 5 ; 0.05', hint: 'Daten ; μ₀ ; α (zweiseitig)',
+    id: 'trTt', title: 't-Test Schritt für Schritt', langs: CODE('k7_ttest'),
+    vars: [['x', 'mem', 'Messwerte'], ['mu0', 'par', 'Sollwert unter H₀'], ['alpha', 'par', 'Niveau (zweiseitig)'], ['n', 'par', 'Stichprobenumfang'], ['xbar|s', 'mem', 'Mittel und Standardabweichung der Daten'],
+      ['se', 'rule', 'geschätzter Standardfehler s/√n'], ['t', 'res', 'Teststatistik: Abstand x̄ − μ₀ in Standardfehlern'], ['krit', 'rule', 'kritischer Wert t_{n−1, 1−α/2}'], ['p', 'res', 'P-Wert'], ['vi', 'res', 'Vertrauensintervall für μ']],
+    together: 'Die Daten liefern <span class="kw-mem">xbar</span> und <span class="kw-mem">s</span>, daraus den Standardfehler <span class="kw-rule">se</span>. <span class="kw-res">t</span> misst, wie viele Standardfehler das Mittel vom Sollwert entfernt ist. Ist |t| ≥ <span class="kw-rule">krit</span> (gleichbedeutend: p ≤ α, oder μ₀ liegt nicht im VI), wird H₀ verworfen.',
+    say: (s, d) => (Math.abs(s.t) >= s.k ? 'Das Mittel ' + LB.fmt(s.xbar, 3) + ' weicht signifikant vom Sollwert ' + d.m0 + ' ab (t = ' + LB.fmt(s.t, 2) + ', P-Wert ' + LB.fmt(s.p, 4) + '). '
+      : 'Das Mittel ' + LB.fmt(s.xbar, 3) + ' weicht nicht signifikant vom Sollwert ' + d.m0 + ' ab (t = ' + LB.fmt(s.t, 2) + ', P-Wert ' + LB.fmt(s.p, 4) + '). ') + 'Plausible Werte für den wahren Erwartungswert liegen zwischen ' + LB.fmt(s.lo, 3) + ' und ' + LB.fmt(s.hi, 3) + '.',
+    input: '5.1 4.9 5.6 5.8 5.3 5.5 5.2 5.4 ; 5 ; 0.05', hint: 'Daten ; μ₀ ; α (zweiseitig)',
     examples: [['acht Messungen', '5.1 4.9 5.6 5.8 5.3 5.5 5.2 5.4 ; 5 ; 0.05'], ['Füllmengen', '1002.1 1003.4 999.2 1001.8 1004.0 1002.9 1000.6 1003.1 1001.2 1002.5 ; 1000 ; 0.05'], ['kein Effekt', '10.2 9.8 10.1 9.7 10.3 9.9 ; 10 ; 0.05']],
     parse: s => { const p = s.split(';'); if (p.length !== 3) throw new Error('Format: Daten ; mu0 ; alpha'); const x = S.parse(p[0]), m0 = parseFloat(p[1]), a = parseFloat(p[2]);
       if (x.length < 2 || isNaN(m0) || !(a > 0 && a < 0.5)) throw new Error('mindestens 2 Werte, 0 < α < 0.5'); return { x, m0, a }; },

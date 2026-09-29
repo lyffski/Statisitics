@@ -87,7 +87,12 @@ LB.on(function ciWall() {
 /* ================================================================ Tracer */
 LB.on(function tracers6() {
   new LB.Tracer({
-    id: 'trMl', title: 'log-Likelihood auf einem Gitter maximieren', langs: CODE('k6_ml'), input: '2 3 1 4 0', hint: 'Poisson-Daten (ganze Zahlen ≥ 0)',
+    id: 'trMl', title: 'log-Likelihood auf einem Gitter maximieren', langs: CODE('k6_ml'),
+    vars: [['x', 'mem', 'beobachtete Anzahlen (Poisson-Daten)'], ['lambdas', 'par', 'Gitter der Kandidaten für λ'], ['lam', 'idx', 'aktueller Kandidat'], ['l', 'chg', 'log-Likelihood ℓ(λ) der Daten für diesen Kandidaten'],
+      ['best', 'res', 'bisher bester Kandidat'], ['bestL', 'res', 'dazugehöriges größtes ℓ']],
+    together: 'Für jeden Kandidaten <span class="kw-idx">lam</span> misst <span class="kw-chg">l</span>, wie gut λ die Daten <span class="kw-mem">x</span> erklärt (Summe der log-W\'keiten). Ist l größer als alles bisher, wird er als <span class="kw-res">best</span> gemerkt. Der ML-Schätzer ist das λ mit der größten Likelihood; bei Poisson ist das genau das Mittel x̄.',
+    say: (s, x) => 'Unter allen geprüften Werten erklärt λ = ' + s.best + ' die Beobachtungen am besten; exakt ist der ML-Schätzer das Mittel λ̂ = ' + LB.fmt(LB.S.mean(x), 3) + '. Aussage: im Mittel treten etwa ' + LB.fmt(LB.S.mean(x), 2) + ' Ereignisse pro Zeiteinheit auf; das ist eine Schätzung aus ' + x.length + ' Beobachtungen und damit selbst unsicher.',
+    input: '2 3 1 4 0', hint: 'Poisson-Daten (ganze Zahlen ≥ 0)',
     examples: [['Grundlage', '2 3 1 4 0'], ['seltene Ereignisse', '0 1 0 0 2 1 0'], ['viele Ereignisse', '3 4 2 5 3 4']],
     parse: s => { const x = S.parse(s); if (!x.length || x.some(v => v < 0 || v !== Math.round(v))) throw new Error('nicht-negative ganze Zahlen'); return x; },
     codeFor: (x, L, lines) => lines.map(l => /#@data\s*$/.test(l) ? (L === 'R' ? 'x <- c(' + x.join(', ') + ')' : 'x = np.array([' + x.join(', ') + '])') + '   # Daten #@data' : l),
@@ -106,12 +111,17 @@ LB.on(function tracers6() {
       cur = null;
       rec.step('out', 'Gitter-Maximum \\(\\lambda=' + best + '\\); exakt \\(\\Chg{\\hat\\lambda}=\\bar x=\\Res{' + LB.fmt(S.mean(x), 4) + '}\\)', st());
     },
-    view: s => '<table class="tbl"><tr><th>λ</th><th class="r">ℓ(λ)</th></tr>' + s.rows.map(r => '<tr' + (r[0] === s.best ? ' style="outline:1px solid var(--idx)"' : '') + '><td class="kw-par">' + r[0] + '</td><td class="r">' + LB.fmt(r[1], 4) + '</td></tr>').join('') + '</table>' +
-      LB.kvHTML([['aktuelles λ', s.cur === null ? '–' : s.cur, 'par'], ['bestes λ', s.best === null ? '–' : s.best, 'res'], ['bestes ℓ', s.best === null ? '–' : LB.fmt(s.bestL, 4), 'res']])
+    view: s => '<table class="tbl"><tr><th>λ</th><th class="r">ℓ(λ)</th></tr>' + s.rows.map(r => '<tr' + (r[0] === s.best ? ' style="outline:1px solid var(--idx)"' : '') + '><td class="kw-par">' + r[0] + '</td><td class="r kw-chg">' + LB.fmt(r[1], 4) + '</td></tr>').join('') + '</table>' +
+      LB.kvHTML([['lam (aktuell)', s.cur === null ? '–' : s.cur, 'idx'], ['bestes λ', s.best === null ? '–' : s.best, 'res'], ['bestes ℓ', s.best === null ? '–' : LB.fmt(s.bestL, 4), 'res']])
   });
 
   new LB.Tracer({
-    id: 'trVi', title: 'Standardfehler und Vertrauensintervall', langs: CODE('k6_vi'), input: '21.3 4 16 0.95', hint: 'x̄ σ n Niveau',
+    id: 'trVi', title: 'Standardfehler und Vertrauensintervall', langs: CODE('k6_vi'),
+    vars: [['xbar', 'mem', 'beobachtetes Mittel'], ['sigma', 'par', 'bekannte Standardabweichung einer Einzelmessung'], ['n', 'par', 'Anzahl Messungen'], ['alpha', 'par', '1 − Vertrauensniveau'],
+      ['se', 'rule', 'Standardfehler σ/√n: wie stark x̄ schwankt'], ['z', 'chg', 'Normal-Quantil z₁₋α/₂'], ['lo|hi', 'res', 'Grenzen des Vertrauensintervalls'], ['n_noetig', 'res', 'nötiges n für halbe Breite 0.5']],
+    together: 'Aus <span class="kw-par">sigma</span> und <span class="kw-par">n</span> entsteht der Standardfehler <span class="kw-rule">se</span>; das Niveau legt das Quantil <span class="kw-chg">z</span> fest. Das Intervall ist Schätzwert ± z · se. Mehr Messungen machen se kleiner (√n im Nenner), ein höheres Niveau macht z und damit das Intervall größer.',
+    say: s => 'Aus ' + s.d.n + ' Messungen mit Mittel ' + s.d.m + ' liegt der wahre Erwartungswert μ plausibel zwischen ' + LB.fmt(s.lo, 3) + ' und ' + LB.fmt(s.hi, 3) + ' (' + Math.round(s.d.l * 100) + '-Prozent-Vertrauensintervall). Genauer: das Verfahren trifft μ in ' + Math.round(s.d.l * 100) + ' Prozent aller Wiederholungen. Für eine halbe Breite von 0.5 bräuchte man ' + s.nn + ' Messungen.',
+    input: '21.3 4 16 0.95', hint: 'x̄ σ n Niveau',
     examples: [['Messungen', '21.3 4 16 0.95'], ['99 %', '21.3 4 16 0.99'], ['Grundlage n = 100', '50 10 100 0.95'], ['Grundlage n = 64', '100 16 64 0.95']],
     parse: s => { const v = S.parse(s); if (v.length !== 4 || v[1] <= 0 || v[2] < 1 || v[3] <= 0 || v[3] >= 1) throw new Error('Format: x̄ σ n Niveau (0 < Niveau < 1)'); return { m: v[0], s: v[1], n: Math.round(v[2]), l: v[3] }; },
     codeFor: (d, L, lines) => lines.map(l => /#@par\s*$/.test(l) ? (L === 'R' ? 'xbar <- ' + d.m + '; sigma <- ' + d.s + '; n <- ' + d.n : 'xbar, sigma, n = ' + d.m + ', ' + d.s + ', ' + d.n) + '   # Mittel, sigma, Umfang #@par' :

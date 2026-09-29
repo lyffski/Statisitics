@@ -91,6 +91,23 @@ def x_vn(m):
             % (cls, g, a['id'], a.get('sec', ''), badge, lab, a['q'], task.group(1) if task else '', sm, rest))
 
 
+def split_semis(h):
+    """Nach „; “ außerhalb von Formeln, Code und Tabellen eine neue Zeile beginnen (mehr Luft)."""
+    out, i, depth = [], 0, 0
+    while i < len(h):
+        for o, c in (('\\(', '\\)'), ('\\[', '\\]'), ('<code', '</code>'), ('<table', '</table>')):
+            if h.startswith(o, i):
+                j = h.find(c, i)
+                if j < 0: j = len(h) - len(c)
+                out.append(h[i:j + len(c)]); i = j + len(c); break
+        else:
+            if h.startswith('; ', i):
+                out.append(';<br>'); i += 2
+            else:
+                out.append(h[i]); i += 1
+    return ''.join(out)
+
+
 def x_pa(m):
     """🎓 Prüfungsaufgabe: ein Szenario, Teilaufgaben (a), (b), … mit je eigener, einzeln aufklappbarer Lösung.
     <x-pa id sec q [scope="kap"]><x-task>…</x-task><x-cover>…</x-cover><x-part h="(a) …" ref="1.2">x-step/x-res/x-trap</x-part>…</x-pa>"""
@@ -110,6 +127,9 @@ def x_pa(m):
     for pa, pb in parts:
         pat = attrs(pa)
         ref = ' <span class="pa-ref">→ %s</span>' % pat['ref'] if pat.get('ref') else ''
+        pb = re.sub(r'<x-say>(.*?)</x-say>', r'<div class="pa-say"><b>🗣 In Worten:</b> \1</div>', pb, flags=re.S)
+        pb = re.sub(r'(<x-step[^>]*>)(.*?)(</x-step>)', lambda q: q.group(1) + split_semis(q.group(2)) + q.group(3), pb, flags=re.S)
+        pb = re.sub(r'(<x-res>)(.*?)(</x-res>)', lambda q: q.group(1) + split_semis(q.group(2)) + q.group(3), pb, flags=re.S)
         out += '<details class="pa-part"><summary>%s%s</summary>%s</details>' % (pat.get('h', ''), ref, common(number_steps(pb)))
     return out + '</div>'
 
@@ -208,9 +228,11 @@ def x_code2(m):
     r, py = code_lines(name, 'R'), code_lines(name, 'py')
     if not r and not py:
         raise SystemExit('Code fehlt: ' + name)
-    return ('<div class="two code2">%s%s</div>' % (
+    say = read(os.path.join(T, 'code', name + '.say.html')).strip()
+    return ('<div class="two code2">%s%s</div>%s' % (
         code_block(r, 'R', 'R · ' + t, 'Basis-R, vollständig lauffähig') if r else '',
-        code_block(py, 'Python', 'Python · ' + t, 'numpy / scipy / matplotlib, vollständig lauffähig') if py else ''))
+        code_block(py, 'Python', 'Python · ' + t, 'numpy / scipy / matplotlib, vollständig lauffähig') if py else '',
+        ('<div class="say-box"><b>🗣 Was sagt das Ergebnis? (Aussage über die Daten)</b><p>%s</p></div>' % say) if say else ''))
 
 
 def vid_title(f):

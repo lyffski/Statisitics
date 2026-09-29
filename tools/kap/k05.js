@@ -73,6 +73,11 @@ LB.on(function napprox() {
 LB.on(function tracer5() {
   new LB.Tracer({
     id: 'trNa', title: 'Normalapproximation Schritt für Schritt', langs: CODE('k5_normapprox'),
+    vars: [['n|p', 'par', 'Parameter von X ~ Bin(n, p)'], ['x', 'mem', 'Grenze: gesucht ist P(X ≤ x)'], ['mu', 'chg', 'Erwartungswert np'], ['sigma', 'chg', 'Standardabweichung √(np(1 − p))'],
+      ['z', 'chg', 'Grenze in Standardabweichungen: (x − μ)/σ'], ['naeh', 'res', 'Näherung Φ(z) ohne Korrektur'], ['zk', 'chg', 'z mit Stetigkeitskorrektur (Grenze x + 0.5)'], ['naehk', 'res', 'Näherung Φ(zk) mit Korrektur'], ['exakt', 'res', 'exakter Binomialwert zum Vergleich']],
+    together: 'Aus <span class="kw-par">n</span> und <span class="kw-par">p</span> entstehen <span class="kw-chg">mu</span> und <span class="kw-chg">sigma</span>. Die Grenze <span class="kw-mem">x</span> wird damit standardisiert (<span class="kw-chg">z</span>) und in Φ eingesetzt. Weil X nur ganze Zahlen annimmt, verschiebt die Stetigkeitskorrektur die Grenze um 0.5 (<span class="kw-chg">zk</span>); der Vergleich mit <span class="kw-res">exakt</span> zeigt, welche Näherung besser ist.',
+    say: s => 'Höchstens ' + s.d.x + ' Erfolge bei ' + s.d.n + ' Versuchen gibt es mit W\'keit etwa ' + LB.fmt(s.ak, 3) + ' (exakt ' + LB.fmt(s.ex, 3) + '). Die Grenze liegt ' + LB.fmt(Math.abs(s.zk), 2) + ' Standardabweichungen ' + (s.zk < 0 ? 'unter' : 'über') + ' dem Erwartungswert ' + LB.fmt(s.mu, 1) + '. ' + (Math.abs(s.ak - s.ex) < Math.abs(s.a - s.ex) ? 'Die Stetigkeitskorrektur verbessert die Näherung.' : 'Hier bringt die Korrektur nichts.') + (s.sd * s.sd < 9 ? ' Da np(1 − p) &lt; 9 ist, ist die Normalnäherung nur grob.' : ''),
+   
     input: '100 0.3 25', hint: 'n p x (gesucht P(X ≤ x))',
     examples: [['Bin(100, 0.3), x = 25', '100 0.3 25'], ['Grundlage Bin(100, 0.5), x = 55', '100 0.5 55'], ['1000 Münzwürfe, x = 530', '1000 0.5 530'], ['kleines n: Bin(10, 0.1), x = 1', '10 0.1 1']],
     parse: s => { const v = S.parse(s); if (v.length !== 3) throw new Error('Format: n p x'); const [n, p, x] = v; if (n < 1 || n > 5000 || p <= 0 || p >= 1 || x < 0 || x > n) throw new Error('1 ≤ n ≤ 5000, 0 < p < 1, 0 ≤ x ≤ n'); return { n: Math.round(n), p, x: Math.round(x) }; },
@@ -89,8 +94,8 @@ LB.on(function tracer5() {
       v.ex = S.binomCdf(d.x, d.n, d.p); rec.step('ex', 'exakt \\(\\PP(X\\le' + d.x + ')=' + LB.fmt(v.ex, 4) + '\\)', st());
       rec.step('out', 'Fehler ohne Korrektur ' + LB.fmt(Math.abs(v.a - v.ex), 4) + ', mit Korrektur ' + LB.fmt(Math.abs(v.ak - v.ex), 4) + '.', st());
     },
-    view: s => LB.kvHTML([['μ', s.mu === null ? '–' : LB.fmt(s.mu, 3), 'par'], ['σ', s.sd === null ? '–' : LB.fmt(s.sd, 4), 'par'], ['z', s.z === null ? '–' : LB.fmt(s.z, 4), 'chg'], ['Φ(z)', s.a === null ? '–' : LB.fmt(s.a, 4), 'res'],
-      ['z korr.', s.zk === null ? '–' : LB.fmt(s.zk, 4), 'chg'], ['Φ korr.', s.ak === null ? '–' : LB.fmt(s.ak, 4), 'res'], ['exakt', s.ex === null ? '–' : LB.fmt(s.ex, 4), 'idx']])
+    view: s => LB.kvHTML([['mu = np', s.mu === null ? '–' : LB.fmt(s.mu, 3), 'chg'], ['sigma', s.sd === null ? '–' : LB.fmt(s.sd, 4), 'chg'], ['z', s.z === null ? '–' : LB.fmt(s.z, 4), 'chg'], ['naeh = Φ(z)', s.a === null ? '–' : LB.fmt(s.a, 4), 'res'],
+      ['zk (korrigiert)', s.zk === null ? '–' : LB.fmt(s.zk, 4), 'chg'], ['naehk = Φ(zk)', s.ak === null ? '–' : LB.fmt(s.ak, 4), 'res'], ['exakt', s.ex === null ? '–' : LB.fmt(s.ex, 4), 'res']])
   });
 });
 

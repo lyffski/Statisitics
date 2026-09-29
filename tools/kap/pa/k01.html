@@ -14,7 +14,7 @@
     <x-step h="Ein einzelner Ausgang.">Ein Elementarereignis ist ein Element \(\Mem{\omega}\in\Om\), zum Beispiel \(\Mem{\omega}=4\).</x-step>
     <x-step h="Ereignisse sind Teilmengen.">\(\mA=\{2,4,6\}\), \(\mB=\{4,5,6\}\), \(\Mem{C}=\{2,3,5\}\). Jedes ist eine Teilmenge \(\subseteq\Om\). \(\mA\) „tritt ein“, wenn der gewürfelte Ausgang in \(\mA\) liegt.</x-step>
     <x-res>\(\Om=\{1,\dots,6\}\), \(\omega=4\), \(\mA=\{2,4,6\}\), \(\mB=\{4,5,6\}\), \(\Mem{C}=\{2,3,5\}\).</x-res>
-  </x-part>
+  <x-say>Ein Wurf hat sechs mögliche Ausgänge; „gerade“, „mindestens 4“ und „Primzahl“ sind jeweils eine Auswahl dieser Ausgänge.</x-say></x-part>
   <x-part h="(b) Mengen-Operationen und De Morgan" ref="1.1">
     <x-step h="oder = Vereinigung.">\(\mA\cupc\mB=\{2,4,5,6\}\) (in A oder in B oder in beiden).</x-step>
     <x-step h="und = Schnitt.">\(\mA\capc\mB=\{4,6\}\).</x-step>
@@ -22,14 +22,14 @@
     <x-step h="De Morgan prüfen.">Links: \((\mA\cupc\mB)\co=\{1,3\}\). Rechts: \(\mA\co\capc\mB\co=\{1,3,5\}\capc\{1,2,3\}=\{1,3\}\). Gleich ✓. In Worten: „nicht (A oder B)“ = „nicht A und nicht B“.</x-step>
     <x-step h="Disjunkt heißt: Schnitt leer.">\(\mA\capc\mB=\{4,6\}\ne\varnothing\), \(\mA\capc\Mem{C}=\{2\}\), \(\mB\capc\Mem{C}=\{5\}\): keines der Paare ist disjunkt. Disjunkt sind z. B. \(\mA\) und \(\mA\co\).</x-step>
     <x-res>\(\mA\cupc\mB=\{2,4,5,6\}\), \(\mA\capc\mB=\{4,6\}\), \(\mA\co=\{1,3,5\}\), \(\mA\setm\mB=\{2\}\), De Morgan ✓, A/B/C paarweise nicht disjunkt.</x-res>
-  </x-part>
+  <x-say>„Gerade oder mindestens 4“ trifft auf 2, 4, 5, 6 zu, „gerade und mindestens 4“ nur auf 4 und 6; keine zwei der drei Ereignisse schließen sich aus.</x-say></x-part>
   <x-part h="(c) Die drei Axiome prüfen" ref="1.1">
     <x-step h="(A1) Nichtnegativität.">\(\PP(\mA)\ge0\) für jedes Ereignis. Hier ist \(q(\{6\})=-0.1<0\) → <b>verletzt</b>.</x-step>
     <x-step h="(A2) Normierung.">\(\PP(\Om)=1\): \(0.3+0.3+0.2+0.1+0.2-0.1=1.0\) ✓. Die Summe allein reicht also nicht!</x-step>
     <x-step h="(A3) Additivität.">Für disjunkte Ereignisse addieren sich die W'keiten. Definiert man \(q(E)=\sum_{\omega\in E}q(\omega)\), ist (A3) automatisch erfüllt, z. B. \(q(\{5,6\})=0.2-0.1=0.1\).</x-step>
     <x-res>Kein Wahrscheinlichkeitsmaß, weil (A1) verletzt ist. Das faire Modell \(\PP(E)=|E|/6\) erfüllt dagegen alle drei.</x-res>
     <x-trap>„Summe = 1“ prüfen und fertig. Jede einzelne W'keit muss zusätzlich ≥ 0 sein.</x-trap>
-  </x-part>
+  <x-say>Die vorgeschlagenen Zahlen sind kein zulässiges Modell, weil eine Wahrscheinlichkeit negativ wäre, auch wenn sie sich zu 1 summieren.</x-say></x-part>
   <x-part h="(d) Rechenregeln aus den Axiomen herleiten" ref="1.1">
     <x-step h="Komplement.">\(\mA\) und \(\mA\co\) sind disjunkt, \(\mA\cupc\mA\co=\Om\). Mit (A3) und (A2): \(\PP(\mA)+\PP(\mA\co)=\PP(\Om)=1\), also \(\PP(\mA\co)=1-\PP(\mA)\).</x-step>
     <x-step h="Leere Menge.">\(\varnothing=\Om\co\), also \(\PP(\varnothing)=1-1=0\).</x-step>
@@ -37,20 +37,20 @@
     \[\Res{\PP(\mA\cupc\mB)}=\PP(\mA)+\PP(\mB)-\PP(\mA\capc\mB).\]</x-step>
     <x-step h="Einsetzen.">\(\PP(\mA\cupc\mB)=\tfrac36+\tfrac36-\tfrac26=\tfrac46=\tfrac23\). Direkt: \(|\{2,4,5,6\}|/6=\tfrac23\) ✓. Differenz: \(\PP(\mA\setm\mB)=\PP(\mA)-\PP(\mA\capc\mB)=\tfrac36-\tfrac26=\tfrac16\) ✓ (\(=\PP(\{2\})\)).</x-step>
     <x-res>\(\PP(\mA\cupc\mB)=2/3\), \(\PP(\mA\setm\mB)=1/6\).</x-res>
-  </x-part>
+  <x-say>Mit Wahrscheinlichkeit 2/3 ist die Augenzahl gerade oder mindestens 4; nur mit 1/6 ist sie gerade, aber kleiner als 4 (also genau 2).</x-say></x-part>
   <x-part h="(e) Siebformel für drei Ereignisse" ref="1.1">
     <x-step h="Einschließen.">\(\PP(\mA)+\PP(\mB)+\PP(\Mem{C})=\tfrac36+\tfrac36+\tfrac36=\tfrac96\).</x-step>
     <x-step h="Paare ausschließen.">\(\PP(\mA\capc\mB)=\tfrac26\), \(\PP(\mA\capc\Mem{C})=\tfrac16\), \(\PP(\mB\capc\Mem{C})=\tfrac16\): Summe \(\tfrac46\).</x-step>
     <x-step h="Dreierschnitt wieder einschließen.">\(\mA\capc\mB\capc\Mem{C}=\varnothing\), also \(+0\).</x-step>
     <x-step h="Zusammen.">\(\Res{\PP(\mA\cupc\mB\cupc\Mem{C})}=\tfrac96-\tfrac46+0=\tfrac56\). Direkt: \(\mA\cupc\mB\cupc\Mem{C}=\{2,3,4,5,6\}\) → \(\tfrac56\) ✓. Noch schneller mit Komplement: nur die 1 fehlt.</x-step>
     <x-res>\(\PP(\mA\cupc\mB\cupc\Mem{C})=5/6\).</x-res>
-  </x-part>
+  <x-say>In 5 von 6 Würfen trifft mindestens eine der drei Eigenschaften zu; nur die 1 erfüllt keine.</x-say></x-part>
   <x-part h="(f) Was bedeutet 0.567?" ref="1.1">
     <x-step h="Relative Häufigkeit.">\(34/60\approx0.567\) ist eine <b>Beobachtung</b>, keine Wahrscheinlichkeit.</x-step>
     <x-step h="Frequentistisch.">\(\PP(\mA)\) ist der Grenzwert der relativen Häufigkeit bei unendlich vielen Wiederholungen. Nach 60 Würfen schwankt der Anteil noch deutlich um \(0.5\) (Gesetz der großen Zahlen, Kap. 5).</x-step>
     <x-step h="Subjektiv (Bayes).">\(\PP(\mA)\) drückt den Glauben aus; bei einem als fair angenommenen Würfel ist das \(0.5\).</x-step>
     <x-res>Nein: das Modell sagt \(\PP(\mA)=0.5\); 0.567 ist eine zufällig schwankende relative Häufigkeit.</x-res>
-  </x-part>
+  <x-say>34 gerade Zahlen in 60 Würfen sind eine zufällig schwankende Beobachtung; sie widersprechen dem fairen Würfel mit P = 0.5 nicht.</x-say></x-part>
 </x-pa>
 <!-- @s1-2 -->
 <h3 id="pa-1-2-h" data-m="🎓 Prüfungsaufgabe 1.2|alles aus 1.2 von null">🎓 Prüfungsaufgabe: alles aus 1.2 von null</h3>
@@ -67,35 +67,35 @@
     <x-step h="Gültig?">Alle \(p(k)\ge0\) und \(\sum p(k)=5\cdot0.15+0.25=1\) ✓.</x-step>
     <x-step h="Ereignis-W'keit = Summe der Elementar-W'keiten.">\(\PP(\{2,4,6\})=p(2)+p(4)+p(6)=0.15+0.15+0.25=\Res{0.55}\).</x-step>
     <x-res>Gültig; \(\PP(\text{gerade})=0.55\), nicht 0.5, weil die Ausgänge nicht gleich wahrscheinlich sind.</x-res>
-  </x-part>
+  <x-say>Beim gezinkten Würfel ist eine gerade Zahl mit 55 Prozent etwas wahrscheinlicher als beim fairen, weil die 6 häufiger kommt.</x-say></x-part>
   <x-part h="(b) Laplace mit zwei Würfeln" ref="1.2">
     <x-step h="Schritt 1: Ω mit gleich wahrscheinlichen Ausgängen.">\(\Om=\{(i,j):i,j\in\{1,\dots,6\}\}\), \(|\Om|=36\). Die Würfel sind fair und unabhängig, also hat jedes geordnete Paar W'keit \(1/36\) (Symmetrie).</x-step>
     <x-step h="Schritt 2: günstige Fälle zählen.">Summe 8: \((2,6),(3,5),(4,4),(5,3),(6,2)\) → 5. Pasch: \((1,1),\dots,(6,6)\) → 6.</x-step>
     <x-step h="Schritt 3: teilen.">\(\PP(\text{Summe}=8)=\tfrac{5}{36}\approx0.139\), \(\PP(\text{Pasch})=\tfrac{6}{36}=\tfrac16\).</x-step>
     <x-res>\(5/36\) und \(1/6\).</x-res>
     <x-trap>Ungeordnet zählen ({3,5} einmal) macht die Ausgänge ungleich wahrscheinlich: dann gilt Laplace nicht mehr.</x-trap>
-  </x-part>
+  <x-say>Mit zwei fairen Würfeln kommt Augensumme 8 in etwa 14 von 100 Würfen vor, ein Pasch in etwa jedem sechsten Wurf.</x-say></x-part>
   <x-part h="(c) Produktregel" ref="1.2">
     <x-step h="Alle PINs.">4 Stellen, je 10 Möglichkeiten: \(10\cdot10\cdot10\cdot10=10^4=10\,000\).</x-step>
     <x-step h="Alle verschieden.">\(10\cdot9\cdot8\cdot7=5040\) (jede Stelle eine Möglichkeit weniger).</x-step>
     <x-step h="Laplace.">\(\PP=\tfrac{5040}{10\,000}=\Res{0.504}\).</x-step>
     <x-res>10 000 PINs; P(alle verschieden) = 0.504.</x-res>
-  </x-part>
+  <x-say>Etwa jede zweite zufällige PIN (50.4 Prozent) hat vier verschiedene Ziffern.</x-say></x-part>
   <x-part h="(d) Fakultät" ref="1.2">
     <x-step h="Anordnungen.">\(5!=5\cdot4\cdot3\cdot2\cdot1=120\).</x-step>
     <x-step h="Günstig.">Anna links fest, die anderen 4 beliebig: \(4!=24\).</x-step>
     <x-res>\(\PP=\tfrac{24}{120}=\tfrac15\): jede der 5 Positionen ist für Anna gleich wahrscheinlich.</x-res>
-  </x-part>
+  <x-say>Anna steht in jeder fünften zufälligen Aufstellung ganz links, genau wie jede andere Person.</x-say></x-part>
   <x-part h="(e) Binomialkoeffizient" ref="1.2">
     <x-step h="Mögliche Ausschüsse (ohne Reihenfolge).">\(\binom{10}{3}=\tfrac{10!}{3!\,7!}=120\).</x-step>
     <x-step h="Günstige: 2 aus 6 Frauen UND 1 aus 4 Männern.">\(\binom62\binom41=15\cdot4=60\) (Produktregel).</x-step>
     <x-res>\(\PP=\tfrac{60}{120}=0.5\).</x-res>
-  </x-part>
+  <x-say>Genau zwei Frauen im Ausschuss kommen in der Hälfte aller zufälligen Auslosungen vor.</x-say></x-part>
   <x-part h="(f) Geburtstagsproblem über das Gegenereignis" ref="1.2">
     <x-step h="Gegenereignis ist leichter.">„Alle verschieden“: \(|\Om|=365^{23}\), günstig \(365\cdot364\cdots343\) (Produktregel).</x-step>
     <x-step h="Rechnen.">\(\PP(\text{alle verschieden})=\prod_{i=0}^{22}\tfrac{365-i}{365}\approx0.4927\).</x-step>
     <x-res>\(\PP(\text{mind. ein gemeinsamer Geburtstag})=1-0.4927\approx0.507\): schon bei 23 Personen über 50 Prozent.</x-res>
-  </x-part>
+  <x-say>Schon in einer Gruppe von 23 Personen haben in etwas mehr als der Hälfte der Fälle zwei denselben Geburtstag.</x-say></x-part>
   <x-part h="(g) Abzählen mit dem Computer" ref="1.2">
     <x-step h="R."><code>s &lt;- outer(1:6, 1:6, "+"); mean(s == 8)</code> → 0.1389</x-step>
     <x-step h="Python."><code>s = np.add.outer(np.arange(1, 7), np.arange(1, 7)); print((s == 8).mean())</code> → 0.1389</x-step>
@@ -116,16 +116,16 @@
     <x-step h="Definition.">\(\mA,\mB\) unabhängig \(:\Leftrightarrow\PP(\mA\capc\mB)=\PP(\mA)\PP(\mB)\).</x-step>
     <x-step h="Beide Seiten.">\(\mA\capc\mB=\{2,4\}\) → \(\tfrac26=\tfrac13\). Produkt: \(\tfrac12\cdot\tfrac46=\tfrac13\).</x-step>
     <x-res>Gleich → unabhängig. Deutung: Wissen „höchstens 4“ ändert die Chance auf „gerade“ nicht (2 von 4 bleibt ½).</x-res>
-  </x-part>
+  <x-say>Zu wissen, dass die Augenzahl höchstens 4 ist, ändert die Chance auf „gerade“ nicht: sie bleibt ½.</x-say></x-part>
   <x-part h="(b) Produkt-Test A, C" ref="1.3">
     <x-step h="Beide Seiten.">\(\mA\capc\Mem{C}=\{4,6\}\) → \(\tfrac13\). Produkt: \(\tfrac12\cdot\tfrac12=\tfrac14\).</x-step>
     <x-res>\(\tfrac13\ne\tfrac14\) → abhängig: unter „mindestens 4“ sind 2 von 3 Zahlen gerade.</x-res>
-  </x-part>
+  <x-say>Wer weiß, dass mindestens 4 gewürfelt wurde, kann eine gerade Zahl mit 2/3 statt ½ erwarten: die Ereignisse hängen zusammen.</x-say></x-part>
   <x-part h="(c) Disjunkt heißt nicht unabhängig" ref="1.3">
     <x-step h="Rechnen.">\(\PP(\mA\capc\mA\co)=\PP(\varnothing)=0\), aber \(\PP(\mA)\PP(\mA\co)=\tfrac14\).</x-step>
     <x-res>Abhängig, sogar maximal: tritt A ein, ist \(\mA\co\) unmöglich.</x-res>
     <x-trap>Disjunkt (schließen sich aus) wird oft mit unabhängig (beeinflussen sich nicht) verwechselt. Mit positiven W'keiten sind disjunkte Ereignisse <b>nie</b> unabhängig.</x-trap>
-  </x-part>
+  <x-say>Zwei Ereignisse, die sich ausschließen, sind stark abhängig: tritt das eine ein, ist das andere unmöglich.</x-say></x-part>
   <x-part h="(d) Komplemente übernehmen die Unabhängigkeit" ref="1.3">
     <x-step h="Allgemein.">\(\PP(\mA\co\capc\mB)=\PP(\mB)-\PP(\mA\capc\mB)=\PP(\mB)-\PP(\mA)\PP(\mB)=(1-\PP(\mA))\PP(\mB)=\PP(\mA\co)\PP(\mB)\).</x-step>
     <x-step h="Zahlen.">\(\mA\co\capc\mB=\{1,3\}\) → \(\tfrac13\); \(\tfrac12\cdot\tfrac23=\tfrac13\) ✓.</x-step>
@@ -136,16 +136,16 @@
     <x-step h="Paare.">Jeder Paarschnitt ist \(\{KK\}\): \(\tfrac14=\tfrac12\cdot\tfrac12\) ✓ für alle drei Paare.</x-step>
     <x-step h="Alle drei.">\(\PP(E_1\capc E_2\capc E_3)=\PP(\{KK\})=\tfrac14\), aber \(\tfrac12\cdot\tfrac12\cdot\tfrac12=\tfrac18\).</x-step>
     <x-res>Paarweise unabhängig, aber nicht gemeinsam. Für n Ereignisse muss die Produktformel für <b>jede</b> Teilauswahl gelten.</x-res>
-  </x-part>
+  <x-say>Je zwei der Münz-Ereignisse beeinflussen sich nicht, alle drei zusammen aber schon: kennt man zwei, steht das dritte fest.</x-say></x-part>
   <x-part h="(f) Reihen- und Parallelschaltung" ref="1.3">
     <x-step h="Reihe: beide müssen funktionieren.">\(\PP=(1-0.1)(1-0.05)=0.9\cdot0.95=\Res{0.855}\) (Unabhängigkeit → Produkt).</x-step>
     <x-step h="Parallel: mindestens eines funktioniert.">Gegenereignis „beide fallen aus“: \(0.1\cdot0.05=0.005\), also \(\PP=1-0.005=\Res{0.995}\).</x-step>
     <x-res>Reihe 0.855, parallel 0.995.</x-res>
-  </x-part>
+  <x-say>In Reihe funktioniert das Gerät in 85.5 Prozent der Fälle, parallel in 99.5 Prozent: Redundanz macht es viel zuverlässiger.</x-say></x-part>
   <x-part h="(g) Mindestens eines von zehn" ref="1.3">
     <x-step h="Gegenereignis.">„Keines fällt aus“: \(0.98^{10}\approx0.8171\) (Produkt dank Unabhängigkeit).</x-step>
     <x-res>\(\PP(\text{mind. ein Ausfall})=1-0.98^{10}\approx0.183\).</x-res>
-  </x-part>
+  <x-say>Bei zehn Bauteilen fällt in etwa 18 von 100 Geräten mindestens eines aus, obwohl jedes einzelne nur mit 2 Prozent ausfällt.</x-say></x-part>
 </x-pa>
 <!-- @s1-4 -->
 <h3 id="pa-1-4-h" data-m="🎓 Prüfungsaufgabe 1.4|alles aus 1.4 von null">🎓 Prüfungsaufgabe: alles aus 1.4 von null</h3>
@@ -162,26 +162,26 @@
     <x-step h="Definition.">\(\PP(R_2\given R_1)=\dfrac{\PP(R_1\capc R_2)}{\PP(R_1)}\). Laplace über 2er-Teilmengen: \(\PP(R_1\capc R_2)=\binom52/\binom82=\tfrac{10}{28}=\tfrac5{14}\), \(\PP(R_1)=\tfrac58\).</x-step>
     <x-step h="Teilen.">\(\tfrac{5/14}{5/8}=\tfrac{8}{14}=\tfrac47\) ✓.</x-step>
     <x-res>\(\PP(R_2\given R_1)=4/7\approx0.571\).</x-res>
-  </x-part>
+  <x-say>Nachdem eine rote Kugel gezogen wurde, ist die zweite mit W'keit 4/7 ≈ 57 Prozent wieder rot.</x-say></x-part>
   <x-part h="(b) Multiplikationsregel" ref="1.4">
     <x-step h="Regel.">\(\PP(R_1\capc R_2)=\PP(R_1)\,\PP(R_2\given R_1)\): Definition nach dem Schnitt aufgelöst.</x-step>
     <x-res>\(\tfrac58\cdot\tfrac47=\tfrac{20}{56}=\tfrac5{14}\approx0.357\), passt zu (a).</x-res>
-  </x-part>
+  <x-say>In etwa 36 von 100 Ziehungen sind beide Kugeln rot.</x-say></x-part>
   <x-part h="(c) Komplement unter Bedingung" ref="1.4">
     <x-step h="Regel.">Für festes \(R_1\) ist \(\PP(\cdot\given R_1)\) wieder ein W'maß, also gilt die Komplementregel.</x-step>
     <x-res>\(\PP(R_2\co\given R_1)=1-\tfrac47=\tfrac37\) (3 blaue von 7 übrigen ✓).</x-res>
-  </x-part>
+  <x-say>Nach einer roten Kugel ist die zweite mit 3/7 ≈ 43 Prozent blau.</x-say></x-part>
   <x-part h="(d) Das Warnschild" ref="1.4">
     <x-step h="P(M).">Gegenereignis: beide blau, \(\tfrac38\cdot\tfrac27=\tfrac{6}{56}\). Also \(\PP(M)=1-\tfrac6{56}=\tfrac{25}{28}\).</x-step>
     <x-step h="P(R₁ | M).">\(R_1\subseteq M\), also \(R_1\capc M=R_1\): \(\PP(R_1\given M)=\tfrac{5/8}{25/28}=\Res{0.7}\).</x-step>
     <x-step h="P(M | R₁).">Wenn die erste rot ist, gibt es sicher mindestens eine rote: \(\PP(M\given R_1)=\Res{1}\).</x-step>
     <x-res>0.7 ≠ 1: die Bedingung darf man nicht einfach umdrehen. Das Umdrehen geht nur mit Bayes (1.4.1).</x-res>
-  </x-part>
+  <x-say>Unter den Ziehungen mit mindestens einer roten Kugel ist die erste in 70 Prozent rot; umgekehrt folgt aus „erste rot“ sicher „mindestens eine rot“. Die Richtung der Bedingung zählt.</x-say></x-part>
   <x-part h="(e) Unabhängig?" ref="1.4">
     <x-step h="Kriterium.">Unabhängig \(\Leftrightarrow\PP(R_2\given R_1)=\PP(R_2)\). Aus Symmetrie ist jede Kugel an Position 2 gleich wahrscheinlich: \(\PP(R_2)=\tfrac58\).</x-step>
     <x-step h="Vergleich.">\(\tfrac47\approx0.571\ne\tfrac58=0.625\) → abhängig.</x-step>
     <x-res>Ohne Zurücklegen abhängig. Mit Zurücklegen: \(\PP(R_2\given R_1)=\tfrac58=\PP(R_2)\) → unabhängig, \(\PP(R_1\capc R_2)=\tfrac{25}{64}\).</x-res>
-  </x-part>
+  <x-say>Ohne Zurücklegen beeinflusst die erste Kugel die zweite; mit Zurücklegen wären die Ziehungen unabhängig.</x-say></x-part>
 </x-pa>
 <!-- @s1-5 -->
 <h3 id="pa-1-5-h" data-m="🎓 Prüfungsaufgabe 1.4.1|alles aus 1.4.1 von null">🎓 Prüfungsaufgabe: alles aus 1.4.1 von null</h3>
@@ -198,31 +198,31 @@
     <x-step h="Stufe 1: Klasse, Stufe 2: Wort.">Erste Äste \(\PP(B_i)\): 0.6, 0.3, 0.1. Zweite Äste \(\PP(G\given B_i)\): 0.01, 0.10, 0.60.</x-step>
     <x-step h="Pfadregel = Multiplikationsregel.">\(\PP(B_1\capc G)=0.6\cdot0.01=0.006\), \(\PP(B_2\capc G)=0.3\cdot0.10=0.03\), \(\PP(B_3\capc G)=0.1\cdot0.60=0.06\).</x-step>
     <x-res>Pfade: 0.006, 0.03, 0.06.</x-res>
-  </x-part>
+  <x-say>Von allen Mails sind 6 Prozent Spam mit dem Wort „Gewinn“, 3 Prozent Newsletter damit, 0.6 Prozent private damit.</x-say></x-part>
   <x-part h="(b) Totale Wahrscheinlichkeit" ref="1.4.1">
     <x-step h="Voraussetzung.">\(B_1,B_2,B_3\) bilden eine Partition: disjunkt, zusammen \(\Om\) (jede Mail genau eine Klasse).</x-step>
     <x-step h="Summe aller G-Pfade.">\(\Res{\PP(G)}=\sum_i\PP(G\given B_i)\PP(B_i)=0.006+0.03+0.06=0.096\).</x-step>
     <x-res>\(\PP(G)=0.096\).</x-res>
-  </x-part>
+  <x-say>Knapp 10 Prozent aller Mails (9.6 Prozent) enthalten das Wort „Gewinn“.</x-say></x-part>
   <x-part h="(c) Bayes: die Bedingung umdrehen" ref="1.4.1">
     <x-step h="Formel.">\(\PP(B_i\given G)=\dfrac{\PP(G\given B_i)\PP(B_i)}{\PP(G)}\): eigener Pfad durch alle G-Pfade.</x-step>
     <x-step h="Zahlen.">\(\tfrac{0.006}{0.096}=0.0625\), \(\tfrac{0.03}{0.096}=0.3125\), \(\tfrac{0.06}{0.096}=\Res{0.625}\). Summe 1 ✓.</x-step>
     <x-res>Mit „Gewinn“ ist die Mail zu 62.5 Prozent Spam (vorher 10 Prozent).</x-res>
-  </x-part>
+  <x-say>Eine Mail mit „Gewinn“ ist zu 62.5 Prozent Spam, obwohl insgesamt nur 10 Prozent Spam sind: das Wort ist ein starkes Indiz.</x-say></x-part>
   <x-part h="(d) Bayes ohne das Wort" ref="1.4.1">
     <x-step h="Pfade für G^c.">\(\PP(G\co\given B_3)=0.4\) → \(0.1\cdot0.4=0.04\); \(\PP(G\co)=1-0.096=0.904\).</x-step>
     <x-res>\(\PP(B_3\given G\co)=\tfrac{0.04}{0.904}\approx0.044\).</x-res>
-  </x-part>
+  <x-say>Eine Mail ohne „Gewinn“ ist nur zu 4.4 Prozent Spam.</x-say></x-part>
   <x-part h="(e) Basisraten-Effekt" ref="1.4.1">
     <x-step h="Neue Priors.">\(\PP(G)=0.69\cdot0.01+0.3\cdot0.1+0.01\cdot0.6=0.0069+0.03+0.006=0.0429\).</x-step>
     <x-step h="Bayes.">\(\PP(B_3\given G)=\tfrac{0.006}{0.0429}\approx\Res{0.140}\).</x-step>
     <x-res>Gleiche Wort-W'keiten, aber nur noch 14 Prozent: bei seltenen Klassen dominieren die Fehlalarme der häufigen Klassen.</x-res>
-  </x-part>
+  <x-say>Wäre Spam selten (1 Prozent), wäre eine Mail mit „Gewinn“ nur zu 14 Prozent Spam: die Basisrate bestimmt das Ergebnis mit.</x-say></x-part>
   <x-part h="(f) Zweites Wort: Posterior wird Prior" ref="1.4.1">
     <x-step h="Neuer Prior = Ergebnis aus (c).">0.0625, 0.3125, 0.625.</x-step>
     <x-step h="Neue Pfade.">\(0.0625\cdot0.02=0.00125\), \(0.3125\cdot0.2=0.0625\), \(0.625\cdot0.5=0.3125\); Summe 0.37625.</x-step>
     <x-res>\(\PP(B_3\given G,\text{gratis})=\tfrac{0.3125}{0.37625}\approx0.831\).</x-res>
-  </x-part>
+  <x-say>Mit beiden Wörtern „Gewinn“ und „gratis“ ist die Mail zu 83 Prozent Spam: jede weitere Beobachtung verschiebt die Einschätzung weiter.</x-say></x-part>
 </x-pa>
 <!-- @kap -->
 <section id="s1-pa" data-m="🎓 Gesamtaufgabe|Kapitel 1 komplett von null">
@@ -243,39 +243,39 @@
     <x-step h="Ω.">Chips 1–10 (1–3 defekt). \(\Om\) = alle 2-elementigen Teilmengen \(\{i,j\}\) mit \(i\ne j\): \(|\Om|=\binom{10}{2}=45\).</x-step>
     <x-step h="Ereignis und Komplement.">\(D=\{\{i,j\}\in\Om:\ i\le3\text{ oder }j\le3\}\). \(D\co\) = „beide Chips intakt“.</x-step>
     <x-res>\(|\Om|=45\); \(D\co\) = beide intakt.</x-res>
-  </x-part>
+  <x-say>Die Prüferin kann 45 verschiedene Paare ziehen.</x-say></x-part>
   <x-part h="(b) Laplace mit Binomialkoeffizienten" ref="1.2">
     <x-step h="Laplace begründen.">Zufällig gezogen → jede 2er-Teilmenge gleich wahrscheinlich.</x-step>
     <x-step h="Zählen.">keiner defekt: \(\binom72=21\); genau einer: \(\binom31\binom71=21\); beide: \(\binom32=3\). Kontrolle \(21+21+3=45\) ✓.</x-step>
     <x-step h="Komplementregel.">\(\PP(D)=1-\tfrac{21}{45}=\tfrac{24}{45}=\tfrac8{15}\).</x-step>
     <x-res>\(\tfrac7{15}\), \(\tfrac7{15}\), \(\tfrac1{15}\); \(\PP(D)=\tfrac8{15}\approx0.533\).</x-res>
-  </x-part>
+  <x-say>In etwa 53 von 100 Stichproben findet die Prüferin mindestens einen defekten Chip; beide defekt nur in etwa 7 von 100.</x-say></x-part>
   <x-part h="(c) Bedingt und Multiplikationsregel" ref="1.4">
     <x-step h="Grundraum schrumpft.">Nach einem defekten bleiben 9 Chips, davon 2 defekt: \(\PP(D_2\given D_1)=\tfrac29\).</x-step>
     <x-step h="Multiplikation.">\(\PP(D_1\capc D_2)=\PP(D_1)\PP(D_2\given D_1)=\tfrac3{10}\cdot\tfrac29=\tfrac6{90}=\tfrac1{15}\) ✓ wie (b).</x-step>
     <x-res>\(\tfrac29\); beide Wege liefern \(\tfrac1{15}\).</x-res>
-  </x-part>
+  <x-say>Nach einem defekten Chip ist der zweite nur noch mit 2/9 ≈ 22 Prozent defekt.</x-say></x-part>
   <x-part h="(d) Unabhängigkeit" ref="1.3">
     <x-step h="P(D₂).">Symmetrie: jeder Chip ist an Position 2 gleich wahrscheinlich, \(\PP(D_2)=\tfrac3{10}\).</x-step>
     <x-step h="Produkt-Test.">\(\PP(D_1)\PP(D_2)=0.09\ne\tfrac1{15}\approx0.067\) → abhängig.</x-step>
     <x-res>Ohne Zurücklegen abhängig; mit Zurücklegen \(\PP(D_1\capc D_2)=0.3\cdot0.3=0.09\) → unabhängig.</x-res>
-  </x-part>
+  <x-say>Ohne Zurücklegen hängt der zweite Chip vom ersten ab; mit Zurücklegen nicht.</x-say></x-part>
   <x-part h="(e) Siebformel" ref="1.1">
     <x-step h="Einschließen, ausschließen, einschließen.">\(\PP(L\cupc K\cupc S)=0.05+0.08+0.04-(0.02+0.01+0.015)+0.005\).</x-step>
     <x-step h="Rechnen.">\(0.17-0.045+0.005=\Res{0.13}\).</x-step>
     <x-res>\(\PP(F)=0.13\), fehlerfrei also 0.87.</x-res>
-  </x-part>
+  <x-say>13 Prozent der Chips haben mindestens einen Fehler, 87 Prozent sind fehlerfrei.</x-say></x-part>
   <x-part h="(f) Totale W'keit und Bayes" ref="1.4.1">
     <x-step h="Partition Linie 1 / Linie 2.">\(\PP(F)=0.10\cdot0.7+0.20\cdot0.3=0.07+0.06=0.13\) ✓: dieselbe Zahl wie (e), das Modell ist in sich stimmig.</x-step>
     <x-step h="Umdrehen.">\(\PP(\text{L2}\given F)=\tfrac{0.06}{0.13}\approx\Res{0.462}\).</x-step>
     <x-res>Obwohl Linie 2 nur 30 Prozent liefert, stammen 46 Prozent der fehlerhaften Chips von dort.</x-res>
-  </x-part>
+  <x-say>Fast die Hälfte der fehlerhaften Chips (46 Prozent) stammt von Linie 2, obwohl sie nur 30 Prozent liefert: Linie 2 ist die Problemlinie.</x-say></x-part>
   <x-part h="(g) Prüfgerät: Bayes und Basisrate" ref="1.4.1">
     <x-step h="Totale W'keit für Alarm.">\(\PP(\text{Alarm})=0.13\cdot0.95+0.87\cdot0.03=0.1235+0.0261=0.1496\).</x-step>
     <x-step h="Bayes.">\(\PP(F\given\text{Alarm})=\tfrac{0.1235}{0.1496}\approx\Res{0.826}\).</x-step>
     <x-step h="Ohne Alarm.">\(\PP(F\given\text{kein Alarm})=\tfrac{0.13\cdot0.05}{1-0.1496}=\tfrac{0.0065}{0.8504}\approx0.0076\).</x-step>
     <x-res>Alarm: 82.6 Prozent fehlerhaft; kein Alarm: nur noch 0.76 Prozent.</x-res>
-  </x-part>
+  <x-say>Schlägt das Gerät an, ist der Chip zu 83 Prozent wirklich fehlerhaft; schlägt es nicht an, nur zu 0.8 Prozent.</x-say></x-part>
   <x-part h="(h) Interpretation" ref="1.1">
     <x-step h="Frequentistisch.">Auf lange Sicht haben etwa 13 von 100 produzierten Chips mindestens einen Fehler.</x-step>
     <x-res>\(\PP(F)=0.13\) ist der Grenzwert der relativen Häufigkeit fehlerhafter Chips.</x-res>

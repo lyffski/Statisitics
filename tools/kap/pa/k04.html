@@ -11,20 +11,20 @@
     <x-step h="Gültig?">Alle Einträge ≥ 0, Summe \(0.10+0.20+0.15+0.25+0.05+0.25=1\) ✓.</x-step>
     <x-step h="Zellen einsammeln.">\(\mX+\mY=2\) bei \((1,1)\) und \((2,0)\): \(0.25+0.05=0.30\).</x-step>
     <x-res>Gültig; \(\PP(\mX+\mY=2)=0.30\).</x-res>
-  </x-part>
+  <x-say>In 30 Prozent der Fälle sind Kaffees und Müdigkeit zusammen gleich 2 (ein Kaffee und müde, oder zwei Kaffees und nicht müde).</x-say></x-part>
   <x-part h="(b) Randverteilungen" ref="4.1">
     <x-step h="Zeilensummen (Y heraussummieren).">\(\PP(\mX=0)=0.3\), \(\PP(\mX=1)=0.4\), \(\PP(\mX=2)=0.3\).</x-step>
     <x-res>Spaltensummen: \(\PP(\mY=0)=0.3\), \(\PP(\mY=1)=0.7\).</x-res>
-  </x-part>
+  <x-say>30 Prozent trinken keinen, 40 Prozent einen, 30 Prozent zwei Kaffees; 70 Prozent sind nachmittags müde.</x-say></x-part>
   <x-part h="(c) Bedingte Verteilungen" ref="4.1">
     <x-step h="Zelle durch Randsumme.">\(\PP(\mY=1\given\mX=0)=\tfrac{0.20}{0.3}=0.667\), \(\PP(\mY=1\given\mX=1)=\tfrac{0.25}{0.4}=0.625\), \(\PP(\mY=1\given\mX=2)=\tfrac{0.25}{0.3}=0.833\).</x-step>
     <x-step h="Bedingter Erwartungswert.">\(\EE[\mY\given\mX=2]=0\cdot0.167+1\cdot0.833=0.833\).</x-step>
     <x-res>X gegeben Y = 1: \(\tfrac{0.20}{0.7},\tfrac{0.25}{0.7},\tfrac{0.25}{0.7}=0.286,\ 0.357,\ 0.357\) (Summe 1 ✓).</x-res>
-  </x-part>
+  <x-say>Wer zwei Kaffees trinkt, ist nachmittags zu 83 Prozent müde, wer einen trinkt, nur zu 63 Prozent.</x-say></x-part>
   <x-part h="(d) Unabhängigkeit" ref="4.1">
     <x-step h="Jede Zelle = Produkt der Ränder?">\(\PP(\mX=0,\mY=0)=0.10\), aber \(0.3\cdot0.3=0.09\).</x-step>
     <x-res>Abhängig: schon eine Zelle genügt. Auch sichtbar in (c): die bedingte W'keit für „müde“ hängt von x ab.</x-res>
-  </x-part>
+  <x-say>Die Müdigkeit hängt davon ab, wie viel Kaffee man trinkt.</x-say></x-part>
   <x-part h="(e) Code" ref="4.1"><x-res>R: <code>P &lt;- matrix(c(.1, .2, .15, .25, .05, .25), 3, byrow = TRUE); rowSums(P); colSums(P); P[, 2] / rowSums(P); outer(rowSums(P), colSums(P))</code>. Python: <code>P.sum(1), P.sum(0), P[:, 1] / P.sum(1), np.outer(P.sum(1), P.sum(0))</code>.</x-res></x-part>
 </x-pa>
 <!-- @s4-2 -->
@@ -42,7 +42,7 @@
     <x-step h="Rechteck.">\(\tfrac23\int_0^{1/2}\!\int_0^{1/2}(x+2y)\dd y\dd x=\tfrac23\int_0^{1/2}\big(\tfrac x2+\tfrac14\big)\dd x=\tfrac23\big(\tfrac1{16}+\tfrac18\big)=\Res{\tfrac18}\).</x-step>
     <x-step h="Dreieck x &lt; y: innere Grenze hängt von y ab.">\(\tfrac23\int_0^1\!\int_0^{y}(x+2y)\dd x\dd y=\tfrac23\int_0^1\tfrac52y^2\dd y=\tfrac23\cdot\tfrac56=\Res{\tfrac59}\).</x-step>
     <x-res>\(\tfrac18\) und \(\tfrac59\).</x-res>
-  </x-part>
+  <x-say>Mit W'keit 1/8 sind beide Größen kleiner als ½; mit 5/9 ist X kleiner als Y.</x-say></x-part>
   <x-part h="(c) Rand- und bedingte Dichte" ref="4.1.2">
     <x-step h="y herausintegrieren.">\(\ff_X(x)=\tfrac23\int_0^1(x+2y)\dd y=\tfrac23(x+1)\).</x-step>
     <x-step h="x herausintegrieren.">\(\ff_Y(y)=\tfrac23\big(\tfrac12+2y\big)=\tfrac13+\tfrac43y\).</x-step>
@@ -51,7 +51,7 @@
   <x-part h="(d) Unabhängig?" ref="4.1.2">
     <x-step h="Produkt prüfen.">\(\ff_X(x)\ff_Y(y)=\tfrac23(x+1)(\tfrac13+\tfrac43y)\); bei \((0,0)\): \(\tfrac29\ne\ff(0,0)=0\).</x-step>
     <x-res>Abhängig; die bedingte Dichte in (c) hängt von x ab.</x-res>
-  </x-part>
+  <x-say>Die Werte von X und Y hängen zusammen: kennt man x, verschiebt sich die Verteilung von Y.</x-say></x-part>
 </x-pa>
 <!-- @s4-3 -->
 <h3 id="pa-4-3-h" data-m="🎓 Prüfungsaufgabe 4.2|alles aus 4.2 von null">🎓 Prüfungsaufgabe: alles aus 4.2 von null</h3>
@@ -63,16 +63,16 @@
   <x-part h="(a) Linearität" ref="4.2">
     <x-step h="Aus den Rändern.">\(\EE[\mX]=0.4+2\cdot0.3=1.0\), \(\EE[\mY]=0.7\).</x-step>
     <x-res>\(\EE[\mX+\mY]=1.7\), gilt auch bei abhängigen ZV.</x-res>
-  </x-part>
+  <x-say>Im Mittel trinkt man 1 Kaffee, 70 Prozent sind müde; zusammen ergibt das im Mittel 1.7.</x-say></x-part>
   <x-part h="(b) Produkt" ref="4.2">
     <x-step h="Über alle Zellen.">\(\EE[\mX\mY]=\sum x\,y\,\pf(x,y)=1\cdot1\cdot0.25+2\cdot1\cdot0.25=0.75\).</x-step>
     <x-res>\(0.75\ne1.0\cdot0.7=0.7\): die Produktregel gilt nur bei Unabhängigkeit.</x-res>
-  </x-part>
+  <x-say>Das Produkt X·Y ist im Mittel 0.75 statt 0.7: die Abhängigkeit zeigt sich darin.</x-say></x-part>
   <x-part h="(c) Lineare und nichtlineare g" ref="4.2">
     <x-step h="Linear.">\(\EE[3+2\mX-5\mY]=3+2-3.5=1.5\).</x-step>
     <x-step h="max: jede Zelle einzeln.">Werte 0, 1, 1, 1, 2, 2 mit W'keiten 0.10, 0.20, 0.15, 0.25, 0.05, 0.25.</x-step>
     <x-res>\(\EE[\max]=0.20+0.15+0.25+0.10+0.50=1.2\).</x-res>
-  </x-part>
+  <x-say>Die größere der beiden Zahlen ist im Mittel 1.2.</x-say></x-part>
   <x-part h="(d) Stetig" ref="4.2">
     <x-step h="Doppelintegral.">\(\EE[\mX\mY]=\iint xy\,\ff(x,y)\dd x\dd y=\tfrac23\int_0^1\!\int_0^1(x^2y+2xy^2)\dd x\dd y=\tfrac23\big(\tfrac16+\tfrac13\big)\).</x-step>
     <x-res>\(\EE[\mX\mY]=\tfrac13\).</x-res>
@@ -85,16 +85,16 @@
   <ol class="pa-list"><li>(a) Bestimme \(\Cov(\mX,\mY)\).</li><li>(b) Bestimme \(\Var(\mX)\), \(\Var(\mY)\) und \(\rho\).</li>
   <li>(c) Leite \(\Var(\mX+\mY)\) her und berechne \(\Var(\mX+\mY)\), \(\Var(\mX-\mY)\).</li><li>(d) Bestimme \(\Cov(2\mX,\,3-\mY)\) und \(\Corr(2\mX,\,3-\mY)\).</li></ol></x-task>
   <x-cover>Cov = E[XY] − E[X]E[Y] (a) · Korrelation ρ ∈ [−1, 1] (b) · Herleitung und Regel Var(X ± Y) (c) · Rechenregeln für Cov und Corr (d)</x-cover>
-  <x-part h="(a) Kovarianz" ref="4.3"><x-res>\(\Cov=0.75-1.0\cdot0.7=\Res{0.05}\): schwach positiv.</x-res></x-part>
+  <x-part h="(a) Kovarianz" ref="4.3"><x-res>\(\Cov=0.75-1.0\cdot0.7=\Res{0.05}\): schwach positiv.</x-res><x-say>Mehr Kaffee geht leicht mit mehr Müdigkeit einher.</x-say></x-part>
   <x-part h="(b) Korrelation" ref="4.3">
     <x-step h="Varianzen.">\(\EE[\mX^2]=0.4+4\cdot0.3=1.6\) → \(\Var(\mX)=0.6\); \(\Var(\mY)=0.7\cdot0.3=0.21\).</x-step>
     <x-res>\(\rho=\tfrac{0.05}{\sqrt{0.6\cdot0.21}}=\tfrac{0.05}{0.355}=0.141\): schwacher linearer Zusammenhang.</x-res>
-  </x-part>
+  <x-say>Der lineare Zusammenhang ist schwach (ρ = 0.14).</x-say></x-part>
   <x-part h="(c) Varianz der Summe" ref="4.3">
     <x-step h="Herleitung.">\(\Var(\mX+\mY)=\EE[((\mX-\mu_X)+(\mY-\mu_Y))^2]=\Var(\mX)+\Var(\mY)+2\Cov(\mX,\mY)\) (Quadrat ausmultiplizieren).</x-step>
     <x-res>\(\Var(\mX+\mY)=0.6+0.21+0.1=0.91\); \(\Var(\mX-\mY)=0.6+0.21-0.1=0.71\).</x-res>
     <x-trap>\(\Var(\mX-\mY)=\Var(\mX)-\Var(\mY)\) ist falsch: Varianzen addieren sich immer, nur das Kovarianz-Glied wechselt das Vorzeichen.</x-trap>
-  </x-part>
+  <x-say>Die Summe streut stärker als die Differenz, weil X und Y positiv zusammenhängen.</x-say></x-part>
   <x-part h="(d) Regeln" ref="4.3">
     <x-step h="Konstanten fallen weg, Faktoren kommen heraus.">\(\Cov(2\mX,3-\mY)=2\cdot(-1)\Cov(\mX,\mY)=-0.1\).</x-step>
     <x-res>\(\Corr=-0.141\): nur das Vorzeichen dreht sich, die Stärke bleibt.</x-res>
@@ -115,12 +115,12 @@
   <x-part h="(b) Linearkombination" ref="4.4">
     <x-step h="E und Var.">\(\EE[D]=72-0.4\cdot175=2\); \(\Var(D)=100+0.16\cdot49-2\cdot0.4\cdot42=74.24\).</x-step>
     <x-res>\(D\sim\Nor(2,\ 74.24)\), \(\sigma_D=8.62\).</x-res>
-  </x-part>
+  <x-say>Das „Übergewicht relativ zur Größe“ D ist normal mit Mittel 2 kg und Streuung 8.6 kg.</x-say></x-part>
   <x-part h="(c) Bedingte Verteilung" ref="4.4">
     <x-step h="Mittel verschiebt sich entlang der Regressionsgeraden.">\(\EE[\mY\given\mX=x]=\mu_Y+\rho\tfrac{\sigma_Y}{\sigma_X}(x-\mu_X)=72+0.6\cdot\tfrac{10}7\cdot7=78\).</x-step>
     <x-step h="Streuung schrumpft.">\(\Var(\mY\given\mX)=\sigma_Y^2(1-\rho^2)=64\), \(\sigma=8\).</x-step>
     <x-res>\(\PP(\mY>80\given\mX=182)=1-\Phi\big(\tfrac{2}{8}\big)=1-\Phi(0.25)=0.401\).</x-res>
-  </x-part>
+  <x-say>Personen mit 182 cm wiegen im Mittel 78 kg; 40 Prozent von ihnen wiegen mehr als 80 kg.</x-say></x-part>
   <x-part h="(d) Konturen und ρ = 0" ref="4.4"><x-res>Konturen sind Ellipsen; mit wachsendem ρ werden sie schmaler und kippen entlang der Diagonale. Bei 2D-Normal: ρ = 0 ⇒ unabhängig. Allgemein nicht: für \(\mX\sim\Nor(0,1)\) und \(\mY=\mX^2\) ist \(\Cov=\EE[\mX^3]=0\), aber Y hängt vollständig von X ab.</x-res></x-part>
 </x-pa>
 <!-- @s4-6 -->
@@ -133,14 +133,14 @@
   <x-part h="(a) Diskrete Faltung" ref="4.5">
     <x-step h="Alle Aufteilungen von 2.">\(\sum_{k=0}^2\PP(\mX=k)\PP(\mY=2-k)=e^{-2}e^{-3}\big(1\cdot\tfrac92+2\cdot3+2\cdot1\big)=12.5e^{-5}\).</x-step>
     <x-res>\(0.0842=\Pois(5)\) an der Stelle 2 (\(e^{-5}\tfrac{25}{2}\)) ✓: Summen unabhängiger Poisson sind Poisson.</x-res>
-  </x-part>
+  <x-say>Genau 2 Ereignisse insgesamt gibt es in 8 von 100 Fällen, wie bei einer Poisson-Verteilung mit Rate 5.</x-say></x-part>
   <x-part h="(b) Stetige Faltung" ref="4.5">
     <x-step h="Formel.">\(\ff_S(s)=\int\ff_X(x)\ff_Y(s-x)\dd x\) = Länge des x-Bereichs mit \(0\le x\le1\) und \(0\le s-x\le1\).</x-step>
     <x-step h="Fälle.">\(0\le s\le1\): \(\ff_S=s\); \(1\le s\le2\): \(\ff_S=2-s\) (Dreieck).</x-step>
     <x-step h="Flächen.">\(\PP(S\le0.5)=\tfrac12\cdot0.5^2=0.125\); \(\PP(S\le1.5)=1-0.125=0.875\).</x-step>
     <x-res>\(\EE[S]=1\), \(\Var(S)=\tfrac1{12}+\tfrac1{12}=\tfrac16\).</x-res>
-  </x-part>
-  <x-part h="(c) Normal + Normal" ref="4.5"><x-res>\(\Nor(30,\ 25)\): Mittel und (bei Unabhängigkeit) Varianzen addieren sich, Standardabweichung 5.</x-res></x-part>
+  <x-say>Die Summe zweier Zufallszahlen aus [0, 1] liegt nur in 12.5 Prozent der Fälle unter 0.5; Werte nahe 1 sind am häufigsten.</x-say></x-part>
+  <x-part h="(c) Normal + Normal" ref="4.5"><x-res>\(\Nor(30,\ 25)\): Mittel und (bei Unabhängigkeit) Varianzen addieren sich, Standardabweichung 5.</x-res><x-say>Die Summe ist normal mit Mittel 30 und Standardabweichung 5.</x-say></x-part>
   <x-part h="(d) Code" ref="4.5"><x-res>R: <code>px &lt;- dpois(0:10, 2); py &lt;- dpois(0:10, 3); sum(px[1:3] * rev(py[1:3]))</code>. Python: <code>np.convolve(stats.poisson.pmf(range(11), 2), stats.poisson.pmf(range(11), 3))[2]</code>.</x-res></x-part>
 </x-pa>
 <!-- @s4-7 -->
@@ -154,12 +154,12 @@
   <x-part h="(b) Summe" ref="4.6">
     <x-step h="Regel.">\(\Var(\sum\mX_i)=\sum\Var(\mX_i)+2\sum_{i<j}\Cov(\mX_i,\mX_j)\) = Summe aller Einträge von Σ.</x-step>
     <x-res>\(\EE=6\); \(\Var=4+9+1+2(2+0-1)=16\).</x-res>
-  </x-part>
+  <x-say>Die Summe der drei Größen ist im Mittel 6 und schwankt mit Standardabweichung 4.</x-say></x-part>
   <x-part h="(c) Linearkombination" ref="4.6">
     <x-step h="Mit Koeffizienten a = (1, −1, 2).">\(\Var=\sum a_i^2\Var_i+2\sum_{i<j}a_ia_j\Cov_{ij}=4+9+4+2\big((1)(-1)(2)+(1)(2)(0)+(-1)(2)(-1)\big)\).</x-step>
     <x-res>\(\EE=1-2+6=5\); \(\Var=17+2(-2+0+2)=17\).</x-res>
-  </x-part>
-  <x-part h="(d) i.i.d." ref="4.6"><x-res>Alle Kovarianzen 0: \(\Var(\text{Summe})=10\cdot4=40\); \(\Var(\bar X)=\tfrac{40}{100}=0.4\). Das Mittel streut viel weniger (Kap. 5).</x-res></x-part>
+  <x-say>Die Kombination ist im Mittel 5 und schwankt mit Standardabweichung √17 ≈ 4.1.</x-say></x-part>
+  <x-part h="(d) i.i.d." ref="4.6"><x-res>Alle Kovarianzen 0: \(\Var(\text{Summe})=10\cdot4=40\); \(\Var(\bar X)=\tfrac{40}{100}=0.4\). Das Mittel streut viel weniger (Kap. 5).</x-res><x-say>Das Mittel von 10 Messungen schwankt nur mit σ ≈ 0.63 statt 2.</x-say></x-part>
 </x-pa>
 <!-- @kap -->
 <section id="s4-pa" data-m="🎓 Gesamtaufgabe|Kapitel 4 komplett von null">
@@ -177,27 +177,27 @@
   <x-part h="(a) Tabelle" ref="4.1">
     <x-step h="Ränder.">X: 0.25, 0.45, 0.30; Y: 0.6, 0.4.</x-step>
     <x-res>\(\PP(\mY=1\given\mX=2)=\tfrac{0.2}{0.3}=0.667\). Abhängig: \(0.20\ne0.25\cdot0.6=0.15\).</x-res>
-  </x-part>
-  <x-part h="(b) Erwartung" ref="4.2"><x-res>\(\EE[\mX]=0.45+0.6=1.05\), \(\EE[\mY]=0.4\), \(\EE[R]=4\cdot1.05+5\cdot0.4=6.20\) Franken.</x-res></x-part>
+  <x-say>Wer zwei Kaffees kauft, nimmt zu 67 Prozent auch Kuchen; Kaffee- und Kuchenkauf hängen zusammen.</x-say></x-part>
+  <x-part h="(b) Erwartung" ref="4.2"><x-res>\(\EE[\mX]=0.45+0.6=1.05\), \(\EE[\mY]=0.4\), \(\EE[R]=4\cdot1.05+5\cdot0.4=6.20\) Franken.</x-res><x-say>Ein Kunde bringt im Mittel 6.20 Franken Umsatz.</x-say></x-part>
   <x-part h="(c) Kovarianz" ref="4.3">
     <x-step h="E[XY].">\(1\cdot0.15+2\cdot0.20=0.55\) → \(\Cov=0.55-1.05\cdot0.4=0.13\).</x-step>
     <x-step h="Varianzen.">\(\Var(\mX)=1.65-1.05^2=0.5475\), \(\Var(\mY)=0.24\), \(\rho=\tfrac{0.13}{\sqrt{0.5475\cdot0.24}}=0.359\).</x-step>
     <x-res>\(\Var(R)=16\cdot0.5475+25\cdot0.24+2\cdot4\cdot5\cdot0.13=8.76+6+5.2=19.96\).</x-res>
-  </x-part>
+  <x-say>Wer mehr Kaffee kauft, kauft eher Kuchen (ρ = 0.36); der Umsatz pro Kunde schwankt mit σ ≈ 4.5 Franken.</x-say></x-part>
   <x-part h="(d) Gemeinsame Dichte" ref="4.1.2">
     <x-step h="Unabhängig → Produkt.">\(\ff(x,y)=e^{-x}e^{-y}\) für \(x,y\ge0\).</x-step>
     <x-step h="Quadrat.">\(\int_0^1\!\int_0^1e^{-x-y}=(1-e^{-1})^2=0.400\).</x-step>
     <x-res>\(\PP(T_1<T_2)=\int_0^\infty e^{-x}\!\int_x^\infty e^{-y}\dd y\dd x=\int_0^\infty e^{-2x}\dd x=\tfrac12\) (Symmetrie).</x-res>
-  </x-part>
+  <x-say>In 40 von 100 Fällen sind beide Kunden innerhalb einer Minute fertig; in der Hälfte der Fälle ist der erste schneller.</x-say></x-part>
   <x-part h="(e) Faltung" ref="4.5">
     <x-step h="Formel.">\(\ff_S(s)=\int_0^se^{-x}e^{-(s-x)}\dd x=s\,e^{-s}\) für \(s\ge0\).</x-step>
     <x-res>\(\PP(S\le1)=\int_0^1se^{-s}\dd s=1-2e^{-1}=0.264\).</x-res>
-  </x-part>
+  <x-say>Beide zusammen sind nur in 26 von 100 Fällen innerhalb einer Minute fertig.</x-say></x-part>
   <x-part h="(f) 2D-Normal" ref="4.4">
     <x-step h="Σ.">\(\Cov=0.5\cdot100\cdot60=3000\): \(\Sigma=\begin{pmatrix}10000&3000\\3000&3600\end{pmatrix}\).</x-step>
     <x-step h="Summe.">\(U+V\sim\Nor(1100,\ 10000+3600+6000)=\Nor(1100,140^2)\); \(\PP(U+V>1300)=1-\Phi(1.43)=0.077\).</x-step>
     <x-res>\(\EE[V\given U=900]=300+0.5\cdot\tfrac{60}{100}\cdot100=330\) Franken.</x-res>
-  </x-part>
-  <x-part h="(g) Fünf Tage" ref="4.6"><x-res>\(\EE=5\cdot1100=5500\); unabhängige Tage: \(\Var=5\cdot19\,600=98\,000\), \(\sigma=313\) Franken.</x-res></x-part>
+  <x-say>An etwa 8 von 100 Tagen liegt der Gesamtumsatz über 1300 Franken; an Tagen mit 900 Franken Kaffeeumsatz verkauft man im Mittel für 330 Franken Kuchen.</x-say></x-part>
+  <x-part h="(g) Fünf Tage" ref="4.6"><x-res>\(\EE=5\cdot1100=5500\); unabhängige Tage: \(\Var=5\cdot19\,600=98\,000\), \(\sigma=313\) Franken.</x-res><x-say>Pro Woche sind etwa 5500 Franken zu erwarten, mit einer typischen Schwankung von rund 300 Franken.</x-say></x-part>
 </x-pa>
 </section>

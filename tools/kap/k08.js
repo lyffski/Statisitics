@@ -121,7 +121,13 @@ LB.on(function tools8() {
 LB.on(function tracers8() {
   const f = (v, k) => v === null ? '–' : LB.fmt(v, k || 4);
   new LB.Tracer({
-    id: 'trGp', title: 'gepaarter t-Test: Differenzen → Ein-Stichproben-t', langs: CODE('k8_gepaart'), input: VOR.join(' ') + ' ; ' + NACH.join(' '), hint: 'Werte A ; Werte B (gleich viele)',
+    id: 'trGp', title: 'gepaarter t-Test: Differenzen → Ein-Stichproben-t', langs: CODE('k8_gepaart'),
+    vars: [['vorher|nachher', 'mem', 'zwei Messungen an denselben Einheiten'], ['u', 'chg', 'Differenzen pro Paar: vorher − nachher'], ['n', 'par', 'Anzahl Paare'], ['ubar|su', 'chg', 'Mittel und Standardabweichung der Differenzen'],
+      ['t', 'res', 'Teststatistik ū / (s_U/√n)'], ['krit', 'rule', 'kritischer Wert t_{n−1, 0.975}'], ['p', 'res', 'P-Wert']],
+    together: 'Aus zwei Spalten wird eine: die Differenzen <span class="kw-chg">u</span>. Alles Weitere ist ein Ein-Stichproben-t-Test auf u mit H₀: E[U] = 0. Weil das persönliche Niveau jeder Einheit in der Differenz wegfällt, ist <span class="kw-chg">su</span> klein und der Test scharf.',
+    say: s => (Math.abs(s.t) >= s.k ? 'Im Mittel ist die erste Messung um ' + LB.fmt(s.ub, 3) + ' ' + (s.ub > 0 ? 'höher' : 'niedriger') + ' als die zweite, und das ist signifikant (t = ' + LB.fmt(s.t, 2) + ', P-Wert ' + LB.fmt(s.p, 4) + '): die Behandlung verändert den Wert.'
+      : 'Die mittlere Differenz ' + LB.fmt(s.ub, 3) + ' ist nicht signifikant (t = ' + LB.fmt(s.t, 2) + ', P-Wert ' + LB.fmt(s.p, 4) + '): die Daten zeigen keinen gesicherten Unterschied zwischen den Bedingungen.'),
+    input: VOR.join(' ') + ' ; ' + NACH.join(' '), hint: 'Werte A ; Werte B (gleich viele)',
     examples: [['vorher/nachher', VOR.join(' ') + ' ; ' + NACH.join(' ')], ['kein Effekt', '10 12 9 11 13 ; 10.2 11.7 9.3 10.8 13.1'], ['Laborvergleich', '31.2 28.4 30.1 29.8 32.5 27.9 30.6 ; 29.1 27.6 28.0 29.9 30.2 26.8 28.1']],
     parse: s => { const p = s.split(';'); if (p.length !== 2) throw new Error('Format: A-Werte ; B-Werte'); const a = S.parse(p[0]), b = S.parse(p[1]);
       if (a.length !== b.length || a.length < 2) throw new Error('gleich viele Werte (≥ 2) nötig'); return { a, b }; },
@@ -140,11 +146,18 @@ LB.on(function tracers8() {
       rec.step('out', Math.abs(v.t) >= v.k ? '<b class="bad">|t| ≥ Grenze → H₀: E[U] = 0 verwerfen</b>' : '<b class="ok">|t| &lt; Grenze → H₀ nicht verwerfen</b>', st());
     },
     view: s => (s.u.length ? '<div class="cells">' + s.u.map(x => '<span class="kw-chg">' + LB.fmt(x, 3) + '</span>').join(' · ') + '</div>' : '') +
-      LB.kvHTML([['n', s.n === null ? '–' : s.n, 'idx'], ['ū', f(s.ub), 'chg'], ['s_U', f(s.su), 'chg'], ['t', f(s.t), 'res'], ['krit', f(s.k), 'rule'], ['P-Wert', f(s.p), 'res']])
+      LB.kvHTML([['n', s.n === null ? '–' : s.n, 'par'], ['ū = ubar', f(s.ub), 'chg'], ['s_U', f(s.su), 'chg'], ['t', f(s.t), 'res'], ['krit', f(s.k), 'rule'], ['P-Wert', f(s.p), 'res']])
   });
 
   new LB.Tracer({
-    id: 'trZs', title: 'Zwei-Stichproben-t-Test mit gepoolter Varianz', langs: CODE('k8_zweistich'), input: '402 415 388 397 410 385 399 421 393 379 ; 378 395 362 388 401 370 383 359', hint: 'Gruppe X ; Gruppe Y',
+    id: 'trZs', title: 'Zwei-Stichproben-t-Test mit gepoolter Varianz', langs: CODE('k8_zweistich'),
+    vars: [['x|y', 'mem', 'zwei unabhängige Gruppen'], ['n|m', 'par', 'Gruppengrößen'], ['sp2', 'chg', 'gepoolte Varianz: gewichtetes Mittel beider Varianzen'], ['se', 'rule', 'Standardfehler der Mitteldifferenz'],
+      ['t', 'res', 'Teststatistik (x̄ − ȳ)/se'], ['df', 'idx', 'Freiheitsgrade n + m − 2'], ['p', 'res', 'P-Wert zweiseitig'], ['vi', 'res', 'Vertrauensintervall für μ_X − μ_Y']],
+    together: 'Beide Gruppen liefern ihre Varianz; <span class="kw-chg">sp2</span> mischt sie (größere Gruppe zählt mehr). Daraus folgt der Standardfehler <span class="kw-rule">se</span> der Differenz, und <span class="kw-res">t</span> misst die Mitteldifferenz in Standardfehlern. <span class="kw-idx">df</span> legt die t-Verteilung fest, daraus <span class="kw-res">p</span> und <span class="kw-res">vi</span>.',
+    say: (s, d) => { const dm = LB.S.mean(d.x) - LB.S.mean(d.y);
+      return (s.p <= 0.05 ? 'Gruppe X liegt im Mittel signifikant ' + (dm > 0 ? 'höher' : 'tiefer') + ' als Gruppe Y (Differenz ' + LB.fmt(dm, 2) + ', t = ' + LB.fmt(s.t, 2) + ', P-Wert ' + LB.fmt(s.p, 4) + '). '
+        : 'Zwischen den Gruppen zeigt sich kein signifikanter Unterschied (Differenz ' + LB.fmt(dm, 2) + ', P-Wert ' + LB.fmt(s.p, 4) + '). ') + 'Der wahre Unterschied μ_X − μ_Y liegt plausibel zwischen ' + LB.fmt(s.lo, 2) + ' und ' + LB.fmt(s.hi, 2) + '.'; },
+    input: '402 415 388 397 410 385 399 421 393 379 ; 378 395 362 388 401 370 383 359', hint: 'Gruppe X ; Gruppe Y',
     examples: [['Produktionslinien', '402 415 388 397 410 385 399 421 393 379 ; 378 395 362 388 401 370 383 359'], ['vorher/nachher ungepaart (falsch!)', VOR.join(' ') + ' ; ' + NACH.join(' ')], ['kein Unterschied', '20 22 19 21 23 20 ; 21 20 22 19 21']],
     parse: s => { const p = s.split(';'); if (p.length !== 2) throw new Error('Format: X-Werte ; Y-Werte'); const x = S.parse(p[0]), y = S.parse(p[1]);
       if (x.length < 2 || y.length < 2) throw new Error('je Gruppe mindestens 2 Werte'); return { x, y }; },
@@ -164,7 +177,7 @@ LB.on(function tracers8() {
       v.lo = g.lo; v.hi = g.hi; rec.step('vi', '95-%-VI für \\(\\mu_X-\\mu_Y\\): [' + LB.fmt(g.lo, 3) + '; ' + LB.fmt(g.hi, 3) + ']', st());
       rec.step('out', Math.abs(g.t) >= g.q ? '<b class="bad">|t| ≥ Grenze → H₀: μ_X = μ_Y verwerfen</b>' : '<b class="ok">|t| &lt; Grenze → H₀ nicht verwerfen</b>', st());
     },
-    view: s => LB.kvHTML([['n, m', s.n === null ? '–' : s.n + ', ' + s.m, 'idx'], ['S²_pool', f(s.sp2), 'chg'], ['SE', f(s.se), 'rule'], ['t', f(s.t), 'res'], ['df', s.df === null ? '–' : s.df, 'idx'], ['P-Wert', f(s.p), 'res'],
+    view: s => LB.kvHTML([['n, m', s.n === null ? '–' : s.n + ', ' + s.m, 'par'], ['S²_pool', f(s.sp2), 'chg'], ['SE', f(s.se), 'rule'], ['t', f(s.t), 'res'], ['df', s.df === null ? '–' : s.df, 'idx'], ['P-Wert', f(s.p), 'res'],
       ['VI', s.lo === null ? '–' : '[' + LB.fmt(s.lo, 3) + '; ' + LB.fmt(s.hi, 3) + ']', 'res']])
   });
 });

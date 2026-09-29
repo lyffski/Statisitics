@@ -164,6 +164,11 @@ LB.on(function tracers2() {
   const vecR = a => 'c(' + a.join(', ') + ')', vecP = a => 'np.array([' + a.join(', ') + '])';
   new LB.Tracer({
     id: 'trEV', title: 'E[X], E[X²], Var, σ', langs: CODE('k2_erwartung'),
+    vars: [['x', 'mem', 'mögliche Werte x_k der Zufallsvariable'], ['p', 'par', 'Wahrscheinlichkeiten p(x_k), Summe 1'], ['k', 'idx', 'Nummer des aktuellen Werts'],
+      ['EX', 'res', 'E[X]: wächst pro Wert um x_k · p(x_k)'], ['EX2', 'chg', 'E[X²]: Hilfsgröße, wächst um x_k² · p(x_k)'], ['VarX', 'res', 'Var(X) = E[X²] − E[X]²'], ['sdX', 'res', 'σ = √Var, in der Einheit von X']],
+    together: 'Die Schleife über <span class="kw-idx">k</span> liefert pro Wert zwei Beiträge: <span class="kw-mem">x</span>·<span class="kw-par">p</span> für <span class="kw-res">EX</span> und x²·p für <span class="kw-chg">EX2</span>. Erst danach entsteht mit dem Verschiebungssatz <span class="kw-res">VarX</span> = EX2 − EX², und <span class="kw-res">sdX</span> bringt die Streuung zurück in die Einheit von X.',
+    say: s => 'Auf lange Sicht ist X im Mittel ' + LB.fmt(s.EX, 3) + (s.EX < 0 ? ' (bei einem Spiel: man verliert im Mittel ' + LB.fmt(-s.EX, 3) + ' pro Runde)' : '') + '. Einzelne Werte weichen typischerweise um etwa σ = ' + LB.fmt(s.sd, 3) + ' davon ab. E ist ein Mittel über viele Wiederholungen, kein Wert, der in einer Runde vorkommen muss.',
+   
     input: '10 2 -3 ; 0.1 0.3 0.6', hint: 'Werte ; Wahrscheinlichkeiten',
     examples: [['Glücksspiel', '10 2 -3 ; 0.1 0.3 0.6'], ['Grundlage-pmf', '0 1 2 ; 0.2 0.5 0.3'], ['fairer Würfel', '1 2 3 4 5 6 ; 0.1666667 0.1666667 0.1666666 0.1666667 0.1666667 0.1666666'], ['Bernoulli(0.3)', '0 1 ; 0.7 0.3']],
     parse: s => { const [a, b] = s.split(';'); if (b === undefined) throw new Error('Format: Werte ; Wahrscheinlichkeiten');
@@ -188,11 +193,17 @@ LB.on(function tracers2() {
     },
     view: s => '<table class="tbl"><tr><th>k</th><th class="r">x_k</th><th class="r">p(x_k)</th><th class="r">x·p</th><th class="r">x²·p</th></tr>' +
       s.x.map((x, i) => '<tr' + (i === s.k ? ' style="outline:1px solid var(--chg)"' : '') + '><td class="kw-idx">' + (i + 1) + '</td><td class="r kw-mem">' + x + '</td><td class="r kw-par">' + s.p[i] + '</td><td class="r">' + LB.fmt(x * s.p[i], 4) + '</td><td class="r">' + LB.fmt(x * x * s.p[i], 4) + '</td></tr>').join('') + '</table>' +
-      LB.kvHTML([['E[X] bisher', LB.fmt(s.EX, 4), 'res'], ['E[X²] bisher', LB.fmt(s.EX2, 4), 'res'], ['Var', s.V === null ? '–' : LB.fmt(s.V, 4), 'res'], ['σ', s.sd === null ? '–' : LB.fmt(s.sd, 4), 'res']])
+      LB.kvHTML([['E[X] bisher', LB.fmt(s.EX, 4), 'res'], ['E[X²] bisher', LB.fmt(s.EX2, 4), 'chg'], ['Var', s.V === null ? '–' : LB.fmt(s.V, 4), 'res'], ['σ', s.sd === null ? '–' : LB.fmt(s.sd, 4), 'res']])
   });
 
   new LB.Tracer({
     id: 'trBin', title: 'Binomialtabelle p(x) und F(x)', langs: CODE('k2_binom'),
+    vars: [['n', 'par', 'Anzahl unabhängiger Versuche'], ['p', 'par', 'Erfolgs-W\'keit pro Versuch'], ['x', 'idx', 'aktuelle Anzahl Erfolge, läuft 0 … n'],
+      ['px', 'res', 'p(x) = P(X = x): Reihenfolgen × Erfolge × Misserfolge'], ['F', 'chg', 'F(x) = P(X ≤ x): alle p bis x aufsummiert']],
+    together: 'Für jedes <span class="kw-idx">x</span> berechnet die Formel <span class="kw-res">px</span> aus drei Teilen: choose(n, x) zählt die Reihenfolgen, pˣ die Erfolge, (1 − p)ⁿ⁻ˣ die Misserfolge. <span class="kw-chg">F</span> sammelt alle px bis x auf, deshalb endet F bei 1.',
+    say: s => { let m = s.rows[0]; s.rows.forEach(r => { if (r[2] > m[2]) m = r; }); const e = s.n * s.p, fl = Math.floor(e), Fe = s.rows[fl] ? s.rows[fl][3] : null;
+      return 'Bei ' + s.n + ' Versuchen mit Erfolgs-W\'keit ' + s.p + ' erwartet man im Mittel np = ' + LB.fmt(e, 2) + ' Erfolge. Am wahrscheinlichsten sind genau ' + m[0] + ' Erfolge (P = ' + LB.fmt(m[2], 3) + ')' + (Fe !== null ? '; höchstens ' + fl + ' Erfolge gibt es mit W\'keit ' + LB.fmt(Fe, 3) : '') + '.'; },
+   
     input: '10 0.25', hint: 'n p',
     examples: [['Multiple Choice', '10 0.25'], ['Grundlage Bin(5, 0.4)', '5 0.4'], ['Bauteile Bin(10, 0.05)', '10 0.05'], ['Münzen Bin(6, 0.5)', '6 0.5']],
     parse: s => { const v = S.parse(s); if (v.length !== 2) throw new Error('Format: n p'); const n = Math.round(v[0]), p = v[1];
@@ -214,11 +225,17 @@ LB.on(function tracers2() {
       x = -1;
     },
     view: s => '<table class="tbl"><tr><th>x</th><th class="r">(n über x)</th><th class="r">p(x)</th><th class="r">F(x)</th></tr>' +
-      s.rows.map(r => '<tr' + (r[0] === s.x ? ' style="outline:1px solid var(--chg)"' : '') + '><td class="kw-idx">' + r[0] + '</td><td class="r">' + r[1] + '</td><td class="r kw-res">' + LB.fmt(r[2], 4) + '</td><td class="r">' + (r[3] === null ? '·' : LB.fmt(r[3], 4)) + '</td></tr>').join('') + '</table>'
+      s.rows.map(r => '<tr' + (r[0] === s.x ? ' style="outline:1px solid var(--chg)"' : '') + '><td class="kw-idx">' + r[0] + '</td><td class="r">' + r[1] + '</td><td class="r kw-res">' + LB.fmt(r[2], 4) + '</td><td class="r kw-chg">' + (r[3] === null ? '·' : LB.fmt(r[3], 4)) + '</td></tr>').join('') + '</table>'
   });
 
   new LB.Tracer({
     id: 'trFl', title: 'Fläche unter der Normal-Dichte mit Rechtecken', langs: CODE('k2_flaeche'),
+    vars: [['mu|sigma', 'par', 'Parameter der Normalverteilung'], ['a|b', 'par', 'Grenzen des Intervalls'], ['m', 'par', 'Anzahl Rechtecke'], ['h', 'chg', 'Breite eines Rechtecks = (b − a)/m'],
+      ['i', 'idx', 'Nummer des Rechtecks'], ['xm', 'chg', 'Mitte des Rechtecks, dort wird die Höhe f(xm) gemessen'], ['flaeche', 'res', 'Summe Höhe × Breite ≈ P(a &lt; X ≤ b)'], ['exakt', 'res', 'F(b) − F(a), exakter Wert']],
+    together: 'Das Intervall [<span class="kw-par">a</span>, <span class="kw-par">b</span>] wird in <span class="kw-par">m</span> Streifen der Breite <span class="kw-chg">h</span> zerlegt. Jedes Rechteck hat die Höhe der Dichte in seiner Mitte <span class="kw-chg">xm</span>. Die Summe aller Rechtecke (<span class="kw-res">flaeche</span>) nähert die Fläche unter der Kurve an, und Fläche = Wahrscheinlichkeit.',
+    say: s => { const d = s.d, ex = LB.S.normCdf(d.b, d.mu, d.s) - LB.S.normCdf(d.a, d.mu, d.s);
+      return 'Ein Wert aus N(' + d.mu + ', ' + d.s + '²) fällt mit Wahrscheinlichkeit ' + LB.fmt(ex, 4) + ' zwischen ' + d.a + ' und ' + d.b + ', also in etwa ' + Math.round(ex * 100) + ' von 100 Beobachtungen. Die ' + d.m + ' Rechtecke liefern ' + LB.fmt(s.A, 4) + ' (Fehler ' + LB.fmt(Math.abs(s.A - ex), 5) + '); mit mehr Rechtecken wird der Fehler kleiner.'; },
+   
     input: '0 1 ; -1 1 ; 8', hint: 'μ σ ; a b ; m (Rechtecke)',
     examples: [['±1σ mit 8 Rechtecken', '0 1 ; -1 1 ; 8'], ['P(X ≤ 3) für N(2, 4²)', '2 4 ; -14 3 ; 20'], ['IQ 85 bis 115', '100 15 ; 85 115 ; 6']],
     parse: s => { const pr = s.split(';').map(S.parse); if (pr.length !== 3 || pr[0].length !== 2 || pr[1].length !== 2 || pr[2].length !== 1) throw new Error('Format: μ σ ; a b ; m');
@@ -248,7 +265,7 @@ LB.on(function tracers2() {
       let path = ''; for (let k = 0; k <= 120; k++) { const x = lo + (hi - lo) * k / 120; path += (k ? 'L' : 'M') + X(x).toFixed(1) + ',' + Y(S.normPdf(x, d.mu, d.s)).toFixed(1); }
       const rects = s.bars.map(b => '<rect x="' + X(b[0] - s.h / 2).toFixed(1) + '" y="' + Y(b[1]).toFixed(1) + '" width="' + Math.max(0.5, X(b[0] + s.h / 2) - X(b[0] - s.h / 2)).toFixed(1) + '" height="' + (Y(0) - Y(b[1])).toFixed(1) + '" fill="' + LB.rgba(C.chg, 0.45) + '" stroke="' + C.chg + '"/>').join('');
       return '<svg viewBox="0 0 ' + W + ' ' + H + '"><line x1="10" x2="' + (W - 10) + '" y1="' + Y(0) + '" y2="' + Y(0) + '" stroke="' + C.muted + '"/>' + rects + '<path d="' + path + '" fill="none" stroke="' + C.rule + '" stroke-width="2"/></svg>' +
-        LB.kvHTML([['i', s.i > d.m ? '–' : s.i, 'idx'], ['h', LB.fmt(s.h, 4), 'par'], ['Fläche bisher', LB.fmt(s.A, 4), 'res']]);
+        LB.kvHTML([['i', s.i > d.m ? '–' : s.i, 'idx'], ['h', LB.fmt(s.h, 4), 'chg'], ['Fläche bisher', LB.fmt(s.A, 4), 'res']]);
     }
   });
 });

@@ -200,7 +200,7 @@ const KW = {
 };
 LB.stripMark = l => l.replace(/\s*#@[\w-]+\s*$/, '');
 LB.markOf = l => { const m = l.match(/#@([\w-]+)\s*$/); return m ? m[1] : ''; };
-LB.hlLine = function (line, lang) {
+LB.hlLine = function (line, lang, vars) {
   lang = lang || 'R'; const kws = KW[lang] || KW.R;
   let out = '', i = 0; const n = line.length;
   while (i < n) {
@@ -211,7 +211,8 @@ LB.hlLine = function (line, lang) {
     if (line.startsWith('<-', i)) { out += '<span class="tok-a">&lt;-</span>'; i += 2; continue; }
     if (/[A-Za-z_.]/.test(ch)) { let j = i + 1; while (j < n && /[A-Za-z0-9_.]/.test(line[j])) j++;
       const w = line.slice(i, j);
-      if (kws.has(w)) out += '<span class="tok-k">' + LB.esc(w) + '</span>';
+      if (vars && vars[w] && line[j] !== '(') out += '<span class="tok-v kw-' + vars[w] + '">' + LB.esc(w) + '</span>';
+      else if (kws.has(w)) out += '<span class="tok-k">' + LB.esc(w) + '</span>';
       else if (line[j] === '(') out += '<span class="tok-t">' + LB.esc(w) + '</span>';
       else out += LB.esc(w);
       i = j; continue; }
@@ -242,7 +243,12 @@ LB.Tracer = class {
       '<input type="range" class="tr-pos" min="0" value="0" aria-label="Schritt">' +
       '<button data-a="next" title="vor">▶</button><button data-a="last" title="Ende">⏭</button>' +
       '<button data-a="auto">⏯ auto</button><span class="tr-cnt"></span></div>' +
-      '<div class="tr-msg"></div>';
+      '<div class="tr-msg"></div>' +
+      '<div class="tr-say"></div>' +
+      (o.vars ? '<details class="tr-legend" open><summary>🏷 Was jede Variable macht (Farbe = Farbe im Code und im Zustand)</summary><div class="tr-vars">' +
+        o.vars.map(v => '<div><code class="kw-' + v[1] + '">' + v[0].split('|').map(LB.esc).join(' / ') + '</code><span>' + v[2] + '</span></div>').join('') + '</div>' +
+        (o.together ? '<div class="tr-tog"><b>🔗 Zusammen gelesen:</b> ' + o.together + '</div>' : '') + '</details>' : '');
+    this.vmap = {}; (o.vars || []).forEach(v => v[0].split('|').forEach(nm => { this.vmap[nm] = v[1]; }));
     this.q = s => this.root.querySelector(s);
     this.root.addEventListener('click', e => {
       const b = e.target.closest('[data-a]'); if (b) this.act(b.dataset.a);
@@ -260,7 +266,7 @@ LB.Tracer = class {
     let lines = this.langs[this.lang];
     if (this.o.codeFor && this.inp !== undefined) lines = this.o.codeFor(this.inp, this.lang, lines);
     this.q('.tr-code').innerHTML = lines.map((l, i) =>
-      '<div class="row" data-k="' + LB.markOf(l) + '"><span class="ln">' + (i + 1) + '</span>' + LB.hlLine(LB.stripMark(l), this.lang) + '<span class="hits"></span></div>').join('');
+      '<div class="row" data-k="' + LB.markOf(l) + '"><span class="ln">' + (i + 1) + '</span>' + LB.hlLine(LB.stripMark(l), this.lang, this.vmap) + '<span class="hits"></span></div>').join('');
     LB.$$('[data-lang]', this.root).forEach(b => b.classList.toggle('on', b.dataset.lang === this.lang));
   }
   run() {
@@ -298,14 +304,24 @@ LB.Tracer = class {
       r.querySelector('.hits').textContent = k && hits[k] ? '×' + hits[k] : '';
     });
     const st = this.q('.tr-state'); st.innerHTML = s.st ? this.o.view(s.st) : '';
+    const prev = i > 0 && this.snaps[i - 1].st ? this.o.view(this.snaps[i - 1].st) : null;
+    if (prev !== null) {                                               // geänderte Werte aufleuchten lassen
+      const tmp = document.createElement('div'); tmp.innerHTML = prev;
+      const SEL = '.kv > div > span, td, .cells .c';
+      const a = LB.$$(SEL, st), b = LB.$$(SEL, tmp);
+      a.forEach((e, k) => { if (!b[k] || b[k].textContent !== e.textContent) e.classList.add('upd'); });
+    }
+    const last = i === this.snaps.length - 1, say = this.q('.tr-say');
+    if (this.o.say && s.st && last) { say.innerHTML = '<b>🗣 Aussage über die Daten:</b> ' + this.o.say(s.st, this.inp); say.classList.add('on'); LB.tex(say); }
+    else if (this.o.say) { say.innerHTML = '🗣 Die Aussage in Worten erscheint im letzten Schritt (⏭).'; say.classList.remove('on'); }
     this.q('.tr-msg').innerHTML = s.msg;
     this.q('.tr-cnt').textContent = 'Schritt ' + i + ' / ' + (this.snaps.length - 1);
     LB.tex(this.q('.tr-msg')); LB.tex(st);
   }
 };
 /* Hilfen für Zustandsansichten */
-LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div><i>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span></div>').join('') + '</div>';
-LB.cellsHTML = (arr, cls, base) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
+LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div' + (p[2] ? ' class="r-' + p[2] + '"' : '') + '><i' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span>' + (p[3] ? '<em>' + p[3] + '</em>' : '') + '</div>').join('') + '</div>';
+LB.cellsHTML = (arr, cls, base, lab) => (lab ? '<div class="cells-lab">' + (lab.idx ? '<span class="kw-' + (lab.idxRole || 'idx') + '">' + lab.idx + '</span> (kleine Zahl) → ' : '') + '<span class="kw-' + (lab.role || 'res') + '">' + lab.val + '</span> (große Zahl)' + (lab.note ? ' · ' + lab.note : '') + '</div>' : '') + '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
 
 /* =====================================================================
    Farbige Schlüsselwörter im Fließtext (Wortliste Begriff → Rolle)
