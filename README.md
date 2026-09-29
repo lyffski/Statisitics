@@ -4,7 +4,7 @@ Eigenständige HTML-Dateien pro Kapitel (dunkler Bildatlas-Stil, KaTeX, Plotly),
 
 | Datei | Inhalt |
 |---|---|
-| `Lernbegleiter/00_Alle_Teile.html` | **alle Teile in einer Datei**: Übersicht (Taste `T`), jeder Teil läuft isoliert in einem eigenen Rahmen |
+| `Lernbegleiter/00_Alle_Teile.html` | **die Datei zum Verschicken**: alle Teile in einer Datei, Übersicht (Taste `T`), jeder Teil läuft isoliert in einem eigenen Rahmen. Nur diese Datei enthält die 🎓 Prüfungsaufgaben und den Video-Pfad `~/Personal/Statistics` |
 | `Lernbegleiter/01_Grundlagen_Wahrscheinlichkeit.html` | Kap. 1: Ω, Axiome, Siebformel, Laplace, mehrstufige Experimente, Unabhängigkeit, bedingte W'keit, totale W'keit, Bayes |
 | `Lernbegleiter/02_Verteilungen.html` | Kap. 2: Zufallsvariable, Verteilungsfunktion, E und Var, Bernoulli bis Normal, Poissonprozess, Transformation |
 | `Lernbegleiter/03_Deskriptive_Statistik.html` | Kap. 3: Kennzahlen, Quantile, Grafiken, Korrelation, lineare Regression |
@@ -17,23 +17,21 @@ Eigenständige HTML-Dateien pro Kapitel (dunkler Bildatlas-Stil, KaTeX, Plotly),
 | `Grundlage/statistik-lernbegleiter-komplett1.html` | bisheriger Lernbegleiter (Skript L. Meier), Quelle aller „📘 Grundlage“-Inhalte |
 | `STATISTIK_II_NOTIZEN.md` | Videos, die erst für Statistik II gebraucht werden (bewusst nicht verlinkt) |
 
+**Einzeldateien** `01…09_*.html`: älterer Stand ohne 🎓 Prüfungsaufgaben; es wird nur noch `00_Alle_Teile.html` aktualisiert.
+
+**🎓 Prüfungsaufgaben:** am Ende jedes Unterkapitels eine Aufgabe, die alles aus dem Unterkapitel von null abfragt, und pro Kapitel eine Gesamtaufgabe (Abschnitt „★“). Jede Teilaufgabe (a), (b), … lässt sich einzeln aufklappen. Quelle: `tools/kap/pa/kNN.html`.
+
 **Kennzeichen:** 📘 Grundlage = aus dem bisherigen Lernbegleiter übernommen · ✚ Neu = ergänzt (Von-null-Karten, R/Python-Code, Tracer, Modulinhalte wie Siebformel und lineare Regression).
 
 **Code:** R (Basis-R) und Python (numpy/scipy/matplotlib) nebeneinander, wie im Modul vorgesehen. Die Python-Programme in `tools/code/*.py` sind ausgeführt und geprüft; die R-Programme sind Zeile für Zeile gleich aufgebaut.
 
-**Videos:** Die 🎬-Links zeigen auf deine lokalen `.mp4`-Dateien. Entweder neben den HTML-Dateien einen Symlink anlegen:
-
-```bash
-cd Lernbegleiter && ln -s ~/Pfad/zu/deinen/Videos videos
-```
-
-oder im ☰-Menü unter „Video-Ordner“ den absoluten Pfad eintragen (gilt in der Gesamtdatei für alle Teile) (z. B. `/home/NAME/Videos/Statistik/`). Unterordner `init/`, `init2/`, `statquest/` wie in deiner Ordnerstruktur.
+**Videos:** Die 🎬-Links öffnen deine lokalen `.mp4`-Dateien direkt aus `/home/lllvrm/Personal/Statistics/` (Unterordner `init/`, `init2/`, `statquest/` wie in deinem `tree`). Liegt der Ordner woanders, im ☰-Menü eines beliebigen Teils unter „Video-Ordner“ den absoluten Pfad eintragen; das gilt dann für alle Teile. „📋 Pfad“ kopiert den Dateipfad, falls der Browser `file://`-Links blockiert.
 
 ## Bauen und testen
 
 ```bash
-python3 tools/build.py            # alle Teile aus tools/kap/ bauen (oder: python3 tools/build.py 8)
+python3 tools/build.py            # alle Teile nach build/teile/ bauen (oder: python3 tools/build.py 8)
 python3 tools/bundle.py           # danach die Gesamtdatei 00_Alle_Teile.html erzeugen
-LIBS=/pfad/zu/libs node tools/test/test.js Lernbegleiter/0[1-9]_*.html      # KaTeX, JS-Fehler, IDs, Überlauf, Menü, Tracer
+LIBS=/pfad/zu/libs node tools/test/test.js build/teile/0*.html      # KaTeX, JS-Fehler, IDs, Überlauf, Menü, Tracer
 LIBS=/pfad/zu/libs node tools/test/bundle_test.js Lernbegleiter/00_Alle_Teile.html   # jeder Teil in der Gesamtdatei
 ```

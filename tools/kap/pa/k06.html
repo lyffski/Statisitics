@@ -1,0 +1,138 @@
+<!-- @s6-1 -->
+<h3 id="pa-6-1-h" data-m="🎓 Prüfungsaufgabe 6.1|alles aus 6.1 von null">🎓 Prüfungsaufgabe: alles aus 6.1 von null</h3>
+<x-pa id="pa-6-1" sec="6.1" q="400 Bauteile, 12 defekt: die drei Fragen der Statistik">
+  <x-task>Von 400 zufällig geprüften Bauteilen sind 12 defekt. \(p\) ist der wahre Defektanteil der Produktion.
+  <ol class="pa-list"><li>(a) Was ist das Modell, was sind die Daten, was ist der Parameter?</li><li>(b) Unterscheide Schätzer \(\hat P\) und Schätzwert \(\hat p\); gib \(\hat p\) an.</li>
+  <li>(c) Ordne zu: „Wie groß ist p?“, „Ist p höchstens 2 Prozent?“, „In welchem Bereich liegt p plausibel?“</li>
+  <li>(d) Gib einen groben Bereich für p an (Standardfehler, ±1.96 SE).</li></ol></x-task>
+  <x-cover>Daten als Realisierungen, Modell, Parameter (a) · Hut-Notation, Schätzer vs. Schätzwert (b) · Punktschätzung, Test, Vertrauensintervall (c) · Vorgriff auf SE (d)</x-cover>
+  <x-part h="(a) Modell" ref="6.1"><x-res>Modell: Anzahl defekt \(X\sim\Bin(400,p)\) (bzw. 400 i.i.d. \(\Bern(p)\)). Daten: die beobachtete Realisierung \(x=12\). Parameter: das unbekannte \(p\).</x-res></x-part>
+  <x-part h="(b) Schätzer vs. Schätzwert" ref="6.1"><x-res>Schätzer \(\hat P=X/400\) ist eine Zufallsvariable (vor dem Experiment). Schätzwert \(\hat p=12/400=0.03\) ist eine Zahl (nach dem Experiment).</x-res></x-part>
+  <x-part h="(c) Drei Fragen" ref="6.1"><x-res>„Wie groß?“ → Punktschätzung. „Höchstens 2 Prozent?“ → Test (Kap. 7). „Welcher Bereich?“ → Vertrauensintervall.</x-res></x-part>
+  <x-part h="(d) Grober Bereich" ref="6.1">
+    <x-step h="Standardfehler.">\(\operatorname{SE}=\sqrt{\hat p(1-\hat p)/n}=\sqrt{0.03\cdot0.97/400}=0.0085\).</x-step>
+    <x-res>\(0.03\pm1.96\cdot0.0085=[0.013;\ 0.047]\). Der Wert 0.02 liegt darin: die Daten widersprechen „2 Prozent“ nicht klar.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s6-2 -->
+<h3 id="pa-6-2-h" data-m="🎓 Prüfungsaufgabe 6.2|alles aus 6.2 von null">🎓 Prüfungsaufgabe: alles aus 6.2 von null</h3>
+<x-pa id="pa-6-2" sec="6.2" q="Normalplot für fünf Werte und die typischen Formen">
+  <x-task>Daten: 4.8, 7.5, 3.1, 5.6, 5.0.
+  <ol class="pa-list"><li>(a) Berechne die Punkte des Normalplots.</li><li>(b) Liegen sie auf einer Geraden? Was sagen Steigung und Achsenabschnitt?</li>
+  <li>(c) Was bedeutet: invertiertes S; S-Form; nach oben gekrümmt?</li><li>(d) Wie prüft man mit einem QQ-Plot auf eine Exponentialverteilung?</li></ol></x-task>
+  <x-cover>Konstruktion mit α_k = (k − 0.5)/n (a) · Gerade, Steigung ≈ σ, Achsenabschnitt ≈ μ (b) · Formen deuten (c) · QQ-Plot für andere Verteilungen (d)</x-cover>
+  <x-part h="(a) Punkte" ref="6.2">
+    <x-step h="Ordnen.">\(x_{(k)}\): 3.1, 4.8, 5.0, 5.6, 7.5.</x-step>
+    <x-step h="Niveaus.">\(\alpha_k=\tfrac{k-0.5}{5}\): 0.1, 0.3, 0.5, 0.7, 0.9.</x-step>
+    <x-step h="Normal-Quantile.">\(\Phi^{-1}(\alpha_k)\): −1.28, −0.52, 0, 0.52, 1.28.</x-step>
+    <x-res>Punkte \((-1.28;3.1)\), \((-0.52;4.8)\), \((0;5.0)\), \((0.52;5.6)\), \((1.28;7.5)\).</x-res>
+  </x-part>
+  <x-part h="(b) Gerade?" ref="6.2"><x-res>Grob ja (bei n = 5 ist viel Schwankung normal). Eine angepasste Gerade hat Achsenabschnitt 5.2 ≈ \(\bar x=5.2\) und Steigung 1.58 ≈ \(s=1.59\).</x-res></x-part>
+  <x-part h="(c) Formen" ref="6.2"><x-res>Invertiertes S (Enden wegbiegen): schwere Ränder, mehr Extremwerte als normal. S-Form: leichte Ränder. Durchgehend gekrümmt (Bogen nach oben): rechtsschiefe Daten.</x-res></x-part>
+  <x-part h="(d) Andere Verteilung" ref="6.2"><x-res>Statt \(\Phi^{-1}\) die Quantile der Exponentialverteilung \(-\ln(1-\alpha_k)\) auf die x-Achse. Liegen die Punkte auf einer Geraden durch 0, passt Exp.</x-res></x-part>
+</x-pa>
+<!-- @s6-3 -->
+<h3 id="pa-6-3-h" data-m="🎓 Prüfungsaufgabe 6.3.1|alles aus 6.3.1 von null">🎓 Prüfungsaufgabe: alles aus 6.3.1 von null</h3>
+<x-pa id="pa-6-3" sec="6.3.1" q="Momentenmethode für vier Modelle mit denselben Daten">
+  <x-task>Daten: 2, 5, 1, 4, 3.
+  <ol class="pa-list"><li>(a) Bestimme die empirischen Momente \(m_1\), \(m_2\).</li><li>(b) Schätze μ und σ² einer Normalverteilung.</li>
+  <li>(c) Schätze λ einer Poisson- und einer Exponentialverteilung.</li><li>(d) Schätze θ einer \(\Uni(0,\theta)\).</li></ol></x-task>
+  <x-cover>empirische Momente (a) · zwei Parameter, zwei Gleichungen (b) · ein Parameter (c, d) · immer: theoretisches Moment = empirisches Moment, auflösen</x-cover>
+  <x-part h="(a) Momente" ref="6.3.1"><x-res>\(m_1=\bar x=3\); \(m_2=\tfrac1n\sum x_i^2=\tfrac{4+25+1+16+9}5=11\).</x-res></x-part>
+  <x-part h="(b) Normal" ref="6.3.1">
+    <x-step h="Gleichungen.">\(\EE[X]=\mu\overset!=3\); \(\EE[X^2]=\sigma^2+\mu^2\overset!=11\).</x-step>
+    <x-res>\(\hat\mu=3\), \(\hat\sigma^2=11-9=2\) (Nenner n; die Stichprobenvarianz mit n − 1 wäre 2.5).</x-res>
+  </x-part>
+  <x-part h="(c) Poisson und Exponential" ref="6.3.1"><x-res>Poisson: \(\EE=\lambda\overset!=3\) → \(\hat\lambda=3\). Exponential: \(\EE=\tfrac1\lambda\overset!=3\) → \(\hat\lambda=\tfrac13\).</x-res></x-part>
+  <x-part h="(d) Uniform" ref="6.3.1"><x-res>\(\EE=\tfrac\theta2\overset!=3\) → \(\hat\theta=6\).</x-res></x-part>
+</x-pa>
+<!-- @s6-4 -->
+<h3 id="pa-6-4-h" data-m="🎓 Prüfungsaufgabe 6.3.2|alles aus 6.3.2 von null">🎓 Prüfungsaufgabe: alles aus 6.3.2 von null</h3>
+<x-pa id="pa-6-4" sec="6.3.2" q="Maximum-Likelihood: Bernoulli, Exponential, Uniform">
+  <x-task><ol class="pa-list"><li>(a) Von 20 Versuchen gelingen 7. Leite den ML-Schätzer für p von null her.</li>
+  <li>(b) Lebensdauern 2, 5, 1, 4, 3 aus \(\Expo(\lambda)\). Stelle \(L\) und \(\ell\) auf und bestimme \(\hat\lambda\) und \(\ell(\hat\lambda)\).</li>
+  <li>(c) Dieselben Daten aus \(\Uni(0,\theta)\): ML-Schätzer? Vergleiche mit der Momentenmethode (6.3.1).</li><li>(d) Wie findet man das Maximum numerisch in R/Python?</li></ol></x-task>
+  <x-cover>Likelihood als Produkt, log-Likelihood, ℓ′ = 0 (a, b) · Randmaximum ohne Ableitung (c) · Vergleich ML vs. Momente (c) · numerische Maximierung (d)</x-cover>
+  <x-part h="(a) Bernoulli" ref="6.3.2">
+    <x-step h="Likelihood.">\(L(p)=p^7(1-p)^{13}\) (7 Erfolge, 13 Misserfolge, unabhängig).</x-step>
+    <x-step h="Log und ableiten.">\(\ell(p)=7\ln p+13\ln(1-p)\), \(\ell'(p)=\tfrac7p-\tfrac{13}{1-p}=0\) → \(7(1-p)=13p\).</x-step>
+    <x-res>\(\hat p=\tfrac7{20}=0.35\): der Anteil der Erfolge.</x-res>
+  </x-part>
+  <x-part h="(b) Exponential" ref="6.3.2">
+    <x-step h="Likelihood.">\(L(\lambda)=\prod\lambda e^{-\lambda x_i}=\lambda^5e^{-15\lambda}\).</x-step>
+    <x-step h="Maximieren.">\(\ell=5\ln\lambda-15\lambda\), \(\ell'=\tfrac5\lambda-15=0\) → \(\hat\lambda=\tfrac13\); \(\ell''=-\tfrac5{\lambda^2}<0\) ✓ Maximum.</x-step>
+    <x-res>\(\hat\lambda=\tfrac1{\bar x}=\tfrac13\), \(\ell(\hat\lambda)=5\ln\tfrac13-5=-10.49\). Hier stimmt ML mit der Momentenmethode überein.</x-res>
+  </x-part>
+  <x-part h="(c) Uniform" ref="6.3.2">
+    <x-step h="Likelihood.">\(L(\theta)=\theta^{-5}\), falls alle \(x_i\le\theta\), sonst 0.</x-step>
+    <x-step h="Maximum am Rand.">\(\theta^{-5}\) fällt in θ, also θ so klein wie möglich: \(\hat\theta=\max x_i=5\). Die Ableitung ist nirgends null.</x-step>
+    <x-res>ML: 5, Momente: 6. Die Methoden können verschiedene Schätzer liefern.</x-res>
+  </x-part>
+  <x-part h="(d) Numerisch" ref="6.3.2"><x-res>R: <code>optimize(function(l) 5 * log(l) - 15 * l, c(0.01, 5), maximum = TRUE)</code>. Python: <code>optimize.minimize_scalar(lambda l: -(5 * np.log(l) - 15 * l), bounds=(0.01, 5), method="bounded")</code>.</x-res></x-part>
+</x-pa>
+<!-- @s6-5 -->
+<h3 id="pa-6-5-h" data-m="🎓 Prüfungsaufgabe 6.3.3|alles aus 6.3.3 von null">🎓 Prüfungsaufgabe: alles aus 6.3.3 von null</h3>
+<x-pa id="pa-6-5" sec="6.3.3" q="Welcher Schätzer ist erwartungstreu?">
+  <x-task><ol class="pa-list"><li>(a) Zeige \(\EE[\bar X_n]=\mu\).</li><li>(b) Für n = 5: welchen Bias hat \(\hat\sigma^2=\tfrac1n\sum(X_i-\bar X)^2\)? Warum ist \(S^2\) mit \(n-1\) erwartungstreu?</li>
+  <li>(c) Für \(\Uni(0,\theta)\) gilt \(\EE[\max X_i]=\tfrac{n}{n+1}\theta\). Ist der ML-Schätzer erwartungstreu? Korrigiere ihn für die Daten 2, 5, 1, 4, 3.</li>
+  <li>(d) Was bedeutet Konsistenz, und ist \(\bar X_n\) konsistent?</li></ol></x-task>
+  <x-cover>Erwartungstreue des Mittels (a) · n vs. n − 1, Bias (b) · verzerrter ML-Schätzer und Korrektur (c) · Konsistenz (d)</x-cover>
+  <x-part h="(a) Mittel" ref="6.3.3"><x-res>\(\EE[\bar X]=\tfrac1n\sum\EE[X_i]=\tfrac1n\,n\mu=\mu\): erwartungstreu.</x-res></x-part>
+  <x-part h="(b) Varianz" ref="6.3.3">
+    <x-step h="Rechnung.">\(\EE\big[\sum(X_i-\bar X)^2\big]=(n-1)\sigma^2\): ein Freiheitsgrad geht verloren, weil \(\bar X\) aus denselben Daten geschätzt wird.</x-step>
+    <x-res>\(\EE[\hat\sigma^2]=\tfrac{n-1}n\sigma^2=0.8\sigma^2\): Bias \(-0.2\sigma^2\). Mit Nenner \(n-1\) verschwindet er.</x-res>
+  </x-part>
+  <x-part h="(c) Maximum" ref="6.3.3">
+    <x-step h="Bias.">\(\EE[\max]=\tfrac56\theta<\theta\): unterschätzt systematisch.</x-step>
+    <x-res>Korrigiert: \(\tfrac{n+1}n\max=\tfrac65\cdot5=6\) (erwartungstreu; zufällig gleich dem Momentenschätzer).</x-res>
+  </x-part>
+  <x-part h="(d) Konsistenz" ref="6.3.3"><x-res>Ein Schätzer ist konsistent, wenn er mit wachsendem n gegen den wahren Wert strebt. \(\bar X_n\): erwartungstreu und \(\Var=\sigma^2/n\to0\), also konsistent (GGZ).</x-res></x-part>
+</x-pa>
+<!-- @s6-6 -->
+<h3 id="pa-6-6-h" data-m="🎓 Prüfungsaufgabe 6.3.4|alles aus 6.3.4 von null">🎓 Prüfungsaufgabe: alles aus 6.3.4 von null</h3>
+<x-pa id="pa-6-6" sec="6.3.4" q="Prüfungspunkte: Standardfehler, VI, benötigtes n">
+  <x-task>n = 36 Prüfungen, \(\bar x=85\) Punkte, bekannte \(\sigma=12\).
+  <ol class="pa-list"><li>(a) Standardfehler von \(\bar X\)?</li><li>(b) 95- und 99-Prozent-Vertrauensintervall für μ; leite die Formel her.</li>
+  <li>(c) Was bedeutet „95 Prozent“, und was nicht?</li><li>(d) Wie groß muss n sein für eine halbe Breite von 1 Punkt (95 Prozent)?</li>
+  <li>(e) Was ändert sich, wenn σ unbekannt ist?</li><li>(f) Fasse das Schema für Schätz-Aufgaben zusammen.</li></ol></x-task>
+  <x-cover>SE = σ/√n (a) · VI-Herleitung aus der Normalverteilung von X̄ (b) · Deutung (c) · Stichprobenumfang (d) · Ausblick t (e) · Schema (f)</x-cover>
+  <x-part h="(a) Standardfehler" ref="6.3.4"><x-res>\(\operatorname{SE}=\tfrac{12}{\sqrt{36}}=2\) Punkte.</x-res></x-part>
+  <x-part h="(b) Vertrauensintervalle" ref="6.3.4">
+    <x-step h="Herleitung.">\(\PP\big(-1.96\le\tfrac{\bar X-\mu}{\operatorname{SE}}\le1.96\big)=0.95\) → nach μ auflösen: \(\mu\in[\bar X\pm1.96\operatorname{SE}]\).</x-step>
+    <x-res>95 Prozent: \(85\pm3.92=[81.08;\ 88.92]\). 99 Prozent: \(85\pm2.576\cdot2=[79.85;\ 90.15]\), breiter.</x-res>
+  </x-part>
+  <x-part h="(c) Deutung" ref="6.3.4"><x-res>Das Verfahren erzeugt in 95 Prozent aller Wiederholungen ein Intervall, das μ enthält. Nicht: „μ liegt mit 95 Prozent W'keit in [81.08; 88.92]“ (μ ist fest, das Intervall zufällig).</x-res></x-part>
+  <x-part h="(d) Stichprobenumfang" ref="6.3.4"><x-res>\(1.96\cdot\tfrac{12}{\sqrt n}\le1\) → \(n\ge553.2\), also 554.</x-res></x-part>
+  <x-part h="(e) σ unbekannt" ref="6.3.4"><x-res>σ durch s ersetzen und \(t_{n-1}\) statt Normal-Quantil: breiteres Intervall (Kap. 7.2).</x-res></x-part>
+  <x-part h="(f) Schema" ref="6.3.4"><x-res>1. Modell und Parameter festlegen. 2. Schätzer wählen (Momente/ML), Schätzwert berechnen. 3. Genauigkeit angeben: SE und Vertrauensintervall.</x-res></x-part>
+</x-pa>
+<!-- @kap -->
+<section id="s6-pa" data-m="🎓 Gesamtaufgabe|Kapitel 6 komplett von null">
+<h2><span class="num">6.★</span>Gesamtaufgabe: Kapitel 6 komplett von null</h2>
+<x-pa id="pa-6-kap" sec="6" scope="kap" q="Wartezeiten an der Hotline">
+  <x-task>Acht Wartezeiten (Minuten): 1.2, 0.4, 2.5, 0.9, 3.1, 0.6, 1.7, 1.6. Modellvorschlag: \(\Expo(\lambda)\).
+  <ol class="pa-list"><li>(a) Was ist gesucht, was sind die Daten, welche der drei Fragen stellst du zuerst?</li>
+  <li>(b) Prüfe das Modell mit QQ-Plots: welche Punkte trägst du gegen Normal und gegen Exp auf?</li>
+  <li>(c) Schätze λ mit der Momentenmethode.</li><li>(d) Leite den ML-Schätzer her.</li>
+  <li>(e) Ist \(\bar X\) erwartungstreu für \(\EE[X]=1/\lambda\)? Bestimme \(s^2\).</li>
+  <li>(f) Unter dem Modell ist \(\sigma=1/\lambda\approx1.5\). Gib SE und ein 95-Prozent-VI für die mittlere Wartezeit an. Wie viele Messungen braucht man für ±0.2 Minuten?</li></ol></x-task>
+  <x-cover>6.1 Grundfragen (a) · 6.2 QQ-Plot (b) · 6.3.1 Momente (c) · 6.3.2 ML (d) · 6.3.3 Erwartungstreue (e) · 6.3.4 SE, VI, n (f)</x-cover>
+  <x-part h="(a) Einordnen" ref="6.1"><x-res>Parameter λ (bzw. mittlere Wartezeit 1/λ); Daten: Realisierungen \(x_1,\dots,x_8\). Zuerst Punktschätzung, dann Genauigkeit (VI).</x-res></x-part>
+  <x-part h="(b) QQ-Plots" ref="6.2">
+    <x-step h="Geordnet.">0.4, 0.6, 0.9, 1.2, 1.6, 1.7, 2.5, 3.1; \(\alpha_k=\tfrac{k-0.5}8\).</x-step>
+    <x-step h="Normal.">x-Achse \(\Phi^{-1}(\alpha_k)\): −1.53, −0.89, −0.49, −0.16, 0.16, 0.49, 0.89, 1.53.</x-step>
+    <x-res>Exp: x-Achse \(-\ln(1-\alpha_k)\): 0.06, 0.21, 0.37, 0.58, 0.83, 1.16, 1.67, 2.77. Der letzte Punkt liegt unter der Geraden: die Daten haben einen leichteren rechten Rand als Exp (auch s = 0.93 < x̄ = 1.5, bei Exp wären beide gleich).</x-res>
+  </x-part>
+  <x-part h="(c) Momente" ref="6.3.1"><x-res>\(\bar x=\tfrac{12}8=1.5\overset!=\tfrac1\lambda\) → \(\hat\lambda=0.667\) pro Minute.</x-res></x-part>
+  <x-part h="(d) ML" ref="6.3.2">
+    <x-step h="log-Likelihood.">\(\ell(\lambda)=8\ln\lambda-\lambda\sum x_i=8\ln\lambda-12\lambda\).</x-step>
+    <x-res>\(\ell'=\tfrac8\lambda-12=0\) → \(\hat\lambda=\tfrac23\), gleich wie (c).</x-res>
+  </x-part>
+  <x-part h="(e) Erwartungstreue" ref="6.3.3"><x-res>Ja, \(\EE[\bar X]=1/\lambda\). \(s^2=0.869\) (Nenner 7, erwartungstreu für σ²), \(s=0.93\).</x-res></x-part>
+  <x-part h="(f) Genauigkeit" ref="6.3.4">
+    <x-step h="SE.">\(\tfrac{1.5}{\sqrt8}=0.53\).</x-step>
+    <x-step h="VI.">\(1.5\pm1.96\cdot0.53=[0.46;\ 2.54]\) Minuten: sehr breit.</x-step>
+    <x-res>Für ±0.2: \(n\ge\big(\tfrac{1.96\cdot1.5}{0.2}\big)^2=216.1\), also 217 Messungen.</x-res>
+  </x-part>
+</x-pa>
+</section>

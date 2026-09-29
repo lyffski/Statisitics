@@ -1,0 +1,203 @@
+<!-- @s4-1 -->
+<h3 id="pa-4-1-h" data-m="🎓 Prüfungsaufgabe 4.1|alles aus 4.1 von null">🎓 Prüfungsaufgabe: alles aus 4.1 von null</h3>
+<x-pa id="pa-4-1" sec="4.1" q="Kaffee und Müdigkeit: eine Tabelle komplett auswerten">
+  <x-task>\(\mX\) = Anzahl Kaffees am Morgen (0, 1, 2), \(\mY\) = 1, falls man am Nachmittag müde ist. Gemeinsame Verteilung:
+  <table class="tbl"><tr><th></th><th>Y = 0</th><th>Y = 1</th></tr><tr><th>X = 0</th><td>0.10</td><td>0.20</td></tr><tr><th>X = 1</th><td>0.15</td><td>0.25</td></tr><tr><th>X = 2</th><td>0.05</td><td>0.25</td></tr></table>
+  <ol class="pa-list"><li>(a) Ist das eine gültige gemeinsame Verteilung? Bestimme \(\PP(\mX+\mY=2)\).</li><li>(b) Bestimme beide Randverteilungen.</li>
+  <li>(c) Bestimme \(\PP(\mY=1\given\mX=x)\) für alle x und \(\EE[\mY\given\mX=2]\), dazu die bedingte Verteilung von X gegeben Y = 1.</li>
+  <li>(d) Sind X und Y unabhängig?</li><li>(e) Wie wertet man die Tabelle in R/Python aus?</li></ol></x-task>
+  <x-cover>gemeinsame Verteilung, P((X, Y) ∈ A) (a) · Randverteilungen (b) · bedingte Verteilung, bedingter Erwartungswert (c) · Unabhängigkeit (d) · Code (e)</x-cover>
+  <x-part h="(a) Gemeinsame Verteilung" ref="4.1">
+    <x-step h="Gültig?">Alle Einträge ≥ 0, Summe \(0.10+0.20+0.15+0.25+0.05+0.25=1\) ✓.</x-step>
+    <x-step h="Zellen einsammeln.">\(\mX+\mY=2\) bei \((1,1)\) und \((2,0)\): \(0.25+0.05=0.30\).</x-step>
+    <x-res>Gültig; \(\PP(\mX+\mY=2)=0.30\).</x-res>
+  </x-part>
+  <x-part h="(b) Randverteilungen" ref="4.1">
+    <x-step h="Zeilensummen (Y heraussummieren).">\(\PP(\mX=0)=0.3\), \(\PP(\mX=1)=0.4\), \(\PP(\mX=2)=0.3\).</x-step>
+    <x-res>Spaltensummen: \(\PP(\mY=0)=0.3\), \(\PP(\mY=1)=0.7\).</x-res>
+  </x-part>
+  <x-part h="(c) Bedingte Verteilungen" ref="4.1">
+    <x-step h="Zelle durch Randsumme.">\(\PP(\mY=1\given\mX=0)=\tfrac{0.20}{0.3}=0.667\), \(\PP(\mY=1\given\mX=1)=\tfrac{0.25}{0.4}=0.625\), \(\PP(\mY=1\given\mX=2)=\tfrac{0.25}{0.3}=0.833\).</x-step>
+    <x-step h="Bedingter Erwartungswert.">\(\EE[\mY\given\mX=2]=0\cdot0.167+1\cdot0.833=0.833\).</x-step>
+    <x-res>X gegeben Y = 1: \(\tfrac{0.20}{0.7},\tfrac{0.25}{0.7},\tfrac{0.25}{0.7}=0.286,\ 0.357,\ 0.357\) (Summe 1 ✓).</x-res>
+  </x-part>
+  <x-part h="(d) Unabhängigkeit" ref="4.1">
+    <x-step h="Jede Zelle = Produkt der Ränder?">\(\PP(\mX=0,\mY=0)=0.10\), aber \(0.3\cdot0.3=0.09\).</x-step>
+    <x-res>Abhängig: schon eine Zelle genügt. Auch sichtbar in (c): die bedingte W'keit für „müde“ hängt von x ab.</x-res>
+  </x-part>
+  <x-part h="(e) Code" ref="4.1"><x-res>R: <code>P &lt;- matrix(c(.1, .2, .15, .25, .05, .25), 3, byrow = TRUE); rowSums(P); colSums(P); P[, 2] / rowSums(P); outer(rowSums(P), colSums(P))</code>. Python: <code>P.sum(1), P.sum(0), P[:, 1] / P.sum(1), np.outer(P.sum(1), P.sum(0))</code>.</x-res></x-part>
+</x-pa>
+<!-- @s4-2 -->
+<h3 id="pa-4-2-h" data-m="🎓 Prüfungsaufgabe 4.1.2|alles aus 4.1.2 von null">🎓 Prüfungsaufgabe: alles aus 4.1.2 von null</h3>
+<x-pa id="pa-4-2" sec="4.1.2" q="Eine gemeinsame Dichte auf dem Einheitsquadrat">
+  <x-task>\(\ff_{X,Y}(x,y)=c\,(x+2y)\) für \(0\le x,y\le1\), sonst 0.
+  <ol class="pa-list"><li>(a) Bestimme c.</li><li>(b) Bestimme \(\PP(\mX\le\tfrac12,\ \mY\le\tfrac12)\) und \(\PP(\mX<\mY)\).</li>
+  <li>(c) Bestimme die Randdichten \(\ff_X\), \(\ff_Y\) und die bedingte Dichte \(\ff_{Y\mid X}(y\given x)\).</li><li>(d) Sind X und Y unabhängig?</li></ol></x-task>
+  <x-cover>Normierung per Doppelintegral (a) · W'keit = Volumen über einem Bereich, auch dreieckige Bereiche (b) · Randdichte, bedingte Dichte (c) · Unabhängigkeit f = f_X · f_Y (d)</x-cover>
+  <x-part h="(a) Normierung" ref="4.1.2">
+    <x-step h="Doppelintegral = 1.">\(\int_0^1\!\int_0^1(x+2y)\dd x\dd y=\tfrac12+1=\tfrac32\), also \(c=\tfrac23\).</x-step>
+    <x-res>\(c=\tfrac23\).</x-res>
+  </x-part>
+  <x-part h="(b) W'keiten als Volumen" ref="4.1.2">
+    <x-step h="Rechteck.">\(\tfrac23\int_0^{1/2}\!\int_0^{1/2}(x+2y)\dd y\dd x=\tfrac23\int_0^{1/2}\big(\tfrac x2+\tfrac14\big)\dd x=\tfrac23\big(\tfrac1{16}+\tfrac18\big)=\Res{\tfrac18}\).</x-step>
+    <x-step h="Dreieck x &lt; y: innere Grenze hängt von y ab.">\(\tfrac23\int_0^1\!\int_0^{y}(x+2y)\dd x\dd y=\tfrac23\int_0^1\tfrac52y^2\dd y=\tfrac23\cdot\tfrac56=\Res{\tfrac59}\).</x-step>
+    <x-res>\(\tfrac18\) und \(\tfrac59\).</x-res>
+  </x-part>
+  <x-part h="(c) Rand- und bedingte Dichte" ref="4.1.2">
+    <x-step h="y herausintegrieren.">\(\ff_X(x)=\tfrac23\int_0^1(x+2y)\dd y=\tfrac23(x+1)\).</x-step>
+    <x-step h="x herausintegrieren.">\(\ff_Y(y)=\tfrac23\big(\tfrac12+2y\big)=\tfrac13+\tfrac43y\).</x-step>
+    <x-res>\(\ff_{Y\mid X}(y\given x)=\dfrac{\ff_{X,Y}(x,y)}{\ff_X(x)}=\dfrac{x+2y}{x+1}\) auf [0, 1].</x-res>
+  </x-part>
+  <x-part h="(d) Unabhängig?" ref="4.1.2">
+    <x-step h="Produkt prüfen.">\(\ff_X(x)\ff_Y(y)=\tfrac23(x+1)(\tfrac13+\tfrac43y)\); bei \((0,0)\): \(\tfrac29\ne\ff(0,0)=0\).</x-step>
+    <x-res>Abhängig; die bedingte Dichte in (c) hängt von x ab.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s4-3 -->
+<h3 id="pa-4-3-h" data-m="🎓 Prüfungsaufgabe 4.2|alles aus 4.2 von null">🎓 Prüfungsaufgabe: alles aus 4.2 von null</h3>
+<x-pa id="pa-4-3" sec="4.2" q="Erwartungswerte aus der Kaffee-Tabelle">
+  <x-task>Tabelle wie in 4.1.
+  <ol class="pa-list"><li>(a) \(\EE[\mX]\), \(\EE[\mY]\), \(\EE[\mX+\mY]\).</li><li>(b) \(\EE[\mX\mY]\): gilt \(\EE[\mX\mY]=\EE[\mX]\EE[\mY]\)?</li>
+  <li>(c) \(\EE[3+2\mX-5\mY]\) und \(\EE[\max(\mX,\mY)]\).</li><li>(d) Wie berechnet man \(\EE[g(\mX,\mY)]\) im stetigen Fall? Bestimme \(\EE[\mX\mY]\) für die Dichte aus 4.1.2.</li></ol></x-task>
+  <x-cover>E[g(X, Y)] als Summe über alle Zellen (b, c) · Linearität gilt immer (a, c) · Produkt nur bei Unabhängigkeit (b) · stetiger Fall als Doppelintegral (d)</x-cover>
+  <x-part h="(a) Linearität" ref="4.2">
+    <x-step h="Aus den Rändern.">\(\EE[\mX]=0.4+2\cdot0.3=1.0\), \(\EE[\mY]=0.7\).</x-step>
+    <x-res>\(\EE[\mX+\mY]=1.7\), gilt auch bei abhängigen ZV.</x-res>
+  </x-part>
+  <x-part h="(b) Produkt" ref="4.2">
+    <x-step h="Über alle Zellen.">\(\EE[\mX\mY]=\sum x\,y\,\pf(x,y)=1\cdot1\cdot0.25+2\cdot1\cdot0.25=0.75\).</x-step>
+    <x-res>\(0.75\ne1.0\cdot0.7=0.7\): die Produktregel gilt nur bei Unabhängigkeit.</x-res>
+  </x-part>
+  <x-part h="(c) Lineare und nichtlineare g" ref="4.2">
+    <x-step h="Linear.">\(\EE[3+2\mX-5\mY]=3+2-3.5=1.5\).</x-step>
+    <x-step h="max: jede Zelle einzeln.">Werte 0, 1, 1, 1, 2, 2 mit W'keiten 0.10, 0.20, 0.15, 0.25, 0.05, 0.25.</x-step>
+    <x-res>\(\EE[\max]=0.20+0.15+0.25+0.10+0.50=1.2\).</x-res>
+  </x-part>
+  <x-part h="(d) Stetig" ref="4.2">
+    <x-step h="Doppelintegral.">\(\EE[\mX\mY]=\iint xy\,\ff(x,y)\dd x\dd y=\tfrac23\int_0^1\!\int_0^1(x^2y+2xy^2)\dd x\dd y=\tfrac23\big(\tfrac16+\tfrac13\big)\).</x-step>
+    <x-res>\(\EE[\mX\mY]=\tfrac13\).</x-res>
+  </x-part>
+</x-pa>
+<!-- @s4-4 -->
+<h3 id="pa-4-4-h" data-m="🎓 Prüfungsaufgabe 4.3|alles aus 4.3 von null">🎓 Prüfungsaufgabe: alles aus 4.3 von null</h3>
+<x-pa id="pa-4-4" sec="4.3" q="Kovarianz, Korrelation und Varianz von Summen">
+  <x-task>Tabelle wie in 4.1 (\(\EE[\mX]=1\), \(\EE[\mY]=0.7\), \(\EE[\mX\mY]=0.75\)).
+  <ol class="pa-list"><li>(a) Bestimme \(\Cov(\mX,\mY)\).</li><li>(b) Bestimme \(\Var(\mX)\), \(\Var(\mY)\) und \(\rho\).</li>
+  <li>(c) Leite \(\Var(\mX+\mY)\) her und berechne \(\Var(\mX+\mY)\), \(\Var(\mX-\mY)\).</li><li>(d) Bestimme \(\Cov(2\mX,\,3-\mY)\) und \(\Corr(2\mX,\,3-\mY)\).</li></ol></x-task>
+  <x-cover>Cov = E[XY] − E[X]E[Y] (a) · Korrelation ρ ∈ [−1, 1] (b) · Herleitung und Regel Var(X ± Y) (c) · Rechenregeln für Cov und Corr (d)</x-cover>
+  <x-part h="(a) Kovarianz" ref="4.3"><x-res>\(\Cov=0.75-1.0\cdot0.7=\Res{0.05}\): schwach positiv.</x-res></x-part>
+  <x-part h="(b) Korrelation" ref="4.3">
+    <x-step h="Varianzen.">\(\EE[\mX^2]=0.4+4\cdot0.3=1.6\) → \(\Var(\mX)=0.6\); \(\Var(\mY)=0.7\cdot0.3=0.21\).</x-step>
+    <x-res>\(\rho=\tfrac{0.05}{\sqrt{0.6\cdot0.21}}=\tfrac{0.05}{0.355}=0.141\): schwacher linearer Zusammenhang.</x-res>
+  </x-part>
+  <x-part h="(c) Varianz der Summe" ref="4.3">
+    <x-step h="Herleitung.">\(\Var(\mX+\mY)=\EE[((\mX-\mu_X)+(\mY-\mu_Y))^2]=\Var(\mX)+\Var(\mY)+2\Cov(\mX,\mY)\) (Quadrat ausmultiplizieren).</x-step>
+    <x-res>\(\Var(\mX+\mY)=0.6+0.21+0.1=0.91\); \(\Var(\mX-\mY)=0.6+0.21-0.1=0.71\).</x-res>
+    <x-trap>\(\Var(\mX-\mY)=\Var(\mX)-\Var(\mY)\) ist falsch: Varianzen addieren sich immer, nur das Kovarianz-Glied wechselt das Vorzeichen.</x-trap>
+  </x-part>
+  <x-part h="(d) Regeln" ref="4.3">
+    <x-step h="Konstanten fallen weg, Faktoren kommen heraus.">\(\Cov(2\mX,3-\mY)=2\cdot(-1)\Cov(\mX,\mY)=-0.1\).</x-step>
+    <x-res>\(\Corr=-0.141\): nur das Vorzeichen dreht sich, die Stärke bleibt.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s4-5 -->
+<h3 id="pa-4-5-h" data-m="🎓 Prüfungsaufgabe 4.4|alles aus 4.4 von null">🎓 Prüfungsaufgabe: alles aus 4.4 von null</h3>
+<x-pa id="pa-4-5" sec="4.4" q="Größe und Gewicht als 2D-Normalverteilung">
+  <x-task>Größe \(\mX\sim\Nor(175,7^2)\) cm, Gewicht \(\mY\sim\Nor(72,10^2)\) kg, gemeinsam normal mit \(\rho=0.6\).
+  <ol class="pa-list"><li>(a) Stelle \(\Sigma\) auf.</li><li>(b) Welche Verteilung hat \(D=\mY-0.4\mX\)?</li>
+  <li>(c) Bestimme \(\EE[\mY\given\mX=182]\), die bedingte Standardabweichung und \(\PP(\mY>80\given\mX=182)\).</li>
+  <li>(d) Wie sehen die Konturlinien aus, wenn ρ wächst? Was bedeutet ρ = 0 hier, und gilt das allgemein?</li></ol></x-task>
+  <x-cover>Kovarianzmatrix Σ (a) · Linearkombination bleibt normal (b) · bedingte Verteilung (c) · Konturen, ρ = 0 ⇒ unabhängig nur bei 2D-Normal (d)</x-cover>
+  <x-part h="(a) Kovarianzmatrix" ref="4.4">
+    <x-step h="Nebendiagonale.">\(\Cov=\rho\sigma_X\sigma_Y=0.6\cdot7\cdot10=42\).</x-step>
+    <x-res>\(\Sigma=\begin{pmatrix}49&42\\42&100\end{pmatrix}\).</x-res>
+  </x-part>
+  <x-part h="(b) Linearkombination" ref="4.4">
+    <x-step h="E und Var.">\(\EE[D]=72-0.4\cdot175=2\); \(\Var(D)=100+0.16\cdot49-2\cdot0.4\cdot42=74.24\).</x-step>
+    <x-res>\(D\sim\Nor(2,\ 74.24)\), \(\sigma_D=8.62\).</x-res>
+  </x-part>
+  <x-part h="(c) Bedingte Verteilung" ref="4.4">
+    <x-step h="Mittel verschiebt sich entlang der Regressionsgeraden.">\(\EE[\mY\given\mX=x]=\mu_Y+\rho\tfrac{\sigma_Y}{\sigma_X}(x-\mu_X)=72+0.6\cdot\tfrac{10}7\cdot7=78\).</x-step>
+    <x-step h="Streuung schrumpft.">\(\Var(\mY\given\mX)=\sigma_Y^2(1-\rho^2)=64\), \(\sigma=8\).</x-step>
+    <x-res>\(\PP(\mY>80\given\mX=182)=1-\Phi\big(\tfrac{2}{8}\big)=1-\Phi(0.25)=0.401\).</x-res>
+  </x-part>
+  <x-part h="(d) Konturen und ρ = 0" ref="4.4"><x-res>Konturen sind Ellipsen; mit wachsendem ρ werden sie schmaler und kippen entlang der Diagonale. Bei 2D-Normal: ρ = 0 ⇒ unabhängig. Allgemein nicht: für \(\mX\sim\Nor(0,1)\) und \(\mY=\mX^2\) ist \(\Cov=\EE[\mX^3]=0\), aber Y hängt vollständig von X ab.</x-res></x-part>
+</x-pa>
+<!-- @s4-6 -->
+<h3 id="pa-4-6-h" data-m="🎓 Prüfungsaufgabe 4.5|alles aus 4.5 von null">🎓 Prüfungsaufgabe: alles aus 4.5 von null</h3>
+<x-pa id="pa-4-6" sec="4.5" q="Summen unabhängiger Zufallsvariablen: diskret, stetig, normal">
+  <x-task><ol class="pa-list"><li>(a) \(\mX\sim\Pois(2)\), \(\mY\sim\Pois(3)\) unabhängig. Bestimme \(\PP(\mX+\mY=2)\) mit der diskreten Faltung und vergleiche mit \(\Pois(5)\).</li>
+  <li>(b) \(\mX,\mY\sim\Uni(0,1)\) unabhängig. Bestimme \(\ff_S\) für \(S=\mX+\mY\), \(\PP(S\le0.5)\), \(\PP(S\le1.5)\), \(\EE[S]\), \(\Var(S)\).</li>
+  <li>(c) \(\mX\sim\Nor(10,9)\), \(\mY\sim\Nor(20,16)\) unabhängig. Verteilung von \(\mX+\mY\)?</li><li>(d) Wie sieht (a) als Code aus?</li></ol></x-task>
+  <x-cover>diskrete Faltung (a) · stetige Faltung, Dreiecksdichte (b) · Summe von Normalen (c) · Faltung als Code (d)</x-cover>
+  <x-part h="(a) Diskrete Faltung" ref="4.5">
+    <x-step h="Alle Aufteilungen von 2.">\(\sum_{k=0}^2\PP(\mX=k)\PP(\mY=2-k)=e^{-2}e^{-3}\big(1\cdot\tfrac92+2\cdot3+2\cdot1\big)=12.5e^{-5}\).</x-step>
+    <x-res>\(0.0842=\Pois(5)\) an der Stelle 2 (\(e^{-5}\tfrac{25}{2}\)) ✓: Summen unabhängiger Poisson sind Poisson.</x-res>
+  </x-part>
+  <x-part h="(b) Stetige Faltung" ref="4.5">
+    <x-step h="Formel.">\(\ff_S(s)=\int\ff_X(x)\ff_Y(s-x)\dd x\) = Länge des x-Bereichs mit \(0\le x\le1\) und \(0\le s-x\le1\).</x-step>
+    <x-step h="Fälle.">\(0\le s\le1\): \(\ff_S=s\); \(1\le s\le2\): \(\ff_S=2-s\) (Dreieck).</x-step>
+    <x-step h="Flächen.">\(\PP(S\le0.5)=\tfrac12\cdot0.5^2=0.125\); \(\PP(S\le1.5)=1-0.125=0.875\).</x-step>
+    <x-res>\(\EE[S]=1\), \(\Var(S)=\tfrac1{12}+\tfrac1{12}=\tfrac16\).</x-res>
+  </x-part>
+  <x-part h="(c) Normal + Normal" ref="4.5"><x-res>\(\Nor(30,\ 25)\): Mittel und (bei Unabhängigkeit) Varianzen addieren sich, Standardabweichung 5.</x-res></x-part>
+  <x-part h="(d) Code" ref="4.5"><x-res>R: <code>px &lt;- dpois(0:10, 2); py &lt;- dpois(0:10, 3); sum(px[1:3] * rev(py[1:3]))</code>. Python: <code>np.convolve(stats.poisson.pmf(range(11), 2), stats.poisson.pmf(range(11), 3))[2]</code>.</x-res></x-part>
+</x-pa>
+<!-- @s4-7 -->
+<h3 id="pa-4-7-h" data-m="🎓 Prüfungsaufgabe 4.6|alles aus 4.6 von null">🎓 Prüfungsaufgabe: alles aus 4.6 von null</h3>
+<x-pa id="pa-4-7" sec="4.6" q="Drei abhängige Größen und die Kovarianzmatrix">
+  <x-task>\(\EE[\mX_1]=1\), \(\EE[\mX_2]=2\), \(\EE[\mX_3]=3\); Kovarianzmatrix \(\Sigma=\begin{pmatrix}4&2&0\\2&9&-1\\0&-1&1\end{pmatrix}\).
+  <ol class="pa-list"><li>(a) Lies alle Varianzen und Kovarianzen ab. Welche Paare sind unkorreliert?</li><li>(b) \(\EE\) und \(\Var\) von \(\mX_1+\mX_2+\mX_3\).</li>
+  <li>(c) \(\EE\) und \(\Var\) von \(\mX_1-\mX_2+2\mX_3\).</li><li>(d) Zehn i.i.d. Größen mit Varianz 4: \(\Var\) von Summe und Mittel?</li></ol></x-task>
+  <x-cover>Kovarianzmatrix lesen (a) · E und Var von Summen mit allen Paar-Kovarianzen (b) · beliebige Linearkombination, Formel aᵀΣa (c) · unabhängige Summanden, Mittelwert (d)</x-cover>
+  <x-part h="(a) Ablesen" ref="4.6"><x-res>Diagonale: Varianzen 4, 9, 1. \(\Cov_{12}=2\), \(\Cov_{13}=0\), \(\Cov_{23}=-1\). Unkorreliert: \(\mX_1,\mX_3\).</x-res></x-part>
+  <x-part h="(b) Summe" ref="4.6">
+    <x-step h="Regel.">\(\Var(\sum\mX_i)=\sum\Var(\mX_i)+2\sum_{i<j}\Cov(\mX_i,\mX_j)\) = Summe aller Einträge von Σ.</x-step>
+    <x-res>\(\EE=6\); \(\Var=4+9+1+2(2+0-1)=16\).</x-res>
+  </x-part>
+  <x-part h="(c) Linearkombination" ref="4.6">
+    <x-step h="Mit Koeffizienten a = (1, −1, 2).">\(\Var=\sum a_i^2\Var_i+2\sum_{i<j}a_ia_j\Cov_{ij}=4+9+4+2\big((1)(-1)(2)+(1)(2)(0)+(-1)(2)(-1)\big)\).</x-step>
+    <x-res>\(\EE=1-2+6=5\); \(\Var=17+2(-2+0+2)=17\).</x-res>
+  </x-part>
+  <x-part h="(d) i.i.d." ref="4.6"><x-res>Alle Kovarianzen 0: \(\Var(\text{Summe})=10\cdot4=40\); \(\Var(\bar X)=\tfrac{40}{100}=0.4\). Das Mittel streut viel weniger (Kap. 5).</x-res></x-part>
+</x-pa>
+<!-- @kap -->
+<section id="s4-pa" data-m="🎓 Gesamtaufgabe|Kapitel 4 komplett von null">
+<h2><span class="num">4.★</span>Gesamtaufgabe: Kapitel 4 komplett von null</h2>
+<p class="one">Ein Café liefert eine Tabelle, zwei Wartezeiten und zwei Tagesumsätze: alle Werkzeuge aus Kapitel 4 an einem Beispiel.</p>
+<x-pa id="pa-4-kap" sec="4" scope="kap" q="Das Café an der Ecke">
+  <x-task>Pro Kunde: \(\mX\) = Anzahl Kaffees, \(\mY\) = 1, falls Kuchen gekauft.
+  <table class="tbl"><tr><th></th><th>Y = 0</th><th>Y = 1</th></tr><tr><th>X = 0</th><td>0.20</td><td>0.05</td></tr><tr><th>X = 1</th><td>0.30</td><td>0.15</td></tr><tr><th>X = 2</th><td>0.10</td><td>0.20</td></tr></table>
+  <ol class="pa-list"><li>(a) Randverteilungen, \(\PP(\mY=1\given\mX=2)\), unabhängig?</li><li>(b) \(\EE[\mX]\), \(\EE[\mY]\) und der erwartete Umsatz \(R=4\mX+5\mY\) (Franken).</li>
+  <li>(c) \(\Cov(\mX,\mY)\), \(\rho\) und \(\Var(R)\).</li><li>(d) Zwei Kunden an der Kasse haben Bedienzeiten \(T_1,T_2\) i.i.d. \(\Expo(1)\) (Minuten). Bestimme mit der gemeinsamen Dichte \(\PP(T_1\le1,T_2\le1)\) und \(\PP(T_1<T_2)\).</li>
+  <li>(e) Bestimme per Faltung die Dichte von \(T_1+T_2\) und \(\PP(T_1+T_2\le1)\).</li>
+  <li>(f) Tagesumsatz Kaffee \(U\sim\Nor(800,100^2)\), Kuchen \(V\sim\Nor(300,60^2)\), gemeinsam normal mit ρ = 0.5. Σ? Verteilung von \(U+V\), \(\PP(U+V>1300)\), \(\EE[V\given U=900]\)?</li>
+  <li>(g) Fünf unabhängige Tage: Erwartung und Standardabweichung des Wochenumsatzes?</li></ol></x-task>
+  <x-cover>4.1 Tabelle, Ränder, bedingt, Unabhängigkeit (a) · 4.2 Erwartung, Linearität (b) · 4.3 Cov, ρ, Var von Summen (c) · 4.1.2 gemeinsame Dichte (d) · 4.5 Faltung (e) · 4.4 2D-Normal (f) · 4.6 viele ZV (g)</x-cover>
+  <x-part h="(a) Tabelle" ref="4.1">
+    <x-step h="Ränder.">X: 0.25, 0.45, 0.30; Y: 0.6, 0.4.</x-step>
+    <x-res>\(\PP(\mY=1\given\mX=2)=\tfrac{0.2}{0.3}=0.667\). Abhängig: \(0.20\ne0.25\cdot0.6=0.15\).</x-res>
+  </x-part>
+  <x-part h="(b) Erwartung" ref="4.2"><x-res>\(\EE[\mX]=0.45+0.6=1.05\), \(\EE[\mY]=0.4\), \(\EE[R]=4\cdot1.05+5\cdot0.4=6.20\) Franken.</x-res></x-part>
+  <x-part h="(c) Kovarianz" ref="4.3">
+    <x-step h="E[XY].">\(1\cdot0.15+2\cdot0.20=0.55\) → \(\Cov=0.55-1.05\cdot0.4=0.13\).</x-step>
+    <x-step h="Varianzen.">\(\Var(\mX)=1.65-1.05^2=0.5475\), \(\Var(\mY)=0.24\), \(\rho=\tfrac{0.13}{\sqrt{0.5475\cdot0.24}}=0.359\).</x-step>
+    <x-res>\(\Var(R)=16\cdot0.5475+25\cdot0.24+2\cdot4\cdot5\cdot0.13=8.76+6+5.2=19.96\).</x-res>
+  </x-part>
+  <x-part h="(d) Gemeinsame Dichte" ref="4.1.2">
+    <x-step h="Unabhängig → Produkt.">\(\ff(x,y)=e^{-x}e^{-y}\) für \(x,y\ge0\).</x-step>
+    <x-step h="Quadrat.">\(\int_0^1\!\int_0^1e^{-x-y}=(1-e^{-1})^2=0.400\).</x-step>
+    <x-res>\(\PP(T_1<T_2)=\int_0^\infty e^{-x}\!\int_x^\infty e^{-y}\dd y\dd x=\int_0^\infty e^{-2x}\dd x=\tfrac12\) (Symmetrie).</x-res>
+  </x-part>
+  <x-part h="(e) Faltung" ref="4.5">
+    <x-step h="Formel.">\(\ff_S(s)=\int_0^se^{-x}e^{-(s-x)}\dd x=s\,e^{-s}\) für \(s\ge0\).</x-step>
+    <x-res>\(\PP(S\le1)=\int_0^1se^{-s}\dd s=1-2e^{-1}=0.264\).</x-res>
+  </x-part>
+  <x-part h="(f) 2D-Normal" ref="4.4">
+    <x-step h="Σ.">\(\Cov=0.5\cdot100\cdot60=3000\): \(\Sigma=\begin{pmatrix}10000&3000\\3000&3600\end{pmatrix}\).</x-step>
+    <x-step h="Summe.">\(U+V\sim\Nor(1100,\ 10000+3600+6000)=\Nor(1100,140^2)\); \(\PP(U+V>1300)=1-\Phi(1.43)=0.077\).</x-step>
+    <x-res>\(\EE[V\given U=900]=300+0.5\cdot\tfrac{60}{100}\cdot100=330\) Franken.</x-res>
+  </x-part>
+  <x-part h="(g) Fünf Tage" ref="4.6"><x-res>\(\EE=5\cdot1100=5500\); unabhängige Tage: \(\Var=5\cdot19\,600=98\,000\), \(\sigma=313\) Franken.</x-res></x-part>
+</x-pa>
+</section>

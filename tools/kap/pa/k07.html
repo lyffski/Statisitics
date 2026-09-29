@@ -1,0 +1,134 @@
+<!-- @s7-1 -->
+<h3 id="pa-7-1-h" data-m="🎓 Prüfungsaufgabe 7.1|alles aus 7.1 von null">🎓 Prüfungsaufgabe: alles aus 7.1 von null</h3>
+<x-pa id="pa-7-1" sec="7.1" q="Ist die Münze gezinkt? Binomialtest komplett">
+  <x-task>Eine Münze zeigt in 20 Würfen 15-mal Kopf. Du vermutest, dass Kopf häufiger kommt als bei einer fairen Münze.
+  <ol class="pa-list"><li>(a) Formuliere Modell, \(H_0\) und \(H_A\). Warum ist „fair“ die Nullhypothese?</li>
+  <li>(b) Bestimme den Verwerfungsbereich K zum Niveau α = 0.05 und das tatsächliche Niveau.</li>
+  <li>(c) Entscheide und bestimme den P-Wert.</li><li>(d) Erkläre Fehler 1. und 2. Art hier in Worten. Wie groß ist die W'keit für einen Fehler 2. Art, wenn in Wahrheit p = 0.7 ist?</li>
+  <li>(e) Wie sähe K beim zweiseitigen Test aus?</li></ol></x-task>
+  <x-cover>Modell, H₀, H_A (a) · Verwerfungsbereich, Niveau (b) · Entscheid, P-Wert (c) · Fehler 1./2. Art, β (d) · einseitig vs. zweiseitig (e)</x-cover>
+  <x-part h="(a) Hypothesen" ref="7.1">
+    <x-step h="Modell.">\(X\) = Anzahl Kopf \(\sim\Bin(20,p)\).</x-step>
+    <x-res>\(H_0:p=0.5\), \(H_A:p>0.5\). Die Nullhypothese ist der Status quo, den man widerlegen will; nur das Verwerfen ist eine starke Aussage.</x-res>
+  </x-part>
+  <x-part h="(b) Verwerfungsbereich" ref="7.1">
+    <x-step h="Große x sprechen für H_A.">Gesucht kleinstes g mit \(\PP_{0.5}(X\ge g)\le0.05\).</x-step>
+    <x-step h="Probieren.">\(\PP(X\ge14)=0.0577>0.05\); \(\PP(X\ge15)=0.0207\le0.05\) ✓.</x-step>
+    <x-res>\(K=\{15,\dots,20\}\), tatsächliches Niveau 0.0207 (diskret: α wird nicht voll ausgeschöpft).</x-res>
+  </x-part>
+  <x-part h="(c) Entscheid und P-Wert" ref="7.1"><x-res>\(x=15\in K\) → \(H_0\) verwerfen. P-Wert \(=\PP_{0.5}(X\ge15)=0.0207\le0.05\).</x-res></x-part>
+  <x-part h="(d) Fehlerarten" ref="7.1">
+    <x-step h="Fehler 1. Art.">Die Münze ist fair, aber wir erklären sie für gezinkt. W'keit ≤ α (hier 0.0207).</x-step>
+    <x-step h="Fehler 2. Art.">Die Münze ist gezinkt, aber wir merken es nicht: \(\beta=\PP_{0.7}(X\le14)\).</x-step>
+    <x-res>\(\beta=0.584\), Macht \(1-\beta=0.416\): mit nur 20 Würfen übersieht man p = 0.7 oft.</x-res>
+  </x-part>
+  <x-part h="(e) Zweiseitig" ref="7.1"><x-res>\(H_A:p\ne0.5\), je α/2 = 0.025 pro Seite: \(\PP(X\le5)=0.0207\), \(\PP(X\ge15)=0.0207\); \(K=\{0,\dots,5\}\cup\{15,\dots,20\}\), Niveau 0.0414.</x-res></x-part>
+</x-pa>
+<!-- @s7-2 -->
+<h3 id="pa-7-2-h" data-m="🎓 Prüfungsaufgabe 7.2|alles aus 7.2 von null">🎓 Prüfungsaufgabe: alles aus 7.2 von null</h3>
+<x-pa id="pa-7-2" sec="7.2" q="Z-Test und t-Test nebeneinander">
+  <x-task><ol class="pa-list"><li>(a) n = 25, \(\bar x=51.2\), σ = 4 bekannt, \(H_0:\mu=50\), \(H_A:\mu>50\), α = 0.05. Z-Test komplett (Statistik, Verteilung, K, Entscheid).</li>
+  <li>(b) n = 16, \(\bar x=103\), s = 5, \(H_0:\mu=100\), zweiseitig, α = 0.05. t-Test komplett.</li>
+  <li>(c) Was wäre in (b), wenn σ = 5 bekannt wäre? Warum unterscheiden sich die Ergebnisse?</li><li>(d) Wie ändert sich der kritische Wert in (b) bei einseitiger Alternative?</li></ol></x-task>
+  <x-cover>Z-Statistik und N(0, 1) (a) · T-Statistik, t_{n−1}, geschätzter SE (b) · t vs. Normal, dickere Ränder (c) · ein- vs. zweiseitige Grenzen (d)</x-cover>
+  <x-part h="(a) Z-Test" ref="7.2">
+    <x-step h="Statistik.">\(Z=\tfrac{\bar X-\mu_0}{\sigma/\sqrt n}\sim\Nor(0,1)\) unter \(H_0\); \(z=\tfrac{1.2}{0.8}=1.5\).</x-step>
+    <x-step h="K.">\([z_{0.95},\infty)=[1.645,\infty)\).</x-step>
+    <x-res>\(1.5<1.645\) → nicht verwerfen (P-Wert 0.067).</x-res>
+  </x-part>
+  <x-part h="(b) t-Test" ref="7.2">
+    <x-step h="Statistik.">\(T=\tfrac{\bar X-\mu_0}{S/\sqrt n}\sim t_{15}\); \(t=\tfrac{3}{5/4}=2.4\).</x-step>
+    <x-step h="K.">\(|t|\ge t_{15,0.975}=2.131\).</x-step>
+    <x-res>\(2.4\ge2.131\) → verwerfen; P-Wert 0.030.</x-res>
+  </x-part>
+  <x-part h="(c) t vs. Normal" ref="7.2"><x-res>Mit bekanntem σ: \(z=2.4\), Grenze 1.96, P-Wert 0.016. Die t-Verteilung hat dickere Ränder, weil s selbst zufällig ist: größere Grenze, größerer P-Wert. Für große n werden beide gleich.</x-res></x-part>
+  <x-part h="(d) Einseitig" ref="7.2"><x-res>\(H_A:\mu>100\): Grenze \(t_{15,0.95}=1.753\) (ganzes α auf einer Seite).</x-res></x-part>
+</x-pa>
+<!-- @s7-3 -->
+<h3 id="pa-7-3-h" data-m="🎓 Prüfungsaufgabe 7.3|alles aus 7.3 von null">🎓 Prüfungsaufgabe: alles aus 7.3 von null</h3>
+<x-pa id="pa-7-3" sec="7.3" q="Macht, benötigtes n und P-Wert beim Z-Test">
+  <x-task>Einseitiger Z-Test \(H_0:\mu=100\), \(H_A:\mu>100\), σ = 10, n = 25, α = 0.05.
+  <ol class="pa-list"><li>(a) Wie groß ist die Macht, wenn in Wahrheit μ = 104 ist? Und β?</li><li>(b) Wie groß muss n für eine Macht von 0.9 sein?</li>
+  <li>(c) Beobachtet wird \(\bar x=103.5\). Bestimme den P-Wert und entscheide bei α = 0.05 und α = 0.01.</li><li>(d) Was bedeutet der P-Wert, und was bedeutet er nicht?</li></ol></x-task>
+  <x-cover>Macht als Fläche unter der Alternative (a) · benötigtes n (b) · P-Wert, Signifikanz auf verschiedenen Niveaus (c) · Deutung und Fehldeutungen (d)</x-cover>
+  <x-part h="(a) Macht" ref="7.3">
+    <x-step h="Verschiebung.">Unter \(\mu=104\) ist \(Z\sim\Nor\big(\tfrac{4}{10/5},1\big)=\Nor(2,1)\).</x-step>
+    <x-step h="Fläche rechts der Grenze.">\(1-\beta=\PP(Z\ge1.645)=\Phi(2-1.645)=\Phi(0.355)\).</x-step>
+    <x-res>Macht 0.639, β = 0.361.</x-res>
+  </x-part>
+  <x-part h="(b) Stichprobenumfang" ref="7.3">
+    <x-step h="Formel.">\(n=\big(\tfrac{z_{1-\alpha}+z_{1-\beta}}{d}\big)^2\) mit \(d=\tfrac{4}{10}=0.4\).</x-step>
+    <x-res>\(\big(\tfrac{1.645+1.2816}{0.4}\big)^2=53.5\) → n = 54.</x-res>
+  </x-part>
+  <x-part h="(c) P-Wert" ref="7.3">
+    <x-step h="Statistik.">\(z=\tfrac{3.5}{2}=1.75\).</x-step>
+    <x-res>P-Wert \(=1-\Phi(1.75)=0.040\): signifikant bei 5 Prozent, nicht bei 1 Prozent.</x-res>
+  </x-part>
+  <x-part h="(d) Deutung" ref="7.3"><x-res>Der P-Wert ist die W'keit, unter \(H_0\) ein mindestens so extremes Ergebnis zu sehen. Er ist <b>nicht</b> die W'keit, dass \(H_0\) stimmt, und sagt nichts über die Größe des Effekts.</x-res></x-part>
+</x-pa>
+<!-- @s7-4 -->
+<h3 id="pa-7-4-h" data-m="🎓 Prüfungsaufgabe 7.4|alles aus 7.4 von null">🎓 Prüfungsaufgabe: alles aus 7.4 von null</h3>
+<x-pa id="pa-7-4" sec="7.4" q="Vertrauensintervall, Dualität und Relevanz">
+  <x-task>Wie in 7.2 (b): n = 16, \(\bar x=103\), s = 5.
+  <ol class="pa-list"><li>(a) Bestimme das 95-Prozent-VI für μ.</li><li>(b) Entscheide ohne Rechnung: \(H_0:\mu=100\)? \(H_0:\mu=105\)?</li>
+  <li>(c) Bestimme das 99-Prozent-VI. Wird \(\mu=100\) jetzt verworfen?</li>
+  <li>(d) In einer riesigen Studie (n = 10 000, \(\bar x=100.2\), s = 5) ist der Effekt hochsignifikant. Ist er relevant, wenn erst 2 Punkte Unterschied praktisch zählen?</li></ol></x-task>
+  <x-cover>t-Vertrauensintervall (a) · Dualität Test ↔ VI (b) · Niveau und Breite (c) · Signifikanz ≠ Relevanz (d)</x-cover>
+  <x-part h="(a) VI" ref="7.4"><x-res>\(103\pm2.131\cdot\tfrac54=103\pm2.66=[100.34;\ 105.66]\).</x-res></x-part>
+  <x-part h="(b) Dualität" ref="7.4"><x-res>100 liegt außerhalb → verwerfen (wie 7.2). 105 liegt innerhalb → nicht verwerfen. Das VI enthält genau die nicht verworfenen μ₀.</x-res></x-part>
+  <x-part h="(c) 99 Prozent" ref="7.4"><x-res>\(t_{15,0.995}=2.947\): \(103\pm3.68=[99.32;\ 106.68]\). 100 liegt darin: auf 1 Prozent nicht verworfen.</x-res></x-part>
+  <x-part h="(d) Relevanz" ref="7.4"><x-res>SE = 0.05, \(z=4\), VI \([100.10;\ 100.30]\): sicher über 100, aber der ganze Bereich liegt weit unter dem relevanten Unterschied von 2. Statistisch signifikant, fachlich irrelevant.</x-res></x-part>
+</x-pa>
+<!-- @s7-5 -->
+<h3 id="pa-7-5-h" data-m="🎓 Prüfungsaufgabe 7.5|alles aus 7.5 von null">🎓 Prüfungsaufgabe: alles aus 7.5 von null</h3>
+<x-pa id="pa-7-5" sec="7.5" q="Reaktionszeiten: Vorzeichen-, Wilcoxon- und t-Test auf einem Datensatz">
+  <x-task>Zehn Reaktionszeiten (ms): 312, 295, 330, 306, 318, 290, 341, 309, 322, 301. Ist der Median größer als 300? α = 0.05, einseitig.
+  <ol class="pa-list"><li>(a) Vorzeichen-Test: Q, Verteilung unter \(H_0\), P-Wert, Entscheid.</li>
+  <li>(b) Wilcoxon-Test: Ränge, W, Entscheid (exakter P-Wert 0.019).</li><li>(c) t-Test zum Vergleich.</li>
+  <li>(d) Wann welcher Test? Nenne die 6 Schritte jedes Tests.</li></ol></x-task>
+  <x-cover>Vorzeichen-Test (a) · Wilcoxon-Test mit Rängen (b) · Vergleich mit t (c) · Auswahlkriterien, 6-Schritt-Schema (d)</x-cover>
+  <x-part h="(a) Vorzeichen-Test" ref="7.5">
+    <x-step h="Differenzen zu 300.">12, −5, 30, 6, 18, −10, 41, 9, 22, 1 → 8 positive.</x-step>
+    <x-step h="Unter H₀.">\(Q\sim\Bin(10,0.5)\); P-Wert \(\PP(Q\ge8)=\tfrac{45+10+1}{1024}=0.055\).</x-step>
+    <x-res>0.055 > 0.05 → nicht verwerfen. Der Test nutzt nur die Vorzeichen.</x-res>
+  </x-part>
+  <x-part h="(b) Wilcoxon" ref="7.5">
+    <x-step h="Beträge ordnen.">1, 5, 6, 9, 10, 12, 18, 22, 30, 41 → Ränge 1 bis 10.</x-step>
+    <x-step h="Ränge der positiven Differenzen.">Negativ sind nur −5 (Rang 2) und −10 (Rang 5): \(W=55-7=48\).</x-step>
+    <x-res>P-Wert 0.019 ≤ 0.05 → verwerfen. Wilcoxon nutzt auch die Größe der Abweichungen.</x-res>
+  </x-part>
+  <x-part h="(c) t-Test" ref="7.5"><x-res>\(\bar x=312.4\), s = 15.77, \(t=\tfrac{12.4}{15.77/\sqrt{10}}=2.49\), df 9, P-Wert 0.017 → verwerfen, falls Normalität plausibel ist.</x-res></x-part>
+  <x-part h="(d) Auswahl und Schema" ref="7.5">
+    <x-step h="Welcher Test?">Normal (Normalplot ok) → t-Test (größte Macht). Klar nicht normal, symmetrisch → Wilcoxon. Nur Richtung verlässlich / sehr schief → Vorzeichen-Test.</x-step>
+    <x-res>6 Schritte: 1. Modell, 2. \(H_0\)/\(H_A\), 3. Teststatistik, 4. Verteilung unter \(H_0\), 5. Verwerfungsbereich zu α, 6. Entscheid (plus P-Wert/VI).</x-res>
+  </x-part>
+</x-pa>
+<!-- @kap -->
+<section id="s7-pa" data-m="🎓 Gesamtaufgabe|Kapitel 7 komplett von null">
+<h2><span class="num">7.★</span>Gesamtaufgabe: Kapitel 7 komplett von null</h2>
+<x-pa id="pa-7-kap" sec="7" scope="kap" q="Enthält der Energydrink, was draufsteht?">
+  <x-task>Auf der Dose stehen 80 mg Koffein. Ein Labor misst 10 Dosen: 78.2, 81.5, 76.9, 79.4, 77.8, 80.1, 75.6, 79.0, 78.5, 77.0. Zusätzlich liegen in einer Stichprobe von 50 Dosen 7 unter 75 mg; der Hersteller garantiert höchstens 5 Prozent solcher Dosen.
+  <ol class="pa-list"><li>(a) Binomialtest der Garantie: Hypothesen, K bei α = 0.05, Entscheid, P-Wert.</li>
+  <li>(b) t-Test, ob der Mittelwert unter 80 mg liegt (α = 0.05).</li>
+  <li>(c) Ein Vorgängerlabor kannte σ = 2 mg. Wie groß wäre die Macht eines einseitigen Z-Tests mit n = 10, wenn μ in Wahrheit 79 ist? Welches n bräuchte man für Macht 0.9?</li>
+  <li>(d) 95-Prozent-VI für μ. Welche Sollwerte wären mit den Daten verträglich (zweiseitig)?</li>
+  <li>(e) Vorzeichen-Test als robuste Alternative zu (b).</li></ol></x-task>
+  <x-cover>7.1 Binomialtest (a) · 7.2 t-Test (b) · 7.3 Macht und n (c) · 7.4 VI und Dualität (d) · 7.5 Vorzeichen-Test (e)</x-cover>
+  <x-part h="(a) Binomialtest" ref="7.1">
+    <x-step h="Hypothesen.">\(X\sim\Bin(50,p)\); \(H_0:p=0.05\), \(H_A:p>0.05\).</x-step>
+    <x-step h="K.">\(\PP(X\ge5)=0.104\), \(\PP(X\ge6)=0.038\le0.05\) → \(K=\{6,\dots,50\}\).</x-step>
+    <x-res>\(x=7\in K\) → verwerfen; P-Wert \(\PP(X\ge7)=0.012\). Die Garantie wird verletzt.</x-res>
+  </x-part>
+  <x-part h="(b) t-Test" ref="7.2">
+    <x-step h="Kennzahlen.">\(\bar x=78.4\), \(s=1.71\), SE \(=0.541\).</x-step>
+    <x-step h="Statistik.">\(t=\tfrac{78.4-80}{0.541}=-2.96\), df 9; K: \(t\le-t_{9,0.95}=-1.833\).</x-step>
+    <x-res>Verwerfen; P-Wert 0.008. Der Mittelwert liegt signifikant unter 80 mg.</x-res>
+  </x-part>
+  <x-part h="(c) Macht" ref="7.3">
+    <x-step h="Verschiebung.">\(\tfrac{1}{2/\sqrt{10}}=1.58\): Macht \(=\Phi(1.58-1.645)=0.47\).</x-step>
+    <x-res>Nur 47 Prozent. Für 0.9: \(n=\big(\tfrac{(1.645+1.282)\cdot2}{1}\big)^2=34.3\) → 35 Dosen.</x-res>
+  </x-part>
+  <x-part h="(d) VI und Dualität" ref="7.4"><x-res>\(78.4\pm2.262\cdot0.541=[77.18;\ 79.62]\) mg. Verträglich sind nur Sollwerte in diesem Bereich; 80 gehört nicht dazu.</x-res></x-part>
+  <x-part h="(e) Vorzeichen-Test" ref="7.5"><x-res>8 von 10 Dosen unter 80: \(\PP(Q\le2)\) mit \(Q\sim\Bin(10,0.5)\) \(=0.055\) → knapp nicht verwerfen. Der robuste Test hat weniger Macht als der t-Test.</x-res></x-part>
+</x-pa>
+</section>

@@ -1,0 +1,100 @@
+<!-- @s8-1 -->
+<h3 id="pa-8-1-h" data-m="🎓 Prüfungsaufgabe 8.1|alles aus 8.1 von null">🎓 Prüfungsaufgabe: alles aus 8.1 von null</h3>
+<x-pa id="pa-8-1" sec="8.1" q="Ein Versuch, zwei Designs">
+  <x-task>Zwei Schuhsohlen-Materialien A und B sollen auf Abrieb verglichen werden. Es stehen 12 Kinder zur Verfügung.
+  <ol class="pa-list"><li>(a) Beschreibe ein ungepaartes Design. Wozu dient die Randomisierung?</li>
+  <li>(b) Beschreibe ein gepaartes Design (Blockbildung). Was ist die Versuchseinheit?</li>
+  <li>(c) Welches Design ist besser, und warum?</li><li>(d) Ordne zu: Blutdruck vor/nach einem Medikament bei 20 Personen; Noten zweier Schulklassen; zwei Messgeräte an denselben 15 Proben.</li></ol></x-task>
+  <x-cover>ungepaart und Randomisierung (a) · gepaart und Block (b) · Vorteil des Pairing (c) · Erkennen an Beispielen (d)</x-cover>
+  <x-part h="(a) Ungepaart" ref="8.1"><x-res>Per Los tragen 6 Kinder Sohle A und 6 Kinder Sohle B. Die Randomisierung verteilt Störgrößen (Gewicht, Aktivität) zufällig auf beide Gruppen, sodass keine Gruppe systematisch bevorzugt ist.</x-res></x-part>
+  <x-part h="(b) Gepaart" ref="8.1"><x-res>Jedes Kind bekommt an einem Fuß A und am anderen B (Fuß per Los). Versuchseinheit = Kind (Block); pro Kind entsteht ein Paar \((a_i,b_i)\).</x-res></x-part>
+  <x-part h="(c) Welches Design?" ref="8.1"><x-res>Gepaart: die großen Unterschiede zwischen Kindern fallen in der Differenz \(a_i-b_i\) weg, der Vergleich wird viel genauer (siehe 8.4).</x-res></x-part>
+  <x-part h="(d) Zuordnen" ref="8.1"><x-res>Blutdruck vorher/nachher: gepaart (dieselbe Person). Schulklassen: ungepaart (verschiedene Schüler). Messgeräte an denselben Proben: gepaart (Probe = Block).</x-res></x-part>
+</x-pa>
+<!-- @s8-2 -->
+<h3 id="pa-8-2-h" data-m="🎓 Prüfungsaufgabe 8.2|alles aus 8.2 von null">🎓 Prüfungsaufgabe: alles aus 8.2 von null</h3>
+<x-pa id="pa-8-2" sec="8.2" q="Schuhsohlen gepaart auswerten">
+  <x-task>Abrieb (mm) bei 6 Kindern: A = 13.2, 8.2, 10.9, 14.3, 10.7, 6.6; B = 14.0, 8.8, 11.2, 14.2, 11.8, 6.4 (jeweils dasselbe Kind).
+  <ol class="pa-list"><li>(a) Bilde die Differenzen und bestimme \(\bar u\), \(s_U\).</li><li>(b) Gepaarter t-Test \(H_0:\EE[U]=0\) zweiseitig, α = 0.05.</li>
+  <li>(c) 95-Prozent-VI für \(\EE[U]\).</li><li>(d) Vorzeichen- und Wilcoxon-Test auf den Differenzen (P-Werte 0.69 und 0.16).</li></ol></x-task>
+  <x-cover>Differenzen bilden (a) · t-Test mit n − 1 Freiheitsgraden (b) · VI (c) · robuste Tests auf den Differenzen (d)</x-cover>
+  <x-part h="(a) Differenzen" ref="8.2">
+    <x-step h="u = a − b.">−0.8, −0.6, −0.3, 0.1, −1.1, 0.2.</x-step>
+    <x-res>\(\bar u=-0.417\), \(s_U=0.512\), n = 6.</x-res>
+  </x-part>
+  <x-part h="(b) t-Test" ref="8.2">
+    <x-step h="Statistik.">\(t=\tfrac{-0.417}{0.512/\sqrt6}=\tfrac{-0.417}{0.209}=-2.00\), df 5.</x-step>
+    <x-res>\(|t|=2.00<t_{5,0.975}=2.571\) → nicht verwerfen (P-Wert 0.103).</x-res>
+  </x-part>
+  <x-part h="(c) VI" ref="8.2"><x-res>\(-0.417\pm2.571\cdot0.209=[-0.95;\ 0.12]\): enthält 0, passend zu (b).</x-res></x-part>
+  <x-part h="(d) Robust" ref="8.2"><x-res>Vorzeichen: 2 von 6 positiv, \(\PP(Q\le2)\cdot2=0.69\). Wilcoxon: W = 3 (Ränge der positiven Differenzen 0.1 → 1 und 0.2 → 2), P-Wert 0.16. Kein Test verwirft; mit 6 Paaren ist die Macht klein.</x-res></x-part>
+</x-pa>
+<!-- @s8-3 -->
+<h3 id="pa-8-3-h" data-m="🎓 Prüfungsaufgabe 8.3|alles aus 8.3 von null">🎓 Prüfungsaufgabe: alles aus 8.3 von null</h3>
+<x-pa id="pa-8-3" sec="8.3" q="Zwei Klassen, ein Zwei-Stichproben-t-Test">
+  <x-task>Klasse X: n = 12, \(\bar x=24.1\), \(s_X=3.2\). Klasse Y: m = 10, \(\bar y=21.3\), \(s_Y=2.8\). Beide normal mit gleicher Varianz angenommen.
+  <ol class="pa-list"><li>(a) Modell und Hypothesen (zweiseitig).</li><li>(b) \(S^2_{\text{pool}}\), SE der Differenz, Teststatistik, df, Entscheid bei α = 0.05.</li>
+  <li>(c) 95-Prozent-VI für \(\mu_X-\mu_Y\).</li><li>(d) Einseitig \(H_A:\mu_X>\mu_Y\)?</li><li>(e) Was liefert der Welch-Test, und wann nimmt man ihn?</li></ol></x-task>
+  <x-cover>Modell mit gleicher Varianz (a) · gepoolte Varianz, t mit n + m − 2 (b) · VI der Differenz (c) · einseitig (d) · Welch (e)</x-cover>
+  <x-part h="(a) Modell" ref="8.3"><x-res>\(X_i\sim\Nor(\mu_X,\sigma^2)\), \(Y_j\sim\Nor(\mu_Y,\sigma^2)\), alle unabhängig; \(H_0:\mu_X=\mu_Y\), \(H_A:\mu_X\ne\mu_Y\).</x-res></x-part>
+  <x-part h="(b) Test" ref="8.3">
+    <x-step h="Gepoolt.">\(S^2_{\text{pool}}=\tfrac{11\cdot3.2^2+9\cdot2.8^2}{20}=9.16\), \(S_{\text{pool}}=3.03\).</x-step>
+    <x-step h="SE und t.">\(\operatorname{SE}=3.03\sqrt{\tfrac1{12}+\tfrac1{10}}=1.296\); \(t=\tfrac{2.8}{1.296}=2.16\), df 20.</x-step>
+    <x-res>\(2.16\ge t_{20,0.975}=2.086\) → verwerfen (P-Wert 0.043).</x-res>
+  </x-part>
+  <x-part h="(c) VI" ref="8.3"><x-res>\(2.8\pm2.086\cdot1.296=[0.10;\ 5.50]\): knapp ohne 0.</x-res></x-part>
+  <x-part h="(d) Einseitig" ref="8.3"><x-res>Grenze \(t_{20,0.95}=1.725\), P-Wert 0.022 → erst recht verwerfen.</x-res></x-part>
+  <x-part h="(e) Welch" ref="8.3"><x-res>Ohne Annahme gleicher Varianzen: \(\operatorname{SE}=\sqrt{\tfrac{s_X^2}n+\tfrac{s_Y^2}m}\), \(t=2.19\), df ≈ 19.9. Nehmen, wenn die Streuungen deutlich verschieden sind (R rechnet standardmäßig Welch).</x-res></x-part>
+</x-pa>
+<!-- @s8-4 -->
+<h3 id="pa-8-4-h" data-m="🎓 Prüfungsaufgabe 8.4|alles aus 8.4 von null">🎓 Prüfungsaufgabe: alles aus 8.4 von null</h3>
+<x-pa id="pa-8-4" sec="8.4" q="Falsch ausgewertet und die Landkarte der Tests">
+  <x-task><ol class="pa-list"><li>(a) Werte die Schuhsohlen-Daten aus 8.2 fälschlich ungepaart aus. Vergleiche t und P-Wert.</li>
+  <li>(b) Warum ist der Unterschied so groß?</li>
+  <li>(c) Welcher Test? (1) eine Stichprobe, σ bekannt; (2) gepaart, Differenzen stark schief; (3) zwei Gruppen, normal; (4) zwei Gruppen, klar nicht normal.</li></ol></x-task>
+  <x-cover>gepaart vs. ungepaart am selben Datensatz (a, b) · Landkarte aller Tests (c)</x-cover>
+  <x-part h="(a) Ungepaart gerechnet" ref="8.4"><x-res>\(s_A=2.91\), \(s_B=3.03\): \(t=-0.24\), df 10, P-Wert 0.81 statt 0.10 gepaart.</x-res></x-part>
+  <x-part h="(b) Warum?" ref="8.4"><x-res>Der Zähler ist gleich (−0.417), aber ungepaart steckt die riesige Streuung zwischen Kindern (s ≈ 3) im Nenner; gepaart nur die kleine Streuung der Differenzen (0.51).</x-res></x-part>
+  <x-part h="(c) Landkarte" ref="8.4"><x-res>(1) Z-Test. (2) Vorzeichen-Test auf den Differenzen (Wilcoxon braucht Symmetrie). (3) Zwei-Stichproben-t-Test (bzw. Welch). (4) Mann-Whitney (Zwei-Stichproben-Wilcoxon).</x-res></x-part>
+</x-pa>
+<!-- @s8-5 -->
+<h3 id="pa-8-5-h" data-m="🎓 Prüfungsaufgabe 8.5|alles aus 8.5 von null">🎓 Prüfungsaufgabe: alles aus 8.5 von null</h3>
+<x-pa id="pa-8-5" sec="8.5" q="Lernzeit und Punkte: ist die Steigung signifikant?">
+  <x-task>Daten aus 3.4: \(x\) = 1, …, 6 Lernstunden, \(y\) = 2, 4, 5, 4, 6, 8 Punkte; Gerade \(\hat y=1.333+1\cdot x\), SSE = 3.333.
+  <ol class="pa-list"><li>(a) Modell und Hypothesen für die Steigung.</li><li>(b) \(\hat\sigma^2\), SE(b), t, df, Entscheid bei α = 0.05.</li>
+  <li>(c) 95-Prozent-VI für β.</li><li>(d) Kontrolliere t über r = 0.917.</li><li>(e) R und Python.</li></ol></x-task>
+  <x-cover>Regressionsmodell, H₀: β = 0 (a) · σ̂² mit n − 2, SE(b), t-Test (b) · VI für β (c) · Zusammenhang mit r (d) · Code (e)</x-cover>
+  <x-part h="(a) Modell" ref="8.5"><x-res>\(Y_i=\alpha+\beta x_i+\varepsilon_i\), \(\varepsilon_i\) i.i.d. \(\Nor(0,\sigma^2)\); \(H_0:\beta=0\) (kein linearer Zusammenhang), \(H_A:\beta\ne0\).</x-res></x-part>
+  <x-part h="(b) Test" ref="8.5">
+    <x-step h="Fehlervarianz.">\(\hat\sigma^2=\tfrac{3.333}{6-2}=0.833\).</x-step>
+    <x-step h="SE.">\(S_{xx}=17.5\): \(\operatorname{SE}(b)=\sqrt{0.833/17.5}=0.218\).</x-step>
+    <x-res>\(t=\tfrac{1}{0.218}=4.58\), df 4, Grenze 2.776 → verwerfen (P-Wert 0.010).</x-res>
+  </x-part>
+  <x-part h="(c) VI" ref="8.5"><x-res>\(1\pm2.776\cdot0.218=[0.39;\ 1.61]\) Punkte pro Stunde.</x-res></x-part>
+  <x-part h="(d) Kontrolle" ref="8.5"><x-res>\(t=\tfrac{r\sqrt{n-2}}{\sqrt{1-r^2}}=\tfrac{0.917\cdot2}{\sqrt{0.16}}=4.58\) ✓.</x-res></x-part>
+  <x-part h="(e) Code" ref="8.5"><x-res>R: <code>summary(lm(y ~ x))</code> (Zeile x: Estimate, Std. Error, t value, Pr). Python: <code>stats.linregress(x, y)</code> (slope, stderr, pvalue).</x-res></x-part>
+</x-pa>
+<!-- @kap -->
+<section id="s8-pa" data-m="🎓 Gesamtaufgabe|Kapitel 8 komplett von null">
+<h2><span class="num">8.★</span>Gesamtaufgabe: Kapitel 8 komplett von null</h2>
+<x-pa id="pa-8-kap" sec="8" scope="kap" q="Eine Diätstudie mit zwei Gruppen">
+  <x-task>Gruppe A (Diät + Sport, 6 Personen), Gewicht vorher 82, 95, 78, 88, 91, 85 und nachher 78, 90, 76, 83, 88, 80 kg; Trainingsstunden pro Woche 3, 5, 1, 4, 2, 4. Gruppe B (nur Diät, 6 andere Personen): Gewichtsverluste 2, 3, 1, 4, 2, 1 kg.
+  <ol class="pa-list"><li>(a) Welche Vergleiche sind gepaart, welche ungepaart?</li><li>(b) Hat Gruppe A signifikant abgenommen? Gepaarter t-Test und VI.</li>
+  <li>(c) Verlieren A und B unterschiedlich viel? Zwei-Stichproben-t-Test und VI.</li>
+  <li>(d) Was würde passieren, wenn man in (b) vorher und nachher ungepaart vergleicht?</li>
+  <li>(e) Hängt der Verlust in A linear von den Trainingsstunden ab? t-Test der Steigung (b = 0.831, SE(b) = 0.110).</li></ol></x-task>
+  <x-cover>8.1 Design (a) · 8.2 gepaarter t-Test (b) · 8.3 Zwei-Stichproben-t-Test (c) · 8.4 falsche Auswertung (d) · 8.5 Regression (e)</x-cover>
+  <x-part h="(a) Designs" ref="8.1"><x-res>Vorher/nachher in A: gepaart (dieselbe Person). A gegen B: ungepaart (verschiedene Personen, m = n = 6 ist Zufall).</x-res></x-part>
+  <x-part h="(b) Gepaart" ref="8.2">
+    <x-step h="Differenzen.">4, 5, 2, 5, 3, 5: \(\bar u=4\), \(s_U=1.265\), SE \(=0.516\).</x-step>
+    <x-res>\(t=\tfrac{4}{0.516}=7.75\), df 5, Grenze 2.571 → verwerfen (P = 0.0006). VI \(4\pm2.571\cdot0.516=[2.67;\ 5.33]\) kg.</x-res>
+  </x-part>
+  <x-part h="(c) Ungepaart" ref="8.3">
+    <x-step h="Kennzahlen.">A: 4.0, s = 1.265; B: 2.17, s = 1.169. \(S^2_{\text{pool}}=\tfrac{1.6+1.367}{2}=1.483\).</x-step>
+    <x-step h="t.">SE \(=\sqrt{1.483}\sqrt{\tfrac16+\tfrac16}=0.703\); \(t=\tfrac{1.83}{0.703}=2.61\), df 10.</x-step>
+    <x-res>\(2.61\ge2.228\) → verwerfen (P = 0.026). VI \([0.27;\ 3.40]\) kg Mehrverlust durch Sport.</x-res>
+  </x-part>
+  <x-part h="(d) Falsch ungepaart" ref="8.4"><x-res>Die Körpergewichte streuen um etwa 6 kg zwischen Personen; dieser Unterschied landet im Nenner, t wird klein, der deutliche Effekt von 4 kg ginge unter. Richtig ist gepaart.</x-res></x-part>
+  <x-part h="(e) Regression" ref="8.5"><x-res>\(t=\tfrac{0.831}{0.110}=7.56\), df 4, Grenze 2.776 → verwerfen (P = 0.002): pro Trainingsstunde etwa 0.8 kg mehr Verlust.</x-res></x-part>
+</x-pa>
+</section>
