@@ -412,6 +412,7 @@ function initVideos() {
    ===================================================================== */
 function start() {
   initMenu(); initVideos();
+  document.addEventListener('click', e => { const b = e.target.closest('[data-pa]'); if (!b) return; LB.$$('.pa-part', b.closest('.pa')).forEach(d => { d.open = b.dataset.pa === '1'; }); });
   LB.$$('.code pre .row').forEach(r => { const ln = r.querySelector('.ln'); const txt = r.dataset.src !== undefined ? r.dataset.src : ''; r.innerHTML = ''; r.appendChild(ln); r.insertAdjacentHTML('beforeend', LB.hlLine(txt, r.closest('.code').dataset.lang)); });
   LB.inits.forEach(fn => { try { fn(); } catch (e) { console.error(e); if (window.__lbErrors) window.__lbErrors.push(String(e)); throw e; } });
   LB.tex(document.body);

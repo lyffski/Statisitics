@@ -91,6 +91,29 @@ def x_vn(m):
             % (cls, g, a['id'], a.get('sec', ''), badge, lab, a['q'], task.group(1) if task else '', sm, rest))
 
 
+def x_pa(m):
+    """🎓 Prüfungsaufgabe: ein Szenario, Teilaufgaben (a), (b), … mit je eigener, einzeln aufklappbarer Lösung.
+    <x-pa id sec q [scope="kap"]><x-task>…</x-task><x-cover>…</x-cover><x-part h="(a) …" ref="1.2">x-step/x-res/x-trap</x-part>…</x-pa>"""
+    a = attrs(m.group(1)); body = m.group(2)
+    task = re.search(r'<x-task>(.*?)</x-task>', body, re.S)
+    cover = re.search(r'<x-cover>(.*?)</x-cover>', body, re.S)
+    parts = re.findall(r'<x-part((?:\s[^>]*)?)>(.*?)</x-part>', body, re.S)
+    kap = a.get('scope') == 'kap'
+    lab = ('🎓 Gesamtaufgabe · Kapitel ' if kap else '🎓 Prüfungsaufgabe · alles aus ') + a['sec']
+    out = ('<div class="vonnull pa%s" id="%s" data-sec="%s"><div class="vn-ttl"><span class="vn-badge pa-badge">%s</span>%s</div>'
+           '<div class="vn-task"><b>Von null lösen, ohne nachzuschauen, wie in der Prüfung.</b> %s</div>'
+           % (' pa-kap' if kap else '', a['id'], a['sec'], lab, a['q'], task.group(1) if task else ''))
+    if cover:
+        out += '<div class="pa-cover"><b>✅ Deckt ab:</b> %s</div>' % cover.group(1)
+    out += ('<div class="pa-tools"><button type="button" class="btn" data-pa="1">alle Lösungen aufklappen</button>'
+            '<button type="button" class="btn" data-pa="0">alle zuklappen</button></div>')
+    for pa, pb in parts:
+        pat = attrs(pa)
+        ref = ' <span class="pa-ref">→ %s</span>' % pat['ref'] if pat.get('ref') else ''
+        out += '<details class="pa-part"><summary>%s%s</summary>%s</details>' % (pat.get('h', ''), ref, common(number_steps(pb)))
+    return out + '</div>'
+
+
 def x_sol(m):
     a = attrs(m.group(1))
     return '<details class="sol"><summary>%s</summary>%s</details>' % (a.get('s', 'Lösung Schritt für Schritt'), common(number_steps(m.group(2))))
@@ -240,6 +263,7 @@ def x_course(m):
 
 
 def expand(body):
+    body = re.sub(r'<x-pa((?:\s[^>]*)?)>(.*?)</x-pa>', x_pa, body, flags=re.S)
     body = re.sub(r'<x-vn((?:\s[^>]*)?)>(.*?)</x-vn>', x_vn, body, flags=re.S)
     body = re.sub(r'<x-sol((?:\s[^>]*)?)>(.*?)</x-sol>', x_sol, body, flags=re.S)
     body = re.sub(r'<x-anat((?:\s[^>]*)?)>(.*?)</x-anat>', x_anat, body, flags=re.S)
@@ -292,11 +316,33 @@ def read(p, default=''):
     return open(p, encoding='utf-8').read() if os.path.exists(p) else default
 
 
+def merge_pa(body, num):
+    """Prüfungsaufgaben aus tools/kap/pa/kNN.html einfügen: <!-- @sN-M --> ans Ende dieses Abschnitts,
+    <!-- @kap --> (Gesamtaufgabe) vor den Abschnitt „Brücke & Lernziele“."""
+    src = read(os.path.join(T, 'kap', 'pa', 'k%02d.html' % num))
+    if not src:
+        return body
+    for key, blk in re.findall(r'<!--\s*@([\w-]+)\s*-->(.*?)(?=<!--\s*@[\w-]+\s*-->|\Z)', src, re.S):
+        if key == 'kap':
+            m = re.search(r'<section id="s%d-9x?"' % num, body)
+            if not m:
+                raise SystemExit('Brücken-Abschnitt fehlt in Kapitel %d' % num)
+            body = body[:m.start()] + blk.strip() + '\n\n' + body[m.start():]
+            continue
+        m = re.search(r'<section id="%s"' % re.escape(key), body)
+        if not m:
+            raise SystemExit('Abschnitt %s fehlt' % key)
+        end = body.index('</section>', m.end())
+        body = body[:end] + blk.strip() + '\n' + body[end:]
+    return body
+
+
 def build(num):
     n, fname, short = PARTS[num - 1]
     body = read(os.path.join(T, 'kap', 'k%02d.html' % num))
     if not body:
         return None
+    body = merge_pa(body, num)
     meta = dict(re.findall(r'<!--\s*(\w+):\s*(.*?)\s*-->', body.split('\n', 20)[0] + '\n'.join(body.split('\n')[:12])))
     title = meta.get('title', short)
     sub = meta.get('sub', '')

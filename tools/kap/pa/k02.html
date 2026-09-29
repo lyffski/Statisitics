@@ -1,0 +1,384 @@
+<!-- @s2-1 -->
+<h3 id="pa-2-1-h" data-m="🎓 Prüfungsaufgabe 2.1|alles aus 2.1 von null">🎓 Prüfungsaufgabe: alles aus 2.1 von null</h3>
+<x-pa id="pa-2-1" sec="2.1" q="Zwei Münzwürfe: Zufallsvariablen als Funktionen">
+  <x-task>Eine faire Münze wird zweimal geworfen. \(\mX\) = Anzahl Kopf, \(\mY\) = 1, falls der 1. Wurf Kopf ist (sonst 0), \(\mZ\) = 1, falls der 2. Wurf Kopf ist (sonst 0).
+  <ol class="pa-list"><li>(a) Schreibe \(\mX\), \(\mY\) und \(\mZ\) als Tabelle \(\omega\mapsto\) Wert.</li>
+  <li>(b) Welches Ereignis ist \(\{\mX=1\}\), und wie groß ist seine W'keit? Was ist der Unterschied zwischen \(\mX\) und \(\mx\)?</li>
+  <li>(c) Sind \(\mY\) und \(\mZ\) unabhängig? Sind \(\mX\) und \(\mY\) unabhängig?</li>
+  <li>(d) Diskret oder stetig: Anzahl Kopf; Anzahl Würfe bis zum ersten Kopf; Flugzeit der Münze in Sekunden?</li></ol></x-task>
+  <x-cover>ZV als Funktion auf Ω (a) · {X = x}, Groß- vs. Kleinbuchstabe (b) · Unabhängigkeit von ZV (c) · diskret vs. stetig (d)</x-cover>
+  <x-part h="(a) Zufallsvariable = Funktion auf Ω" ref="2.1">
+    <x-step h="Ω und Werte.">\(\Om=\{KK,KZ,ZK,ZZ\}\), Laplace.
+    <table class="tbl"><tr><th>ω</th><th>KK</th><th>KZ</th><th>ZK</th><th>ZZ</th></tr><tr><td>X(ω)</td><td>2</td><td>1</td><td>1</td><td>0</td></tr><tr><td>Y(ω)</td><td>1</td><td>1</td><td>0</td><td>0</td></tr><tr><td>Z(ω)</td><td>1</td><td>0</td><td>1</td><td>0</td></tr></table></x-step>
+    <x-res>Eine Zufallsvariable ordnet jedem Ausgang eine Zahl zu; hier gilt sogar \(\mX=\mY+\mZ\).</x-res>
+  </x-part>
+  <x-part h="(b) Das Ereignis {X = x}" ref="2.1">
+    <x-step h="Urbild.">\(\{\mX=1\}=\{\omega:\mX(\omega)=1\}=\{KZ,ZK\}\), also \(\PP(\mX=1)=\tfrac24=\tfrac12\).</x-step>
+    <x-step h="Groß vs. klein.">\(\mX\) ist die zufällige Größe (Funktion), \(\mx\) eine feste Zahl, die sie annehmen kann. \(\{\mX=\mx\}\) ist ein Ereignis, \(\PP(\mX=\mx)\) eine Zahl.</x-step>
+    <x-res>\(\{\mX=1\}=\{KZ,ZK\}\), W'keit ½.</x-res>
+  </x-part>
+  <x-part h="(c) Unabhängigkeit von Zufallsvariablen" ref="2.1">
+    <x-step h="Definition.">\(\mY,\mZ\) unabhängig, wenn \(\PP(\mY=y,\mZ=z)=\PP(\mY=y)\PP(\mZ=z)\) für <b>alle</b> Wertepaare.</x-step>
+    <x-step h="Y, Z.">Jedes der 4 Paare \((y,z)\) entspricht genau einem ω: \(\tfrac14=\tfrac12\cdot\tfrac12\) ✓ für alle vier → unabhängig.</x-step>
+    <x-step h="X, Y.">Ein Gegenbeispiel reicht: \(\PP(\mX=2,\mY=0)=0\), aber \(\PP(\mX=2)\PP(\mY=0)=\tfrac14\cdot\tfrac12=\tfrac18\) → abhängig.</x-step>
+    <x-res>Y, Z unabhängig; X, Y abhängig (Y ist ein Teil von X).</x-res>
+  </x-part>
+  <x-part h="(d) Diskret oder stetig?" ref="2.1">
+    <x-step h="Kriterium.">Diskret: Werte abzählbar (auflistbar); stetig: Werte füllen ein Intervall.</x-step>
+    <x-res>Anzahl Kopf: diskret (0, 1, 2). Würfe bis Kopf: diskret, abzählbar unendlich (1, 2, 3, …). Flugzeit: stetig.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-2 -->
+<h3 id="pa-2-2-h" data-m="🎓 Prüfungsaufgabe 2.2|alles aus 2.2 von null">🎓 Prüfungsaufgabe: alles aus 2.2 von null</h3>
+<x-pa id="pa-2-2" sec="2.2" q="Defekte in einer Stichprobe: p(x), Treppe F(x), alle Rechenregeln">
+  <x-task>\(\mX\) = Anzahl defekter Teile in einer Stichprobe mit \(\pf(0)=0.4\), \(\pf(1)=0.3\), \(\pf(2)=0.2\), \(\pf(3)=0.1\).
+  <ol class="pa-list"><li>(a) Ist das eine gültige Wahrscheinlichkeitsfunktion? Bestimme \(\PP(\mX\text{ gerade})\).</li>
+  <li>(b) Bestimme \(\FF(x)\) für alle \(x\in\mathbb R\) und daraus \(\FF(1.5)\), \(\FF(-1)\), \(\FF(5)\). Skizziere die Treppe.</li>
+  <li>(c) Berechne nur mit \(\FF\): \(\PP(1<\mX\le3)\), \(\PP(\mX>1)\), \(\PP(\mX<2)\), \(\PP(\mX\ge1)\), \(\PP(\mX=2)\).</li></ol></x-task>
+  <x-cover>p(x), Summe 1, P(X ∈ A) (a) · Verteilungsfunktion als Treppe, auch zwischen den Werten (b) · alle Rechenregeln mit F, Sprunghöhe (c)</x-cover>
+  <x-part h="(a) Wahrscheinlichkeitsfunktion" ref="2.2">
+    <x-step h="Gültig?">Alle \(\ge0\), Summe \(0.4+0.3+0.2+0.1=1\) ✓.</x-step>
+    <x-step h="P(X ∈ A) = Summe.">\(\PP(\mX\in\{0,2\})=\pf(0)+\pf(2)=0.6\).</x-step>
+    <x-res>Gültig; \(\PP(\text{gerade})=0.6\).</x-res>
+  </x-part>
+  <x-part h="(b) Die Treppe F(x)" ref="2.2">
+    <x-step h="Aufsummieren.">\(\FF(x)=\PP(\mX\le x)\): \(0\) für \(x<0\); \(0.4\) für \(0\le x<1\); \(0.7\) für \(1\le x<2\); \(0.9\) für \(2\le x<3\); \(1\) für \(x\ge3\).</x-step>
+    <x-step h="Zwischen den Werten.">\(\FF(1.5)=\FF(1)=0.7\) (zwischen 1 und 2 kommt nichts dazu), \(\FF(-1)=0\), \(\FF(5)=1\).</x-step>
+    <x-res>Treppe mit Sprüngen der Höhe \(\pf(k)\) an den Stellen 0, 1, 2, 3, rechtsstetig.</x-res>
+  </x-part>
+  <x-part h="(c) Rechenregeln mit F" ref="2.2">
+    <x-step h="Intervall.">\(\PP(1<\mX\le3)=\FF(3)-\FF(1)=1-0.7=0.3\).</x-step>
+    <x-step h="Gegenereignis.">\(\PP(\mX>1)=1-\FF(1)=0.3\); \(\PP(\mX\ge1)=1-\FF(0)=0.6\).</x-step>
+    <x-step h="Echt kleiner.">\(\PP(\mX<2)=\PP(\mX\le1)=\FF(1)=0.7\): bei diskreten ZV zählt, ob \(<\) oder \(\le\).</x-step>
+    <x-step h="Sprunghöhe.">\(\PP(\mX=2)=\FF(2)-\FF(1)=0.2\).</x-step>
+    <x-res>0.3, 0.3, 0.7, 0.6, 0.2.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-3 -->
+<h3 id="pa-2-3-h" data-m="🎓 Prüfungsaufgabe 2.2.1|alles aus 2.2.1 von null">🎓 Prüfungsaufgabe: alles aus 2.2.1 von null</h3>
+<x-pa id="pa-2-3" sec="2.2.1" q="Kosten der Reparatur: E, Var, σ, a + bX und E[g(X)]">
+  <x-task>Wie in 2.2: \(\pf(0)=0.4\), \(\pf(1)=0.3\), \(\pf(2)=0.2\), \(\pf(3)=0.1\) defekte Teile.
+  <ol class="pa-list"><li>(a) Bestimme \(\EE[\mX]\) und deute es als Schwerpunkt.</li>
+  <li>(b) Bestimme \(\Var(\mX)\) einmal über die Definition und einmal mit dem Verschiebungssatz; dazu \(\sigma\).</li>
+  <li>(c) Die Kosten sind \(K=10+4\mX\) (in Franken). Bestimme \(\EE[K]\), \(\Var(K)\), \(\sigma_K\).</li>
+  <li>(d) Bestimme \(\EE\big[\tfrac1{1+\mX}\big]\) und vergleiche mit \(\tfrac1{1+\EE[\mX]}\).</li>
+  <li>(e) Schreibe (a) und (b) in R und Python.</li></ol></x-task>
+  <x-cover>E als gewichtetes Mittel/Schwerpunkt (a) · Var per Definition und Verschiebungssatz, σ (b) · Regeln für a + bX (c) · E[g(X)] ≠ g(E[X]) (d) · Code (e)</x-cover>
+  <x-part h="(a) Erwartungswert" ref="2.2.1">
+    <x-step h="Wert mal W'keit.">\(\EE[\mX]=0\cdot0.4+1\cdot0.3+2\cdot0.2+3\cdot0.1=\Res{1.0}\).</x-step>
+    <x-res>\(\EE[\mX]=1\): auf einem Stab mit Gewichten 0.4, 0.3, 0.2, 0.1 an den Stellen 0–3 liegt das Gleichgewicht bei 1.</x-res>
+  </x-part>
+  <x-part h="(b) Varianz auf zwei Wegen" ref="2.2.1">
+    <x-step h="Definition.">\(\sum(x-\mu)^2\pf(x)=1\cdot0.4+0\cdot0.3+1\cdot0.2+4\cdot0.1=1.0\).</x-step>
+    <x-step h="Verschiebungssatz.">\(\EE[\mX^2]=0+0.3+4\cdot0.2+9\cdot0.1=2.0\); \(\Var(\mX)=\EE[\mX^2]-\EE[\mX]^2=2-1=1.0\) ✓.</x-step>
+    <x-res>\(\Var(\mX)=1\), \(\sigma=1\).</x-res>
+  </x-part>
+  <x-part h="(c) Lineare Transformation" ref="2.2.1">
+    <x-step h="Regeln.">\(\EE[a+b\mX]=a+b\,\EE[\mX]\), \(\Var(a+b\mX)=b^2\Var(\mX)\): die Verschiebung a ändert die Streuung nicht.</x-step>
+    <x-res>\(\EE[K]=10+4\cdot1=14\), \(\Var(K)=16\cdot1=16\), \(\sigma_K=4\).</x-res>
+    <x-trap>\(\Var(4\mX)=4\Var(\mX)\) ist falsch: der Faktor kommt quadriert heraus.</x-trap>
+  </x-part>
+  <x-part h="(d) E einer Funktion" ref="2.2.1">
+    <x-step h="Regel.">\(\EE[g(\mX)]=\sum g(x)\pf(x)\): g auf die Werte anwenden, W'keiten bleiben.</x-step>
+    <x-step h="Rechnen.">\(1\cdot0.4+\tfrac12\cdot0.3+\tfrac13\cdot0.2+\tfrac14\cdot0.1=0.4+0.15+0.0667+0.025=0.642\).</x-step>
+    <x-res>\(\EE[1/(1+\mX)]\approx0.642\ne\tfrac1{1+1}=0.5\): nur für lineare g darf man g und E vertauschen.</x-res>
+  </x-part>
+  <x-part h="(e) Code" ref="2.2.1">
+    <x-step h="R."><code>x &lt;- 0:3; p &lt;- c(.4, .3, .2, .1); mu &lt;- sum(x * p); sum((x - mu)^2 * p)</code></x-step>
+    <x-step h="Python."><code>x = np.arange(4); p = np.array([.4, .3, .2, .1]); mu = (x * p).sum(); ((x - mu)**2 * p).sum()</code></x-step>
+    <x-res>Beide liefern 1.0 und 1.0.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-4 -->
+<h3 id="pa-2-4-h" data-m="🎓 Prüfungsaufgabe 2.2.2|alles aus 2.2.2 von null">🎓 Prüfungsaufgabe: alles aus 2.2.2 von null</h3>
+<x-pa id="pa-2-4" sec="2.2.2" q="Ein Freiwurf als Bernoulli-Variable">
+  <x-task>Eine Spielerin trifft einen Freiwurf mit W'keit 0.7. \(\mX=1\) bei Treffer, sonst 0.
+  <ol class="pa-list"><li>(a) Gib die Verteilung von \(\mX\) an.</li><li>(b) Leite \(\EE[\mX]\) und \(\Var(\mX)\) von null her; wieso ist \(\mX^2=\mX\)?</li>
+  <li>(c) Für welches p ist die Varianz maximal?</li><li>(d) Wie viele Treffer erwartet man bei 3 Würfen?</li></ol></x-task>
+  <x-cover>Steckbrief Bernoulli, Indikator (a) · E = p, Var = p(1 − p) (b) · Maximum bei ½ (c) · Summe von Indikatoren zählt Erfolge (d)</x-cover>
+  <x-part h="(a) Verteilung" ref="2.2.2"><x-res>\(\mX\sim\Bern(0.7)\): \(\pf(1)=0.7\), \(\pf(0)=0.3\). X ist der Indikator des Ereignisses „Treffer“.</x-res></x-part>
+  <x-part h="(b) E und Var" ref="2.2.2">
+    <x-step h="E.">\(\EE[\mX]=0\cdot0.3+1\cdot0.7=0.7=p\): der Erwartungswert eines Indikators ist die W'keit des Ereignisses.</x-step>
+    <x-step h="X² = X.">\(0^2=0\), \(1^2=1\), also \(\EE[\mX^2]=\EE[\mX]=p\).</x-step>
+    <x-step h="Var.">\(\Var(\mX)=p-p^2=p(1-p)=0.7\cdot0.3=\Res{0.21}\), \(\sigma\approx0.458\).</x-step>
+    <x-res>\(\EE=0.7\), \(\Var=0.21\).</x-res>
+  </x-part>
+  <x-part h="(c) Maximale Unsicherheit" ref="2.2.2">
+    <x-step h="Ableiten.">\(\tfrac{d}{dp}\,p(1-p)=1-2p=0\) → \(p=\tfrac12\), \(\Var=0.25\).</x-step>
+    <x-res>Am unsichersten ist ein Versuch bei p = ½; bei p = 0 oder 1 gibt es keine Streuung.</x-res>
+  </x-part>
+  <x-part h="(d) Summe von Indikatoren" ref="2.2.2">
+    <x-step h="Linearität.">Treffer = \(\mX_1+\mX_2+\mX_3\), \(\EE=3\cdot0.7=2.1\).</x-step>
+    <x-res>2.1 Treffer. Die Summe unabhängiger Bernoulli ist binomial (2.2.3).</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-5 -->
+<h3 id="pa-2-5-h" data-m="🎓 Prüfungsaufgabe 2.2.3|alles aus 2.2.3 von null">🎓 Prüfungsaufgabe: alles aus 2.2.3 von null</h3>
+<x-pa id="pa-2-5" sec="2.2.3" q="Klickrate einer Werbung: Binomialverteilung komplett">
+  <x-task>Eine Werbung wird mit W'keit 0.1 angeklickt. 20 Personen sehen sie unabhängig voneinander. \(\mX\) = Anzahl Klicks.
+  <ol class="pa-list"><li>(a) Begründe \(\mX\sim\Bin(20,0.1)\) und leite die Formel für \(\pf(x)\) her.</li>
+  <li>(b) Bestimme \(\PP(\mX=2)\), \(\PP(\mX\le2)\), \(\PP(\mX\ge1)\).</li>
+  <li>(c) Bestimme \(\EE[\mX]\), \(\Var(\mX)\), \(\sigma\) und den wahrscheinlichsten Wert.</li>
+  <li>(d) Die R- und Python-Befehle für (b).</li></ol></x-task>
+  <x-cover>Voraussetzungen und Herleitung der Formel (a) · Punkt-, kumulierte und Gegenwahrscheinlichkeit (b) · E = np, Var = np(1 − p), Modus (c) · Code (d)</x-cover>
+  <x-part h="(a) Modell und Formel" ref="2.2.3">
+    <x-step h="Voraussetzungen.">Feste Anzahl n = 20, jeder Versuch Klick ja/nein, gleiche W'keit p = 0.1, unabhängig.</x-step>
+    <x-step h="Eine Reihenfolge.">Erst x Klicks, dann 20 − x keine: \(p^x(1-p)^{20-x}\) (Unabhängigkeit → Produkt).</x-step>
+    <x-step h="Alle Reihenfolgen.">Die x Klick-Plätze lassen sich auf \(\binom{20}{x}\) Arten wählen, alle gleich wahrscheinlich: \(\pf(x)=\binom{20}{x}0.1^x0.9^{20-x}\).</x-step>
+    <x-res>\(\mX\sim\Bin(20,0.1)\).</x-res>
+  </x-part>
+  <x-part h="(b) Drei W'keiten" ref="2.2.3">
+    <x-step h="Punkt.">\(\pf(2)=\binom{20}2\,0.1^2\,0.9^{18}=190\cdot0.01\cdot0.1501=\Res{0.285}\).</x-step>
+    <x-step h="Kumuliert.">\(\pf(0)=0.9^{20}=0.1216\), \(\pf(1)=20\cdot0.1\cdot0.9^{19}=0.2702\): \(\PP(\mX\le2)=0.1216+0.2702+0.2852=\Res{0.677}\).</x-step>
+    <x-step h="Mindestens einer.">\(1-\pf(0)=1-0.9^{20}=\Res{0.878}\).</x-step>
+    <x-res>0.285, 0.677, 0.878.</x-res>
+  </x-part>
+  <x-part h="(c) Kennzahlen" ref="2.2.3">
+    <x-step h="Als Summe von Bernoulli.">\(\EE=np=2\), \(\Var=np(1-p)=1.8\), \(\sigma=1.342\).</x-step>
+    <x-res>Modus 2 (größtes \(\pf(x)\); Faustregel \(\lfloor(n+1)p\rfloor=2\)).</x-res>
+  </x-part>
+  <x-part h="(d) Code" ref="2.2.3">
+    <x-step h="R."><code>dbinom(2, 20, 0.1); pbinom(2, 20, 0.1); 1 - dbinom(0, 20, 0.1)</code></x-step>
+    <x-step h="Python."><code>stats.binom.pmf(2, 20, 0.1); stats.binom.cdf(2, 20, 0.1); stats.binom.sf(0, 20, 0.1)</code></x-step>
+    <x-res>d = Punkt-W'keit, p/cdf = kumuliert, sf = 1 − cdf.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-6 -->
+<h3 id="pa-2-6-h" data-m="🎓 Prüfungsaufgabe 2.2.4|alles aus 2.2.4 von null">🎓 Prüfungsaufgabe: alles aus 2.2.4 von null</h3>
+<x-pa id="pa-2-6" sec="2.2.4" q="Glücksrad bis zum ersten Gewinn">
+  <x-task>Ein Glücksrad gewinnt bei jeder Drehung unabhängig mit W'keit 0.25. \(\mX\) = Anzahl Drehungen bis zum ersten Gewinn (inklusive).
+  <ol class="pa-list"><li>(a) Leite \(\pf(x)\) und \(\FF(x)\) her.</li><li>(b) Bestimme \(\PP(\mX=3)\), \(\PP(\mX\le3)\), \(\PP(\mX>5)\).</li>
+  <li>(c) Bestimme \(\EE[\mX]\), \(\Var(\mX)\), \(\sigma\) und deute \(\EE[\mX]\) als „Wiederkehrperiode“.</li></ol></x-task>
+  <x-cover>Herleitung p(x) und F(x) (a) · Punkt-, kumulierte und Schwanz-W'keit (b) · E = 1/p, Var = (1 − p)/p², Wiederkehr (c)</x-cover>
+  <x-part h="(a) Formeln herleiten" ref="2.2.4">
+    <x-step h="p(x).">\(\mX=x\) heißt: \(x-1\) Nieten, dann Gewinn: \(\pf(x)=(1-p)^{x-1}p\), \(x=1,2,\dots\)</x-step>
+    <x-step h="F(x) über das Gegenereignis.">\(\mX>x\) heißt: die ersten x sind Nieten, \(\PP(\mX>x)=(1-p)^x\), also \(\FF(x)=1-(1-p)^x\).</x-step>
+    <x-res>\(\pf(x)=0.75^{x-1}\cdot0.25\), \(\FF(x)=1-0.75^x\).</x-res>
+  </x-part>
+  <x-part h="(b) W'keiten" ref="2.2.4">
+    <x-res>\(\PP(\mX=3)=0.75^2\cdot0.25=0.1406\); \(\PP(\mX\le3)=1-0.75^3=0.5781\); \(\PP(\mX>5)=0.75^5=0.2373\).</x-res>
+  </x-part>
+  <x-part h="(c) Kennzahlen" ref="2.2.4">
+    <x-step h="Formeln.">\(\EE[\mX]=\tfrac1p=4\), \(\Var(\mX)=\tfrac{1-p}{p^2}=\tfrac{0.75}{0.0625}=12\), \(\sigma\approx3.46\).</x-step>
+    <x-res>Im Mittel alle 4 Drehungen ein Gewinn (wie „ein Jahrhunderthochwasser“: im Mittel alle 100 Jahre); die Streuung ist groß.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-7 -->
+<h3 id="pa-2-7-h" data-m="🎓 Prüfungsaufgabe 2.2.5|alles aus 2.2.5 von null">🎓 Prüfungsaufgabe: alles aus 2.2.5 von null</h3>
+<x-pa id="pa-2-7" sec="2.2.5" q="Serverausfälle: Poisson, Skalierung und Approximation">
+  <x-task>Ein Server hat im Mittel 2 Ausfälle pro Tag, seltene und unabhängige Ereignisse.
+  <ol class="pa-list"><li>(a) Welche Verteilung hat die Anzahl \(\mX\) pro Tag? Bestimme \(\PP(\mX=0)\), \(\PP(\mX\le2)\), \(\PP(\mX\ge3)\).</li>
+  <li>(b) \(\EE[\mX]\) und \(\Var(\mX)\)? Welche Verteilung hat die Anzahl pro Woche?</li>
+  <li>(c) 500 Nutzer lösen je unabhängig mit W'keit 0.004 einen Ausfall aus. Vergleiche \(\PP(\text{kein Ausfall})\) exakt (binomial) und mit Poisson.</li>
+  <li>(d) Welche diskrete Verteilung passt zu: Treffer bei 10 Würfen; Würfe bis zum ersten Treffer; Anrufe pro Stunde?</li></ol></x-task>
+  <x-cover>Poisson-Formel und W'keiten (a) · E = Var = λ, Skalierung λt (b) · Poisson-Approximation der Binomial (c) · Schema „welche diskrete Verteilung“ (d)</x-cover>
+  <x-part h="(a) Poisson-W'keiten" ref="2.2.5">
+    <x-step h="Modell.">\(\mX\sim\Pois(2)\), \(\pf(x)=e^{-2}\tfrac{2^x}{x!}\).</x-step>
+    <x-step h="Rechnen.">\(\pf(0)=e^{-2}=0.1353\); \(\PP(\mX\le2)=e^{-2}(1+2+2)=5e^{-2}=0.6767\); \(\PP(\mX\ge3)=1-0.6767=0.3233\).</x-step>
+    <x-res>0.135, 0.677, 0.323.</x-res>
+  </x-part>
+  <x-part h="(b) Kennzahlen und Skalierung" ref="2.2.5">
+    <x-res>\(\EE=\Var=\lambda=2\). Pro Woche: Rate × Zeit, \(\Pois(14)\).</x-res>
+  </x-part>
+  <x-part h="(c) Approximation" ref="2.2.5">
+    <x-step h="Exakt.">\(\Bin(500,0.004)\): \(0.996^{500}=0.1348\).</x-step>
+    <x-step h="Poisson mit λ = np = 2.">\(e^{-2}=0.1353\).</x-step>
+    <x-res>Fast gleich: bei großem n und kleinem p gilt \(\Bin(n,p)\approx\Pois(np)\).</x-res>
+  </x-part>
+  <x-part h="(d) Schema" ref="2.2.5">
+    <x-res>Feste Anzahl Versuche → Binomial. Warten auf den 1. Erfolg → Geometrisch. Zählen in Zeit/Raum ohne feste Obergrenze → Poisson.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-8 -->
+<h3 id="pa-2-8-h" data-m="🎓 Prüfungsaufgabe 2.3|alles aus 2.3 von null">🎓 Prüfungsaufgabe: alles aus 2.3 von null</h3>
+<x-pa id="pa-2-8" sec="2.3" q="Eine Dreiecksdichte: c, F, Fläche, Quantile, E und Var">
+  <x-task>\(\ff(x)=c\,(2-x)\) für \(0\le x\le2\), sonst 0.
+  <ol class="pa-list"><li>(a) Bestimme c, sodass \(\ff\) eine Dichte ist.</li><li>(b) Bestimme \(\FF(x)\) und \(\PP(0.5<\mX\le1)\). Wie groß ist \(\PP(\mX=1)\)?</li>
+  <li>(c) Bestimme den Median und das 90-Prozent-Quantil.</li><li>(d) Bestimme \(\EE[\mX]\), \(\Var(\mX)\), \(\sigma\).</li>
+  <li>(e) Kann eine Dichte Werte über 1 haben?</li></ol></x-task>
+  <x-cover>Dichte, Normierung (a) · F = ∫f, Fläche = W'keit, P(X = a) = 0 (b) · Quantile (c) · E und Var als Integrale (d) · Dichte ≠ W'keit (e)</x-cover>
+  <x-part h="(a) Normierung" ref="2.3">
+    <x-step h="Gesamtfläche 1.">\(\int_0^2c(2-x)\dd x=c\,[2x-\tfrac{x^2}2]_0^2=c\cdot2=1\) → \(c=\tfrac12\). Außerdem \(\ff\ge0\) ✓.</x-step>
+    <x-res>\(c=\tfrac12\), \(\ff(x)=1-\tfrac x2\).</x-res>
+  </x-part>
+  <x-part h="(b) Verteilungsfunktion und Fläche" ref="2.3">
+    <x-step h="Integrieren.">\(\FF(x)=\int_0^x(1-\tfrac u2)\dd u=x-\tfrac{x^2}4\) für \(0\le x\le2\); 0 links, 1 rechts.</x-step>
+    <x-step h="Intervall.">\(\FF(1)-\FF(0.5)=0.75-0.4375=\Res{0.3125}\).</x-step>
+    <x-step h="Einzelner Punkt.">\(\PP(\mX=1)=\int_1^1\ff=0\). Deshalb ist bei stetigen ZV \(<\) und \(\le\) egal.</x-step>
+    <x-res>\(\PP(0.5<\mX\le1)=0.3125\), \(\PP(\mX=1)=0\).</x-res>
+  </x-part>
+  <x-part h="(c) Quantile" ref="2.3">
+    <x-step h="Median.">\(\FF(q)=0.5\): \(q^2-4q+2=0\) → \(q=2-\sqrt2\approx\Res{0.586}\) (die andere Lösung liegt außerhalb [0, 2]).</x-step>
+    <x-step h="90 Prozent.">\(q^2-4q+3.6=0\) → \(q=2-\sqrt{0.4}\approx\Res{1.368}\).</x-step>
+    <x-res>Median 0.586, 90-Prozent-Quantil 1.368.</x-res>
+  </x-part>
+  <x-part h="(d) E und Var" ref="2.3">
+    <x-step h="E.">\(\int_0^2x(1-\tfrac x2)\dd x=[\tfrac{x^2}2-\tfrac{x^3}6]_0^2=2-\tfrac86=\tfrac23\).</x-step>
+    <x-step h="E[X²].">\(\int_0^2x^2(1-\tfrac x2)\dd x=[\tfrac{x^3}3-\tfrac{x^4}8]_0^2=\tfrac83-2=\tfrac23\).</x-step>
+    <x-step h="Var.">\(\tfrac23-\tfrac49=\tfrac29\approx0.222\), \(\sigma\approx0.471\).</x-step>
+    <x-res>\(\EE=0.667\) > Median 0.586: die Dichte ist rechtsschief.</x-res>
+  </x-part>
+  <x-part h="(e) Dichte über 1?" ref="2.3">
+    <x-res>Ja. \(\ff(x)\) ist keine W'keit, sondern W'keit pro Längeneinheit. Beispiel \(\Uni(0,0.5)\): \(\ff=2\).</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-9 -->
+<h3 id="pa-2-9-h" data-m="🎓 Prüfungsaufgabe 2.3.3|alles aus 2.3.3 von null">🎓 Prüfungsaufgabe: alles aus 2.3.3 von null</h3>
+<x-pa id="pa-2-9" sec="2.3.3" q="Wartezeit auf die S-Bahn (alle 20 Minuten)">
+  <x-task>Du kommst zufällig an; die Wartezeit ist \(W\sim\Uni(0,20)\) Minuten.
+  <ol class="pa-list"><li>(a) Gib \(\ff\) und \(\FF\) an.</li><li>(b) \(\PP(W>15)\), \(\PP(5\le W\le8)\)?</li><li>(c) \(\EE[W]\), \(\Var(W)\), \(\sigma\), 80-Prozent-Quantil?</li><li>(d) Welche Varianz hat ein Rundungsfehler \(\Uni(-0.5,0.5)\)?</li></ol></x-task>
+  <x-cover>Steckbrief f, F (a) · Rechtecksfläche (b) · E = (a + b)/2, Var = (b − a)²/12, Quantil (c) · Anwendung Rundung (d)</x-cover>
+  <x-part h="(a) Dichte und F" ref="2.3.3"><x-res>\(\ff=\tfrac1{20}\) auf [0, 20]; \(\FF(w)=\tfrac{w}{20}\) auf [0, 20].</x-res></x-part>
+  <x-part h="(b) Rechtecksflächen" ref="2.3.3"><x-res>\(\PP(W>15)=\tfrac5{20}=0.25\); \(\PP(5\le W\le8)=\tfrac3{20}=0.15\).</x-res></x-part>
+  <x-part h="(c) Kennzahlen" ref="2.3.3">
+    <x-step h="Formeln.">\(\EE=\tfrac{0+20}2=10\), \(\Var=\tfrac{20^2}{12}=33.3\), \(\sigma=5.77\).</x-step>
+    <x-step h="Quantil.">\(q_{0.8}=a+0.8(b-a)=16\).</x-step>
+    <x-res>10 Minuten, 33.3, 5.77, 16 Minuten.</x-res>
+  </x-part>
+  <x-part h="(d) Rundung" ref="2.3.3"><x-res>\(\Var=\tfrac1{12}\approx0.083\), \(\sigma\approx0.289\) Einheiten.</x-res></x-part>
+</x-pa>
+<!-- @s2-10 -->
+<h3 id="pa-2-10-h" data-m="🎓 Prüfungsaufgabe 2.3.4|alles aus 2.3.4 von null">🎓 Prüfungsaufgabe: alles aus 2.3.4 von null</h3>
+<x-pa id="pa-2-10" sec="2.3.4" q="Abfüllanlage: Normalverteilung komplett">
+  <x-task>Die Füllmenge ist \(\mX\sim\Nor(500,4^2)\) ml.
+  <ol class="pa-list"><li>(a) Was bedeuten \(\mu\) und \(\sigma\) in der Dichte?</li><li>(b) \(\PP(\mX<495)\), \(\PP(495\le\mX\le505)\), \(\PP(\mX>510)\) über Standardisierung und Φ.</li>
+  <li>(c) In welchen Bereichen liegen 68 bzw. 95 Prozent?</li><li>(d) Unter welcher Menge liegen die 5 Prozent kleinsten Füllungen?</li>
+  <li>(e) Auf welches μ muss man die Anlage stellen, damit nur 1 Prozent unter 495 ml liegt?</li></ol></x-task>
+  <x-cover>Parameter der Dichte (a) · Standardisieren, Φ, Symmetrie Φ(−z) = 1 − Φ(z) (b) · 68–95-Regel (c) · Quantil (d) · Parameter rückwärts bestimmen (e)</x-cover>
+  <x-part h="(a) Parameter" ref="2.3.4"><x-res>μ = 500 ist Mitte und Maximum der Glocke (Erwartungswert), σ = 4 der Abstand zu den Wendepunkten (Standardabweichung).</x-res></x-part>
+  <x-part h="(b) Standardisieren" ref="2.3.4">
+    <x-step h="Unter 495.">\(z=\tfrac{495-500}4=-1.25\): \(\Phi(-1.25)=1-\Phi(1.25)=1-0.8944=\Res{0.106}\).</x-step>
+    <x-step h="Symmetrisches Intervall.">\(\PP(|\mZ|\le1.25)=2\Phi(1.25)-1=\Res{0.789}\).</x-step>
+    <x-step h="Über 510.">\(z=2.5\): \(1-\Phi(2.5)=\Res{0.0062}\).</x-step>
+    <x-res>0.106, 0.789, 0.0062.</x-res>
+  </x-part>
+  <x-part h="(c) 68–95-Regel" ref="2.3.4"><x-res>\(\mu\pm\sigma=[496,504]\) enthält 68.3 Prozent; \(\mu\pm2\sigma=[492,508]\) enthält 95.4 Prozent.</x-res></x-part>
+  <x-part h="(d) Quantil" ref="2.3.4">
+    <x-step h="Standard-Quantil.">\(z_{0.05}=-1.645\).</x-step>
+    <x-res>\(q_{0.05}=500-1.645\cdot4=493.4\) ml.</x-res>
+  </x-part>
+  <x-part h="(e) μ bestimmen" ref="2.3.4">
+    <x-step h="Bedingung.">\(\PP(\mX<495)=\Phi\big(\tfrac{495-\mu}4\big)=0.01\) → \(\tfrac{495-\mu}4=-2.326\).</x-step>
+    <x-res>\(\mu=495+2.326\cdot4\approx504.3\) ml.</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-11 -->
+<h3 id="pa-2-11-h" data-m="🎓 Prüfungsaufgabe 2.3.5|alles aus 2.3.5 von null">🎓 Prüfungsaufgabe: alles aus 2.3.5 von null</h3>
+<x-pa id="pa-2-11" sec="2.3.5" q="Lebensdauer eines Akkus">
+  <x-task>Die Lebensdauer \(T\) eines Akkus ist exponentialverteilt mit Mittel 5 Jahre.
+  <ol class="pa-list"><li>(a) Bestimme λ, \(\ff\) und \(\FF\).</li><li>(b) \(\PP(T\le2)\) und \(\PP(T>5)\)?</li><li>(c) Median und 90-Prozent-Quantil; warum ist der Median kleiner als das Mittel?</li><li>(d) \(\Var(T)\), \(\sigma\)?</li>
+  <li>(e) Welche stetige Verteilung passt zu: Rundungsfehler; Abfüllmenge; Zeit bis zum nächsten Anruf?</li></ol></x-task>
+  <x-cover>Steckbrief λ, f, F (a) · Überlebens-W'keit e^(−λt) (b) · Quantile, Schiefe (c) · Var = 1/λ² (d) · Schema „welche stetige Verteilung“ (e)</x-cover>
+  <x-part h="(a) Parameter" ref="2.3.5"><x-res>\(\EE[T]=\tfrac1\lambda=5\) → \(\lambda=0.2\); \(\ff(t)=0.2e^{-0.2t}\), \(\FF(t)=1-e^{-0.2t}\) für \(t\ge0\).</x-res></x-part>
+  <x-part h="(b) W'keiten" ref="2.3.5"><x-res>\(\PP(T\le2)=1-e^{-0.4}=0.330\); \(\PP(T>5)=e^{-1}=0.368\): nur 37 Prozent überleben das Mittel.</x-res></x-part>
+  <x-part h="(c) Quantile" ref="2.3.5">
+    <x-step h="Auflösen.">\(1-e^{-\lambda q}=\alpha\) → \(q_\alpha=-\tfrac{\ln(1-\alpha)}{\lambda}\).</x-step>
+    <x-res>Median \(=5\ln2\approx3.47\) Jahre; \(q_{0.9}=\tfrac{\ln10}{0.2}\approx11.5\) Jahre. Wenige sehr lange Lebensdauern ziehen das Mittel nach oben (rechtsschief).</x-res>
+  </x-part>
+  <x-part h="(d) Streuung" ref="2.3.5"><x-res>\(\Var=\tfrac1{\lambda^2}=25\), \(\sigma=5\) (so groß wie das Mittel).</x-res></x-part>
+  <x-part h="(e) Schema" ref="2.3.5"><x-res>Rundungsfehler → Uniform; Abfüllmenge (viele kleine Einflüsse) → Normal; Wartezeit auf ein Ereignis mit konstanter Rate → Exponential.</x-res></x-part>
+</x-pa>
+<!-- @s2-12 -->
+<h3 id="pa-2-12-h" data-m="🎓 Prüfungsaufgabe 2.3.6|alles aus 2.3.6 von null">🎓 Prüfungsaufgabe: alles aus 2.3.6 von null</h3>
+<x-pa id="pa-2-12" sec="2.3.6" q="Linear, standardisiert, monoton: drei Transformationen">
+  <x-task><ol class="pa-list"><li>(a) \(\mX\sim\Uni(0,1)\), \(\mY=3+2\mX\). Bestimme \(\FF_{\mY}\), \(\ff_{\mY}\), \(\EE[\mY]\), \(\Var(\mY)\).</li>
+  <li>(b) Die Temperatur ist \(\mX\sim\Nor(20,5^2)\) °C. Welche Verteilung hat \(F=32+1.8\mX\) (°F)? \(\PP(F>80)\)? Welchen z-Wert hat 30 °C?</li>
+  <li>(c) \(\mX\sim\Uni(0,1)\), \(\mY=\mX^2\). Bestimme \(\FF_{\mY}\), \(\ff_{\mY}\) und \(\EE[\mY]\).</li></ol></x-task>
+  <x-cover>linearer Fall mit F und f (a) · Normal bleibt normal, Standardisierung, z-Wert (b) · allgemeiner monotoner Fall (c)</x-cover>
+  <x-part h="(a) Linearer Fall" ref="2.3.6">
+    <x-step h="Über F.">\(\FF_{\mY}(y)=\PP(3+2\mX\le y)=\PP\big(\mX\le\tfrac{y-3}2\big)=\tfrac{y-3}2\) für \(3\le y\le5\).</x-step>
+    <x-step h="Ableiten.">\(\ff_{\mY}(y)=\tfrac12\) auf [3, 5]: \(\mY\sim\Uni(3,5)\) (Faktor \(1/|b|\)).</x-step>
+    <x-res>\(\EE[\mY]=3+2\cdot\tfrac12=4\), \(\Var(\mY)=4\cdot\tfrac1{12}=\tfrac13\).</x-res>
+  </x-part>
+  <x-part h="(b) Normal und Standardisierung" ref="2.3.6">
+    <x-step h="Linear bleibt normal.">\(F\sim\Nor(32+1.8\cdot20,\ 1.8^2\cdot25)=\Nor(68,9^2)\).</x-step>
+    <x-step h="W'keit.">\(\PP(F>80)=1-\Phi\big(\tfrac{80-68}9\big)=1-\Phi(1.333)=\Res{0.091}\). Kontrolle: 80 °F = 26.7 °C, \(z=\tfrac{6.67}5=1.333\) ✓.</x-step>
+    <x-step h="z-Wert.">\(z=\tfrac{30-20}5=2\): 30 °C liegt 2 Standardabweichungen über dem Mittel.</x-step>
+    <x-res>\(\Nor(68,81)\), 0.091, z = 2.</x-res>
+  </x-part>
+  <x-part h="(c) Monotoner Fall" ref="2.3.6">
+    <x-step h="F über das Ereignis.">Für \(0\le y\le1\): \(\FF_{\mY}(y)=\PP(\mX^2\le y)=\PP(\mX\le\sqrt y)=\sqrt y\) (\(x^2\) ist auf [0, 1] steigend).</x-step>
+    <x-step h="Dichte.">\(\ff_{\mY}(y)=\tfrac1{2\sqrt y}\).</x-step>
+    <x-res>\(\EE[\mY]=\int_0^1y\tfrac1{2\sqrt y}\dd y=\tfrac13\) (Kontrolle: \(\EE[\mX^2]=\int_0^1x^2\dd x=\tfrac13\) ✓).</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-13 -->
+<h3 id="pa-2-13-h" data-m="🎓 Prüfungsaufgabe 2.4|alles aus 2.4 von null">🎓 Prüfungsaufgabe: alles aus 2.4 von null</h3>
+<x-pa id="pa-2-13" sec="2.4" q="Kunden an der Kasse: Anzahl und Wartezeit">
+  <x-task>Kunden kommen als Poissonprozess mit Rate 12 pro Stunde.
+  <ol class="pa-list"><li>(a) Wie ist die Anzahl in 10 Minuten verteilt? \(\PP(\text{keiner in 10 min})\)?</li><li>(b) \(\PP(\text{mindestens 5 in 30 min})\)?</li>
+  <li>(c) Leite von null her, dass die Wartezeit \(T\) bis zum ersten Kunden exponentialverteilt ist. \(\EE[T]\) und \(\PP(T>10\text{ min})\)?</li>
+  <li>(d) Wie wahrscheinlich kommen genau 2 Kunden in den ersten 15 Minuten und keiner in den nächsten 15 Minuten?</li></ol></x-task>
+  <x-cover>N(t) ~ Pois(λt) (a, b) · Wartezeit ~ Exp(λ), Herleitung (c) · unabhängige Zuwächse (d)</x-cover>
+  <x-part h="(a) Anzahl" ref="2.4"><x-res>\(\lambda t=12\cdot\tfrac16=2\): \(N\sim\Pois(2)\), \(\PP(N=0)=e^{-2}=0.135\).</x-res></x-part>
+  <x-part h="(b) Mindestens 5" ref="2.4">
+    <x-step h="λt = 6.">\(\PP(N\le4)=e^{-6}(1+6+18+36+54)=115e^{-6}=0.285\).</x-step>
+    <x-res>\(\PP(N\ge5)=0.715\).</x-res>
+  </x-part>
+  <x-part h="(c) Wartezeit herleiten" ref="2.4">
+    <x-step h="Schlüsselidee.">\(T>t\) heißt: bis Zeit t kam niemand, also \(\PP(T>t)=\PP(N(t)=0)=e^{-\lambda t}\).</x-step>
+    <x-step h="Folgerung.">\(\FF_T(t)=1-e^{-\lambda t}\): \(T\sim\Expo(12\text{ pro h})\), \(\EE[T]=\tfrac1{12}\) h = 5 min.</x-step>
+    <x-res>\(\PP(T>10\text{ min})=e^{-2}=0.135\): dieselbe Zahl wie (a), dasselbe Ereignis.</x-res>
+  </x-part>
+  <x-part h="(d) Unabhängige Zuwächse" ref="2.4">
+    <x-step h="Disjunkte Intervalle sind unabhängig.">\(\PP(N_1=2)\PP(N_2=0)\) mit je \(\lambda t=3\).</x-step>
+    <x-res>\(e^{-3}\tfrac{9}{2}\cdot e^{-3}=4.5e^{-6}\approx0.011\).</x-res>
+  </x-part>
+</x-pa>
+<!-- @s2-14 -->
+<h3 id="pa-2-14-h" data-m="🎓 Prüfungsaufgabe 2.5|alles aus 2.5 von null">🎓 Prüfungsaufgabe: alles aus 2.5 von null</h3>
+<x-pa id="pa-2-14" sec="2.5" q="Diskret gegen stetig nebeneinander">
+  <x-task>\(\mX\sim\Bin(10,0.5)\) und \(\mY\sim\Nor(5,2.5)\) (gleiches Mittel und gleiche Varianz).
+  <ol class="pa-list"><li>(a) Vergleiche \(\PP(\mX<5)\) mit \(\PP(\mX\le5)\) und \(\PP(\mY<5)\) mit \(\PP(\mY\le5)\).</li>
+  <li>(b) \(\PP(\mX=5)\) und \(\PP(\mY=5)\)?</li><li>(c) Schreibe \(\EE\) in beiden Fällen als Formel.</li><li>(d) Gib für beide die R- und Python-Befehle für Punkt-/Dichtewert, F, Quantil und Zufallszahlen an.</li></ol></x-task>
+  <x-cover>&lt; vs. ≤ (a) · Punkt-W'keit vs. Dichte (b) · Σ ↔ ∫ (c) · Toolbox d/p/q/r (d)</x-cover>
+  <x-part h="(a) &lt; oder ≤" ref="2.5"><x-res>\(\PP(\mX<5)=\FF(4)=0.377\), \(\PP(\mX\le5)=0.623\): großer Unterschied. \(\PP(\mY<5)=\PP(\mY\le5)=0.5\).</x-res></x-part>
+  <x-part h="(b) Einzelner Wert" ref="2.5"><x-res>\(\PP(\mX=5)=\binom{10}5/2^{10}=0.246\); \(\PP(\mY=5)=0\) (Fläche über einem Punkt).</x-res></x-part>
+  <x-part h="(c) Summe ↔ Integral" ref="2.5"><x-res>\(\EE[\mX]=\sum_xx\,\pf(x)=5\); \(\EE[\mY]=\int x\,\ff(x)\dd x=5\).</x-res></x-part>
+  <x-part h="(d) Toolbox" ref="2.5">
+    <x-step h="R.">\(\mX\): <code>dbinom, pbinom, qbinom, rbinom</code>; \(\mY\): <code>dnorm(x, 5, sqrt(2.5)), pnorm, qnorm, rnorm</code>.</x-step>
+    <x-res>Python: <code>stats.binom(10, .5).pmf/.cdf/.ppf/.rvs</code>, <code>stats.norm(5, np.sqrt(2.5)).pdf/.cdf/.ppf/.rvs</code>. Achtung: R und SciPy wollen σ, nicht σ².</x-res>
+  </x-part>
+</x-pa>
+<!-- @kap -->
+<section id="s2-pa" data-m="🎓 Gesamtaufgabe|Kapitel 2 komplett von null">
+<h2><span class="num">2.★</span>Gesamtaufgabe: Kapitel 2 komplett von null</h2>
+<p class="one">Ein Callcenter liefert für jede Verteilung aus Kapitel 2 eine Größe. Teil (i) und Teil (b) hängen über den Poissonprozess zusammen.</p>
+<x-pa id="pa-2-kap" sec="2" scope="kap" q="Ein Tag im Callcenter">
+  <x-task>Anrufe kommen als Poissonprozess mit 6 pro Stunde. Jeder Anruf führt unabhängig mit W'keit 0.2 zu einem Verkauf. Ein Gespräch dauert exponentialverteilt im Mittel 4 Minuten. Die Pause dauert uniform zwischen 5 und 15 Minuten. Der Tagesumsatz ist \(\Nor(1000,150^2)\) Franken.
+  <ol class="pa-list"><li>(a) Gib für N = Anrufe pro Stunde, V = Verkauf ja/nein, S = Verkäufe in 10 Anrufen, K = Anrufe bis zum ersten Verkauf, D = Gesprächsdauer an: diskret oder stetig, und welche Verteilung?</li>
+  <li>(b) \(\PP(N=4)\) und \(\PP(N\le2)\)?</li><li>(c) \(\PP(S=2)\), \(\PP(S\ge1)\), \(\EE[S]\), \(\Var(S)\)?</li><li>(d) \(\EE[K]\) und \(\PP(K>5)\)?</li>
+  <li>(e) Die Provision X pro Anruf ist 0, 50 oder 200 Franken mit W'keiten 0.8, 0.15, 0.05. Gib \(\FF\) an und bestimme \(\EE[X]\), \(\Var(X)\). Der Lohn pro Anruf ist \(L=20+0.1X\): \(\EE[L]\), \(\sigma_L\)?</li>
+  <li>(f) \(\PP(D>10)\) und Median von D?</li><li>(g) \(\PP(\text{Pause}>12)\)?</li>
+  <li>(h) \(\PP(U<800)\), 90-Prozent-Quantil des Umsatzes U, Verteilung des Umsatzes in Euro bei Kurs 0.95?</li>
+  <li>(i) Wie wahrscheinlich kommt der erste Anruf erst nach 15 Minuten? Rechne auf zwei Wegen.</li>
+  <li>(j) Vergleiche \(\PP(N<6)\) und \(\PP(N\le6)\) sowie \(\PP(D<4)\) und \(\PP(D\le4)\).</li></ol></x-task>
+  <x-cover>2.1 Typ der ZV (a) · 2.2.5 Poisson (b) · 2.2.2/2.2.3 Bernoulli und Binomial (c) · 2.2.4 Geometrisch (d) · 2.2 und 2.2.1 p, F, E, Var, a + bX (e) · 2.3.5 Exponential (f) · 2.3.3 Uniform (g) · 2.3.4 und 2.3.6 Normal, Quantil, Transformation (h) · 2.4 Poissonprozess (i) · 2.5 diskret vs. stetig (j)</x-cover>
+  <x-part h="(a) Welche ZV, welche Verteilung?" ref="2.1">
+    <x-res>N: diskret, \(\Pois(6)\). V: diskret, \(\Bern(0.2)\). S: diskret, \(\Bin(10,0.2)\). K: diskret, \(\Geom(0.2)\). D: stetig, \(\Expo(1/4)\) pro Minute.</x-res>
+  </x-part>
+  <x-part h="(b) Poisson" ref="2.2.5"><x-res>\(\PP(N=4)=e^{-6}\tfrac{6^4}{4!}=0.134\); \(\PP(N\le2)=e^{-6}(1+6+18)=0.062\).</x-res></x-part>
+  <x-part h="(c) Binomial" ref="2.2.3">
+    <x-step h="Formel.">\(\PP(S=2)=\binom{10}2\,0.2^2\,0.8^8=45\cdot0.04\cdot0.1678=0.302\); \(\PP(S\ge1)=1-0.8^{10}=0.893\).</x-step>
+    <x-res>\(\EE[S]=10\cdot0.2=2\), \(\Var(S)=10\cdot0.2\cdot0.8=1.6\).</x-res>
+  </x-part>
+  <x-part h="(d) Geometrisch" ref="2.2.4"><x-res>\(\EE[K]=\tfrac1{0.2}=5\); \(\PP(K>5)=0.8^5=0.328\).</x-res></x-part>
+  <x-part h="(e) Diskrete Verteilung, E, Var, a + bX" ref="2.2.1">
+    <x-step h="F als Treppe.">\(\FF(x)=0\) für \(x<0\), 0.8 für \(0\le x<50\), 0.95 für \(50\le x<200\), 1 für \(x\ge200\).</x-step>
+    <x-step h="E und Var.">\(\EE[X]=50\cdot0.15+200\cdot0.05=17.5\); \(\EE[X^2]=2500\cdot0.15+40000\cdot0.05=2375\); \(\Var=2375-17.5^2=2068.75\), \(\sigma=45.5\).</x-step>
+    <x-res>\(\EE[L]=20+0.1\cdot17.5=21.75\), \(\sigma_L=0.1\cdot45.5=4.55\) Franken.</x-res>
+  </x-part>
+  <x-part h="(f) Exponential" ref="2.3.5"><x-res>\(\lambda=\tfrac14\): \(\PP(D>10)=e^{-2.5}=0.082\); Median \(4\ln2=2.77\) Minuten.</x-res></x-part>
+  <x-part h="(g) Uniform" ref="2.3.3"><x-res>\(\PP(\text{Pause}>12)=\tfrac{15-12}{15-5}=0.3\).</x-res></x-part>
+  <x-part h="(h) Normal, Quantil, Transformation" ref="2.3.4">
+    <x-step h="Standardisieren.">\(\PP(U<800)=\Phi\big(\tfrac{-200}{150}\big)=\Phi(-1.333)=0.091\).</x-step>
+    <x-step h="Quantil.">\(q_{0.9}=1000+1.2816\cdot150=1192\) Franken.</x-step>
+    <x-res>In Euro: \(0.95U\sim\Nor(950,142.5^2)\) (2.3.6).</x-res>
+  </x-part>
+  <x-part h="(i) Poissonprozess auf zwei Wegen" ref="2.4">
+    <x-step h="Anzahl.">In 0.25 h ist \(N\sim\Pois(1.5)\): \(\PP(N=0)=e^{-1.5}=0.223\).</x-step>
+    <x-res>Wartezeit \(T\sim\Expo(6/\text{h})\): \(\PP(T>0.25)=e^{-1.5}=0.223\) ✓.</x-res>
+  </x-part>
+  <x-part h="(j) Diskret vs. stetig" ref="2.5"><x-res>\(\PP(N<6)=\FF(5)=0.446\) ≠ \(\PP(N\le6)=0.606\). Bei D ist beides \(1-e^{-1}=0.632\).</x-res></x-part>
+</x-pa>
+</section>

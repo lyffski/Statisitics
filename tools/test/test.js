@@ -44,7 +44,7 @@ async function route(page) {
         });
         const kd = [];
         document.querySelectorAll('.katex-display').forEach(k => { if (k.scrollWidth > k.clientWidth + 2) kd.push(k.textContent.slice(0, 40)); });
-        const links = []; document.querySelectorAll('#lbMenu a[href^="#"], .lbq a').forEach(a => { const id = a.getAttribute('href').slice(1); if (!document.getElementById(id)) links.push(id); });
+        const links = []; document.querySelectorAll('#lbMenu a[href^="#"]:not([data-part]), .lbq a').forEach(a => { const id = a.getAttribute('href').slice(1); if (!document.getElementById(id)) links.push(id); });
         const secs = [...document.querySelectorAll('[data-vn]')].map(s => [s.id, s.querySelectorAll('.vonnull:not(.blsol)').length]).filter(x => x[1] < 1);
         const trEnd = [...document.querySelectorAll('.tracer')].map(t => [t.id, t.querySelector('.tr-msg').textContent.slice(0, 90)]);
         const trBad = trEnd.filter(x => /⚠|keine Schritte/.test(x[1]));

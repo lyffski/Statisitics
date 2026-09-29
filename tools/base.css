@@ -237,3 +237,17 @@ footer.foot{color:var(--muted);font-size:.85rem;border-top:1px solid var(--borde
   .anat>div>span,.pt-grid>div,.vn-step>div,td{overflow-x:auto}
   .katex{font-size:1em}
 }
+/* 🎓 Prüfungsaufgaben mit Teilaufgaben */
+.vonnull.pa{border-color:var(--res)}
+.pa-badge{background:var(--res)}
+.pa-kap{border-width:2px;box-shadow:0 0 0 1px color-mix(in srgb,var(--res) 35%,transparent)}
+.pa-cover{font-size:.9rem;color:var(--muted);margin:.2rem 0 .5rem}
+.pa-cover b{color:var(--idx)}
+.pa-tools{display:flex;gap:.5rem;flex-wrap:wrap;margin:.3rem 0 .6rem}
+.pa-tools .btn{font-size:.82rem;padding:.15rem .6rem}
+.pa-part{border:1px solid var(--border);border-radius:10px;margin:.45rem 0;background:var(--card2)}
+.pa-part>summary{cursor:pointer;padding:.5rem .8rem;font-weight:600}
+.pa-part[open]>summary{border-bottom:1px solid var(--border)}
+.pa-part>:not(summary){margin-left:.8rem;margin-right:.8rem}
+.pa-ref{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--rule);font-weight:400;margin-left:.3rem}
+.pa-list{list-style:none;padding-left:.3rem;margin:.4rem 0 0}.pa-list li{margin:.15rem 0}
