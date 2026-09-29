@@ -1,0 +1,14 @@
+/* Kapitel 1: Würfelraster und Balken im Tracer */
+.dgrid{display:grid;grid-template-columns:3rem repeat(6,minmax(0,1fr));gap:3px;margin:.2rem 0 .5rem;font-family:'JetBrains Mono',monospace;font-size:.8rem}
+.dgrid .dh{color:var(--muted);text-align:center;font-size:.7rem;align-self:center}
+.dgrid .dc{text-align:center;border:1px solid var(--border);border-radius:5px;padding:.12rem 0;font-weight:700}
+.dgrid .dc.m{border-color:var(--idx);background:color-mix(in srgb,var(--idx) 25%,transparent)}
+.dgrid .dc.aa{border-color:var(--mem);background:color-mix(in srgb,var(--mem) 20%,transparent)}
+.dgrid .dc.bb{border-color:var(--par);background:color-mix(in srgb,var(--par) 20%,transparent)}
+.dgrid .dc.ab{border-color:var(--res);background:color-mix(in srgb,var(--res) 28%,transparent)}
+.dgrid .dc.out{opacity:.3}
+.dgrid .dc.gone{opacity:.25;text-decoration:line-through}
+.dgrid .dc.o{outline:2px solid var(--chg);outline-offset:1px}
+.bar{position:relative;height:14px;background:var(--bg);border:1px solid var(--border);border-radius:7px;margin:.4rem 0}
+.bar span{position:absolute;left:0;top:0;bottom:0;background:var(--res);border-radius:7px}
+.bar i{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--par)}

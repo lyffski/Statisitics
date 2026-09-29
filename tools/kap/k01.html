@@ -1,0 +1,721 @@
+<!-- title: Kap. 1 · Grundlagen der Wahrscheinlichkeitsrechnung -->
+<!-- sub: Ω, Ereignisse, Axiome, Laplace, Unabhängigkeit, bedingte W'keit, totale W'keit & Bayes -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 1 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Grundlagen der Wahrscheinlichkeitsrechnung</h1>
+  <p class="lead">Vom <b>Zufallsexperiment</b> über <b>Grundraum</b>, <b>Ereignisse</b> und die <b>Axiome von Kolmogorov</b> bis zu <b>bedingten Wahrscheinlichkeiten</b>, dem <b>Satz der totalen Wahrscheinlichkeit</b> und dem <b>Satz von Bayes</b>. Jedes Symbol hat seine Rollenfarbe, jede Formel hat einen Vorlese-Satz, jedes Verfahren gibt es als R- und Python-Programm mit Tracer.</p>
+</div>
+
+<x-card t="🎨 Farblegende: eine Farbe = eine Rolle (in Formel, Code, Grafik und Text)" src="GN">
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: die gesuchte Zahl, z. B. \(\Res{0.2}\), \(\Res{\PP(\mA\given\mB)}\) als Ziel</div>
+    <div><b class="kw-chg">orange · Operation</b>: Mengen-Verknüpfung \(\capc\ \cupc\ {}\co\ \setm\), Umformung</div>
+    <div><b class="kw-rule">lila · Regel/Operator</b>: \(\PP(\cdot)\), Axiome, Satznamen (Bayes, Laplace)</div>
+    <div><b class="kw-par">blau · gegeben</b>: eingesetzte Angaben, z. B. \(\Par{0.5}\), \(\Par{n}\)</div>
+    <div><b class="kw-idx">grün · Index/Zähler</b>: \(\Idx{i}, \Idx{k}\), Laufvariable, Zähler im Code</div>
+    <div><b class="kw-cond">cyan · Bedingung</b>: der Strich \(\given\) „gegeben“, Vergleiche \(\Cond{\le}\)</div>
+    <div><b class="kw-mem">pink · Objekt</b>: Ereignisse \(\mA,\mB\), Ausgang \(\Mem{\omega}\), Grundraum \(\Om\)</div>
+  </div>
+  <p class="small muted">Die Grundlage hatte sechs Rollen (W'keit, Ereignis, Grundraum, Bedingung, Operator, Zahl). Sie gehen hier in den sieben Rollen des Skills auf: Grundraum und Ereignis sind beide „Objekt“ (pink), die konkrete Zahl ist entweder <span class="kw kw-par">gegeben</span> (blau) oder <span class="kw kw-res">Ergebnis</span> (rot).</p>
+</x-card>
+
+<x-card t="🏷️ Herkunft jedes Bausteins" src="N">
+  <p><span class="srcin">📘 Grundlage</span> Inhalt aus deinem bisherigen Lernbegleiter (Skript L. Meier), hier im neuen Stil übernommen. Das ist das Pflicht-Fundament.
+  <span class="srcin n">✚ Neu</span> ergänzt: Von-null-Karten, R- und Python-Code mit Tracer, weitere Beispiele, Themen aus der Modulbeschreibung (z. B. Formel des Ein- und Ausschließens).
+  Im ☰-Menü kannst du alle Grundlage-Inhalte farbig hervorheben lassen.</p>
+  <p>🎬 Unter den Themen stehen <b>Links zu deinen lokalen Videos</b>. Lege neben diese HTML-Datei einen Ordner (oder Symlink) <code>videos</code>, der auf deinen Video-Ordner zeigt, z. B. <code>ln -s ~/Videos/Statistik videos</code>. Oder trag den absoluten Pfad im ☰-Menü unter „Video-Ordner“ ein. „📋 Pfad“ kopiert den Dateipfad, z. B. für <code>xdg-open</code> oder VLC.</p>
+  <p class="small muted">⚖ <b>Modul vs. Grundlage:</b> Das Modul nennt Henze „Stochastik für Einsteiger“ und Irle als Literatur; die Grundlage folgt dem Skript von Meier. Inhalt und Formeln sind gleich, nur die Schreibweise weicht manchmal ab. Henze schreibt das Gegenereignis oft als \(\overline{\mA}\) statt \(\mA\co\) und den Schnitt oft kurz als \(\Mem{AB}\) statt \(\mA\capc\mB\). Wo das wichtig wird, steht ein ⚖-Kasten.</p>
+</x-card>
+
+<x-course cur="1"/>
+
+<section id="s1-0" data-m="🔬 Master-Anatomie|6 Leitfragen, 4-Schritte-Werkzeug">
+<h2><span class="num">1.0</span>Master-Anatomie: so liest du jede Formel dieses Kapitels</h2>
+<p class="one">Präg dir einmal ein, welche Farbe welche Rolle hat. Dann liest sich jede Formel fast von selbst.</p>
+
+<x-anat t="die zentrale Formel des Kapitels (Satz von Bayes)" f="\Res{\PP(\Mem{B_{\Idx{i}}}\given\mA)} \;=\; \dfrac{\PP(\mA\given\Mem{B_{\Idx{i}}})\;\PP(\Mem{B_{\Idx{i}}})}{\sum_{\Idx{l}=1}^{\Par{k}}\PP(\mA\given\Mem{B_{\Idx{l}}})\;\PP(\Mem{B_{\Idx{l}}})}" src="GN">
+  <x-a s="\Res{\PP(\Mem{B_i}\given\mA)}">das Gesuchte (rot): wie wahrscheinlich ist die Ursache \(\Mem{B_i}\), nachdem wir \(\mA\) beobachtet haben?</x-a>
+  <x-a s="\PP">der Operator (lila): frisst ein Ereignis und gibt eine Zahl in \([0,1]\) zurück</x-a>
+  <x-a s="\mA,\ \Mem{B_i}">die Objekte (pink): Ereignisse, also Teilmengen des Grundraums \(\Om\)</x-a>
+  <x-a s="\given">die Bedingung (cyan): „gegeben, dass …“. Rechts vom Strich steht, was schon bekannt ist</x-a>
+  <x-a s="\Idx{i},\ \Idx{l}">die Indizes (grün): nummerieren die Fälle \(B_1\) bis \(B_k\)</x-a>
+  <x-a s="\Par{k}">gegeben (blau): Anzahl der Fälle der Zerlegung von \(\Om\)</x-a>
+  <x-read>„P von B-i gegeben A ist gleich P von A gegeben B-i mal P von B-i, geteilt durch die Summe über alle l von P von A gegeben B-l mal P von B-l.“</x-read>
+</x-anat>
+
+<x-card t="🧭 Die 6 Leitfragen für jede neue Formel" src="G">
+  <ol class="cook">
+    <li><b>Was kommt raus?</b> Meist links vom Gleichheitszeichen: eine Wahrscheinlichkeit, also eine Zahl zwischen 0 und 1.</li>
+    <li><b>Welche Ereignisse stecken drin?</b> Suche die pinken Buchstaben \(\mA, \mB, \Mem{\omega}\).</li>
+    <li><b>Wie sind sie verknüpft?</b> Die orangen Operationen sagen „und“ \(\capc\), „oder“ \(\cupc\), „nicht“ \({}\co\).</li>
+    <li><b>Gibt es eine Bedingung?</b> Ein Strich \(\given\) heißt „gegeben“: Der Grundraum schrumpft auf das, was rechts steht.</li>
+    <li><b>Was ist mein Grundraum?</b> \(\Om\) ist „alles“; nach einer Bedingung ist es das bedingende Ereignis.</li>
+    <li><b>Zahlen einsetzen.</b> Jedes Symbol an derselben Stelle durch seinen Wert ersetzen: das ist der „Bauplan“.</li>
+  </ol>
+</x-card>
+
+<x-card t="🎓 Das agnostische Spitzenwerkzeug für JEDE Prüfungsfrage" src="G">
+  <p>Egal wie die Aufgabe formuliert ist: diese vier Schritte lösen jede Aufgabe zur Wahrscheinlichkeitsrechnung. Jeder Prüfungs-Trainer und jede Von-null-Karte folgt diesem Gerüst.</p>
+  <ol class="cook">
+    <li><b>ERKENNEN:</b> Grundraum und Ereignis benennen. Einfache W'keit (Laplace)? „und/unabhängig“? „gegeben/bedingt“? „umgekehrt gefragt“ (Bayes)?</li>
+    <li><b>WÄHLEN:</b> gleich wahrscheinlich → Laplace (günstige/mögliche) · „mindestens“ → Gegenereignis \(1-\PP\) · „unabhängig“ → \(\PP(\mA)\PP(\mB)\) · „gegeben B“ → \(\PP(\mA\capc\mB)/\PP(\mB)\) · Ursache aus Wirkung → Bayes mit totaler W'keit.</li>
+    <li><b>RECHNEN:</b> Formel einsetzen; bei mehrstufigen Experimenten einen Baum zeichnen und Pfade multiplizieren.</li>
+    <li><b>ARTIKULIEREN:</b> „Gesucht ist …; nach [Regel] ergibt sich [Wert]; anschaulich heißt das [Deutung].“</li>
+  </ol>
+</x-card>
+<x-vids><x-vid f="init/Probability and Statistics： Overview [sQqniayndb4].mp4" n="Überblick über das Fach"/></x-vids>
+</section>
+
+<!-- ================================================================ 1.1 -->
+<section id="s1-1" data-vn data-m="1.1 Grundbegriffe|Ω, Ereignis, Mengen, Axiome, Rechenregeln">
+<h2><span class="num">1.1</span>Grundbegriffe</h2>
+<p class="one">Zufallsexperiment → Grundraum → Ereignisse als Mengen → Axiome → alle Rechenregeln.</p>
+
+<x-vn id="vn-1-1" sec="1.1" q="Aus drei Angaben alle anderen Wahrscheinlichkeiten ausrechnen">
+  <x-task>Für zwei Ereignisse gilt \(\PP(\mA)=\Par{0.5}\), \(\PP(\mB)=\Par{0.4}\) und \(\PP(\mA\cupc\mB)=\Par{0.7}\). Bestimme (a) \(\PP(\mA\capc\mB)\), (b) \(\PP(\mA\co\capc\mB)\), (c) \(\PP(\mA\setm\mB)\), (d) die Wahrscheinlichkeit, dass <i>keines</i> der beiden Ereignisse eintritt, und (e) \(\PP(\mA\co\cupc\mB\co)\).</x-task>
+  <x-step h="Begriffe klären.">Ein <span class="kw kw-mem">Ereignis</span> ist eine Menge von Ausgängen. \(\mA\capc\mB\) heißt „A und B“, \(\mA\cupc\mB\) „A oder B (oder beide)“, \(\mA\co\) „nicht A“, \(\mA\setm\mB\) „A, aber nicht B“.</x-step>
+  <x-step h="Welche Regel verbindet die Angaben?">Der <span class="kw kw-rule">Additionssatz</span> enthält genau die drei gegebenen Größen und die gesuchte Überlappung: \(\PP(\mA\cupc\mB)=\PP(\mA)+\PP(\mB)-\PP(\mA\capc\mB)\).</x-step>
+  <x-step h="(a) Überlappung ausrechnen.">Additionssatz nach \(\PP(\mA\capc\mB)\) umstellen und einsetzen:
+  \[\begin{aligned}
+  \Res{\PP(\mA\capc\mB)} &= \PP(\mA)+\PP(\mB)-\PP(\mA\cupc\mB) && \text{Additionssatz umgestellt} \\
+  &= \Par{0.5}+\Par{0.4}-\Par{0.7} && \text{Angaben eingesetzt} \\
+  &= \Res{0.2} && \text{die Überlappung wird doppelt gezählt, darum abziehen}
+  \end{aligned}\]</x-step>
+  <x-step h="(b) nur B, nicht A.">\(\mB\) zerfällt disjunkt in „B mit A“ und „B ohne A“. Axiom (A3) gibt \(\PP(\mB)=\PP(\mA\capc\mB)+\PP(\mA\co\capc\mB)\):
+  \[\begin{aligned}
+  \Res{\PP(\mA\co\capc\mB)} &= \PP(\mB)-\PP(\mA\capc\mB) && \text{B in zwei disjunkte Teile zerlegt} \\
+  &= \Par{0.4}-\Res{0.2}=\Res{0.2} && \text{eingesetzt}
+  \end{aligned}\]</x-step>
+  <x-step h="(c) A ohne B.">Genauso: \(\PP(\mA\setm\mB)=\PP(\mA)-\PP(\mA\capc\mB)=\Par{0.5}-\Res{0.2}=\Res{0.3}\).</x-step>
+  <x-step h="(d) keines von beiden.">„Keines“ ist das Gegenereignis von „mindestens eines“, also \((\mA\cupc\mB)\co\):
+  \[\begin{aligned}
+  \Res{\PP((\mA\cupc\mB)\co)} &= 1-\PP(\mA\cupc\mB) && \text{Komplementregel} \\
+  &= 1-\Par{0.7}=\Res{0.3} && \text{eingesetzt}
+  \end{aligned}\]</x-step>
+  <x-step h="(e) De Morgan.">\(\mA\co\cupc\mB\co=(\mA\capc\mB)\co\) („nicht beide“), also \(\PP(\mA\co\cupc\mB\co)=1-\Res{0.2}=\Res{0.8}\).</x-step>
+  <x-step h="Prüfen.">Die vier disjunkten Felder des Venn-Diagramms müssen zusammen 1 ergeben: \(\underbrace{0.3}_{A\text{ ohne }B}+\underbrace{0.2}_{A\cap B}+\underbrace{0.2}_{B\text{ ohne }A}+\underbrace{0.3}_{\text{keins}}=1\) ✓.</x-step>
+  <x-res>\(\PP(\mA\capc\mB)=0.2\), \(\PP(\mA\co\capc\mB)=0.2\), \(\PP(\mA\setm\mB)=0.3\), \(\PP(\text{keines})=0.3\), \(\PP(\mA\co\cupc\mB\co)=0.8\). Antwortsatz: „Mit dem Additionssatz folgt P(A∩B)=0.2; alle weiteren Werte ergeben sich aus der disjunkten Zerlegung und der Komplementregel.“</x-res>
+  <x-trap>\(\PP(\mA\cupc\mB)=\PP(\mA)+\PP(\mB)\) gilt <b>nur</b> für disjunkte Ereignisse. Hier wäre das 0.9 statt 0.7.</x-trap>
+</x-vn>
+
+<x-g><p>Die Wahrscheinlichkeitsrechnung befasst sich mit <b>Zufallsexperimenten</b>: Der Ausgang ist nicht exakt vorhersagbar, und unter „gleichen Bedingungen“ bekommt man verschiedene Ergebnisse (z. B. die Druckfestigkeit von 10 Beton-Prüfkörpern aus derselben Produktion).</p></x-g>
+
+<h3 id="s1-1-a" data-m="Grundvokabeln|ω, Ω, Ereignis A ⊂ Ω">Die drei Grundvokabeln</h3>
+<x-anat t="Elementarereignis, Grundraum, Ereignis" f="\Mem{\omega}\;\Chg{\in}\;\mA\;\Chg{\subseteq}\;\Om" src="G">
+  <x-a s="\Mem{\omega}">„klein Omega“: ein <b>Elementarereignis</b>, also ein möglicher Ausgang des Experiments (z. B. ω = ZK: erst Zahl, dann Kopf)</x-a>
+  <x-a s="\Om">„groß Omega“: der <b>Grundraum</b>, die Menge aller Elementarereignisse; \(|\Om|\) = Anzahl seiner Elemente</x-a>
+  <x-a s="\mA\subseteq\Om">„A ist Teilmenge von Omega“: ein <b>Ereignis</b>, eine Sammlung von Ausgängen. „A tritt ein“ heißt: der Ausgang ω liegt in A</x-a>
+  <x-a s="\Chg{\in}">„ist Element von“: ein einzelner Ausgang gehört zu einer Menge</x-a>
+  <x-read>„Ein Ausgang omega ist ein Element des Ereignisses A, und A ist eine Teilmenge des Grundraums Omega.“</x-read>
+</x-anat>
+<x-pt><x-q>Würfel. Nenne den Grundraum, ein Elementarereignis und das Ereignis „gerade Augenzahl“.</x-q><x-e>„nenne/beschreibe Ω, Ereignis, möglichen Ausgang“.</x-e><x-l>\(\Om=\{1,\dots,6\}\); Elementarereignis z. B. \(\{3\}\); „gerade“ \(=\{2,4,6\}\).</x-l><x-s>„Der Grundraum ist Ω={1,…,6}, ein Elementarereignis z. B. {3}, und ‚gerade‘ ist das Ereignis {2,4,6}.“</x-s></x-pt>
+<x-card t="🟢 Beispiel · Münze 2× werfen" src="G">
+  <p>K = Kopf, Z = Zahl. Der Grundraum ist \(\Om=\{KK,KZ,ZK,ZZ\}\), also \(|\Om|=\Res{4}\). Das Ereignis „genau 1× Kopf“ ist \(\mA=\{KZ,ZK\}\).</p>
+  <p>Bei der Druckfestigkeit von Beton ist der Ausgang eine positive reelle Zahl, also \(\Om=\mathbb{R}^{+}\), und „zwischen 10 und 20 MPa“ ist das Intervall \(\mA=[10,20]\). Ein Grundraum muss also nicht endlich sein.</p>
+</x-card>
+<x-vids><x-vid f="init/Set Theory in Probability： Sample Spaces and Events [b_ev4Hdzh-U].mp4" n="Grundraum &amp; Ereignisse"/></x-vids>
+
+<h3 id="s1-1-b" data-m="Mengen-Operationen|∩ ∪ ᶜ \, Venn, De Morgan">Mengen-Operationen: „und / oder / nicht“</h3>
+<x-g><p>Weil Ereignisse Mengen sind, verknüpft man sie mit der Mengenlehre. Tippe die Knöpfe an, um im Venn-Diagramm zu sehen, welche Fläche jede Operation markiert.</p></x-g>
+<x-viz t="Venn-Diagramm interaktiv" src="GN">
+  <div class="ctl"><span class="seg" id="vennBtns">
+    <button class="btn" data-op="AnB">A ∩ B „und“</button><button class="btn" data-op="AuB">A ∪ B „oder“</button>
+    <button class="btn" data-op="Ac">Aᶜ „nicht A“</button><button class="btn" data-op="AmB">A \ B „A ohne B“</button>
+    <button class="btn" data-op="BmA">B \ A</button><button class="btn" data-op="none">(A ∪ B)ᶜ „keins“</button>
+    <button class="btn" data-op="xor">A △ B „genau eins“</button></span></div>
+  <div class="two">
+    <div id="venn"></div>
+    <div><div class="out" id="vennTxt"></div><p id="vennSet" class="small"></p>
+    <p class="small muted">Beispiel-Grundraum: Würfel, \(\mA=\{1,2,3\}\), \(\mB=\{3,4\}\). Die Zahlen im Bild sind die Ausgänge.</p></div>
+  </div>
+  <div class="recog"><b>Erkennbar an:</b> „und“ = nur die Linse in der Mitte, „oder“ = alles, was irgendwie in einem Kreis liegt, „nicht“ = alles außerhalb.</div>
+</x-viz>
+<x-pt><x-q>\(\mA=\{1,2,3\}\), \(\mB=\{3,4\}\). Bestimme \(\mA\cupc\mB\) und \(\mA\capc\mB\).</x-q><x-e>„Vereinigung (oder), Schnitt (und), Venn“.</x-e><x-l>\(\mA\cupc\mB=\{1,2,3,4\}\); \(\mA\capc\mB=\{3\}\).</x-l><x-s>„A∪B={1,2,3,4} (alles in A oder B), A∩B={3} (nur das Gemeinsame).“</x-s></x-pt>
+<x-g><p><b>Disjunkt:</b> \(\mA\) und \(\mB\) heißen disjunkt (schließen sich aus), falls \(\mA\capc\mB=\varnothing\) (leere Menge = „unmögliches Ereignis“). Außerdem gelten die <b>De-Morgan'schen Regeln</b>:</p>
+\[\begin{aligned}
+(\mA\capc\mB)\co &= \mA\co\cupc\mB\co && \text{nicht (A und B) = (nicht A) oder (nicht B)} \\
+(\mA\cupc\mB)\co &= \mA\co\capc\mB\co && \text{nicht (A oder B) = (nicht A) und (nicht B)}
+\end{aligned}\]
+<p><b>Merksatz:</b> „Das Komplement kehrt ∩ und ∪ um.“</p></x-g>
+
+<h3 id="s1-1-c" data-m="Axiome von Kolmogorov|(A1) 0≤P≤1, (A2) P(Ω)=1, (A3) Additivität">Die Axiome von Kolmogorov</h3>
+<x-g><p>Bis jetzt haben wir „Wahrscheinlichkeit“ benutzt, ohne sie zu definieren. Eine Wahrscheinlichkeit ist eine Zuordnung \(\PP(\cdot)\), die jedem Ereignis eine Zahl gibt und dabei drei Grundregeln (Axiome) erfüllt.</p></x-g>
+<x-anat t="die 3 Axiome (A1) bis (A3)" src="G">
+  <div class="anat-f">\[\begin{aligned}
+  &\text{(A1)} && 0\ \Cond{\le}\ \PP(\mA)\ \Cond{\le}\ 1 && \text{jede W'keit liegt zwischen 0 und 1} \\
+  &\text{(A2)} && \PP(\Om)=1 && \text{irgendetwas passiert sicher} \\
+  &\text{(A3)} && \PP(\mA\cupc\mB)=\PP(\mA)+\PP(\mB)\quad\text{falls }\mA\capc\mB=\varnothing && \text{disjunkte W'keiten addieren sich}
+  \end{aligned}\]</div>
+  <x-a s="\text{(A1)}">Normierung nach oben und unten: jede Wahrscheinlichkeit \(\PP(\mA)\) liegt zwischen 0 und 1</x-a>
+  <x-a s="\text{(A2)}">sicheres Ereignis: der ganze Grundraum hat Wahrscheinlichkeit 1</x-a>
+  <x-a s="\text{(A3)}">Additivität: für sich ausschließende Ereignisse addieren sich die W'keiten; allgemein \(\PP(\Mem{A_1}\cupc\Mem{A_2}\cupc\dots)=\sum_{\Idx{i}}\PP(\Mem{A_{\Idx{i}}})\) für paarweise disjunkte \(A_i\)</x-a>
+  <x-a s="\varnothing">die leere Menge = das unmögliche Ereignis</x-a>
+  <x-read>„P von A liegt zwischen 0 und 1; P von ganz Omega ist 1; und wenn A und B sich ausschließen, ist P von A-oder-B gleich P von A plus P von B.“</x-read>
+</x-anat>
+<x-pt><x-q>A, B disjunkt mit \(\PP(\mA)=\Par{0.3}\), \(\PP(\mB)=\Par{0.5}\). Bestimme \(\PP(\mA\cupc\mB)\).</x-q><x-e>„disjunkt, schließen sich aus“ → Axiom (A3), einfach addieren.</x-e><x-l>\(\PP(\mA\cupc\mB)=\Par{0.3}+\Par{0.5}=\Res{0.8}\).</x-l><x-s>„Da A und B disjunkt sind, gilt P(A∪B)=P(A)+P(B)=0.8 (Axiom A3).“</x-s></x-pt>
+
+<h3 id="s1-1-d" data-m="Rechenregeln (1.1)–(1.5)|Komplement, Additionssatz, Monotonie">Abgeleitete Rechenregeln, von null hergeleitet</h3>
+<x-g><p>Aus den drei Axiomen folgt alles Weitere. Denk dir Wahrscheinlichkeiten als Flächen im Venn-Diagramm (Gesamtfläche \(\Om\) = 1). Dann wird jede Regel anschaulich.</p></x-g>
+<x-card t="🔍 Herleitung jeder Regel aus den Axiomen" src="GN">
+  <p><b>(1.1) Gegenwahrscheinlichkeit.</b> \(\mA\) und \(\mA\co\) sind disjunkt und füllen zusammen ganz \(\Om\):</p>
+  \[\begin{aligned}
+  \mA\cupc\mA\co &= \Om,\quad \mA\capc\mA\co=\varnothing && \text{A und nicht-A zerlegen den Grundraum} \\
+  \PP(\mA)+\PP(\mA\co) &= \PP(\Om) && \text{Axiom (A3)} \\
+  \PP(\mA)+\PP(\mA\co) &= 1 && \text{Axiom (A2)} \\
+  \Res{\PP(\mA\co)} &= 1-\PP(\mA) && \text{umgestellt}
+  \end{aligned}\]
+  <p><b>(1.2) Additionssatz.</b> Zerlege \(\mA\cupc\mB\) disjunkt in „A“ und „B ohne A“:</p>
+  \[\begin{aligned}
+  \mA\cupc\mB &= \mA\ \cupc\ (\mB\setm\mA) && \text{die zwei Teile überlappen nicht} \\
+  \PP(\mA\cupc\mB) &= \PP(\mA)+\PP(\mB\setm\mA) && \text{Axiom (A3)} \\
+  \PP(\mB\setm\mA) &= \PP(\mB)-\PP(\mA\capc\mB) && \text{denn B = (B ohne A) plus (A und B), disjunkt} \\
+  \Res{\PP(\mA\cupc\mB)} &= \PP(\mA)+\PP(\mB)-\PP(\mA\capc\mB) && \text{eingesetzt: die Linse wurde doppelt gezählt}
+  \end{aligned}\]
+  <p><b>(1.3) Sub-Additivität.</b> Ohne den Abzug ist die Summe zu groß: \(\PP(\Mem{A_1}\cupc\dots\cupc\Mem{A_n})\ \Cond{\le}\ \PP(\Mem{A_1})+\dots+\PP(\Mem{A_n})\).</p>
+  <p><b>(1.4) Monotonie.</b> Liegt \(\mB\) ganz in \(\mA\) (\(\mB\subseteq\mA\)), ist seine Fläche kleiner: \(\PP(\mB)\ \Cond{\le}\ \PP(\mA)\). Grund: \(\PP(\mA)=\PP(\mB)+\PP(\mA\setm\mB)\) und der zweite Summand ist nach (A1) mindestens 0.</p>
+  <p><b>(1.5) Differenz.</b> Unter \(\mB\subseteq\mA\) gilt \(\PP(\mA\setm\mB)=\PP(\mA)-\PP(\mB)\) (gleiche Zerlegung wie bei 1.4).</p>
+  <p><b>Folgerung:</b> \(\PP(\varnothing)=0\), denn \(\varnothing=\Om\co\) und (1.1) gibt \(1-1=0\).</p>
+</x-card>
+<x-pt><x-q>(a) \(\PP(\mA)=\Par{0.7}\) → \(\PP(\mA\co)\)? (b) \(\PP(\mA)=\Par{0.5},\ \PP(\mB)=\Par{0.4},\ \PP(\mA\capc\mB)=\Par{0.2}\) → \(\PP(\mA\cupc\mB)\)?</x-q><x-e>„nicht A“ → Komplement; „A oder B“ mit Überlappung → Additionsregel.</x-e><x-l>(a) \(1-\Par{0.7}=\Res{0.3}\). (b) \(\Par{0.5}+\Par{0.4}-\Par{0.2}=\Res{0.7}\).</x-l><x-s>„P(Aᶜ)=1−P(A)=0.3; P(A∪B)=P(A)+P(B)−P(A∩B)=0.7.“</x-s></x-pt>
+
+<h3 id="s1-1-e" data-m="Ein- und Ausschließen|Siebformel für 3 Ereignisse (Modul)">Formel des Ein- und Ausschließens (Siebformel) <span class="srcin n">✚ Neu · Modulinhalt</span></h3>
+<x-idea>Die Modulbeschreibung nennt die <span class="kw kw-rule">Formel des Ein- und Ausschließens</span> ausdrücklich. Sie verallgemeinert den Additionssatz (1.2) auf mehr als zwei Ereignisse: <b>einzeln addieren, paarweise Überlappungen abziehen, dreifache wieder addieren, …</b> mit wechselndem Vorzeichen.</x-idea>
+<x-anat t="Siebformel für drei Ereignisse" f="\Res{\PP(\mA\cupc\mB\cupc\Mem{C})} = \underbrace{\PP(\mA)+\PP(\mB)+\PP(\Mem{C})}_{\text{einschließen}} \;\Chg{-}\; \underbrace{\big[\PP(\mA\capc\mB)+\PP(\mA\capc\Mem{C})+\PP(\mB\capc\Mem{C})\big]}_{\text{ausschließen}} \;\Chg{+}\; \underbrace{\PP(\mA\capc\mB\capc\Mem{C})}_{\text{wieder einschließen}}">
+  <x-a s="\PP(\mA)+\PP(\mB)+\PP(\Mem{C})">jedes Feld wird so oft gezählt, wie viele Kreise es überdecken</x-a>
+  <x-a s="\Chg{-}[\dots]">zieht die paarweisen Linsen ab; die Mitte \(A\cap B\cap C\) wurde dabei dreimal abgezogen</x-a>
+  <x-a s="\Chg{+}\PP(\mA\capc\mB\capc\Mem{C})">die Mitte war 3× drin und wurde 3× abgezogen, also einmal wieder addieren</x-a>
+  <x-a s="\text{allgemein}">für n Ereignisse: \[\PP\Big(\bigcup_{\Idx{i}=1}^{\Par{n}}\Mem{A_{\Idx{i}}}\Big)=\sum_{\Idx{k}=1}^{\Par{n}}(-1)^{\Idx{k}+1}\!\!\sum_{i_1<\dots<i_k}\!\!\PP(\Mem{A_{i_1}}\capc\dots\capc\Mem{A_{i_k}})\]</x-a>
+  <x-read>„P von A oder B oder C ist die Summe der Einzelwahrscheinlichkeiten, minus die Summe der paarweisen Schnitte, plus der dreifache Schnitt.“</x-read>
+</x-anat>
+<x-card t="🔍 Warum stimmt die Zählung? (ein Feld nach dem anderen)">
+  <table class="tbl"><tr><th>Feld liegt in …</th><th class="r">Einzeln (+)</th><th class="r">Paare (−)</th><th class="r">Dreifach (+)</th><th class="r">Summe</th></tr>
+  <tr><td>genau einem Ereignis</td><td class="r">1</td><td class="r">0</td><td class="r">0</td><td class="r"><b class="kw-idx">1</b></td></tr>
+  <tr><td>genau zwei Ereignissen</td><td class="r">2</td><td class="r">1</td><td class="r">0</td><td class="r"><b class="kw-idx">1</b></td></tr>
+  <tr><td>allen drei</td><td class="r">3</td><td class="r">3</td><td class="r">1</td><td class="r"><b class="kw-idx">1</b></td></tr></table>
+  <p>Jedes Feld der Vereinigung wird am Ende genau einmal gezählt, also stimmt die Formel.</p>
+</x-card>
+<x-sol s="🧪 Beispiel: Würfel, drei Ereignisse (aufklappen)">
+  <p>Ein fairer Würfel: \(\mA=\{\)gerade\(\}=\{2,4,6\}\), \(\mB=\{\text{mindestens }4\}=\{4,5,6\}\), \(\Mem{C}=\{1,2\}\).</p>
+  <x-step h="Einzeln.">\(\PP(\mA)=\tfrac36,\ \PP(\mB)=\tfrac36,\ \PP(\Mem{C})=\tfrac26\); Summe \(\tfrac86\).</x-step>
+  <x-step h="Paare.">\(\mA\capc\mB=\{4,6\}\to\tfrac26\), \(\mA\capc\Mem{C}=\{2\}\to\tfrac16\), \(\mB\capc\Mem{C}=\varnothing\to0\); Summe \(\tfrac36\).</x-step>
+  <x-step h="Dreifach.">\(\mA\capc\mB\capc\Mem{C}=\varnothing\to0\).</x-step>
+  <x-step h="Zusammensetzen.">\(\tfrac86-\tfrac36+0=\tfrac56\). Kontrolle: \(\mA\cupc\mB\cupc\Mem{C}=\{1,2,4,5,6\}\), also 5 von 6 ✓.</x-step>
+  <x-res>\(\PP(\mA\cupc\mB\cupc\Mem{C})=5/6\approx0.8333\)</x-res>
+</x-sol>
+
+<h3 id="s1-1-f" data-m="Interpretation|frequentistisch vs. bayes'sch, relative Häufigkeit">Was bedeutet eine Wahrscheinlichkeit? Zwei Interpretationen</h3>
+<x-g><p><b>Frequentistisch:</b> die Idealisierung der relativen Häufigkeit bei vielen unabhängigen Wiederholungen. Formell: ist \(\Idx{f_n}(\mA)\) die relative Häufigkeit von \(\mA\) in \(\Par{n}\) Experimenten, so gilt \(\Idx{f_n}(\mA)\to\PP(\mA)\) für \(\Par{n}\to\infty\).</p></x-g>
+<x-viz t="Konvergenz der relativen Häufigkeit" src="GN">
+  <div class="ctl"><label>Anzahl Würfe n <input type="range" id="fqN" min="10" max="3000" step="10" value="300"><output for="fqN"></output></label>
+  <label>wahres P(A) <input type="range" id="fqP" min="0.05" max="0.95" step="0.05" value="0.5" data-fmt="2"><output for="fqP"></output></label>
+  <button class="btn" id="fqNew">🎲 neu würfeln</button></div>
+  <div id="fqPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> für kleine n zappelt die Kurve stark, für große n kriecht sie an die gestrichelte Linie \(\PP(\mA)\) heran. Das ist die Idee hinter dem <span class="kw kw-rule">Gesetz der großen Zahlen</span> (Kap. 5).</div>
+</x-viz>
+<p>So rechnet man \(\Idx{f_n}\) Schritt für Schritt aus. Der Tracer zeigt den Zähler und die relative Häufigkeit nach jedem Wurf; mit dem Knopf R/Python wechselst du die Sprache (die Zeilen entsprechen sich).</p>
+<div id="trRel"></div>
+<x-code2 f="k1_relhaeuf" t="relative Häufigkeit"/>
+<x-pt><x-q>In 10 Würfen kam 4× die 6. Ist damit \(p(6)=0.4\)?</x-q><x-e>„nach n Versuchen / relative Häufigkeit / empirisch“.</x-e><x-l>Nein: die relative Häufigkeit schwankt und nähert sich erst für \(n\to\infty\) dem wahren Wert \(\tfrac16\).</x-l><x-s>„Nein, 4/10 ist nur die relative Häufigkeit; sie konvergiert erst für große n gegen p(6)=1/6.“</x-s></x-pt>
+<x-g><p><b>Bayes'sch (subjektiv):</b> \(\PP(\mA)\) als Maß für den Glauben, dass ein Ereignis eintritt, z. B. „mit 15 % sind auf diesem Grundstück Ölvorräte“. Das heißt nicht, dass 15 % der Bohrlöcher Öl finden: entweder ist das Öl da oder nicht. Je nach Problem passt die eine oder die andere Sicht.</p></x-g>
+
+<h3 id="s1-1-g" data-m="Schema & Beispiele 1.1|Rechenregeln anwenden, leicht→schwer">📐 Schema und drei aufbauende Beispiele</h3>
+<ol class="cook">
+  <li>Alle Angaben als \(\PP(\cdot)\) von Ereignissen aufschreiben; das Gesuchte ebenso.</li>
+  <li>Gesuchtes Ereignis in Mengen-Sprache übersetzen (\(\capc,\cupc,{}\co,\setm\)), dabei „mindestens eins“ → Komplement von „keins“.</li>
+  <li>Venn-Diagramm mit allen disjunkten Feldern skizzieren und von innen nach außen füllen.</li>
+  <li>Passende Regel (1.1)–(1.5) oder Siebformel anwenden; zum Schluss prüfen, dass alle Felder zusammen 1 ergeben.</li>
+</ol>
+<x-ex3>
+  <x-ex l="1" t="Komplement">\(\PP(\mA)=0.35\). Gesucht \(\PP(\mA\co)\).<x-step>Regel (1.1).</x-step><x-step>\(1-0.35=0.65\).</x-step><x-v>0.65, weil A und Aᶜ den Grundraum disjunkt aufteilen.</x-v></x-ex>
+  <x-ex l="2" t="Additionssatz rückwärts">\(\PP(\mA)=0.6,\ \PP(\mB)=0.5,\ \PP(\mA\cupc\mB)=0.8\). Sind A und B disjunkt?<x-step>\(\PP(\mA\capc\mB)=0.6+0.5-0.8=0.3\).</x-step><x-step>\(0.3\ne0\).</x-step><x-v>nicht disjunkt: sie überlappen mit Wahrscheinlichkeit 0.3.</x-v></x-ex>
+  <x-ex l="3" t="Siebformel">Von 100 Studierenden hören 50 Musik, 40 machen Sport, 30 lesen; 20 Musik+Sport, 15 Musik+Lesen, 10 Sport+Lesen, 5 alles. Wie viele machen nichts davon?<x-step>Siebformel: \(50+40+30-20-15-10+5=80\) machen mindestens eines.</x-step><x-step>Komplement: \(100-80=20\).</x-step><x-v>20 Personen, also \(\PP(\text{nichts})=0.2\).</x-v></x-ex>
+</x-ex3>
+<x-trap><b>„disjunkt“ ist kein Wahrscheinlichkeitsbegriff.</b> Disjunkt heißt „die Mengen überlappen nicht“. Ob sie <i>unabhängig</i> sind, entscheidet erst die Produktformel in 1.3.</x-trap>
+<x-vids><x-vid f="init/The Birthday Problem in Probability： P(A) = 1 - P(not A) [m7hI2LulMxE].mp4" n="Komplementregel in Aktion"/></x-vids>
+<p class="small muted">🌉 <b>Weiter:</b> Die Regeln sagen, wie man Wahrscheinlichkeiten kombiniert, aber nicht, woher die Zahlen kommen. Das liefert 1.2: bei gleich wahrscheinlichen Ausgängen durch Abzählen.</p>
+</section>
+
+<!-- ================================================================ 1.2 -->
+<section id="s1-2" data-vn data-m="1.2 Laplace|diskrete Modelle, P(A)=|A|/|Ω|, Abzählen">
+<h2><span class="num">1.2</span>Diskrete Modelle und das Laplace-Modell</h2>
+<p class="one">Endlicher oder abzählbarer Grundraum → Liste der Einzelwahrscheinlichkeiten → bei Gleichverteilung einfach abzählen.</p>
+
+<x-vn id="vn-1-2" sec="1.2" q="Zwei Würfel: Augensumme mindestens 10, mindestens eine Sechs">
+  <x-task>Zwei faire Würfel werden geworfen. Berechne (a) \(\PP(\text{Augensumme}\ \ge 10)\) und (b) \(\PP(\text{mindestens eine Sechs})\). Gib jeweils Bruch und Dezimalzahl an.</x-task>
+  <x-step h="Grundraum festlegen.">Ein Ausgang ist ein <b>geordnetes</b> Paar \((\Idx{a},\Idx{b})\): erster und zweiter Würfel. Also \(\Om=\{1,\dots,6\}^2\) mit \(|\Om|=6\cdot6=\Par{36}\).</x-step>
+  <x-step h="Laplace-Annahme prüfen.">Faire Würfel, unabhängig geworfen: jedes der 36 Paare hat dieselbe W'keit \(\tfrac1{36}\). Also darf man abzählen: \(\PP(\mA)=|\mA|/|\Om|\).</x-step>
+  <x-step h="(a) günstige Fälle zählen.">Summe 10: (4,6),(5,5),(6,4); Summe 11: (5,6),(6,5); Summe 12: (6,6). Zusammen \(|\mA|=3+2+1=\Res{6}\).
+  \[\begin{aligned}
+  \Res{\PP(\mA)} &= \frac{|\mA|}{|\Om|} && \text{Laplace-Formel} \\
+  &= \frac{\Res{6}}{\Par{36}}=\frac16 && \text{eingesetzt und gekürzt} \\
+  &\approx \Res{0.1667} && \text{als Dezimalzahl}
+  \end{aligned}\]</x-step>
+  <x-step h="(b) „mindestens“ → Gegenereignis.">„Mindestens eine Sechs“ ist das Gegenteil von „keine Sechs“. Keine Sechs heißt: beide Würfel zeigen 1 bis 5, das sind \(5\cdot5=25\) Paare.
+  \[\begin{aligned}
+  \Res{\PP(\mB)} &= 1-\PP(\mB\co) && \text{Komplementregel (1.1)} \\
+  &= 1-\frac{25}{36} && \text{keine Sechs: 5 mal 5 Paare} \\
+  &= \frac{11}{36}\approx\Res{0.3056} && \text{ausgerechnet}
+  \end{aligned}\]</x-step>
+  <x-step h="Prüfen durch direktes Zählen.">Sechs beim ersten: 6 Paare; Sechs beim zweiten: 6 Paare; (6,6) doppelt gezählt: \(6+6-1=11\) ✓ (das ist der Additionssatz).</x-step>
+  <x-res>(a) \(1/6\approx0.1667\), (b) \(11/36\approx0.3056\). „Mit 36 gleich wahrscheinlichen geordneten Paaren gilt P(Summe≥10)=6/36 und über das Gegenereignis P(mindestens eine 6)=1−25/36=11/36.“</x-res>
+  <x-trap>Ungeordnete Paare (also {5,6} = {6,5}) sind <b>nicht</b> gleich wahrscheinlich: {6,6} hat W'keit 1/36, {5,6} aber 2/36. Deshalb immer geordnet zählen.</x-trap>
+</x-vn>
+
+<x-g><p>Ein Modell heißt <b>diskret</b>, wenn \(\Om\) endlich oder abzählbar ist: \(\Om=\{\Mem{\omega_1},\Mem{\omega_2},\dots\}\). Dann genügt eine „Liste“ der Wahrscheinlichkeiten aller Elementarereignisse. Daraus baut man jedes Ereignis zusammen.</p></x-g>
+<x-anat t="Ereignis-W'keit im diskreten Modell" f="\Res{\PP(\mA)}\;=\;\sum_{\Idx{k}\,:\,\Mem{\omega_{\Idx{k}}}\in\mA}\PP(\{\Mem{\omega_{\Idx{k}}}\})\qquad\text{mit}\qquad\sum_{\Idx{k}\ge1}\PP(\{\Mem{\omega_{\Idx{k}}}\})=1" src="G">
+  <x-a s="\sum">„Summe über“: alle passenden Bausteine aufsammeln</x-a>
+  <x-a s="\Idx{k}:\Mem{\omega_k}\in\mA">„alle k, für die omega-k in A liegt“: der Laufbereich, nur Ausgänge innerhalb von A</x-a>
+  <x-a s="\PP(\{\Mem{\omega_k}\})">die W'keit des einzelnen Ausgangs (geschweifte Klammern = einelementige Menge)</x-a>
+  <x-a s="\sum=1">alle Bausteine zusammen ergeben 1 (folgt aus A2 und A3)</x-a>
+  <x-read>„P von A ist die Summe der Einzelwahrscheinlichkeiten aller Ausgänge, die in A liegen.“</x-read>
+</x-anat>
+<x-pt><x-q>\(\Om=\{a,b,c\}\) mit W'keiten \(\Par{0.5},\Par{0.3},\Par{0.2}\). Bestimme \(\PP(\{a,c\})\).</x-q><x-e>„W'keit eines Ereignisses“ = Summe der Elementarwahrscheinlichkeiten.</x-e><x-l>\(\PP(\{a,c\})=\Par{0.5}+\Par{0.2}=\Res{0.7}\).</x-l><x-s>„P({a,c}) = p(a)+p(c) = 0.7.“</x-s></x-pt>
+
+<h3 id="s1-2-a" data-m="Laplace-Formel|günstige / mögliche Fälle">Der Spezialfall: alle Ausgänge gleich wahrscheinlich (Laplace)</h3>
+<x-g><p>Ist \(\Om\) endlich und hat keine bevorzugten Ausgänge (faire Münze, fairer Würfel), so bekommt jeder Ausgang dieselbe W'keit \(1/|\Om|\).</p></x-g>
+<x-anat t="Laplace-Formel" f="\Res{\PP(\mA)}\;=\;\dfrac{|\mA|}{|\Om|}\;=\;\dfrac{\text{Anzahl günstige Fälle}}{\text{Anzahl mögliche Fälle}}" src="G">
+  <x-a s="|\mA|">Anzahl der Ausgänge in A: die „günstigen Fälle“</x-a>
+  <x-a s="|\Om|">Anzahl aller Ausgänge: die „möglichen Fälle“</x-a>
+  <x-why>Aus (A2) und (A3): \(|\Om|\) gleiche Summanden \(p\) ergeben 1, also \(p=1/|\Om|\); \(\mA\) sammelt \(|\mA|\) davon ein.</x-why>
+  <x-read>„P von A ist die Anzahl der Elemente von A geteilt durch die Anzahl der Elemente von Omega.“</x-read>
+</x-anat>
+<div class="trap"><b>⚠ Gilt nur bei Gleichverteilung!</b> Für viele reale Phänomene (Druckfestigkeit, Wetter …) ist Laplace ungeeignet. <span class="srcin">📘 Grundlage</span></div>
+<x-pt><x-q>52-Karten-Spiel. Wie groß ist die W'keit, eine Herz-Karte zu ziehen?</x-q><x-e>„gleich wahrscheinlich, fair, rein zufällig“ → Laplace.</x-e><x-l>\(\PP=\tfrac{\Par{13}}{\Par{52}}=\Res{0.25}\).</x-l><x-s>„Laplace: P(Herz)=günstige/mögliche=13/52=0.25.“</x-s></x-pt>
+<x-card t="🔧 Wie berechnet man das? (abstrakte Anatomie)" src="G">
+  <ol class="cook"><li>Grundraum \(\Om\) hinschreiben und seine Elemente zählen → \(|\Om|\).</li><li>Das gesuchte Ereignis als Teilmenge beschreiben und zählen → \(|\mA|\).</li><li>Gleichverteilungs-Annahme prüfen: sind wirklich alle Ausgänge gleich wahrscheinlich?</li><li>Teilen: \(\PP(\mA)=|\mA|/|\Om|\).</li></ol>
+</x-card>
+<x-card t="🧱 Bauplan Wörter → Zahlen · Münze 2×, „genau 1× Kopf“" src="G">
+  <p>① Struktur mit Wort-Labels</p>
+  \[\PP(\mA)=\underbrace{\PP(\{KZ\})}_{\text{Fall 1}}+\underbrace{\PP(\{ZK\})}_{\text{Fall 2}}\]
+  <p>② Dieselbe Struktur, Zahlen an denselben Stellen</p>
+  \[\PP(\mA)=\underbrace{\Par{\tfrac14}}_{\text{Fall 1}}+\underbrace{\Par{\tfrac14}}_{\text{Fall 2}}\]
+  <p>③ Ergebnis</p>
+  \[\PP(\mA)=\Res{\tfrac12}\]
+</x-card>
+<x-pt><x-q>3× faire Münze. Wie groß ist P(genau 2× Kopf)?</x-q><x-e>„genau k von n“ → günstige Pfade abzählen.</x-e><x-l>8 gleich wahrscheinliche Ausgänge; günstig KKZ, KZK, ZKK → 3 → \(\PP=\tfrac38=\Res{0.375}\).</x-l><x-s>„Von 8 gleich wahrscheinlichen Ausgängen haben 3 genau 2× Kopf, also P=3/8=0.375.“</x-s></x-pt>
+
+<h3 id="s1-2-b" data-m="Laplace-Tracer|36 Paare abzählen in R/Python">Code: Abzählen mit dem Computer</h3>
+<p>Das Programm geht alle 36 Paare durch, zählt \(|\Om|\) und \(|\mA|\) und teilt. Im Zustand rechts siehst du das 6×6-Raster: <span class="kw kw-idx">grün</span> = günstig, orange Rahmen = aktuelles Paar. Gib als Eingabe die Schwelle \(k\) ein (Ereignis „Summe ≥ k“).</p>
+<div id="trLap"></div>
+<x-code2 f="k1_laplace" t="Laplace mit zwei Würfeln"/>
+<x-card t="🔍 Kosten pro Zeile (wie oft läuft was?)">
+  <table class="tbl"><tr><th>Zeile (R)</th><th>Code</th><th class="r">wie oft</th><th>Bedeutung</th></tr>
+  <tr><td>4</td><td><code>for (a in 1:6)</code></td><td class="r">6</td><td>erster Würfel</td></tr>
+  <tr><td>5</td><td><code>for (b in 1:6)</code></td><td class="r">6·6 = 36</td><td>für jedes a alle b</td></tr>
+  <tr><td>6</td><td><code>moeglich &lt;- moeglich + 1</code></td><td class="r">36</td><td>zählt \(|\Om|\)</td></tr>
+  <tr><td>7</td><td><code>if (a + b &gt;= k) …</code></td><td class="r">36 Tests, \(|\mA|\) Treffer</td><td>zählt \(|\mA|\)</td></tr></table>
+  \[\begin{aligned}
+  \text{Tests} &= \sum_{\Idx{a}=1}^{6}\sum_{\Idx{b}=1}^{6}1 && \text{jede Kombination einmal} \\
+  &= 6\cdot6=|\Om| && \text{Abzählen kostet so viel, wie der Grundraum groß ist}
+  \end{aligned}\]
+  <p class="small">Bei \(\Par{m}\) Würfeln wächst \(|\Om|=6^{\Par{m}}\) exponentiell. Dann rechnet man lieber mit Formeln (z. B. Binomialverteilung in Kap. 2) statt alles aufzuzählen.</p>
+</x-card>
+
+<h3 id="s1-2-c" data-m="Abzählen: Kombinatorik|Produktregel, n!, Binomialkoeffizient">Werkzeug zum Abzählen: Produktregel, Fakultät, Binomialkoeffizient <span class="srcin n">✚ Neu</span></h3>
+<x-idea>Laplace braucht \(|\mA|\) und \(|\Om|\). Bei größeren Experimenten zählt man nicht mehr von Hand, sondern mit drei Regeln. (Der Binomialkoeffizient taucht in der Grundlage in Kap. 2.2 bei der Binomialverteilung auf.)</x-idea>
+<table class="tbl">
+  <tr><th>Situation</th><th>Anzahl</th><th>Beispiel</th><th>R</th><th>Python</th></tr>
+  <tr><td>\(\Par{k}\) Stufen mit je \(n_1,\dots,n_k\) Möglichkeiten (Produktregel)</td><td>\(n_1\cdot n_2\cdots n_k\)</td><td>2 Würfel: \(6\cdot6=36\)</td><td><code>6^2</code></td><td><code>6**2</code></td></tr>
+  <tr><td>\(\Par{n}\) Dinge in eine Reihenfolge bringen</td><td>\(n!\)</td><td>5 Bücher: \(120\)</td><td><code>factorial(5)</code></td><td><code>math.factorial(5)</code></td></tr>
+  <tr><td>\(\Par{k}\) aus \(\Par{n}\) <b>mit</b> Reihenfolge, ohne Zurücklegen</td><td>\(\frac{n!}{(n-k)!}\)</td><td>Podest aus 10 Läufern: \(720\)</td><td><code>factorial(10)/factorial(7)</code></td><td><code>math.perm(10, 3)</code></td></tr>
+  <tr><td>\(\Par{k}\) aus \(\Par{n}\) <b>ohne</b> Reihenfolge, ohne Zurücklegen</td><td>\(\binom{n}{k}=\frac{n!}{k!(n-k)!}\)</td><td>Lotto 6 aus 49: \(13\,983\,816\)</td><td><code>choose(49, 6)</code></td><td><code>math.comb(49, 6)</code></td></tr>
+</table>
+<x-anat t="Binomialkoeffizient" f="\binom{\Par{n}}{\Par{k}}=\dfrac{\Par{n}!}{\Par{k}!\,(\Par{n}-\Par{k})!}">
+  <x-a s="\Par{n}!">alle Reihenfolgen der n Objekte</x-a>
+  <x-a s="\Par{k}!">die k Ausgewählten untereinander sind egal: so viele Reihenfolgen fallen zusammen</x-a>
+  <x-a s="(\Par{n}-\Par{k})!">die nicht Ausgewählten untereinander sind ebenfalls egal</x-a>
+  <x-read>„n über k ist n Fakultät geteilt durch k Fakultät mal n minus k Fakultät: die Anzahl der k-elementigen Teilmengen einer n-elementigen Menge.“</x-read>
+</x-anat>
+<x-sol s="🧪 Geburtstagsproblem von null (aufklappen)">
+  <p><b>Aufgabe.</b> \(\Par{n}=23\) Personen, 365 gleich wahrscheinliche Geburtstage, unabhängig. Wie groß ist die W'keit, dass mindestens zwei denselben Geburtstag haben?</p>
+  <x-step h="Grundraum.">Geordnete Listen von 23 Geburtstagen: \(|\Om|=365^{23}\) (Produktregel), alle gleich wahrscheinlich.</x-step>
+  <x-step h="„mindestens zwei gleich“ → Gegenereignis „alle verschieden“.">Für „alle verschieden“ hat Person 1 365 Möglichkeiten, Person 2 noch 364, …, Person 23 noch 343.</x-step>
+  <x-step h="Rechnen.">
+  \[\begin{aligned}
+  \PP(\text{alle verschieden}) &= \frac{365\cdot364\cdots343}{365^{23}} && \text{Laplace mit Produktregel} \\
+  &= \prod_{\Idx{i}=0}^{22}\frac{365-\Idx{i}}{365} && \text{Faktor für Faktor} \\
+  &\approx 0.4927 && \text{ausgerechnet} \\
+  \Res{\PP(\text{mind. zwei gleich})} &= 1-0.4927\approx\Res{0.5073} && \text{Komplementregel}
+  \end{aligned}\]</x-step>
+  <x-res>Schon bei 23 Personen ist die W'keit größer als 50 %. R: <code>1 - prod((365 - 0:22) / 365)</code>, Python: <code>1 - np.prod((365 - np.arange(23)) / 365)</code>.</x-res>
+</x-sol>
+<x-viz t="Geburtstagsproblem: W'keit für einen gemeinsamen Geburtstag">
+  <div class="ctl"><label>Personen n <input type="range" id="bdN" min="2" max="80" value="23"><output for="bdN"></output></label></div>
+  <div id="bdPlot" class="plot" style="min-height:260px"></div>
+  <div class="out" id="bdOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> die Kurve steigt viel schneller, als die Intuition sagt, weil die Anzahl der <i>Paare</i> \(\binom{n}{2}\) quadratisch wächst.</div>
+</x-viz>
+
+<h3 id="s1-2-d" data-m="Schema & Beispiele 1.2|Laplace in 3 Schritten, leicht→schwer">📐 Schema: Laplace-Aufgabe in 3 Schritten</h3>
+<ol class="cook"><li>Grundraum \(\Om\) festlegen (geordnet!) und \(|\Om|\) zählen.</li><li>Ereignis \(\mA\) abgrenzen und \(|\mA|\) zählen (oder \(|\mA\co|\), wenn „mindestens“).</li><li>Quotient \(|\mA|/|\Om|\) bilden.</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Fairer Würfel, „gerade Augenzahl“" src="G">\(\Om=\{1,\dots,6\}\), \(|\Om|=6\). \(\mA=\{2,4,6\}\), \(|\mA|=3\).<x-v>\(\PP(\mA)=3/6=\tfrac12\).</x-v></x-ex>
+  <x-ex l="2" t="Zwei Würfel, „Augensumme = 7“" src="G">\(|\Om|=36\) geordnete Paare. Günstig: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) → \(|\mA|=6\).<x-v>\(\PP=6/36=1/6\): 7 ist die häufigste Summe.</x-v></x-ex>
+  <x-ex l="3" t="Münze 2×, „mindestens 1× Kopf“" src="G">Trick über das Gegenereignis (1.1): „mindestens 1 Kopf“ = nicht „gar kein Kopf“ = \(\{ZZ\}\co\).<x-v>\(\PP=1-\PP(\{ZZ\})=1-\tfrac14=\tfrac34\). Merke: „mindestens eins“ ruft fast immer nach der Gegenwahrscheinlichkeit.</x-v></x-ex>
+</x-ex3>
+<x-vids><x-vid f="init/Gentle Introduction to Probability： Counting Coin Flips and Dice [4T3aOIfNdTY].mp4" n="Münzen &amp; Würfel abzählen"/><x-vid f="init/Counting Probabilities with Combinatorics and the Factorial [5mDYZMwTAF8].mp4" n="Fakultät, Kombinatorik"/><x-vid f="init/The Birthday Problem in Probability： P(A) = 1 - P(not A) [m7hI2LulMxE].mp4" n="Geburtstagsproblem"/></x-vids>
+<p class="small muted">🌉 <b>Weiter:</b> Oft kennt man nur die Einzelwahrscheinlichkeiten zweier Ereignisse. Wann darf man daraus \(\PP(\mA\capc\mB)\) ausrechnen? Genau bei Unabhängigkeit (1.3).</p>
+</section>
+
+<!-- ================================================================ 1.3 -->
+<section id="s1-3" data-vn data-m="1.3 Unabhängigkeit|P(A∩B)=P(A)P(B), Zuverlässigkeit">
+<h2><span class="num">1.3</span>Unabhängigkeit von Ereignissen</h2>
+<p class="one">Wenn zwei Ereignisse sich „nicht kümmern“, multipliziert man ihre Wahrscheinlichkeiten.</p>
+
+<x-vn id="vn-1-3" sec="1.3" q="Reihen- und Parallelschaltung zweier Bauteile">
+  <x-task>Ein Gerät hat zwei Bauteile, die <b>unabhängig</b> voneinander funktionieren: Bauteil 1 mit W'keit \(\Par{0.95}\), Bauteil 2 mit W'keit \(\Par{0.90}\). Berechne die W'keit, dass das Gerät funktioniert, wenn die Bauteile (a) in <b>Reihe</b> geschaltet sind (beide müssen gehen) und (b) <b>parallel</b> geschaltet sind (eines genügt).</x-task>
+  <x-step h="Ereignisse benennen.">\(\Mem{F_1}\) = „Bauteil 1 funktioniert“, \(\Mem{F_2}\) = „Bauteil 2 funktioniert“. Gegeben \(\PP(\Mem{F_1})=\Par{0.95}\), \(\PP(\Mem{F_2})=\Par{0.90}\), unabhängig.</x-step>
+  <x-step h="(a) Reihe = „und“.">Das Gerät geht, wenn \(\Mem{F_1}\capc\Mem{F_2}\) eintritt. Bei Unabhängigkeit gilt die <span class="kw kw-rule">Produktformel</span>:
+  \[\begin{aligned}
+  \Res{\PP(\Mem{F_1}\capc\Mem{F_2})} &= \PP(\Mem{F_1})\cdot\PP(\Mem{F_2}) && \text{Definition der Unabhängigkeit} \\
+  &= \Par{0.95}\cdot\Par{0.90} && \text{eingesetzt} \\
+  &= \Res{0.855} && \text{ausmultipliziert}
+  \end{aligned}\]</x-step>
+  <x-step h="(b) Parallel = „oder“ → über das Gegenereignis.">Das Gerät fällt nur aus, wenn <b>beide</b> ausfallen. Mit Unabhängigkeit sind auch die Ausfälle \(\Mem{F_1}\co,\Mem{F_2}\co\) unabhängig:
+  \[\begin{aligned}
+  \PP(\text{Ausfall}) &= \PP(\Mem{F_1}\co\capc\Mem{F_2}\co) && \text{beide defekt} \\
+  &= (1-\Par{0.95})(1-\Par{0.90}) && \text{Produktformel für die Komplemente} \\
+  &= 0.05\cdot0.10=0.005 && \text{ausgerechnet} \\
+  \Res{\PP(\Mem{F_1}\cupc\Mem{F_2})} &= 1-0.005=\Res{0.995} && \text{Komplementregel}
+  \end{aligned}\]</x-step>
+  <x-step h="Prüfen mit dem Additionssatz.">\(\PP(\Mem{F_1}\cupc\Mem{F_2})=0.95+0.90-0.855=0.995\) ✓.</x-step>
+  <x-res>(a) Reihe: 0.855, (b) parallel: 0.995. „Bei unabhängigen Bauteilen multipliziert man; die Parallelschaltung rechnet man über das Gegenereignis ‚beide fallen aus‘.“</x-res>
+  <x-trap>Die Parallelschaltung ist <b>nicht</b> \(0.95+0.90\) (das wäre größer als 1). Addieren darf man nur bei disjunkten Ereignissen.</x-trap>
+</x-vn>
+
+<x-g><p>Aus \(\PP(\mA)\) und \(\PP(\mB)\) allein kann man \(\PP(\mA\capc\mB)\) im Allgemeinen nicht berechnen, denn die Überlappung ist unbekannt. Es gibt aber einen wichtigen Spezialfall: die <b>Produktformel</b>.</p></x-g>
+<x-anat t="Definition der Unabhängigkeit" f="\mA,\mB\ \text{unabhängig}\quad:\Longleftrightarrow\quad\PP(\mA\capc\mB)\;=\;\PP(\mA)\cdot\PP(\mB)" src="G">
+  <x-a s="\PP(\mA\capc\mB)">W'keit, dass beide Ereignisse zusammen eintreten („A und B“)</x-a>
+  <x-a s="\cdot">der Kern: bei Unabhängigkeit wird schlicht multipliziert</x-a>
+  <x-a s=":\Longleftrightarrow">„ist definiert als“: Unabhängigkeit <i>ist</i> diese Gleichung, nicht mehr und nicht weniger</x-a>
+  <x-read>„A und B sind unabhängig, wenn P von A-und-B gleich P von A mal P von B ist.“ Anschaulich: unter n Fällen sammelst du erst den Anteil P(A), davon nochmal den Anteil P(B). B „kümmert“ sich nicht um A.</x-read>
+</x-anat>
+<x-pt><x-q>\(\PP(\mA)=\Par{0.5},\ \PP(\mB)=\Par{0.4}\), A und B unabhängig. \(\PP(\mA\capc\mB)\)?</x-q><x-e>„unabhängig, stören sich nicht, und“.</x-e><x-l>\(\Par{0.5}\cdot\Par{0.4}=\Res{0.2}\).</x-l><x-s>„Bei Unabhängigkeit gilt P(A∩B)=P(A)·P(B)=0.2.“</x-s></x-pt>
+<div class="trap is-g"><b>⚠ Achtung: disjunkt ≠ unabhängig.</b> Unabhängige Ereignisse sind nicht disjunkt, und disjunkte Ereignisse sind nicht unabhängig (außer bei W'keit 0). Disjunktheit ist rein mengentheoretisch (kein Überlapp). Unabhängigkeit hängt an den Zahlen der Wahrscheinlichkeiten. <span class="srcin">📘 Grundlage</span></div>
+<x-pt><x-q>A, B sind disjunkt mit \(\PP(\mA),\PP(\mB)>0\). Sind sie unabhängig?</x-q><x-e>„disjunkt“ und „unabhängig“ verwechselt.</x-e><x-l>Nein: disjunkt heißt \(\PP(\mA\capc\mB)=0\), aber \(\PP(\mA)\PP(\mB)>0\), also \(\PP(\mA\capc\mB)\ne\PP(\mA)\PP(\mB)\).</x-l><x-s>„Nein: disjunkte Ereignisse mit positiver W'keit sind gerade nicht unabhängig, da P(A∩B)=0≠P(A)P(B).“</x-s></x-pt>
+<x-viz t="Produktformel-Prüfer" src="G">
+  <p class="small">Stelle \(\PP(\mA)\), \(\PP(\mB)\) und den tatsächlichen \(\PP(\mA\capc\mB)\) ein. Die Balken zeigen, ob die Produktformel erfüllt ist (unabhängig), ob positiv abhängig (Überlappung größer als das Produkt) oder negativ.</p>
+  <div class="ctl"><label>P(A) <input type="range" id="upA" min="0" max="1" step="0.01" value="0.33" data-fmt="2"><output for="upA"></output></label>
+  <label>P(B) <input type="range" id="upB" min="0" max="1" step="0.01" value="0.17" data-fmt="2"><output for="upB"></output></label>
+  <label>P(A∩B) tatsächlich <input type="range" id="upAB" min="0" max="1" step="0.005" value="0.06" data-fmt="3"><output for="upAB"></output></label></div>
+  <div id="upPlot" class="plot" style="min-height:200px"></div>
+  <div class="out" id="upOut"></div>
+</x-viz>
+<x-pt><x-q>\(\PP(\mA\capc\mB)=\Par{0.2},\ \PP(\mA)=\Par{0.5},\ \PP(\mB)=\Par{0.4}\). Unabhängig?</x-q><x-e>„prüfe Unabhängigkeit“ → Produktformel testen.</x-e><x-l>\(\Par{0.5}\cdot\Par{0.4}=0.2=\PP(\mA\capc\mB)\) ✓ → unabhängig.</x-l><x-s>„Wegen P(A)·P(B)=0.2=P(A∩B) sind A und B unabhängig.“</x-s></x-pt>
+<x-card t="🔧 Wie berechnet man das? (abstrakt) · n Ereignisse" src="G">
+  <p>„A und B unabhängig, gesucht P(beide)“: die beiden Einzelwahrscheinlichkeiten multiplizieren. Bei \(n\) Ereignissen muss die Produktformel für <b>jedes Teilbündel</b> gelten:</p>
+  \[\PP(\Mem{A_{i_1}}\capc\dots\capc\Mem{A_{i_k}})=\PP(\Mem{A_{i_1}})\cdots\PP(\Mem{A_{i_k}})\quad\text{für alle }\Idx{k}\text{ und alle Indizes }\Idx{i_1}<\dots<\Idx{i_k}\]
+</x-card>
+
+<h3 id="s1-3-a" data-m="Unabhängigkeits-Tracer|Produktformel durch Abzählen prüfen">Code: Unabhängigkeit durch Abzählen prüfen</h3>
+<p>Das Programm zählt für zwei Würfel \(|\mA|\), \(|\mB|\), \(|\mA\capc\mB|\) und vergleicht \(\PP(\mA\capc\mB)\) mit \(\PP(\mA)\PP(\mB)\). Eingabe: zwei Bedingungen in \(a\) (erster Würfel) und \(b\) (zweiter) in der Form <code>A: … ; B: …</code> mit <code>+ - * % == != &lt; &lt;= &gt; &gt;= &amp;&amp; ||</code>. Die Zeilen 2 und 3 des Codes passen sich an.</p>
+<div id="trUnabh"></div>
+<x-code2 f="k1_unabh" t="Produktformel prüfen"/>
+
+<h3 id="s1-3-b" data-m="Schema & Beispiele 1.3|Zuverlässigkeit, paarweise vs. gemeinsam">📐 Schema: Ausfall- und Zuverlässigkeits-Aufgabe</h3>
+<ol class="cook"><li>Einzel-W'keiten \(\PP(\Mem{A_i})\) notieren, Unabhängigkeit begründen (kein ursächlicher Zusammenhang).</li><li>Gesuchte Kombination als ∩/∪ ausdrücken (ggf. über das Gegenereignis).</li><li>Produktformel anwenden, dann ggf. mit (1.1)/(1.2) auflösen.</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Gerät mit 2 Bauteilen (Skript)" src="G">Beide fallen unabhängig aus, je \(\PP(\Mem{A_i})=1/100\).
+  \[\PP(\Mem{A_1}\capc\Mem{A_2})=\tfrac1{100}\cdot\tfrac1{100}=10^{-4}\]
+  <x-v>Wären die Ausfälle abhängig (fällt eins aus, fällt das andere mit), stiege die Ausfall-W'keit auf 1/100, also um Größenordnungen. Falsche Unabhängigkeits-Annahmen unterschätzen Risiken massiv.</x-v></x-ex>
+  <x-ex l="2" t="„mindestens eines fällt aus“" src="G">Gleiche Zahlen, gesucht \(\PP(\Mem{A_1}\cupc\Mem{A_2})\).<x-step>Über (1.2): \(0.01+0.01-10^{-4}=0.0199\).</x-step><x-step>Über das Gegenereignis „keins fällt aus“: \(1-0.99\cdot0.99=0.0199\) ✓.</x-step><x-v>0.0199; beide Wege stimmen überein.</x-v></x-ex>
+  <x-ex l="3" t="paarweise vs. gemeinsam" src="GN">Zwei faire Münzen. \(\mA\) = „1. Kopf“, \(\mB\) = „2. Kopf“, \(\Mem{C}\) = „beide gleich“.<x-step>Paarweise: \(\PP(\mA\capc\mB)=\tfrac14=\tfrac12\cdot\tfrac12\), ebenso \(\mA,\Mem{C}\) und \(\mB,\Mem{C}\) (jeweils \(\{KK\}\)).</x-step><x-step>Gemeinsam: \(\PP(\mA\capc\mB\capc\Mem{C})=\PP(\{KK\})=\tfrac14\ne\tfrac18\).</x-step><x-v>paarweise unabhängig, aber <b>nicht</b> gemeinsam unabhängig. Paarweise Unabhängigkeit ist echt schwächer.</x-v></x-ex>
+</x-ex3>
+<x-vids><x-vid f="init/Independence in Probability [2nDYX8IKrwo].mp4" n="Unabhängigkeit"/></x-vids>
+<p class="small muted">🌉 <b>Weiter:</b> Sind zwei Ereignisse abhängig, kann man aus dem einen etwas über das andere lernen. Das misst die bedingte Wahrscheinlichkeit (1.4).</p>
+</section>
+
+<!-- ================================================================ 1.4 -->
+<section id="s1-4" data-vn data-m="1.4 Bedingte W'keit|P(A|B)=P(A∩B)/P(B), Multiplikationsregel">
+<h2><span class="num">1.4</span>Bedingte Wahrscheinlichkeiten</h2>
+<p class="one">„Die Karten werden aufgedeckt“: Wissen über B schaltet den Grundraum auf B um.</p>
+
+<x-vn id="vn-1-4" sec="1.4" q="Urne ohne Zurücklegen: bedingt, gemeinsam, Gegenereignis">
+  <x-task>Eine Urne enthält 3 rote und 2 blaue Kugeln. Man zieht zweimal <b>ohne Zurücklegen</b>. \(\Mem{R_1}\) = „erste Kugel rot“, \(\Mem{R_2}\) = „zweite Kugel rot“. Bestimme (a) \(\PP(\Mem{R_2}\given\Mem{R_1})\), (b) \(\PP(\Mem{R_1}\capc\Mem{R_2})\), (c) \(\PP(\Mem{R_2}\co\given\Mem{R_1})\) und (d) entscheide, ob \(\Mem{R_1}\) und \(\Mem{R_2}\) unabhängig sind, wenn man weiß, dass \(\PP(\Mem{R_2})=\tfrac35\) gilt.</x-task>
+  <x-step h="Was bedeutet der Strich?">\(\PP(\Mem{R_2}\given\Mem{R_1})\) fragt: <i>Wir wissen schon, dass die erste Kugel rot war.</i> Wie wahrscheinlich ist dann „zweite rot“? Der Grundraum ist jetzt die Situation nach dem ersten roten Zug.</x-step>
+  <x-step h="(a) neue Urne ansehen.">Nach einem roten Zug liegen noch 2 rote und 2 blaue Kugeln in der Urne, alle gleich wahrscheinlich:
+  \[\Res{\PP(\Mem{R_2}\given\Mem{R_1})}=\frac{2}{4}=\Res{0.5}\]</x-step>
+  <x-step h="(b) Multiplikationsregel (1.6).">„Beide rot“ = erst rot, dann rot gegeben rot:
+  \[\begin{aligned}
+  \Res{\PP(\Mem{R_1}\capc\Mem{R_2})} &= \PP(\Mem{R_2}\given\Mem{R_1})\cdot\PP(\Mem{R_1}) && \text{Multiplikationsregel} \\
+  &= \tfrac{2}{4}\cdot\tfrac{3}{5} && \text{Zug 2 gegeben Zug 1, dann Zug 1} \\
+  &= \tfrac{6}{20}=\Res{0.3} && \text{gekürzt}
+  \end{aligned}\]</x-step>
+  <x-step h="(c) Komplement innerhalb der Bedingung.">Bei fester Bedingung gelten alle gewohnten Regeln: \(\PP(\Mem{R_2}\co\given\Mem{R_1})=1-\PP(\Mem{R_2}\given\Mem{R_1})=1-0.5=\Res{0.5}\). (Direkt: 2 blaue von 4.)</x-step>
+  <x-step h="(d) Unabhängigkeit testen.">Test (1.7): ist \(\PP(\Mem{R_2}\given\Mem{R_1})=\PP(\Mem{R_2})\)?
+  \[\begin{aligned}
+  \PP(\Mem{R_2}\given\Mem{R_1}) &= 0.5 && \text{aus (a)} \\
+  \PP(\Mem{R_2}) &= 0.6 && \text{gegeben (Herleitung in 1.4.1)} \\
+  0.5 &\ne 0.6 && \text{also abhängig}
+  \end{aligned}\]</x-step>
+  <x-res>(a) 0.5, (b) 0.3, (c) 0.5, (d) abhängig. „Ohne Zurücklegen ändert der erste Zug die Urne; deshalb ist P(R₂|R₁)=0.5≠0.6=P(R₂).“</x-res>
+  <x-trap>Mit Zurücklegen wären die Züge unabhängig: \(\PP(\Mem{R_2}\given\Mem{R_1})=\tfrac35=\PP(\Mem{R_2})\).</x-trap>
+</x-vn>
+
+<x-g><p>Sind zwei Ereignisse nicht unabhängig, können wir aus dem Eintreten des einen etwas über das andere lernen. Das führt zur <b>bedingten Wahrscheinlichkeit</b>: „die Karten werden sukzessive aufgedeckt“.</p></x-g>
+<x-anat t="Definition der bedingten W'keit" f="\Res{\PP(\mA\given\mB)}\;=\;\dfrac{\PP(\mA\capc\mB)}{\PP(\mB)}\qquad(\PP(\mB)>0)" src="G">
+  <x-a s="\PP(\mA\given\mB)">„P von A gegeben B“: W'keit von A, wenn wir schon wissen, dass B eingetreten ist</x-a>
+  <x-a s="\given">der Bedingungsstrich: rechts steht, was als bekannt gilt; es wird zum neuen Grundraum \(\Mem{\Omega'}=\mB\)</x-a>
+  <x-a s="\PP(\mA\capc\mB)">Zähler: nur der Teil von A, der innerhalb von B liegt</x-a>
+  <x-a s="\PP(\mB)">Nenner: die Normierung; sorgt dafür, dass im neuen Grundraum \(\PP(\Mem{\Omega'})=1\) gilt</x-a>
+  <x-read>„P von A gegeben B ist P von A-und-B, geteilt durch P von B.“ Bildlich: der Anteil der Fläche \(A\cap B\) an der Fläche von B.</x-read>
+</x-anat>
+<x-pt><x-q>\(\PP(\mA\capc\mB)=\Par{0.2},\ \PP(\mB)=\Par{0.5}\). Bestimme \(\PP(\mA\given\mB)\).</x-q><x-e>„gegeben, unter der Bedingung, falls B eingetreten“.</x-e><x-l>\(\tfrac{\Par{0.2}}{\Par{0.5}}=\Res{0.4}\).</x-l><x-s>„P(A|B)=P(A∩B)/P(B)=0.4.“</x-s></x-pt>
+<x-card t="🔍 Herleitung: warum durch P(B) teilen?" src="G">
+  <ol class="cook"><li>Wir wissen, dass B eingetreten ist → neuer Grundraum \(\Mem{\Omega'}=\mB\), nicht mehr ganz \(\Om\).</li>
+  <li>Von A zählt jetzt nur noch der Teil, der sich in B abspielt → Zähler \(\PP(\mA\capc\mB)\).</li>
+  <li>Damit der neue Grundraum wieder W'keit 1 hat, teilen wir durch \(\PP(\mB)\) (Normierung): \(\PP(\mB\given\mB)=\frac{\PP(\mB\capc\mB)}{\PP(\mB)}=\frac{\PP(\mB)}{\PP(\mB)}=1\) ✓.</li>
+  <li>Voraussetzung: \(\PP(\mB)>0\) (durch 0 teilen ist verboten).</li></ol>
+</x-card>
+<x-pt><x-q>Warum teilt man in \(\PP(\mA\given\mB)\) durch \(\PP(\mB)\)?</x-q><x-e>konzeptuelle „warum“-Frage.</x-e><x-l>B wird zum neuen Grundraum; man renormiert, damit \(\PP(\mB\given\mB)=1\) gilt, deshalb ÷ P(B).</x-l><x-s>„Durch die Bedingung wird B der neue Grundraum; das Teilen durch P(B) renormiert, sodass P(B|B)=1.“</x-s></x-pt>
+<x-viz t="Bedingung schaltet den Grundraum um" src="G">
+  <p class="small">Der Regler steuert, wie groß der Überlapp \(\mA\capc\mB\) ist (als Anteil von B). Links die volle Sicht (Grundraum \(\Om\)), rechts „nach der Bedingung“: B ist der ganze neue Grundraum, und \(\PP(\mA\given\mB)\) ist der markierte Anteil daran.</p>
+  <div class="ctl"><label>Überlapp A∩B (Anteil von B) <input type="range" id="cdO" min="0" max="1" step="0.01" value="0.35" data-fmt="2"><output for="cdO"></output></label></div>
+  <div id="cdSvg"></div>
+  <div class="out" id="cdOut"></div>
+</x-viz>
+<x-pt><x-q>Würfel, gegeben „gerade Augenzahl“. Bestimme \(\PP(6\given\text{gerade})\).</x-q><x-e>„gegeben“ → Grundraum auf die Bedingung einschränken.</x-e><x-l>gerade = {2,4,6}; günstig = {6} → \(\PP=\tfrac13\).</x-l><x-s>„Gegeben ‚gerade‘ schrumpft der Grundraum auf {2,4,6}; P(6|gerade)=1/3.“</x-s></x-pt>
+<x-card t="🧱 Bauplan Wörter → Zahlen · Würfel: „6, gegeben gerade Augenzahl“" src="G">
+  <p>① Struktur mit Wort-Labels</p>
+  \[\PP(\mA\given\mB)=\frac{\overbrace{\PP(\mA\capc\mB)}^{\text{6 und gerade}}}{\underbrace{\PP(\mB)}_{\text{gerade}}}\]
+  <p>② Zahlen: \(\mA=\{6\}\), \(\mB=\{2,4,6\}\), \(\mA\capc\mB=\{6\}\)</p>
+  \[\PP(\mA\given\mB)=\frac{\Par{1/6}}{\Par{1/2}}\]
+  <p>③ Ergebnis</p>
+  \[\PP(\mA\given\mB)=\Res{\tfrac13}\]
+  <p>Ohne Info wäre \(\PP(6)=1/6\); die Zusatzinfo „gerade“ hebt sie auf 1/3. Wir haben etwas gelernt.</p>
+</x-card>
+<x-pt><x-q>Würfel, gegeben „ungerade“. Bestimme \(\PP(\text{Augenzahl}\le3\given\text{ungerade})\).</x-q><x-e>bedingte W'keit mit eingeschränktem Grundraum.</x-e><x-l>ungerade = {1,3,5}; davon ≤ 3 sind {1,3} → \(\PP=\tfrac23\).</x-l><x-s>„Im eingeschränkten Grundraum {1,3,5} sind 2 von 3 höchstens 3, also P=2/3.“</x-s></x-pt>
+
+<h3 id="s1-4-a" data-m="Rechenregeln & Warnschild|Multiplikationsregel, nicht umkehren">Rechenregeln und ein Warnschild</h3>
+<x-g><p>Bei festem bedingendem Ereignis \(\mB\) gelten alle gewohnten Regeln: \(0\le\PP(\mA\given\mB)\le1\), \(\PP(\mB\given\mB)=1\), \(\PP(\mA\co\given\mB)=1-\PP(\mA\given\mB)\). Außerdem die zentrale <b>Multiplikationsregel (1.6)</b>:</p>
+\[\begin{aligned}
+\PP(\mA\capc\mB) &= \PP(\mA\given\mB)\,\PP(\mB) && \text{Definition mit P(B) durchmultipliziert} \\
+&= \PP(\mB\given\mA)\,\PP(\mA) && \text{dasselbe mit vertauschten Rollen}
+\end{aligned}\]
+<p>Und Unabhängigkeit lässt sich damit umformulieren <b>(1.7)</b>: \(\mA,\mB\) unabhängig \(\iff\PP(\mA\given\mB)=\PP(\mA)\): „B zu kennen ändert nichts an A“.</p></x-g>
+<div class="trap is-g"><b>⚠ Achtung: bedingte W'keiten nicht „umkehren“!</b> Im Allgemeinen gilt \(\PP(\mA\given\mB)\ne\PP(\mB\given\mA)\) und \(\PP(\mA\given\mB\co)\ne1-\PP(\mA\given\mB)\). Das Vertauschen von Bedingung und Ereignis ist der häufigste Denkfehler (siehe Bayes unten: „positiver Test“ ist nicht dasselbe wie „wirklich krank“). <span class="srcin">📘 Grundlage</span></div>
+<x-pt><x-q>\(\PP(\mA\given\mB)=\Par{0.9}\). Folgt daraus \(\PP(\mB\given\mA)=0.9\)?</x-q><x-e>„umkehren, vertauschen der Bedingung“.</x-e><x-l>Nein: \(\PP(\mA\given\mB)\) und \(\PP(\mB\given\mA)\) sind i. A. verschieden (Bayes verbindet sie über die Basisraten).</x-l><x-s>„Nein: bedingte W'keiten darf man nicht umkehren; P(A|B)≠P(B|A) im Allgemeinen.“</x-s></x-pt>
+
+<h3 id="s1-4-b" data-m="Bedingt-Tracer|neuer Grundraum B, abzählen in R/Python">Code: der Grundraum schrumpft auf B</h3>
+<p>Das Programm überspringt jedes Paar außerhalb von \(\mB\) (<code>next</code> in R, <code>continue</code> in Python). Was übrig bleibt, ist der neue Grundraum. Im Raster sind Paare außerhalb von B ausgegraut. Eingabe wie in 1.3: <code>A: … ; B: …</code>.</p>
+<div id="trBed"></div>
+<x-code2 f="k1_bedingt" t="bedingte W'keit durch Abzählen"/>
+
+<h3 id="s1-4-c" data-m="Schema & Beispiele 1.4|bedingte W'keit in 3 Schritten">📐 Schema: Aufgabe zur bedingten W'keit</h3>
+<ol class="cook"><li>Ereignisse benennen; klären, was gegeben ist → das ist \(\mB\) (rechts vom Strich).</li><li>\(\PP(\mA\capc\mB)\) und \(\PP(\mB)\) bestimmen (oft aus Angaben oder Tabelle).</li><li>Teilen: \(\PP(\mA\given\mB)=\PP(\mA\capc\mB)/\PP(\mB)\), und prüfen, ob nach \(\PP(\mA\given\mB)\) oder \(\PP(\mB\given\mA)\) gefragt war.</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Würfel (Skript)" src="G">\(\PP(6\given\text{gerade})=\frac{1/6}{1/2}=\frac13\), siehe Bauplan oben.<x-v>1/3: die Bedingung verdoppelt die W'keit.</x-v></x-ex>
+  <x-ex l="2" t="Multiplikationsregel vorwärts" src="G">2 Karten ohne Zurücklegen aus 52, beide Asse?<x-step>\(\PP(\text{2. Ass}\given\text{1. Ass})=3/51\).</x-step><x-step>(1.6): \(\PP(\text{beide Asse})=\frac4{52}\cdot\frac3{51}=\frac1{221}\approx0.0045\).</x-step><x-v>1/221; die Bedingung ändert die W'keit, also nicht unabhängig.</x-v></x-ex>
+  <x-ex l="3" t="Unabhängigkeit als Test (1.7)" src="GN">Kartenspiel: \(\mA\) = „Ass“, \(\mB\) = „Herz“.<x-step>\(\PP(\mA\given\mB)=\frac{1}{13}\) (ein Herz-Ass unter 13 Herz).</x-step><x-step>\(\PP(\mA)=\frac4{52}=\frac1{13}\).</x-step><x-v>gleich, also unabhängig: die Farbe verrät nichts über den Wert. Wäre \(\PP(\mA\given\mB)>\PP(\mA)\), wären sie positiv abhängig.</x-v></x-ex>
+</x-ex3>
+<x-vids><x-vid f="init/Conditional Probabilities [KjdS_o5HNII].mp4" n="bedingte W'keit"/><x-vid f="statquest/Conditional Probabilities, Clearly Explained!!! [_IgyaD7vOOA].mp4" n="StatQuest, mit Tabelle"/></x-vids>
+<p class="small muted">🌉 <b>Weiter:</b> Mit der Multiplikationsregel lassen sich mehrstufige Experimente als Baum rechnen, und die Bedingung lässt sich umdrehen (1.4.1).</p>
+</section>
+
+<!-- ================================================================ 1.4.1 -->
+<section id="s1-5" data-vn data-m="1.4.1 Totale W'keit & Bayes|Baum, Partition, Bedingung umdrehen">
+<h2><span class="num">1.4.1</span>Satz der totalen Wahrscheinlichkeit und Satz von Bayes</h2>
+<p class="one">Totale W'keit baut \(\PP(\mA)\) aus Fällen zusammen; Bayes dreht die Bedingung um. Beides folgt aus der Multiplikationsregel.</p>
+
+<x-vn id="vn-1-5" sec="1.4.1" q="Drei Maschinen: wie oft Ausschuss, und woher kommt ein defektes Teil?">
+  <x-task>Eine Fabrik hat drei Maschinen. \(M_1\) stellt 50 %, \(M_2\) 30 %, \(M_3\) 20 % der Teile her. Die Ausschussquoten sind 1 %, 2 % und 3 %. (a) Wie groß ist die W'keit, dass ein zufällig gewähltes Teil defekt ist? (b) Ein Teil ist defekt. Mit welcher W'keit stammt es von \(M_3\)? (c) Von welcher Maschine stammt ein defektes Teil am wahrscheinlichsten?</x-task>
+  <x-step h="Ereignisse und Angaben.">\(\Mem{B_i}\) = „Teil von Maschine i“, \(\mA\) = „Teil defekt“. Gegeben: \(\PP(\Mem{B_1})=\Par{0.5}\), \(\PP(\Mem{B_2})=\Par{0.3}\), \(\PP(\Mem{B_3})=\Par{0.2}\) und \(\PP(\mA\given\Mem{B_1})=\Par{0.01}\), \(\PP(\mA\given\Mem{B_2})=\Par{0.02}\), \(\PP(\mA\given\Mem{B_3})=\Par{0.03}\).</x-step>
+  <x-step h="Partition prüfen.">Jedes Teil kommt von genau einer Maschine: \(\Mem{B_1},\Mem{B_2},\Mem{B_3}\) sind disjunkt und füllen \(\Om\) (0.5+0.3+0.2=1). Also darf man die totale W'keit verwenden.</x-step>
+  <x-step h="(a) Pfade multiplizieren, dann addieren.">
+  \[\begin{aligned}
+  \Res{\PP(\mA)} &= \sum_{\Idx{i}=1}^{3}\PP(\mA\given\Mem{B_{\Idx{i}}})\,\PP(\Mem{B_{\Idx{i}}}) && \text{Satz der totalen W'keit} \\
+  &= 0.01\cdot0.5+0.02\cdot0.3+0.03\cdot0.2 && \text{die drei Pfade zu A} \\
+  &= 0.005+0.006+0.006 && \text{Pfad-W'keiten} \\
+  &= \Res{0.017} && \text{1.7 Prozent aller Teile sind defekt}
+  \end{aligned}\]</x-step>
+  <x-step h="(b) Bedingung umdrehen: Bayes.">Gesucht ist \(\PP(\Mem{B_3}\given\mA)\): Anteil des Pfads über \(M_3\) an allen Pfaden zu A.
+  \[\begin{aligned}
+  \Res{\PP(\Mem{B_3}\given\mA)} &= \frac{\PP(\mA\given\Mem{B_3})\,\PP(\Mem{B_3})}{\PP(\mA)} && \text{Satz von Bayes} \\
+  &= \frac{0.006}{0.017} && \text{Pfad 3 durch alle Pfade} \\
+  &\approx \Res{0.3529} && \text{ausgerechnet}
+  \end{aligned}\]</x-step>
+  <x-step h="(c) alle drei vergleichen.">\(\PP(\Mem{B_1}\given\mA)=\tfrac{0.005}{0.017}\approx0.2941\), \(\PP(\Mem{B_2}\given\mA)=\tfrac{0.006}{0.017}\approx0.3529\), \(\PP(\Mem{B_3}\given\mA)\approx0.3529\). Summe = 1 ✓.</x-step>
+  <x-res>(a) 0.017, (b) ≈ 0.353, (c) \(M_2\) und \(M_3\) gleichauf (je ≈ 0.353). „Obwohl M₁ die meisten Teile baut, stammt ein defektes Teil eher von M₂ oder M₃, weil deren Ausschussquote höher ist.“</x-res>
+  <x-trap>Nicht \(\PP(\Mem{B_3}\given\mA)\) mit \(\PP(\mA\given\Mem{B_3})=0.03\) verwechseln.</x-trap>
+</x-vn>
+
+<h3 id="s1-5-a" data-m="Wahrscheinlichkeitsbaum|mehrstufige Experimente, Pfadregeln">Der Wahrscheinlichkeitsbaum als Denkbild (mehrstufige Experimente)</h3>
+<x-g><p>Zerlege das Experiment in Stufen. Auf jedem Ast steht eine (bedingte) W'keit; in jeder Verzweigung ist die Summe 1. <b>Einen Pfad durchmultiplizieren</b> ergibt die W'keit der Kombination (1. Pfadregel = Multiplikationsregel); <b>alle Pfade zu A aufsummieren</b> ergibt \(\PP(\mA)\) (2. Pfadregel = totale W'keit).</p></x-g>
+<x-viz t="interaktiver Wahrscheinlichkeitsbaum (Straße nass und Unfall)" src="G">
+  <div class="ctl"><label>P(B) nass <input type="range" id="trB" min="0" max="1" step="0.01" value="0.2" data-fmt="2"><output for="trB"></output></label>
+  <label>P(A|B) <input type="range" id="trAB" min="0" max="0.1" step="0.001" value="0.01" data-fmt="3"><output for="trAB"></output></label>
+  <label>P(A|Bᶜ) <input type="range" id="trABc" min="0" max="0.1" step="0.001" value="0.001" data-fmt="3"><output for="trABc"></output></label></div>
+  <div id="treeSvg"></div>
+  <div class="out" id="treeOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> Aufgaben mit „zuerst …, dann …“, „nacheinander“, „aus Maschine/Gruppe …“ sind Bäume. Die erste Stufe ist die Partition \(\Mem{B_i}\).</div>
+</x-viz>
+<x-pt><x-q>Urne mit 2 roten und 1 blauen Kugel, ohne Zurücklegen. P(beide gezogenen rot)?</x-q><x-e>„mehrstufig, nacheinander, ohne Zurücklegen“ → Baum, Pfad multiplizieren.</x-e><x-l>\(\tfrac{2}{3}\cdot\tfrac{1}{2}=\Res{\tfrac13}\).</x-l><x-s>„Entlang des Pfads: P(beide rot)=2/3·1/2=1/3.“</x-s></x-pt>
+<x-anat t="Satz der totalen Wahrscheinlichkeit" f="\Res{\PP(\mA)}\;=\;\sum_{\Idx{i}=1}^{\Par{k}}\PP(\mA\given\Mem{B_{\Idx{i}}})\,\PP(\Mem{B_{\Idx{i}}})\qquad\text{mit}\qquad\Mem{B_1}\cupc\dots\cupc\Mem{B_k}=\Om,\ \text{disjunkt}" src="G">
+  <x-a s="\Mem{B_1},\dots,\Mem{B_k}">eine <b>Partition</b> von \(\Om\): disjunkt und lückenlos („alle Fälle abgedeckt“)</x-a>
+  <x-a s="\PP(\mA\given\Mem{B_i})">wie wahrscheinlich A ist, in jeder Situation \(B_i\) für sich</x-a>
+  <x-a s="\PP(\Mem{B_i})">das Gewicht der Situation \(B_i\)</x-a>
+  <x-a s="\sum">gewichtete Summe: jede Situation mit ihrem Gewicht mischen</x-a>
+  <x-why>\(\mA=\bigcup_i(\mA\capc\Mem{B_i})\) disjunkt, also nach (A3) \(\PP(\mA)=\sum_i\PP(\mA\capc\Mem{B_i})\), und jeder Summand ist nach (1.6) \(\PP(\mA\given\Mem{B_i})\PP(\Mem{B_i})\).</x-why>
+  <x-read>„P von A ist die Summe über alle Fälle B-i von: P von A gegeben B-i, mal P von B-i“, also der gewichtete Durchschnitt der Fall-Wahrscheinlichkeiten.</x-read>
+</x-anat>
+<x-pt><x-q>\(\PP(\mA\given\mB)=\Par{0.8},\ \PP(\mA\given\mB\co)=\Par{0.3},\ \PP(\mB)=\Par{0.6}\). Bestimme \(\PP(\mA)\).</x-q><x-e>„Gesamtwahrscheinlichkeit über Fälle, aufteilen in B und Bᶜ“.</x-e><x-l>\(0.8\cdot0.6+0.3\cdot0.4=0.48+0.12=\Res{0.6}\).</x-l><x-s>„Totale W'keit: P(A)=P(A|B)P(B)+P(A|Bᶜ)P(Bᶜ)=0.6.“</x-s></x-pt>
+<x-card t="🧱 Bauplan Wörter → Zahlen · Straße nass und Unfall" src="G">
+  <p>\(\mA\) = „Unfall“, \(\mB\) = „Straße nass“. Gegeben: \(\PP(\mA\given\mB)=0.01\), \(\PP(\mA\given\mB\co)=0.001\), \(\PP(\mB)=0.2\) ⇒ \(\PP(\mB\co)=0.8\).</p>
+  <p>① Struktur mit Wort-Labels</p>
+  \[\PP(\mA)=\underbrace{\PP(\mA\given\mB)\PP(\mB)}_{\text{Fall: nass}}+\underbrace{\PP(\mA\given\mB\co)\PP(\mB\co)}_{\text{Fall: trocken}}\]
+  <p>② Zahlen an denselben Stellen</p>
+  \[\PP(\mA)=\underbrace{\Par{0.01}\cdot\Par{0.2}}_{\text{nass}}+\underbrace{\Par{0.001}\cdot\Par{0.8}}_{\text{trocken}}\]
+  <p>③ Ergebnis</p>
+  \[\PP(\mA)=0.002+0.0008=\Res{0.0028}\]
+</x-card>
+
+<h3 id="s1-5-b" data-m="Satz von Bayes|Bedingung umdrehen, Basisraten-Falle">Und jetzt umdrehen: der Satz von Bayes</h3>
+<x-anat t="Satz von Bayes" f="\Res{\PP(\Mem{B_{\Idx{i}}}\given\mA)}\;=\;\dfrac{\PP(\mA\given\Mem{B_{\Idx{i}}})\,\PP(\Mem{B_{\Idx{i}}})}{\displaystyle\sum_{\Idx{l}=1}^{\Par{k}}\PP(\mA\given\Mem{B_{\Idx{l}}})\,\PP(\Mem{B_{\Idx{l}}})}" src="G">
+  <x-a s="\PP(\Mem{B_i}\given\mA)">das Gesuchte: von der Beobachtung A zurück auf die Ursache \(B_i\) („invers“)</x-a>
+  <x-a s="\text{Zähler}">\(\PP(\mA\given\Mem{B_i})\PP(\Mem{B_i})\): ein Pfad zu A, nämlich der über \(B_i\)</x-a>
+  <x-a s="\text{Nenner}">\(=\PP(\mA)\) aus dem Satz der totalen W'keit: alle Pfade zu A</x-a>
+  <x-why>Zweimal Multiplikationsregel: \(\PP(\Mem{B_i}\given\mA)\PP(\mA)=\PP(\Mem{B_i}\capc\mA)=\PP(\mA\given\Mem{B_i})\PP(\Mem{B_i})\), dann durch \(\PP(\mA)\) teilen.</x-why>
+  <x-read>„P von B-i gegeben A ist: der Pfad über B-i, geteilt durch die Summe aller Pfade“, also der Anteil des gesuchten Pfads am gesamten A.</x-read>
+</x-anat>
+<x-pt><x-q>Test: Sensitivität 0.99, Falsch-Positiv-Rate 0.05, Prävalenz 0.01. Bestimme P(krank | positiv).</x-q><x-e>„umgekehrt gefragt, aus Wirkung auf Ursache, Basisrate“.</x-e><x-l>\(\tfrac{0.99\cdot0.01}{0.99\cdot0.01+0.05\cdot0.99}=\tfrac{0.0099}{0.0594}\approx\Res{0.167}\).</x-l><x-s>„Trotz gutem Test ist P(krank|positiv)=0.0099/0.0594≈0.167: die niedrige Basisrate dominiert.“</x-s></x-pt>
+<x-card t="🟢 Beispiel · Haarriss-Detektor (Basisraten-Falle)" src="G">
+  <p>\(\mA\) = „Test meldet Risse“, \(\Mem{B_1}\) = „wirklich Risse“, \(\Mem{B_2}\) = „keine Risse“. Gegeben: \(\PP(\mA\given\Mem{B_1})=0.99\) (<span class="kw kw-par">Sensitivität</span>), \(\PP(\mA\given\Mem{B_2})=0.03\) (Fehlalarm), \(\PP(\Mem{B_1})=0.001\) (<span class="kw kw-par">Basisrate</span>). Gesucht: \(\PP(\Mem{B_1}\given\mA)\), „wie oft stimmt ein Alarm?“</p>
+  \[\begin{aligned}
+  \Res{\PP(\Mem{B_1}\given\mA)} &= \frac{0.99\cdot0.001}{0.99\cdot0.001+0.03\cdot0.999} && \text{Bayes mit zwei Fällen} \\
+  &= \frac{0.00099}{0.03096} && \text{Zähler und Nenner ausgerechnet} \\
+  &\approx \Res{0.032} && \text{nur jeder 31. Alarm ist echt}
+  \end{aligned}\]
+  <p>Überraschung: obwohl der Test „gut“ aussieht, ist ein Alarm nur zu ≈ 3.2 % echt. Grund: echte Risse sind extrem selten (Basisrate 0.1 %), also überwiegen die vielen Fehlalarme.</p>
+  <p><b>Dieselbe Geschichte mit Anzahlen (n = 1 000 000)</b></p>
+  <table class="tbl"><tr><th></th><th class="r">\(B_1\) (Risse)</th><th class="r">\(B_2\) (keine)</th><th class="r">Summe</th></tr>
+  <tr><td>\(A\) (Alarm)</td><td class="r">990</td><td class="r">29 970</td><td class="r">30 960</td></tr>
+  <tr><td>\(A^c\) (kein Alarm)</td><td class="r">10</td><td class="r">969 030</td><td class="r">969 040</td></tr>
+  <tr><td>Summe</td><td class="r">1 000</td><td class="r">999 000</td><td class="r">1 000 000</td></tr></table>
+  <p>Von 30 960 Alarmen sind nur 990 echt: 990 / 30 960 = 0.032 ✓, exakt das Bayes-Resultat. Solche Häufigkeitstabellen sind ideal, um das Ergebnis fachfremden Personen zu erklären.</p>
+  <p class="small muted">Hinweis aus der Grundlage: Im PDF-Skript sind die Tabellenzahlen durch den Textsatz verrutscht; die hier gezeigten Werte sind nachgerechnet und intern konsistent.</p>
+</x-card>
+<x-viz t="Bayes-Explorer (Basisraten-Effekt)" src="G">
+  <p class="small">Wie hängt die „Treffsicherheit eines Alarms“ \(\PP(\Mem{B_1}\given\mA)\) von der Basisrate \(\PP(\Mem{B_1})\) ab? Verschiebe die Regler: bei seltenen Ereignissen bleibt selbst ein guter Test unzuverlässig. Darunter die Häufigkeitstabelle für n = 1 000 000.</p>
+  <div class="ctl"><label>Sensitivität P(A|B₁) <input type="range" id="byS" min="0.5" max="1" step="0.005" value="0.99" data-fmt="3"><output for="byS"></output></label>
+  <label>Fehlalarm P(A|B₂) <input type="range" id="byF" min="0.001" max="0.2" step="0.001" value="0.03" data-fmt="3"><output for="byF"></output></label>
+  <label>Basisrate P(B₁) <input type="range" id="byP" min="-4" max="-0.3" step="0.01" value="-3"><output id="byPo"></output></label></div>
+  <div id="byPlot" class="plot"></div>
+  <div class="out" id="byOut"></div>
+  <div id="byTab"></div>
+</x-viz>
+<x-pt><x-q>Warum ist P(krank | positiv) trotz sehr gutem Test so klein?</x-q><x-e>„Basisraten-Effekt, seltene Krankheit, viele falsch Positive“.</x-e><x-l>Weil die Krankheit selten ist (Prävalenz 1 %): unter den vielen Gesunden gibt es absolut mehr falsch Positive als es echte Kranke gibt.</x-l><x-s>„Der Basisraten-Effekt: bei seltener Krankheit übertreffen die falsch Positiven die echten Positiven, also bleibt P(krank|positiv) klein.“</x-s></x-pt>
+
+<h3 id="s1-5-c" data-m="Bayes-Tracer|Pfade, P(A), Posterior in R/Python">Code: totale W'keit und Bayes für k Fälle</h3>
+<p>Eingabe: <code>Vorab-W'keiten ; Likelihoods</code>, also \(\PP(\Mem{B_i})\) und \(\PP(\mA\given\Mem{B_i})\). Der Tracer baut erst die Pfade (Multiplikationsregel), summiert zu \(\PP(\mA)\) (totale W'keit) und teilt dann jeden Pfad durch \(\PP(\mA)\) (Bayes).</p>
+<div id="trBayes"></div>
+<x-code2 f="k1_bayes" t="totale W'keit und Bayes"/>
+
+<h3 id="s1-5-d" data-m="Schema & Beispiele 1.4.1|Baum → Pfade → Bayes">📐 Schema: Bayes-Aufgabe in 4 Schritten</h3>
+<ol class="cook"><li>Ursachen \(\Mem{B_i}\) (Partition) und Beobachtung \(\mA\) festlegen; \(\PP(\Mem{B_i})\) und \(\PP(\mA\given\Mem{B_i})\) aus dem Text lesen.</li><li>Baum zeichnen, Pfade multiplizieren: \(\PP(\mA\capc\Mem{B_i})\).</li><li>Pfade zu A addieren: \(\PP(\mA)\).</li><li>Gesuchten Pfad durch \(\PP(\mA)\) teilen; Summe aller Posteriori = 1 prüfen.</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Totale W'keit mit 2 Fällen">\(\PP(\mB)=0.3\), \(\PP(\mA\given\mB)=0.5\), \(\PP(\mA\given\mB\co)=0.1\).<x-step>\(0.5\cdot0.3+0.1\cdot0.7=0.15+0.07=0.22\).</x-step><x-v>\(\PP(\mA)=0.22\).</x-v></x-ex>
+  <x-ex l="2" t="Umdrehen">Gleiche Zahlen, gesucht \(\PP(\mB\given\mA)\).<x-step>Pfad über B: 0.15; alle Pfade: 0.22.</x-step><x-v>\(0.15/0.22\approx0.682\): nach der Beobachtung A ist B mehr als doppelt so wahrscheinlich wie vorher (0.3).</x-v></x-ex>
+  <x-ex l="3" t="Zweimal testen">Prävalenz 0.01, Sensitivität 0.99, Falsch-Positiv 0.05. Zwei unabhängige positive Tests (gegeben der Zustand).<x-step>Nach Test 1: 0.1667 (siehe oben). Dieser Wert wird die neue Vorab-W'keit.</x-step><x-step>\(\frac{0.99\cdot0.1667}{0.99\cdot0.1667+0.05\cdot0.8333}\approx\frac{0.1650}{0.2067}\approx0.798\).</x-step><x-v>≈ 0.80: ein zweiter positiver Test hebt die W'keit stark, weil die Basisrate schon aktualisiert ist.</x-v></x-ex>
+</x-ex3>
+<x-trap><b>Basisraten-Falle:</b> Wer die Vorab-W'keit \(\PP(\Mem{B_i})\) ignoriert, verwechselt \(\PP(\mA\given\Mem{B_1})\) mit \(\PP(\Mem{B_1}\given\mA)\). Immer zuerst fragen: <i>Wie häufig ist die Ursache überhaupt?</i></x-trap>
+<x-vids><x-vid f="init/The Law of Total Probability [UzEPJEQF4W0].mp4" n="totale W'keit"/><x-vid f="init/Bayes' Theorem (with Example!) [akClB1J6b28].mp4" n="Bayes mit Beispiel"/><x-vid f="init/Bayes' Theorem Example： Drug Testing 🌿 [gE6RnZJixUw].mp4" n="Drogentest, Basisrate"/><x-vid f="statquest/Bayes' Theorem, Clearly Explained!!!! [9wCnvr7Xw4E].mp4" n="StatQuest"/></x-vids>
+</section>
+
+<!-- ================================================================ Abschluss -->
+<section id="s1-9" data-m="🌉 Brücke & Lernziele|roter Faden Kap. 1, Lernziele 1.5">
+<h2>🌉 Die große Brücke: Kapitel 1 als ein roter Faden</h2>
+<x-card t="🧵 Fluss-Diagramm" src="G">
+<svg viewBox="0 0 1200 430" role="img" aria-label="Fluss von Kapitel 1">
+  <defs><marker id="arrK1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="450" y="10" width="300" height="46" rx="10" fill="#1c2129" stroke="#30363d"/><text x="600" y="39" fill="#e6edf3">Zufallsexperiment</text>
+    <rect x="450" y="80" width="300" height="46" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="600" y="109" fill="#f778ba">Ausgang ω, Grundraum Ω, Ereignisse A ⊂ Ω</text>
+    <rect x="450" y="150" width="300" height="46" rx="10" fill="#1c2129" stroke="#d29922"/><text x="600" y="179" fill="#d29922">Mengenlehre ∩ ∪ ᶜ \ · De Morgan</text>
+    <rect x="450" y="220" width="300" height="46" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="600" y="249" fill="#bc8cff">P(A): Axiome (A1)–(A3), Regeln (1.1)–(1.5)</text>
+    <line x1="600" y1="56" x2="600" y2="78" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK1)"/>
+    <line x1="600" y1="126" x2="600" y2="148" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK1)"/>
+    <line x1="600" y1="196" x2="600" y2="218" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK1)"/>
+    <rect x="20" y="320" width="260" height="70" rx="10" fill="#1c2129" stroke="#30363d"/><text x="150" y="345" fill="#e6edf3" font-weight="700">1.2 Laplace</text><text x="150" y="370" fill="#8b949e">P(A)=|A|/|Ω| · abzählen</text>
+    <rect x="310" y="320" width="260" height="70" rx="10" fill="#1c2129" stroke="#30363d"/><text x="440" y="345" fill="#e6edf3" font-weight="700">1.3 Unabhängigkeit</text><text x="440" y="370" fill="#8b949e">P(A∩B)=P(A)P(B) · multiplizieren</text>
+    <rect x="600" y="320" width="260" height="70" rx="10" fill="#1c2129" stroke="#56d4dd"/><text x="730" y="345" fill="#e6edf3" font-weight="700">1.4 Bedingt</text><text x="730" y="370" fill="#8b949e">P(A|B)=P(A∩B)/P(B) · umschalten</text>
+    <rect x="890" y="320" width="290" height="70" rx="10" fill="#1c2129" stroke="#f85149"/><text x="1035" y="345" fill="#e6edf3" font-weight="700">1.4.1 Totale W'keit &amp; Bayes</text><text x="1035" y="370" fill="#8b949e">Pfade summieren · umdrehen</text>
+    <line x1="560" y1="266" x2="160" y2="318" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK1)"/>
+    <line x1="580" y1="266" x2="450" y2="318" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK1)"/>
+    <line x1="620" y1="266" x2="720" y2="318" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK1)"/>
+    <line x1="860" y1="355" x2="888" y2="355" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK1)"/>
+    <text x="1035" y="415" fill="#bc8cff" font-weight="700">→ Kap. 2: Zufallsvariablen</text>
+  </g>
+</svg>
+<p>Lies von oben nach unten: Experiment → Ereignisse → P(A) → drei Kombinationswerkzeuge. Laplace füllt die Liste, Unabhängigkeit multipliziert, die Bedingung schaltet um, und totale W'keit plus Bayes bauen zusammen und kehren um.</p>
+<p><b>→ Wofür brauchst du das in Kapitel 2?</b> Eine <span class="kw kw-mem">Zufallsvariable</span> ordnet jedem Ausgang eine Zahl zu. Ihre Verteilung ist genau eine Liste von \(\PP(\mX=x)\), gerechnet mit den Regeln dieses Kapitels (Laplace, Unabhängigkeit bei der Binomialverteilung, Komplementregel bei „mindestens eins“ u. v. m.).</p>
+</x-card>
+<x-card t="✅ Lernziele (1.5): kannst du …" src="G">
+  <ul><li>… Grundbegriffe und Mengen-Operationen benennen und Wahrscheinlichkeiten interpretieren (frequentistisch/bayes'sch)?</li>
+  <li>… die Axiome (A1)–(A3) und die Rechenregeln (1.1)–(1.5) anwenden, dazu die Siebformel (Modul)?</li>
+  <li>… im diskreten/Laplace-Modell rechnen (\(|\mA|/|\Om|\)) und dabei geordnet abzählen?</li>
+  <li>… Unabhängigkeit erkennen und mit der Produktformel rechnen?</li>
+  <li>… bedingte W'keiten bilden und Unabhängigkeit über \(\PP(\mA\given\mB)=\PP(\mA)\) ausdrücken?</li>
+  <li>… mit totaler W'keit und Bayes Aufgaben lösen (und die Basisraten-Falle vermeiden)?</li>
+  <li>… jede dieser Rechnungen in R oder Python nachprogrammieren?</li></ul>
+</x-card>
+</section>
+
+<section id="s1-cheat" data-m="📋 Cheat-Sheet|alle Formeln auf einen Blick">
+<h2>📋 Cheat-Sheet Kapitel 1</h2>
+<table class="tbl cheat">
+<tr><th>Regel</th><th>Formel</th><th>Wann?</th><th>R / Python</th></tr>
+<tr><td>Komplement (1.1)</td><td>\(\PP(\mA\co)=1-\PP(\mA)\)</td><td>„nicht“, „mindestens eins“</td><td><code>1 - p</code></td></tr>
+<tr><td>Additionssatz (1.2)</td><td>\(\PP(\mA\cupc\mB)=\PP(\mA)+\PP(\mB)-\PP(\mA\capc\mB)\)</td><td>„oder“ mit Überlapp</td><td><code>pA + pB - pAB</code></td></tr>
+<tr><td>Siebformel (Modul)</td><td>\(\sum\PP(A_i)-\sum\PP(A_i\cap A_j)+\PP(A\cap B\cap C)\)</td><td>„oder“ bei 3+ Ereignissen</td><td>—</td></tr>
+<tr><td>Laplace</td><td>\(\PP(\mA)=|\mA|/|\Om|\)</td><td>gleich wahrscheinliche Ausgänge</td><td>R <code>mean(bedingung)</code>, Py <code>np.mean(...)</code></td></tr>
+<tr><td>Binomialkoeffizient</td><td>\(\binom nk=\frac{n!}{k!(n-k)!}\)</td><td>k aus n ohne Reihenfolge</td><td>R <code>choose(n,k)</code>, Py <code>math.comb(n,k)</code></td></tr>
+<tr><td>Unabhängigkeit</td><td>\(\PP(\mA\capc\mB)=\PP(\mA)\PP(\mB)\)</td><td>„stören sich nicht“</td><td><code>pA * pB</code></td></tr>
+<tr><td>Bedingte W'keit</td><td>\(\PP(\mA\given\mB)=\PP(\mA\capc\mB)/\PP(\mB)\)</td><td>„gegeben“, „falls“</td><td><code>pAB / pB</code></td></tr>
+<tr><td>Multiplikationsregel (1.6)</td><td>\(\PP(\mA\capc\mB)=\PP(\mA\given\mB)\PP(\mB)\)</td><td>Pfad im Baum</td><td><code>like * prior</code></td></tr>
+<tr><td>Unabhängigkeit (1.7)</td><td>\(\PP(\mA\given\mB)=\PP(\mA)\)</td><td>Test auf Unabhängigkeit</td><td>—</td></tr>
+<tr><td>Totale W'keit</td><td>\(\PP(\mA)=\sum_i\PP(\mA\given\Mem{B_i})\PP(\Mem{B_i})\)</td><td>Fälle, mehrstufig</td><td><code>sum(like * prior)</code></td></tr>
+<tr><td>Bayes</td><td>\(\PP(\Mem{B_i}\given\mA)=\frac{\PP(\mA\given\Mem{B_i})\PP(\Mem{B_i})}{\PP(\mA)}\)</td><td>Ursache aus Wirkung</td><td><code>like*prior/sum(like*prior)</code></td></tr>
+</table>
+</section>
+
+<section id="s1-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-rule">Zufallsexperiment</span></td><td>random experiment</td><td>Vorgang mit nicht exakt vorhersagbarem Ausgang</td><td><a href="#s1-1">1.1</a></td></tr>
+<tr><td><span class="kw kw-mem">Elementarereignis ω</span></td><td>outcome</td><td>ein einzelner möglicher Ausgang</td><td><a href="#s1-1-a">1.1</a></td></tr>
+<tr><td><span class="kw kw-mem">Grundraum Ω</span></td><td>sample space</td><td>Menge aller Ausgänge</td><td><a href="#s1-1-a">1.1</a></td></tr>
+<tr><td><span class="kw kw-mem">Ereignis</span></td><td>event</td><td>Teilmenge von Ω; tritt ein, wenn der Ausgang darin liegt</td><td><a href="#s1-1-a">1.1</a></td></tr>
+<tr><td><span class="kw kw-rule">disjunkt</span></td><td>disjoint, mutually exclusive</td><td>A ∩ B = ∅, können nicht zusammen eintreten</td><td><a href="#s1-1-b">1.1</a></td></tr>
+<tr><td><span class="kw kw-rule">De-Morgan-Regeln</span></td><td>De Morgan's laws</td><td>Komplement kehrt ∩ und ∪ um</td><td><a href="#s1-1-b">1.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Axiome von Kolmogorov</span></td><td>Kolmogorov axioms</td><td>0≤P≤1, P(Ω)=1, Additivität bei Disjunktheit</td><td><a href="#s1-1-c">1.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Siebformel</span></td><td>inclusion–exclusion principle</td><td>einzeln +, Paare −, Tripel + …</td><td><a href="#s1-1-e">1.1</a></td></tr>
+<tr><td><span class="kw kw-rule">frequentistisch</span></td><td>frequentist</td><td>P = Grenzwert der relativen Häufigkeit</td><td><a href="#s1-1-f">1.1</a></td></tr>
+<tr><td><span class="kw kw-rule">bayes'sch</span></td><td>Bayesian, subjective</td><td>P = Maß für den Glauben</td><td><a href="#s1-1-f">1.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Laplace-Modell</span></td><td>uniform model</td><td>alle Ausgänge gleich wahrscheinlich</td><td><a href="#s1-2-a">1.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Wahrscheinlichkeitsfunktion</span></td><td>probability mass function</td><td>Liste p(ωₖ); Summe 1</td><td><a href="#s1-2">1.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Binomialkoeffizient</span></td><td>binomial coefficient</td><td>Anzahl k-elementiger Teilmengen</td><td><a href="#s1-2-c">1.2</a></td></tr>
+<tr><td><span class="kw kw-rule">unabhängig</span></td><td>independent</td><td>P(A∩B)=P(A)P(B); B ändert P(A) nicht</td><td><a href="#s1-3">1.3</a></td></tr>
+<tr><td><span class="kw kw-cond">bedingte W'keit</span></td><td>conditional probability</td><td>P(A∩B)/P(B): W'keit von A, wenn B bekannt ist</td><td><a href="#s1-4">1.4</a></td></tr>
+<tr><td><span class="kw kw-rule">Multiplikationsregel</span></td><td>multiplication / chain rule</td><td>P(A∩B)=P(A|B)P(B)</td><td><a href="#s1-4-a">1.4</a></td></tr>
+<tr><td><span class="kw kw-mem">Partition</span></td><td>partition</td><td>disjunkte Ereignisse, die zusammen Ω ergeben</td><td><a href="#s1-5">1.4.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Satz der totalen W'keit</span></td><td>law of total probability</td><td>gewichtete Summe über alle Fälle</td><td><a href="#s1-5-a">1.4.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Satz von Bayes</span></td><td>Bayes' theorem</td><td>Bedingung umdrehen</td><td><a href="#s1-5-b">1.4.1</a></td></tr>
+<tr><td><span class="kw kw-par">Sensitivität</span></td><td>sensitivity, true positive rate</td><td>P(Test positiv | wirklich da)</td><td><a href="#s1-5-b">1.4.1</a></td></tr>
+<tr><td><span class="kw kw-par">Basisrate</span></td><td>base rate, prior</td><td>Vorab-W'keit der Ursache, entscheidend für Bayes</td><td><a href="#s1-5-b">1.4.1</a></td></tr>
+</table>
+</section>
+
+<section id="s1-train" data-m="🏋 Training|Zufallsaufgaben mit Prüfen-Knopf">
+<h2>🏋 Training: neue Aufgaben auf Knopfdruck</h2>
+<x-card t="Aufgabe A · Bayes mit Zufallszahlen" id="qzBayes">
+  <p id="qbTask"></p>
+  <p class="quiz">P(B₁ | A) = <input id="qbIn" placeholder="0.xxxx"> <button class="btn" id="qbChk">Prüfen</button> <button class="btn" id="qbNew">Neue Aufgabe</button></p>
+  <div class="out" id="qbRes"></div>
+</x-card>
+<x-card t="Aufgabe B · Laplace mit zwei Würfeln" id="qzLap">
+  <p id="qlTask"></p>
+  <p class="quiz">P = <input id="qlIn" placeholder="z. B. 5/36"> <button class="btn" id="qlChk">Prüfen</button> <button class="btn" id="qlNew">Neue Aufgabe</button></p>
+  <div class="out" id="qlRes"></div>
+</x-card>
+</section>
