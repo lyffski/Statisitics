@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kap. 8 · Vergleich zweier Stichproben · Lernbegleiter Statistik I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+/* ================================================================
+   Lernbegleiter Statistik I · gemeinsamer Stil (dunkler Bildatlas)
+   Farbe = Rolle, überall gleich: Formel, Code, Plot, Fließtext.
+   ================================================================ */
+:root{
+  --bg:#0d1117; --card:#161b22; --card2:#1c2129; --panel:#11161d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+  --res:#f85149;  /* Ergebnis / gesuchte Größe                 rot    */
+  --chg:#d29922;  /* Änderung / Operation / Transformation     orange */
+  --rule:#bc8cff; /* Regel / Operator P,E,Var / Verteilung     lila   */
+  --par:#58a6ff;  /* Parameter / Eingabe  p, λ, μ, σ, n, α     blau   */
+  --idx:#3fb950;  /* Index / Zähler / Freiheitsgrad / „richtig" grün  */
+  --cond:#56d4dd; /* Bedingung / Vergleich / Hypothese         cyan   */
+  --mem:#f778ba;  /* Ereignis / Zufallsvariable / Daten        pink   */
+  --gl:#6e9fd8;   /* Kennzeichen „Grundlage"                          */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{hyphens:auto;overflow-wrap:break-word;margin:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.6}
+a{color:var(--par)}
+.wrap{max-width:1640px;margin:0 auto;padding:1.2rem 1.6rem 5rem}
+h1{font-family:'Crimson Pro',Georgia,serif;font-size:2.4rem;line-height:1.15;margin:.4rem 0 .4rem}
+h2{font-size:1.6rem;margin:2.6rem 0 .7rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h2 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.5rem}
+h3{font-size:1.25rem;margin:1.9rem 0 .5rem}
+h3 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.4rem}
+h4{font-size:1.05rem;margin:1.2rem 0 .4rem}
+.one{color:var(--muted);margin:-.3rem 0 .8rem}
+p{margin:.5rem 0}
+code{hyphens:none;font-family:'JetBrains Mono',Consolas,monospace;font-size:.86em;background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:0 .3rem}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--border);padding:.3rem .55rem;text-align:left;vertical-align:top}
+th{background:var(--card2);color:var(--muted);font-weight:600}
+td.r,th.r{text-align:right}
+.tbl{max-width:100%}
+svg{max-width:100%;height:auto}
+.katex-display{margin:.5rem 0;max-width:100%}
+.katex{font-size:1.07em}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0;position:relative}
+.card>b:first-child,.ctitle{display:block;font-size:1.08rem;margin-bottom:.35rem}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin:.15rem 0}
+
+/* ---------- Farbige Schlüsselwörter im Fließtext ---------- */
+.kw{font-weight:600}
+.kw-res{color:var(--res)} .kw-chg{color:var(--chg)} .kw-rule{color:var(--rule)} .kw-par{color:var(--par)}
+.kw-idx{color:var(--idx)} .kw-cond{color:var(--cond)} .kw-mem{color:var(--mem)}
+
+/* ---------- Herkunfts-Kennzeichen ---------- */
+.src{position:absolute;top:.55rem;right:.7rem;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.05rem .45rem;border:1px solid var(--border);color:var(--muted);background:var(--bg)}
+.src.g{color:var(--gl);border-color:var(--gl)}
+.src.n{color:var(--idx);border-color:color-mix(in srgb,var(--idx) 60%,transparent)}
+.srcin{display:inline-block;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.02rem .42rem;border:1px solid var(--gl);color:var(--gl);vertical-align:middle;margin-left:.35rem}
+.srcin.n{border-color:var(--idx);color:var(--idx)}
+.gblk{border-left:3px solid color-mix(in srgb,var(--gl) 70%,transparent);padding-left:.8rem;margin:.6rem 0}
+body.hl-g .is-g{box-shadow:0 0 0 2px var(--gl)}
+body.hl-g .gblk{background:color-mix(in srgb,var(--gl) 9%,transparent)}
+.has-src{padding-top:1.5rem}
+
+/* ---------- Kopf: NICHT sticky ---------- */
+.lbtop{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.1rem;padding:.8rem 1.4rem;border-bottom:1px solid var(--border);background:var(--card)}
+.lbtop .lbt{min-width:0;flex:1 1 280px}
+.lbtop .lbt b{font-size:1.05rem;margin-right:.6rem}
+.lbtop .lbt span{color:var(--muted);font-size:.85rem;display:block}
+.lbq{display:flex;flex-wrap:wrap;gap:.3rem .45rem;flex:1 1 520px}
+.lbq a{font-size:.8rem;text-decoration:none;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.12rem .5rem;white-space:nowrap}
+.lbq a:hover{border-color:var(--rule);color:var(--rule)}
+.lbq a small{color:var(--muted);margin-left:.3rem}
+.lbburger,.lbfab{font:inherit;font-weight:700;cursor:pointer;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--text);padding:.3rem .75rem}
+.lbfab{position:fixed;right:18px;bottom:18px;z-index:300;border-radius:50%;width:48px;height:48px;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.lbmenu{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.6);display:none;overflow:auto;padding:2.2rem 2rem}
+body.menu-open .lbmenu{display:block}
+.lbm-in{max-width:1640px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.4rem 1.4rem}
+.lbm-head{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-bottom:.6rem}
+.lbm-head .sp{margin-left:auto}
+.lbm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.9rem 1.4rem}
+.lbm-grid h5{margin:.2rem 0 .3rem;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--rule)}
+.lbm-grid a{display:flex;gap:.5rem;align-items:baseline;text-decoration:none;color:var(--text);padding:.16rem .35rem;border-radius:6px;font-size:.9rem}
+.lbm-grid a:hover{background:var(--card2)}
+.lbm-grid a span{color:var(--muted);font-size:.8rem}
+.lbm-grid a.sub{padding-left:1.1rem;font-size:.86rem}
+.lbm-opts{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;align-items:center;margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--border);font-size:.88rem;color:var(--muted)}
+.lbm-opts input[type=text]{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:min(30rem,100%)}
+.lbm-parts{display:flex;flex-wrap:wrap;gap:.35rem .5rem;align-items:center;margin:.2rem 0 .8rem;font-size:.86rem}
+.lbm-parts a{border:1px solid var(--border);border-radius:7px;padding:.1rem .5rem;text-decoration:none;color:var(--text)}
+.lbm-parts a.cur{border-color:var(--rule);color:var(--rule)}
+
+/* ---------- Titelbereich ---------- */
+.hero{padding:1rem 0 .4rem}
+.hero .kick{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rule);font-weight:700}
+.hero .lead{font-size:1.1rem;color:#c9d1d9;max-width:1100px}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.45rem .9rem;margin:.6rem 0}
+.legend div{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.35rem .6rem;font-size:.92rem}
+.legend b{font-family:'JetBrains Mono',monospace}
+
+/* ---------- Anatomie ---------- */
+.anat-f{text-align:center;font-size:1.15rem;margin:.3rem 0 .6rem}
+.anat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.45rem 1.2rem}
+.anat>div{display:grid;grid-template-columns:minmax(4.2rem,auto) minmax(0,1fr);gap:.6rem;align-items:baseline;background:var(--card2);border-radius:8px;padding:.35rem .6rem}
+.anat .sym{font-weight:600;text-align:center}
+.anat>div>span{min-width:0}
+.read{border-left:4px solid var(--rule);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+.why{border-left:4px solid var(--chg);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+
+/* ---------- Von-null-Karte ---------- */
+.vonnull{border:1.6px solid var(--rule);border-radius:14px;background:var(--panel);padding:1rem 1.2rem .8rem;margin:1.1rem 0 1.4rem;position:relative}
+.vonnull .vn-ttl{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem;font-size:1.2rem;font-weight:700;padding-right:6rem}
+.vn-badge{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#fff;background:var(--rule);border-radius:6px;padding:.16rem .55rem;font-weight:600}
+.vonnull .vn-task{border-left:4px solid var(--res);background:var(--card2);border-radius:8px;padding:.6rem .9rem;margin:.5rem 0 .6rem}
+details>summary{cursor:pointer;font-weight:700;color:var(--rule);padding:.35rem 0}
+.vn-step{display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.65rem;align-items:start;margin:.55rem 0}
+.vnn{display:inline-flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--rule);color:#fff;font-weight:700;font-size:.85rem}
+.vn-res{margin:.6rem 0 .3rem;padding:.45rem .85rem;border-radius:9px;font-weight:700;border:1.5px solid var(--idx);color:var(--idx);background:color-mix(in srgb,var(--idx) 8%,transparent)}
+.trap{margin:.5rem 0;padding:.45rem .85rem;border-radius:9px;border:1.3px solid var(--chg);background:color-mix(in srgb,var(--chg) 8%,transparent)}
+.trap b:first-child{color:var(--chg)}
+.blsol{border-color:var(--par)}
+.blsol .vn-badge{background:var(--par)}
+
+/* ---------- Prüfungs-Trainer (aus der Grundlage) ---------- */
+.pt{border:1px dashed color-mix(in srgb,var(--gl) 70%,transparent);border-radius:12px;padding:.7rem 1rem;margin:.9rem 0;background:#121a24;position:relative}
+.pt .ptq{padding-right:6rem}
+.pt .ptq b:first-child{color:var(--gl)}
+.pt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-top:.4rem}
+.pt-grid>div{background:var(--card2);border-radius:8px;padding:.4rem .6rem;font-size:.95rem}
+.pt-grid>div>i{display:block;font-style:normal;font-size:.78rem;color:var(--muted);font-weight:700;letter-spacing:.04em}
+
+/* ---------- Bausteine ---------- */
+.idea{border-left:4px solid var(--rule);background:var(--card);border-radius:10px;padding:.6rem 1rem;margin:.8rem 0}
+.idea>b:first-child{color:var(--rule)}
+.cook{counter-reset:ck;list-style:none;padding-left:0}
+.cook>li{counter-increment:ck;position:relative;padding-left:2.3rem;margin:.4rem 0}
+.cook>li::before{content:counter(ck);position:absolute;left:0;top:.05rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--card2);border:1px solid var(--rule);color:var(--rule);font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.ex3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem}
+.ex{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.7rem .9rem}
+.ex .lvl{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.ex .lvl.l1{color:var(--idx)} .ex .lvl.l2{color:var(--chg)} .ex .lvl.l3{color:var(--res)}
+.verdict{margin-top:.5rem;border-top:1px solid var(--border);padding-top:.4rem}
+.verdict b{color:var(--idx)}
+.vs{border:1.3px solid var(--cond);border-radius:12px;padding:.6rem 1rem;margin:.8rem 0;background:color-mix(in srgb,var(--cond) 6%,transparent)}
+.vs>b:first-child{color:var(--cond)}
+.cheat td:first-child{white-space:normal}
+
+/* ---------- Video-Chips ---------- */
+.vids{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}
+.vid{display:inline-flex;flex-wrap:wrap;align-items:center;gap:.35rem;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.2rem .35rem .2rem .6rem;font-size:.86rem;max-width:100%}
+.vid .vt{color:var(--text)}
+.vid .vs2{color:var(--muted);font-size:.74rem;font-family:'JetBrains Mono',monospace}
+.vid a,.vid button{font:inherit;font-size:.8rem;cursor:pointer;border:1px solid var(--border);border-radius:6px;padding:0 .4rem;background:var(--bg);color:var(--text);text-decoration:none}
+.vid a:hover{border-color:var(--chg);color:var(--chg)}
+
+/* ---------- Code ---------- */
+.code{margin:.7rem 0;border:1px solid var(--border);border-radius:10px;background:#0b0f14;overflow:hidden}
+.code .ch{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;background:var(--card2);padding:.3rem .8rem;font-size:.85rem;border-bottom:1px solid var(--border)}
+.code .ch b{color:var(--text)}
+.code .ch span{color:var(--muted)}
+.code pre{margin:0;padding:.5rem 0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.83rem;line-height:1.5}
+.code .row,.tr-code .row{white-space:pre-wrap;word-break:break-word;padding:0 .7rem 0 3.4em;text-indent:-2.7em}
+.code .ln,.tr-code .ln{display:inline-block;width:2.2em;text-indent:0;color:#5c6370;margin-right:.5em;text-align:right;user-select:none}
+.tok-c{color:#7d8590;font-style:italic}
+.tok-k{color:#ff7b72}
+.tok-t{color:#79c0ff}
+.tok-s{color:#a5d6ff}
+.tok-n{color:#e3b341}
+.tok-a{color:var(--chg);font-weight:700}
+
+/* ---------- Tracer ---------- */
+.tracer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0}
+.tr-head{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-bottom:.6rem}
+.tr-head input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.2rem .5rem;width:min(28rem,100%)}
+.tr-head select{max-width:100%;font:inherit;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .4rem}
+.tracer button,.btn{font:inherit;cursor:pointer;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.2rem .6rem}
+.tracer button:hover,.btn:hover{border-color:var(--chg)}
+.btn.on,.tracer button.on{border-color:var(--rule);color:var(--rule);background:color-mix(in srgb,var(--rule) 14%,transparent)}
+.tr-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1rem}
+.tr-code{margin:0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.82rem;background:#0b0f14;border:1px solid var(--border);border-radius:10px;padding:.5rem 0;line-height:1.5}
+.tr-code .row.cur{background:color-mix(in srgb,var(--chg) 22%,transparent);outline:1px solid var(--chg)}
+.tr-code .hits{color:var(--idx);margin-left:.6em;font-size:.75rem}
+.tr-state{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.6rem .8rem;min-width:0}
+.tr-ctl{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-top:.6rem}
+.tr-ctl input[type=range]{flex:1 1 200px}
+.tr-cnt{color:var(--muted);font-size:.85rem}
+.tr-msg{margin-top:.5rem;border-left:4px solid var(--chg);padding:.3rem .8rem;background:var(--card2);border-radius:6px;min-height:2.2rem}
+.cells{display:flex;flex-wrap:wrap;gap:3px;margin:.2rem 0 .4rem}
+.cells .c{min-width:2.4rem;text-align:center;border:1px solid var(--border);border-radius:5px;padding:.1rem .25rem;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem}
+.cells .c i{display:block;font-style:normal;font-size:.62rem;font-weight:400;color:var(--muted)}
+.cells .c.m{border-color:var(--idx);background:color-mix(in srgb,var(--idx) 22%,transparent)}
+.cells .c.h{border-color:var(--res);background:color-mix(in srgb,var(--res) 18%,transparent)}
+.cells .c.o{border-color:var(--chg);background:color-mix(in srgb,var(--chg) 20%,transparent)}
+.cells .c.out{opacity:.3}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.35rem;margin:.3rem 0}
+.kv div{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.2rem .45rem;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.kv div i{display:block;font-style:normal;color:var(--muted);font-size:.7rem;font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Visuals / Regler ---------- */
+.viz{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0;position:relative}
+.viz .ctl{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;align-items:center;margin:.3rem 0 .5rem}
+.viz .ctl label{display:flex;align-items:center;gap:.5rem;font-size:.92rem;flex:1 1 230px}
+.viz .ctl input[type=range]{flex:1 1 120px;accent-color:var(--par)}
+.viz .ctl output{font-family:'JetBrains Mono',monospace;color:var(--par);min-width:3.5rem}
+.viz input[type=number],.viz input[type=text],.viz textarea{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;max-width:100%}
+.viz textarea{width:100%;min-height:3rem}
+.plot{width:100%;min-height:280px}
+.recog{margin-top:.4rem;font-size:.92rem;color:#c9d1d9}
+.recog b:first-child{color:var(--chg)}
+.out{font-family:'JetBrains Mono',monospace;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .6rem;margin:.4rem 0}
+.ok{color:var(--idx)} .bad{color:var(--res)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:.25rem}
+
+/* ---------- Brücke ---------- */
+.bridge svg text{font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Training ---------- */
+.quiz input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:8rem}
+
+footer.foot{color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem;padding-top:1rem}
+
+@media(max-width:900px){
+  .wrap{padding:1rem .9rem 5rem}
+  .tr-grid,.anat,.two,.three,.ex3,.pt-grid{grid-template-columns:minmax(0,1fr)}
+  .lbmenu{padding:1rem .6rem}
+  h1{font-size:1.8rem}
+  .vonnull .vn-ttl,.pt .ptq{padding-right:0;padding-top:1rem}
+}
+@media(max-width:640px){
+  /* Tabellen werden zu gestapelten Karten: nie seitwärts scrollen */
+  .tbl,.tbl tbody,.tbl tr,.tbl td,.tbl th{display:block;width:100%}
+  .tbl tr{border:1px solid var(--border);border-radius:8px;margin:.4rem 0;padding:.2rem}
+  .tbl td,.tbl th{border:0;padding:.15rem .4rem;text-align:left!important}
+  .tbl th{background:none}
+  .dgrid{grid-template-columns:2.2rem repeat(6,minmax(0,1fr))}
+  body{font-size:16px}
+  .katex-display{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+  .anat>div{grid-template-columns:minmax(0,1fr)}
+  .anat>div>span,.pt-grid>div,.vn-step>div,td{overflow-x:auto}
+  .katex{font-size:1em}
+}
+
+
+</style>
+</head>
+<body>
+<header class="lbtop">
+  <button class="lbburger" id="lbOpen" aria-label="Inhalt öffnen">☰ Inhalt</button>
+  <div class="lbt"><b>Kap. 8 · Vergleich zweier Stichproben</b><span>gepaart vs. ungepaart, Differenzen, gepoolte Varianz, Zwei-Stichproben-t-Test, Wilcoxon, t-Test in der Regression</span></div>
+  <nav class="lbq"><a href="#s8-0">🗺️ Übersicht<small>Entscheidungsbaum</small></a><a href="#s8-1">8.1 gepaart vs. ungepaart<small>Block</small></a><a href="#s8-2">8.2 Gepaart<small>Differenzen U_i</small></a><a href="#s8-3">8.3 Zwei-Stichproben-t<small>S²_pool</small></a><a href="#s8-4">8.4 Vergleich der Konzepte<small>Landkarte aller Tests</small></a><a href="#s8-5">8.5 Regression: t-Test der Steigung<small>H₀: β = 0</small></a><a href="#s8-6">🧰 Werkzeuge<small>eigene Daten vergleichen</small></a><a href="#s8-7">📐 Schema &amp; Beispiele<small>5 Schritte Zwei-Gruppen-Vergleich</small></a><a href="#s8-9">🌉 Brücke &amp; Lernziele<small>Abschluss Statistik I</small></a><a href="#s8-cheat">📋 Cheat-Sheet<small>Formeln Kap. 8</small></a><a href="#s8-glossar">📚 Glossar<small>Fachwörter deutsch/englisch</small></a><a href="#s8-train">🏋 Training<small>gepaart oder ungepaart rechnen</small></a></nav>
+</header>
+<div class="lbmenu" id="lbMenu"><div class="lbm-in">
+  <div class="lbm-head"><b>☰ Inhalt · Kap. 8 · Vergleich zweier Stichproben</b><button class="lbburger sp" data-close>✕ schließen</button></div>
+  <div class="lbm-parts"><span class="muted">Teil wechseln:</span><a href="01_Grundlagen_Wahrscheinlichkeit.html" data-part="0">Kap. 1 · Grundlagen W-Rechnung</a><a href="02_Verteilungen.html" data-part="1">Kap. 2 · Verteilungen</a><a href="03_Deskriptive_Statistik.html" data-part="2">Kap. 3 · Deskriptive Statistik</a><a href="04_Mehrdimensionale_Verteilungen.html" data-part="3">Kap. 4 · Mehrdimensional</a><a href="05_Grenzwertsaetze.html" data-part="4">Kap. 5 · Grenzwertsätze</a><a href="06_Parameterschaetzung.html" data-part="5">Kap. 6 · Parameterschätzung</a><a href="07_Tests_und_Vertrauensintervalle.html" data-part="6">Kap. 7 · Tests &amp; VI</a><a href="08_Zwei_Stichproben.html" data-part="7" class="cur">Kap. 8 · Zwei Stichproben</a><a href="09_Rechner.html" data-part="8">🧰 Statistik-Rechner</a></div>
+  <div class="lbm-grid"><div><h5>🗺️ Übersicht</h5><a href="#s8-0"><b>🗺️ Übersicht</b><span>Entscheidungsbaum, Leitfragen</span></a></div><div><h5>8.1 gepaart vs. ungepaart</h5><a href="#s8-1"><b>8.1 gepaart vs. ungepaart</b><span>Block, Randomisierung, Zuordnung</span></a></div><div><h5>8.2 Gepaart</h5><a href="#s8-2"><b>8.2 Gepaart</b><span>Differenzen U_i, t-Test mit n−1</span></a></div><div><h5>8.3 Zwei-Stichproben-t</h5><a href="#s8-3"><b>8.3 Zwei-Stichproben-t</b><span>S²_pool, t mit n+m−2, VI der Differenz</span></a></div><div><h5>8.4 Vergleich der Konzepte</h5><a href="#s8-4"><b>8.4 Vergleich der Konzepte</b><span>Landkarte aller Tests, Pairing ignorieren?</span></a></div><div><h5>8.5 Regression: t-Test der Steigung</h5><a href="#s8-5"><b>8.5 Regression: t-Test der Steigung</b><span>H₀: β = 0, SE(b), df n−2 (Modul)</span></a></div><div><h5>🧰 Werkzeuge</h5><a href="#s8-6"><b>🧰 Werkzeuge</b><span>eigene Daten vergleichen</span></a></div><div><h5>📐 Schema &amp; Beispiele</h5><a href="#s8-7"><b>📐 Schema &amp; Beispiele</b><span>5 Schritte Zwei-Gruppen-Vergleich</span></a></div><div><h5>🌉 Brücke &amp; Lernziele</h5><a href="#s8-9"><b>🌉 Brücke &amp; Lernziele</b><span>Abschluss Statistik I</span></a></div><div><h5>📋 Cheat-Sheet</h5><a href="#s8-cheat"><b>📋 Cheat-Sheet</b><span>Formeln Kap. 8</span></a></div><div><h5>📚 Glossar</h5><a href="#s8-glossar"><b>📚 Glossar</b><span>Fachwörter deutsch/englisch</span></a></div><div><h5>🏋 Training</h5><a href="#s8-train"><b>🏋 Training</b><span>gepaart oder ungepaart rechnen</span></a></div></div>
+  <div class="lbm-opts">
+    <label><input type="checkbox" id="lbHlG"> 📘 Grundlage-Inhalte hervorheben</label>
+    <label>🎬 Video-Ordner <input type="text" id="lbVbase" value="videos/" title="relativ zur HTML-Datei (z. B. Symlink „videos") oder absolut, z. B. /home/NAME/Videos/Statistik/"></label>
+    <span>Esc schließt · T = Teile</span>
+  </div>
+</div></div>
+<button class="lbfab" id="lbFab" aria-label="Inhalt öffnen">☰</button>
+<main class="wrap">
+<!-- title: Kap. 8 · Vergleich zweier Stichproben -->
+<!-- sub: gepaart vs. ungepaart, Differenzen, gepoolte Varianz, Zwei-Stichproben-t-Test, Wilcoxon, t-Test in der Regression -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 8 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Vergleich zweier Stichproben</h1>
+  <p class="lead">Zwei Messreihen: Unterscheiden sich ihre Erwartungswerte? Die wichtigste Vorfrage ist <b>gepaart oder ungepaart</b>. Gepaart wird mit <b>Differenzen</b> auf Kapitel 7 zurückgeführt, ungepaart mit der <b>gepoolten Varianz</b> zum <b>Zwei-Stichproben-t-Test</b>. Neu aus der Modulbeschreibung („Lineare Regression und t-Tests“): der <b>t-Test für die Steigung</b> einer Regressionsgeraden.</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Grundlage, hier vertieft und erweitert">📘 Grundlage ✚ erweitert</span><b>🎨 Farblegende für Kapitel 8</b>
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: Teststatistik T, P-Wert, VI der Differenz</div>
+    <div><b class="kw-chg">orange · Umformung</b>: Differenzen \(\Chg{u_i=x_i-y_i}\), gepoolte Varianz \(\Chg{S^2_{\text{pool}}}\)</div>
+    <div><b class="kw-rule">lila · Verteilung/Test</b>: \(t_{n-1}\), \(t_{n+m-2}\), Wilcoxon</div>
+    <div><b class="kw-par">blau · Parameter</b>: \(\Par{\mu_X},\Par{\mu_Y},\Par{\sigma^2}\), Differenz \(\Par{d}\), \(\Par{\alpha}\)</div>
+    <div><b class="kw-idx">grün · Umfang/Freiheitsgrade</b>: \(\Idx{n},\Idx{m}\), \(\Idx{n-1}\), \(\Idx{n+m-2}\)</div>
+    <div><b class="kw-cond">cyan · Hypothesen</b>: \(\Cond{H_0:\mu_X=\mu_Y}\), Paar-Zuordnung</div>
+    <div><b class="kw-mem">pink · Daten</b>: Gruppen \(\Mem{X},\Mem{Y}\), Mittel \(\Mem{\bar X},\Mem{\bar Y}\)</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Roter Faden:</b> alles baut auf Kapitel 7 auf. Gepaart → Differenzen \(U_i\) bilden und einen Ein-Stichproben-Test machen. Ungepaart → gemeinsame Varianz \(S^2_{\text{pool}}\) schätzen und den Zwei-Stichproben-t-Test rechnen. Beide enden in Teststatistik, Verwerfungsbereich und Vertrauensintervall.</div>
+</div>
+<div class="bridge"><svg viewBox="0 0 1638 128" role="img" aria-label="Brücke durch Statistik I"><defs><marker id="arrC1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs><rect x="10" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="105" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 1 · Grundlagen</text><text x="105" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Ω, P, Bayes</text><line x1="200" y1="73" x2="213" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="214" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="309" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 2 · Verteilungen</text><text x="309" y="90" fill="#8b949e" font-size="14" text-anchor="middle">X, E, Var</text><line x1="404" y1="73" x2="417" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="418" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="513" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 3 · Deskriptiv</text><text x="513" y="90" fill="#8b949e" font-size="14" text-anchor="middle">x̄, s, Quantile</text><line x1="608" y1="73" x2="621" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="622" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="717" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 4 · Mehrdim.</text><text x="717" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Cov, Corr</text><line x1="812" y1="73" x2="825" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="826" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="921" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 5 · Grenzwerte</text><text x="921" y="90" fill="#8b949e" font-size="14" text-anchor="middle">GGZ, ZGS</text><line x1="1016" y1="73" x2="1029" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="1030" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1125" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 6 · Schätzen</text><text x="1125" y="90" fill="#8b949e" font-size="14" text-anchor="middle">MoM, ML, SE</text><line x1="1220" y1="73" x2="1233" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="1234" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1329" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 7 · Tests & VI</text><text x="1329" y="90" fill="#8b949e" font-size="14" text-anchor="middle">H₀, p, VI</text><line x1="1424" y1="73" x2="1437" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="1438" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#bc8cff" stroke-width="3"/><text x="1533" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 8 · Zwei Stichpr.</text><text x="1533" y="90" fill="#8b949e" font-size="14" text-anchor="middle">gepaart, t</text><text x="1533" y="28" fill="#bc8cff" font-size="16" font-weight="700" text-anchor="middle">▼ DU BIST HIER</text></svg></div>
+
+<section id="s8-0" data-m="🗺️ Übersicht|Entscheidungsbaum, Leitfragen">
+<h2><span class="num">8.0</span>Master-Anatomie und Entscheidungsbaum</h2>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: jeder Zwei-Gruppen-Test hat dieselbe Form</b><div class="anat-f">\[ \Res{T}=\frac{\text{beobachtet}-\text{erwartet}}{\text{Standardfehler}}:\qquad \underbrace{\frac{\bar U}{S_U/\sqrt n}}_{\text{gepaart, }t_{n-1}}\qquad \underbrace{\frac{\bar X-\bar Y}{S_{\text{pool}}\sqrt{\frac1n+\frac1m}}}_{\text{ungepaart, }t_{n+m-2}} \]</div><div class="anat"><div><span class="sym">\(\bar U\)</span><span>Mittel der Paar-Differenzen: der gepaarte Fall ist eine Stichprobe</span></div><div><span class="sym">\(S_{\text{pool}}\)</span><span>gemeinsame Standardabweichung beider Gruppen (gleiche Varianz angenommen)</span></div><div><span class="sym">\(\sqrt{1/n+1/m}\)</span><span>Faktor für die Streuung der Differenz zweier unabhängiger Mittel</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Gepaart: Differenzmittel durch seinen Standardfehler. Ungepaart: Mitteldifferenz durch S-pool mal Wurzel aus eins durch n plus eins durch m.“</div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🗺️ Entscheidungsbaum: welcher Test?</b>
+<svg viewBox="0 0 1200 330" role="img" aria-label="Entscheidungsbaum">
+  <defs><marker id="arrK8a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="420" y="10" width="360" height="50" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="600" y="32" fill="#bc8cff" font-weight="700">Zwei Gruppen vergleichen</text><text x="600" y="52" fill="#8b949e">dieselbe Einheit zweimal gemessen?</text>
+    <rect x="80" y="100" width="440" height="110" rx="10" fill="#1c2129" stroke="#d29922"/><text x="300" y="124" fill="#d29922" font-weight="700">JA → gepaart</text><text x="300" y="148" fill="#e6edf3">Differenzen Uᵢ = Xᵢ − Yᵢ → eine Stichprobe (Kap. 7)</text><text x="300" y="172" fill="#8b949e">normal → t-Test (n − 1) · sonst Vorzeichen</text><text x="300" y="194" fill="#8b949e">Kompromiss → Wilcoxon</text>
+    <rect x="680" y="100" width="440" height="110" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="900" y="124" fill="#58a6ff" font-weight="700">NEIN → ungepaart</text><text x="900" y="148" fill="#e6edf3">X₁…Xₙ und Y₁…Yₘ unabhängig</text><text x="900" y="172" fill="#8b949e">normal, gleiche Varianz → Zwei-Stichproben-t (n + m − 2)</text><text x="900" y="194" fill="#8b949e">nicht normal → Zwei-Stichproben-Wilcoxon</text>
+    <rect x="330" y="250" width="540" height="56" rx="10" fill="#1c2129" stroke="#f85149"/><text x="600" y="274" fill="#f85149" font-weight="700">Teststatistik in K? → Entscheid</text><text x="600" y="296" fill="#8b949e">+ Vertrauensintervall für die Differenz</text>
+    <line x1="560" y1="60" x2="320" y2="98" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+    <line x1="640" y1="60" x2="880" y2="98" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+    <line x1="300" y1="210" x2="500" y2="248" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+    <line x1="900" y1="210" x2="700" y2="248" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+  </g>
+</svg>
+<p><b>Kernidee:</b> jeder Zwei-Gruppen-Vergleich wird auf einen bekannten Ein-Gruppen-Test zurückgeführt.</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🎓 Das Spitzenwerkzeug für JEDEN Zwei-Gruppen-Vergleich</b>
+  <ol class="cook"><li><b>ERKENNEN:</b> Zwei Gruppen von Messungen; unterscheiden sich \(\mu_X\) und \(\mu_Y\)?</li>
+  <li><b>WÄHLEN:</b> gepaart? → Differenzen, Ein-Stichproben-Test (t/Vorzeichen/Wilcoxon). Ungepaart? → Zwei-Stichproben-t-Test (gleiche Varianz) oder Zwei-Stichproben-Wilcoxon.</li>
+  <li><b>RECHNEN:</b> gepaart: t auf die Differenzen, n − 1 Freiheitsgrade. Ungepaart: \(S^2_{\text{pool}}\), dann T, n + m − 2 Freiheitsgrade.</li>
+  <li><b>ARTIKULIEREN:</b> „Die Teststatistik ist […]; sie liegt (nicht) in K. Also unterscheiden sich die Gruppen (nicht) signifikant. Das VI für die Differenz ist […].“</li></ol>
+</div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/StatQuickie： Which t test to use [nnBJeb_I-q8].mp4"><span class="vt">🎬 StatQuickie: Which t test to use</span> <span class="muted small">welcher t-Test?</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/StatQuickie： Which t test to use [nnBJeb_I-q8].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 8.1 -->
+<section id="s8-1" data-vn data-m="8.1 gepaart vs. ungepaart|Block, Randomisierung, Zuordnung">
+<h2><span class="num">8.1</span>Gepaarte und ungepaarte Stichproben</h2>
+<div class="vonnull" id="vn-8-1" data-sec="8.1"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 8.1</span>Vier Studien richtig einordnen</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Entscheide jeweils gepaart oder ungepaart und nenne den passenden Test (Normalverteilung plausibel): (a) Blutdruck von 20 Personen vor und nach einer Therapie; (b) 30 Mäuse zufällig auf Futter A oder B verteilt, Gewichtszunahme gemessen; (c) linkes und rechtes Auge von 15 Patienten mit zwei Augentropfen; (d) Prüfungspunkte zweier verschiedener Jahrgänge.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Die Schlüsselfrage.</b> „Kann ich jede Einheit der einen Gruppe genau einer Einheit der anderen zuordnen?“ Ja → gepaart. Nein → ungepaart.</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(a)</b> Dieselbe Person zweimal → <b>gepaart</b>, t-Test auf die 20 Differenzen (df = 19).</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(b)</b> Verschiedene Mäuse, zufällig zugelost → <b>ungepaart</b>, Zwei-Stichproben-t-Test (df = 28 bei 15 + 15).</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(c)</b> Beide Augen gehören zu einer Person (Block) → <b>gepaart</b>, df = 14.</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">(d)</b> Verschiedene Studierende → <b>ungepaart</b>, df = n + m − 2.</div></div>
+  <div class="vn-res">✔ (a) gepaart, (b) ungepaart, (c) gepaart, (d) ungepaart.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Gleich große Gruppen machen Daten noch nicht gepaart. Entscheidend ist die natürliche Zuordnung über dieselbe Einheit.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Die wichtigste Vorfrage überhaupt. Zwei Prinzipien guter Versuchsplanung: <b>Randomisierung</b> (zufällige Zuordnung) und <b>Blockbildung</b> (dieselbe Einheit als Block).</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: die zwei Datenstrukturen</b><div class="anat"><div><span class="sym">\(\text{ungepaart}\)</span><span>zwei unabhängige Gruppen; Beobachtungen \(x_1,\dots,x_n\) und \(y_1,\dots,y_m\), Umfänge dürfen verschieden sein. Entsteht durch Randomisierung</span></div><div><span class="sym">\(\text{gepaart}\)</span><span>beide Bedingungen an derselben Einheit; zu jeder Einheit ein Paar \((x_i,y_i)\), zwingend gleicher Umfang. Jede Einheit ist ein Block</span></div><div><span class="sym">\(\text{Test}\)</span><span>„Kann ich jede Einheit genau einer der anderen Gruppe zuordnen?“ Ja → gepaart</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Gepaart heißt: dieselbe Versuchseinheit, zwei Messungen. Ungepaart heißt: zwei getrennte Gruppen.“ Reifen A/B am selben Auto = gepaart; Drähte aus zwei Werken = ungepaart.</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Ein Bremstest rüstet jedes von 12 Testautos einmal mit Reifen A und einmal mit B aus. Gepaart oder ungepaart?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Dieselbe Versuchseinheit (Auto) unter beiden Bedingungen → Block → gepaart.</div><div><i>⚙️ LÖSEN</i>Gepaart: für jedes Auto \(U_i\) = Bremsweg A − Bremsweg B, dann Ein-Stichproben-Test.</div><div><i>🗣️ SAGEN</i>„Das ist gepaart, weil jedes Auto beide Reifen fährt: ich bilde die Differenzen und teste sie wie eine Stichprobe.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? gepaart vs. ungepaart</b>
+  <div class="ctl"><span class="seg" id="gpSeg"><button class="btn on" data-s="u">ungepaart (2 Gruppen)</button><button class="btn" data-s="g">gepaart (verbundene Paare)</button></span></div>
+  <div id="gpPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> dieselben Messwerte, zwei Lesarten. Gepaart: jede Einheit liefert ein verbundenes Paar; die Steigung jeder Linie ist die individuelle Differenz, fast alle fallen.</div>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🎯 Beispiele: richtig einordnen</b>
+  <table class="tbl"><tr><th>Situation</th><th>Versuchseinheit</th><th>Struktur</th></tr>
+  <tr><td>Zugfestigkeit von Drähten aus 2 Werken</td><td>ein Draht</td><td>ungepaart</td></tr>
+  <tr><td>100 Patienten zufällig auf Medikament/Placebo</td><td>ein Patient</td><td>ungepaart</td></tr>
+  <tr><td>Bremsweg Reifen A vs. B am selben Testauto</td><td>ein Testauto</td><td>gepaart</td></tr>
+  <tr><td>15 Prüfkörper von 2 Laboren gemessen</td><td>ein Prüfkörper</td><td>gepaart</td></tr></table>
+  <p><b>Faustregel:</b> Wird eine Einheit zweimal gemessen (Block), ist es gepaart. Werden verschiedene Einheiten zwei Gruppen zugelost, ist es ungepaart.</p>
+</div>
+</section>
+
+<!-- ============================================================ 8.2 -->
+<section id="s8-2" data-vn data-m="8.2 Gepaart|Differenzen U_i, t-Test mit n−1">
+<h2><span class="num">8.2</span>Gepaarte Vergleiche: der Trick mit den Differenzen</h2>
+<div class="vonnull" id="vn-8-2" data-sec="8.2"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 8.2</span>Vorher/nachher: gepaarter t-Test von Hand</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Ein Messwert wird an 8 Personen vor und nach einer Maßnahme erhoben: vorher 5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0; nachher 4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3. Hat die Maßnahme den Wert verändert? (zweiseitig, α = 0.05) Gib auch das 95-%-VI für die mittlere Differenz an.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Einordnen.</b> Dieselben Personen → gepaart → Differenzen \(\Chg{u_i}\) = vorher − nachher.</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">Differenzen.</b> 0.5, 0.7, −0.1, 0.8, 0.5, 0.7, 0.3, 0.7.</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">Kennzahlen.</b> \(\bar u=\tfrac{4.1}{8}=0.5125\), \(s_U=0.2949\), n = 8.</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">Teststatistik.</b> 
+  \[\begin{aligned}
+  \Res{t} &= \frac{\bar u-0}{s_U/\sqrt n}=\frac{0.5125}{0.2949/\sqrt8}=\frac{0.5125}{0.1043} && H_0:\EE[U_i]=0 \\
+  &\approx \Res{4.92} && \text{ausgerechnet}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">Entscheid und VI.</b> \(t_{7,0.975}=2.365\); \(4.92\ge2.365\) → <b>verwerfen</b>, P ≈ 0.0017. VI: \(0.5125\pm2.365\cdot0.1043=\Res{[0.266;\ 0.759]}\) (enthält 0 nicht ✓).</div></div>
+  <div class="vn-res">✔ t ≈ 4.92, df = 7, P ≈ 0.002; die Maßnahme senkt den Wert im Mittel um 0.27 bis 0.76.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Der ganze gepaarte Fall wird auf Kapitel 7 zurückgeführt: man bildet eine neue Stichprobe aus den Differenzen und testet sie wie eine einzelne Stichprobe.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: die Differenzen U_i</b><div class="anat-f">\[ \underbrace{\Chg{u_{\Idx{i}}}=\Mem{x_{\Idx{i}}}-\Mem{y_{\Idx{i}}}}_{\text{Differenz pro Paar}},\quad i=1,\dots,n\qquad\Longrightarrow\qquad \Cond{H_0}:\ \EE[U_i]=0 \]</div><div class="anat"><div><span class="sym">\(U_i\)</span><span>die Differenz innerhalb von Paar i; aus n Paaren wird eine i.i.d.-Stichprobe \(U_1,\dots,U_n\)</span></div><div><span class="sym">\(H_0\)</span><span>„kein Unterschied zwischen den Bedingungen“; Alternative zwei- oder einseitig</span></div><div><span class="sym">\(\text{Test}\)</span><span>genau die Tests aus Kapitel 7 auf die Differenzen: t-Test (normal), Vorzeichen-Test, Wilcoxon-Test</span></div></div><div class="read">📖 <b>Vorlesen:</b> „u i ist x i minus y i; getestet wird, ob der Erwartungswert der Differenzen null ist.“</div></div>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡 Warum das genial ist:</b> Innerhalb eines Blocks fällt das einheitsspezifische Niveau weg. Misst man zwei Größen an derselben Person, kürzt sich die große Variabilität zwischen Personen in der Differenz heraus → kleinere Varianz, schärferer Test.</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> 9 Paare, Differenzen annähernd normal. Welcher Test, wie viele Freiheitsgrade?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Gepaart + normal → t-Test auf die Differenzen, n − 1.</div><div><i>⚙️ LÖSEN</i>Ein-Stichproben-t-Test auf \(U_1,\dots,U_9\), df = 8, Grenze \(t_{8,0.975}=2.306\).</div><div><i>🗣️ SAGEN</i>„t-Test auf die Differenzen mit 8 Freiheitsgraden.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? warum Pairing die Varianz schrumpfen lässt</b>
+  <div class="ctl"><label>Block-Streuung zwischen Einheiten <input type="range" id="blS" min="0" max="6" step="0.1" value="3" data-fmt="1"><output for="blS"></output></label>
+  <label>echter Effekt A − B <input type="range" id="blE" min="-3" max="3" step="0.1" value="1.5" data-fmt="1"><output for="blE"></output></label></div>
+  <div class="two"><div id="blRaw" class="plot"></div><div id="blDiff" class="plot"></div></div>
+  <div class="out" id="blOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> links streuen die Rohwerte stark (Block-Variabilität); rechts in den Differenzen kürzt sich das persönliche Niveau weg, nur der echte Effekt bleibt.</div>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: gepaarter t-Test (7 Prüfkörper, zwei Labore)</b>
+  \[\begin{aligned}
+  \bar u &= 1.657,\quad S_U=1.328,\quad n=7 && \text{Differenzen und Kennzahlen} \\
+  t &= \frac{1.657}{1.328/\sqrt7}=\Res{3.30} && \text{Ein-Stichproben-t auf U} \\
+  3.30 &\ge t_{6,0.975}=2.447\ \Rightarrow\ H_0\ \text{verwerfen} && \text{Entscheidung}
+  \end{aligned}\]
+  <p>Die Labore unterscheiden sich signifikant; es ist exakt der Ein-Stichproben-t-Test aus 7.2, angewendet auf die Differenzen.</p>
+</div>
+<div id="trGp"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · gepaarter t-Test</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Gepaarter t-Test: Differenzen bilden, dann Ein-Stichproben-t-Test"><span class="ln">1</span># Gepaarter t-Test: Differenzen bilden, dann Ein-Stichproben-t-Test</div><div class="row" data-src="vorher &lt;- c(5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0)    # Bedingung A"><span class="ln">2</span>vorher &lt;- c(5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0)    # Bedingung A</div><div class="row" data-src="nachher &lt;- c(4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3)   # Bedingung B, gleiche Einheiten"><span class="ln">3</span>nachher &lt;- c(4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3)   # Bedingung B, gleiche Einheiten</div><div class="row" data-src="u &lt;- vorher - nachher                      # Differenz pro Paar"><span class="ln">4</span>u &lt;- vorher - nachher                      # Differenz pro Paar</div><div class="row" data-src="n &lt;- length(u)                             # Anzahl Paare"><span class="ln">5</span>n &lt;- length(u)                             # Anzahl Paare</div><div class="row" data-src="ubar &lt;- mean(u); su &lt;- sd(u)               # Mittel und Standardabweichung der Differenzen"><span class="ln">6</span>ubar &lt;- mean(u); su &lt;- sd(u)               # Mittel und Standardabweichung der Differenzen</div><div class="row" data-src="t &lt;- ubar / (su / sqrt(n))                 # Teststatistik für H0: E[U] = 0"><span class="ln">7</span>t &lt;- ubar / (su / sqrt(n))                 # Teststatistik für H0: E[U] = 0</div><div class="row" data-src="krit &lt;- qt(0.975, n - 1)                   # t_{n-1, 0.975}, zweiseitig alpha = 0.05"><span class="ln">8</span>krit &lt;- qt(0.975, n - 1)                   # t_{n-1, 0.975}, zweiseitig alpha = 0.05</div><div class="row" data-src="p &lt;- 2 * pt(-abs(t), n - 1)                # P-Wert"><span class="ln">9</span>p &lt;- 2 * pt(-abs(t), n - 1)                # P-Wert</div><div class="row" data-src="cat(&quot;t =&quot;, t, &quot; krit =&quot;, krit, &quot; p =&quot;, p, &quot;\n&quot;)"><span class="ln">10</span>cat(&quot;t =&quot;, t, &quot; krit =&quot;, krit, &quot; p =&quot;, p, &quot;\n&quot;)</div><div class="row" data-src="t.test(vorher, nachher, paired = TRUE)     # eingebaut, identisch"><span class="ln">11</span>t.test(vorher, nachher, paired = TRUE)     # eingebaut, identisch</div><div class="row" data-src="t.test(vorher, nachher, var.equal = TRUE)  # FALSCH für gepaarte Daten: verschenkt das Pairing"><span class="ln">12</span>t.test(vorher, nachher, var.equal = TRUE)  # FALSCH für gepaarte Daten: verschenkt das Pairing</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · gepaarter t-Test</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Gepaarter t-Test: Differenzen bilden, dann Ein-Stichproben-t-Test"><span class="ln">1</span># Gepaarter t-Test: Differenzen bilden, dann Ein-Stichproben-t-Test</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src="from scipy import stats"><span class="ln">3</span>from scipy import stats</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="vorher = np.array([5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0])    # Bedingung A"><span class="ln">5</span>vorher = np.array([5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0])    # Bedingung A</div><div class="row" data-src="nachher = np.array([4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3])   # Bedingung B, gleiche Einheiten"><span class="ln">6</span>nachher = np.array([4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3])   # Bedingung B, gleiche Einheiten</div><div class="row" data-src="u = vorher - nachher                       # Differenz pro Paar"><span class="ln">7</span>u = vorher - nachher                       # Differenz pro Paar</div><div class="row" data-src="n = len(u)                                 # Anzahl Paare"><span class="ln">8</span>n = len(u)                                 # Anzahl Paare</div><div class="row" data-src="ubar, su = u.mean(), u.std(ddof=1)         # Mittel und Standardabweichung der Differenzen"><span class="ln">9</span>ubar, su = u.mean(), u.std(ddof=1)         # Mittel und Standardabweichung der Differenzen</div><div class="row" data-src="t = ubar / (su / np.sqrt(n))               # Teststatistik für H0: E[U] = 0"><span class="ln">10</span>t = ubar / (su / np.sqrt(n))               # Teststatistik für H0: E[U] = 0</div><div class="row" data-src="krit = stats.t.ppf(0.975, n - 1)           # t_{n-1, 0.975}, zweiseitig alpha = 0.05"><span class="ln">11</span>krit = stats.t.ppf(0.975, n - 1)           # t_{n-1, 0.975}, zweiseitig alpha = 0.05</div><div class="row" data-src="p = 2 * stats.t.sf(abs(t), n - 1)          # P-Wert"><span class="ln">12</span>p = 2 * stats.t.sf(abs(t), n - 1)          # P-Wert</div><div class="row" data-src="print(f&quot;t = {t:.4f}  krit = {krit:.4f}  p = {p:.4f}&quot;)"><span class="ln">13</span>print(f&quot;t = {t:.4f}  krit = {krit:.4f}  p = {p:.4f}&quot;)</div><div class="row" data-src="print(stats.ttest_rel(vorher, nachher))    # eingebaut, identisch"><span class="ln">14</span>print(stats.ttest_rel(vorher, nachher))    # eingebaut, identisch</div><div class="row" data-src="print(stats.ttest_ind(vorher, nachher))    # FALSCH für gepaarte Daten: verschenkt das Pairing"><span class="ln">15</span>print(stats.ttest_ind(vorher, nachher))    # FALSCH für gepaarte Daten: verschenkt das Pairing</div></pre></div></div>
+</section>
+
+<!-- ============================================================ 8.3 -->
+<section id="s8-3" data-vn data-m="8.3 Zwei-Stichproben-t|S²_pool, t mit n+m−2, VI der Differenz">
+<h2><span class="num">8.3</span>Zwei-Stichproben-t-Test (ungepaart)</h2>
+<div class="vonnull" id="vn-8-3" data-sec="8.3"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 8.3</span>Zwei Produktionslinien vergleichen</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Zugfestigkeiten zweier unabhängiger Linien: X (n = 10): 402, 415, 388, 397, 410, 385, 399, 421, 393, 379; Y (m = 8): 378, 395, 362, 388, 401, 370, 383, 359. Teste \(H_0:\mu_X=\mu_Y\) zweiseitig mit α = 0.05 (normal, gleiche Varianz) und gib das 95-%-VI für \(\mu_X-\mu_Y\) an.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Kennzahlen je Gruppe.</b> \(\bar x=398.9\), \(s_X=13.445\); \(\bar y=379.5\), \(s_Y=15.147\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">Gepoolte Varianz.</b> 
+  \[\Chg{S^2_{\text{pool}}}=\frac{(n-1)s_X^2+(m-1)s_Y^2}{n+m-2}=\frac{9\cdot180.77+7\cdot229.43}{16}\approx\Res{202.06},\quad S_{\text{pool}}\approx14.21\]</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">Teststatistik.</b> 
+  \[\begin{aligned}
+  \Res{t} &= \frac{\bar x-\bar y}{S_{\text{pool}}\sqrt{\frac1n+\frac1m}}=\frac{19.4}{14.21\cdot\sqrt{0.1+0.125}} && \text{Mitteldifferenz durch SE} \\
+  &= \frac{19.4}{6.743}\approx\Res{2.88} && df=n+m-2=16
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">Entscheid.</b> \(t_{16,0.975}=2.120\); \(2.88\ge2.12\) → <b>verwerfen</b>, P ≈ 0.011.</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">VI.</b> \(19.4\pm2.120\cdot6.743=\Res{[5.11;\ 33.69]}\), enthält 0 nicht ✓.</div></div>
+  <div class="vn-res">✔ S²_pool ≈ 202.1, t ≈ 2.88 (df 16), P ≈ 0.011; VI [5.1; 33.7]. Welch-Test (ohne gleiche Varianz): t = 2.84, P = 0.013; Wilcoxon: P = 0.021.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Nenner n + m − 2, nicht n + m. Und die Gewichte in S²_pool sind (n − 1) und (m − 1), nicht n und m.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Bei unabhängigen Gruppen gibt es keine Paare. Modell: beide normalverteilt mit <b>gleicher Varianz</b> σ². Getestet wird \(\mu_X=\mu_Y\).</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Modell und Hypothese</b><div class="anat-f">\[ X_1,\dots,X_n\sim\Nor(\Par{\mu_X},\Par{\sigma^2}),\quad Y_1,\dots,Y_m\sim\Nor(\Par{\mu_Y},\Par{\sigma^2})\ \text{unabhängig},\qquad \Cond{H_0}:\ \mu_X=\mu_Y \]</div><div class="anat"><div><span class="sym">\(X,\ Y\)</span><span>die zwei unabhängigen Gruppen (Umfänge n und m); alle ZV unabhängig</span></div><div><span class="sym">\(\sigma^2\)</span><span>die gemeinsame Varianz: zentrale Annahme</span></div><div><span class="sym">\(H_0\)</span><span>„die Erwartungswerte unterscheiden sich nicht“</span></div></div><div class="read">📖 <b>Vorlesen:</b> „X-Gruppe normal mit mü-X, Y-Gruppe normal mit mü-Y, gleiche Varianz; Nullhypothese: die beiden mü sind gleich.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Werk X soll höhere mittlere Zugfestigkeit haben als Werk Y. Modell und Hypothesen?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Ungepaart, einseitige Alternative.</div><div><i>⚙️ LÖSEN</i>X ~ N(µX, σ²), Y ~ N(µY, σ²), unabhängig. H₀: µX = µY, H_A: µX &gt; µY.</div><div><i>🗣️ SAGEN</i>„Beide normal mit gleicher Varianz; H₀: mü-X gleich mü-Y, einseitige Alternative mü-X größer.“</div></div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔍 Von null: die Teststatistik herleiten</b>
+  \[\begin{aligned}
+  \Var(\bar X_n-\bar Y_m) &= \frac{\sigma^2}{n}+\frac{\sigma^2}{m}=\sigma^2\Big(\frac1n+\frac1m\Big) && \text{unabhängig: Varianzen addieren (Kap. 4)} \\
+  Z &= \frac{(\bar X_n-\bar Y_m)-(\mu_X-\mu_Y)}{\sigma\sqrt{1/n+1/m}}\sim\Nor(0,1) && \text{mit bekanntem }\sigma \\
+  S^2_{\text{pool}} &= \frac{(n-1)S_X^2+(m-1)S_Y^2}{n+m-2} && \sigma\text{ schätzen, größere Gruppe zählt mehr} \\
+  T &= \frac{(\bar X_n-\bar Y_m)-(\mu_X-\mu_Y)}{S_{\text{pool}}\sqrt{1/n+1/m}}\sim t_{n+m-2} && \text{zwei Mittel geschätzt: zwei Freiheitsgrade bezahlt}
+  \end{aligned}\]
+</div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Entscheidung und Vertrauensintervall</b><div class="anat-f">\[ |t|\ge t_{n+m-2,1-\alpha/2}\Rightarrow H_0\ \text{verwerfen},\qquad \Res{I_d}=(\bar X_n-\bar Y_m)\pm S_{\text{pool}}\sqrt{\tfrac1n+\tfrac1m}\;t_{n+m-2,1-\alpha/2} \]</div><div class="anat"><div><span class="sym">\(d=\mu_X-\mu_Y\)</span><span>die Differenz der Erwartungswerte; das VI sammelt alle nicht verworfenen Differenzwerte</span></div><div><span class="sym">\(\text{Dualität}\)</span><span>enthält das VI die 0 nicht, wird \(H_0:\mu_X=\mu_Y\) verworfen</span></div><div><span class="sym">\(\text{Erweiterungen}\)</span><span>ungleiche Varianzen → Welch-Test; nicht normal → Zwei-Stichproben-Wilcoxon (Mann-Whitney), in der Praxis oft die bessere Wahl</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Das Intervall für die Differenz ist Mitteldifferenz plus/minus S-pool mal Wurzel aus eins durch n plus eins durch m mal das t-Quantil.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> n = 12, x̄ = 25.4, s_X = 3.1; m = 15, ȳ = 23.1, s_Y = 2.8; zweiseitig, α = 0.05. S²_pool, t, Entscheid?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Erst gepoolte Varianz, dann t, df = 25.</div><div><i>⚙️ LÖSEN</i>\(S^2_{\text{pool}}=\tfrac{11\cdot3.1^2+14\cdot2.8^2}{25}=8.62\); \(t=\tfrac{2.3}{\sqrt{8.62}\sqrt{1/12+1/15}}=\Res{2.02}<2.06\) → nicht verwerfen.</div><div><i>🗣️ SAGEN</i>„t ist 2.02, knapp unter 2.06: der Unterschied ist nicht signifikant.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? Zwei-Stichproben-t-Test live</b>
+  <div class="ctl"><label>x̄ <input type="range" id="tsX" min="360" max="420" step="0.1" value="398.9" data-fmt="1"><output for="tsX"></output></label>
+  <label>ȳ <input type="range" id="tsY" min="360" max="420" step="0.1" value="380.8" data-fmt="1"><output for="tsY"></output></label>
+  <label>n <input type="range" id="tsN" min="2" max="50" value="10"><output for="tsN"></output></label>
+  <label>m <input type="range" id="tsM" min="2" max="50" value="8"><output for="tsM"></output></label>
+  <label>s_pool <input type="range" id="tsS" min="3" max="40" step="0.1" value="17.3" data-fmt="1"><output for="tsS"></output></label></div>
+  <div class="two"><div id="tsDens" class="plot"></div><div id="tsCI" class="plot" style="min-height:220px"></div></div>
+  <div class="out" id="tsOut"></div>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: Aluminiumlegierung A vs. B</b>
+  <p>Linie A: n = 10, x̄ = 398.9, s_X = 15.9. Linie B: m = 8, ȳ = 380.8, s_Y = 19.0. Ungepaart, α = 0.05.</p>
+  \[\begin{aligned}
+  S^2_{\text{pool}} &= \frac{9\cdot15.9^2+7\cdot19.0^2}{16}=\Res{300.14} && \text{gepoolte Varianz} \\
+  t &= \frac{398.9-380.8}{\sqrt{300.14}\sqrt{\frac1{10}+\frac18}}=\Res{2.2} && \text{Teststatistik} \\
+  K &= (-\infty,-2.12]\cup[2.12,\infty) && t_{16,0.975}=2.12 \\
+  2.2 &\ge 2.12\Rightarrow\text{verwerfen};\quad I_d=18.1\pm17.42=[0.68;\ 35.5] && \text{Entscheid und VI}
+  \end{aligned}\]
+  <p>Signifikant, aber das VI reicht fast an 0 heran: die Relevanz des Unterschieds ist nicht gesichert (vgl. 7.4).</p>
+</div>
+<div id="trZs"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Zwei-Stichproben-t-Test</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Zwei-Stichproben-t-Test (ungepaart, gleiche Varianz)"><span class="ln">1</span># Zwei-Stichproben-t-Test (ungepaart, gleiche Varianz)</div><div class="row" data-src="x &lt;- c(402, 415, 388, 397, 410, 385, 399, 421, 393, 379)   # Gruppe X"><span class="ln">2</span>x &lt;- c(402, 415, 388, 397, 410, 385, 399, 421, 393, 379)   # Gruppe X</div><div class="row" data-src="y &lt;- c(378, 395, 362, 388, 401, 370, 383, 359)             # Gruppe Y"><span class="ln">3</span>y &lt;- c(378, 395, 362, 388, 401, 370, 383, 359)             # Gruppe Y</div><div class="row" data-src="n &lt;- length(x); m &lt;- length(y)             # Umfänge dürfen verschieden sein"><span class="ln">4</span>n &lt;- length(x); m &lt;- length(y)             # Umfänge dürfen verschieden sein</div><div class="row" data-src="sp2 &lt;- ((n - 1) * var(x) + (m - 1) * var(y)) / (n + m - 2) # gepoolte Varianz"><span class="ln">5</span>sp2 &lt;- ((n - 1) * var(x) + (m - 1) * var(y)) / (n + m - 2) # gepoolte Varianz</div><div class="row" data-src="se &lt;- sqrt(sp2) * sqrt(1 / n + 1 / m)      # Standardfehler der Differenz"><span class="ln">6</span>se &lt;- sqrt(sp2) * sqrt(1 / n + 1 / m)      # Standardfehler der Differenz</div><div class="row" data-src="t &lt;- (mean(x) - mean(y)) / se              # Teststatistik"><span class="ln">7</span>t &lt;- (mean(x) - mean(y)) / se              # Teststatistik</div><div class="row" data-src="df &lt;- n + m - 2                            # Freiheitsgrade"><span class="ln">8</span>df &lt;- n + m - 2                            # Freiheitsgrade</div><div class="row" data-src="p &lt;- 2 * pt(-abs(t), df)                   # P-Wert zweiseitig"><span class="ln">9</span>p &lt;- 2 * pt(-abs(t), df)                   # P-Wert zweiseitig</div><div class="row" data-src="vi &lt;- mean(x) - mean(y) + c(-1, 1) * qt(0.975, df) * se    # 95-%-VI für mu_X - mu_Y"><span class="ln">10</span>vi &lt;- mean(x) - mean(y) + c(-1, 1) * qt(0.975, df) * se    # 95-%-VI für mu_X - mu_Y</div><div class="row" data-src="cat(&quot;t =&quot;, t, &quot; df =&quot;, df, &quot; p =&quot;, p, &quot; VI =&quot;, vi, &quot;\n&quot;)"><span class="ln">11</span>cat(&quot;t =&quot;, t, &quot; df =&quot;, df, &quot; p =&quot;, p, &quot; VI =&quot;, vi, &quot;\n&quot;)</div><div class="row" data-src="t.test(x, y, var.equal = TRUE)             # eingebaut; ohne var.equal: Welch-Test"><span class="ln">12</span>t.test(x, y, var.equal = TRUE)             # eingebaut; ohne var.equal: Welch-Test</div><div class="row" data-src="wilcox.test(x, y)                          # Zwei-Stichproben-Wilcoxon (Mann-Whitney)"><span class="ln">13</span>wilcox.test(x, y)                          # Zwei-Stichproben-Wilcoxon (Mann-Whitney)</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Zwei-Stichproben-t-Test</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Zwei-Stichproben-t-Test (ungepaart, gleiche Varianz)"><span class="ln">1</span># Zwei-Stichproben-t-Test (ungepaart, gleiche Varianz)</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src="from scipy import stats"><span class="ln">3</span>from scipy import stats</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="x = np.array([402, 415, 388, 397, 410, 385, 399, 421, 393, 379])   # Gruppe X"><span class="ln">5</span>x = np.array([402, 415, 388, 397, 410, 385, 399, 421, 393, 379])   # Gruppe X</div><div class="row" data-src="y = np.array([378, 395, 362, 388, 401, 370, 383, 359])             # Gruppe Y"><span class="ln">6</span>y = np.array([378, 395, 362, 388, 401, 370, 383, 359])             # Gruppe Y</div><div class="row" data-src="n, m = len(x), len(y)                      # Umfänge dürfen verschieden sein"><span class="ln">7</span>n, m = len(x), len(y)                      # Umfänge dürfen verschieden sein</div><div class="row" data-src="sp2 = ((n - 1) * x.var(ddof=1) + (m - 1) * y.var(ddof=1)) / (n + m - 2)   # gepoolte Varianz"><span class="ln">8</span>sp2 = ((n - 1) * x.var(ddof=1) + (m - 1) * y.var(ddof=1)) / (n + m - 2)   # gepoolte Varianz</div><div class="row" data-src="se = np.sqrt(sp2) * np.sqrt(1 / n + 1 / m) # Standardfehler der Differenz"><span class="ln">9</span>se = np.sqrt(sp2) * np.sqrt(1 / n + 1 / m) # Standardfehler der Differenz</div><div class="row" data-src="t = (x.mean() - y.mean()) / se             # Teststatistik"><span class="ln">10</span>t = (x.mean() - y.mean()) / se             # Teststatistik</div><div class="row" data-src="df = n + m - 2                             # Freiheitsgrade"><span class="ln">11</span>df = n + m - 2                             # Freiheitsgrade</div><div class="row" data-src="p = 2 * stats.t.sf(abs(t), df)             # P-Wert zweiseitig"><span class="ln">12</span>p = 2 * stats.t.sf(abs(t), df)             # P-Wert zweiseitig</div><div class="row" data-src="vi = x.mean() - y.mean() + np.array([-1, 1]) * stats.t.ppf(0.975, df) * se   # 95-%-VI"><span class="ln">13</span>vi = x.mean() - y.mean() + np.array([-1, 1]) * stats.t.ppf(0.975, df) * se   # 95-%-VI</div><div class="row" data-src="print(f&quot;t = {t:.4f}  df = {df}  p = {p:.4f}  VI = {vi.round(2)}&quot;)"><span class="ln">14</span>print(f&quot;t = {t:.4f}  df = {df}  p = {p:.4f}  VI = {vi.round(2)}&quot;)</div><div class="row" data-src="print(stats.ttest_ind(x, y))               # eingebaut; equal_var=False: Welch-Test"><span class="ln">15</span>print(stats.ttest_ind(x, y))               # eingebaut; equal_var=False: Welch-Test</div><div class="row" data-src="print(stats.mannwhitneyu(x, y))            # Zwei-Stichproben-Wilcoxon (Mann-Whitney)"><span class="ln">16</span>print(stats.mannwhitneyu(x, y))            # Zwei-Stichproben-Wilcoxon (Mann-Whitney)</div></pre></div></div>
+</section>
+
+<!-- ============================================================ 8.4 -->
+<section id="s8-4" data-vn data-m="8.4 Vergleich der Konzepte|Landkarte aller Tests, Pairing ignorieren?">
+<h2><span class="num">8.4</span>Vergleich der Konzepte: alles auf einen Blick</h2>
+<div class="vonnull" id="vn-8-4" data-sec="8.4"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 8.4</span>Was passiert, wenn man gepaarte Daten ungepaart auswertet?</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Werte die vorher/nachher-Daten aus 8.2 fälschlich mit dem Zwei-Stichproben-t-Test aus. Vergleiche Teststatistik, Freiheitsgrade und P-Wert mit dem gepaarten Test und erkläre den Unterschied.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Ungepaart gerechnet.</b> \(\bar x=5.5875\), \(\bar y=5.075\), \(S_{\text{pool}}\approx0.496\): \(t=\tfrac{0.5125}{0.496\sqrt{2/8}}\approx\Res{2.07}\), df = 14, P ≈ \(\Res{0.058}\) → <b>nicht</b> signifikant.</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">Gepaart (richtig).</b> t ≈ 4.92, df = 7, P ≈ 0.0017 → hochsignifikant.</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">Warum?</b> Der Zähler (0.5125) ist gleich. Aber ungepaart steckt die große Streuung <i>zwischen</i> Personen im Nenner; gepaart fällt sie in den Differenzen weg (\(s_U=0.29\) statt \(S_{\text{pool}}\sqrt{2}\approx0.70\)).</div></div>
+  <div class="vn-res">✔ Ungepaart: t = 2.07, P = 0.058 (verpasster Effekt); gepaart: t = 4.92, P = 0.002. Die Paar-Struktur ignorieren kostet Macht.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Umgekehrt ist es genauso falsch, bei wirklich unabhängigen Gruppen Paare zu erfinden (z. B. nach Sortierung).</div>
+</details></div>
+<div class="gblk is-g"><div><p>Die komplette Landkarte der Tests bei stetigen Messgrößen: von einer Stichprobe (Kapitel 7) bis zum Zwei-Gruppen-Vergleich (Kapitel 8).</p></div></div>
+<table class="tbl is-g"><tr><th>Situation</th><th>Voraussetzung</th><th>Teststatistik</th><th>Verteilung unter H₀</th><th>df</th><th>R</th></tr>
+<tr><td>1 Stichprobe, σ bekannt</td><td>normal</td><td>\(Z=\frac{\bar X-\mu_0}{\sigma/\sqrt n}\)</td><td>\(\Nor(0,1)\)</td><td>—</td><td><code>pnorm</code></td></tr>
+<tr><td>1 Stichprobe, σ unbekannt</td><td>normal</td><td>\(T=\frac{\bar X-\mu_0}{S/\sqrt n}\)</td><td>\(t_{n-1}\)</td><td>n − 1</td><td><code>t.test(x, mu=)</code></td></tr>
+<tr><td>1 Stichprobe, nicht normal</td><td>Median</td><td>Q / W</td><td>Bin(n, ½) / Tabelle</td><td>—</td><td><code>binom.test</code>, <code>wilcox.test</code></td></tr>
+<tr><td>gepaart</td><td>→ Differenzen</td><td>wie 1 Stichprobe auf U</td><td>t / Bin / Tabelle</td><td>n − 1</td><td><code>t.test(x, y, paired=TRUE)</code></td></tr>
+<tr><td>ungepaart</td><td>normal, gleiche Varianz</td><td>\(T=\frac{\bar X-\bar Y}{S_{\text{pool}}\sqrt{1/n+1/m}}\)</td><td>\(t_{n+m-2}\)</td><td>n + m − 2</td><td><code>t.test(x, y, var.equal=TRUE)</code></td></tr>
+<tr><td>ungepaart, nicht normal</td><td>—</td><td>Zwei-Stichproben-Wilcoxon</td><td>Tabelle</td><td>—</td><td><code>wilcox.test(x, y)</code></td></tr></table>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🧭 Die eine Kernidee:</b> Jeder Test hat dieselbe Form (beobachtet − erwartet)/Standardfehler. Gepaart reduziert man auf eine Stichprobe; ungepaart schätzt man eine gemeinsame Varianz. Verwerfungsbereich, P-Wert, VI und Dualität sind überall identisch.</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Zwei unabhängige Gruppen mit n = 12 und m = 15, Daten klar nicht normal. Welcher Test?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Ungepaart + nicht normal → rangbasiert.</div><div><i>⚙️ LÖSEN</i>Zwei-Stichproben-Wilcoxon (Mann-Whitney): verteilungsfrei, Grenzen aus Tabellen bzw. Computer-P-Wert.</div><div><i>🗣️ SAGEN</i>„Zwei-Stichproben-Wilcoxon-Test: ideal bei nicht-normalen ungepaarten Gruppen.“</div></div></div>
+<table class="tbl is-g"><tr><th></th><th>gepaart</th><th>ungepaart</th></tr><tr><td>reduziert auf</td><td>1 Stichprobe (Differenzen)</td><td>Differenz zweier Mittel</td></tr><tr><td>Varianz</td><td>klein (Block fällt raus)</td><td>gepoolt aus beiden Gruppen</td></tr><tr><td>Freiheitsgrade</td><td>n − 1</td><td>n + m − 2</td></tr><tr><td>Umfänge</td><td>zwingend gleich</td><td>dürfen verschieden sein</td></tr></table>
+</section>
+
+<!-- ============================================================ 8.5 Regression -->
+<section id="s8-5" data-vn data-m="8.5 Regression: t-Test der Steigung|H₀: β = 0, SE(b), df n−2 (Modul)">
+<h2><span class="num">8.5</span>Lineare Regression und t-Test für die Steigung <span class="srcin n">✚ Neu · Modulinhalt</span></h2>
+<p class="one">Die Modulbeschreibung nennt „Lineare Regression und t-Tests“. Hier kommt beides zusammen: Ist die Steigung der Ausgleichsgeraden (3.4.1) signifikant von 0 verschieden?</p>
+<div class="vonnull" id="vn-8-5" data-sec="8.5"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 8.5</span>Ist der lineare Zusammenhang signifikant?</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Für die fünf Punkte (1, 2), (2, 4), (3, 5), (4, 4), (5, 5) ist die Kleinste-Quadrate-Gerade \(\hat y=2.2+0.6x\) (3.4.1). Modell \(Y_i=\alpha+\beta x_i+\varepsilon_i\), \(\varepsilon_i\iid\Nor(0,\sigma^2)\). Teste \(H_0:\beta=0\) zweiseitig mit α = 0.05 und gib ein 95-%-VI für β an.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Fehlervarianz schätzen.</b> SSE = 2.4 (aus 3.4.1). Zwei Parameter (α, β) geschätzt → Nenner n − 2 = 3: \(\hat\sigma^2=\tfrac{2.4}{3}=0.8\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">Standardfehler der Steigung.</b> \(\operatorname{SE}(b)=\sqrt{\hat\sigma^2/S_{xx}}=\sqrt{0.8/10}\approx\Res{0.283}\).</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">Teststatistik.</b> 
+  \[\begin{aligned}
+  \Res{t} &= \frac{b-0}{\operatorname{SE}(b)}=\frac{0.6}{0.283}\approx\Res{2.12} && \text{beobachtet minus erwartet durch SE} \\
+  t_{3,0.975} &= 3.182 && df=n-2
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">Entscheid und VI.</b> \(|2.12|<3.182\) → <b>nicht verwerfen</b>, P ≈ 0.124. VI: \(0.6\pm3.182\cdot0.283=\Res{[-0.30;\ 1.50]}\) enthält 0.</div></div>
+  <div class="vn-res">✔ t = 2.12 (df 3), P ≈ 0.12: bei nur fünf Punkten ist der Zusammenhang (r = 0.77) nicht signifikant. R: <code>summary(lm(y ~ x))</code>.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Ein großes r bei kleinem n ist nicht automatisch signifikant; umgekehrt wird bei riesigem n schon ein winziges r signifikant (Relevanz, 7.4).</div>
+</details></div>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: t-Test für die Steigung</b><div class="anat-f">\[ \Res{T}=\frac{\Chg{b}-\Par{\beta_0}}{\operatorname{SE}(b)},\qquad \operatorname{SE}(b)=\sqrt{\frac{\hat\sigma^2}{\sum(x_i-\bar x)^2}},\qquad \hat\sigma^2=\frac{\sum e_i^2}{n-2},\qquad T\sim t_{\Idx{n-2}} \]</div><div class="anat"><div><span class="sym">\(b\)</span><span>geschätzte Steigung (Kleinste Quadrate)</span></div><div><span class="sym">\(\beta_0\)</span><span>meist 0: „kein linearer Zusammenhang“</span></div><div><span class="sym">\(\hat\sigma^2\)</span><span>geschätzte Streuung um die Gerade; Nenner n − 2, weil Achsenabschnitt und Steigung geschätzt wurden</span></div><div><span class="sym">\(t_{n-2}\)</span><span>gleiche Logik wie beim t-Test: pro geschätztem Parameter ein Freiheitsgrad weniger</span></div></div><div class="why">🧠 <b>Warum so?</b> Äquivalent: \(H_0:\beta=0\) ist derselbe Test wie „wahre Korrelation 0“; es gilt \(t=r\sqrt{n-2}/\sqrt{1-r^2}\). Hier: \(0.775\sqrt3/\sqrt{0.4}=2.12\) ✓.</div><div class="read">📖 <b>Vorlesen:</b> „T ist die geschätzte Steigung minus beta null, geteilt durch ihren Standardfehler; unter H null t-verteilt mit n minus zwei Freiheitsgraden.“</div></div>
+<div class="card has-src "><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔗 Brücke: der Zwei-Stichproben-t-Test ist eine Regression</b>
+  <p>Kodiert man die Gruppe als \(x_i=0\) (Gruppe Y) bzw. \(x_i=1\) (Gruppe X), dann ist die Steigung der Regressionsgeraden genau \(\bar x-\bar y\), und der t-Test für die Steigung ist exakt der Zwei-Stichproben-t-Test mit gepoolter Varianz (df = n + m − 2). In R: <code>summary(lm(wert ~ gruppe))</code> liefert dasselbe t wie <code>t.test(..., var.equal = TRUE)</code>.</p>
+</div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · t-Test der Steigung</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Lineare Regression mit t-Test für die Steigung"><span class="ln">1</span># Lineare Regression mit t-Test für die Steigung</div><div class="row" data-src="x &lt;- c(1, 2, 3, 4, 5); y &lt;- c(2, 4, 5, 4, 5)   # Daten"><span class="ln">2</span>x &lt;- c(1, 2, 3, 4, 5); y &lt;- c(2, 4, 5, 4, 5)   # Daten</div><div class="row" data-src="n &lt;- length(x)"><span class="ln">3</span>n &lt;- length(x)</div><div class="row" data-src="b &lt;- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))^2)   # Steigung 0.6"><span class="ln">4</span>b &lt;- sum((x - mean(x)) * (y - mean(y))) / sum((x - mean(x))^2)   # Steigung 0.6</div><div class="row" data-src="a &lt;- mean(y) - b * mean(x)                 # Achsenabschnitt 2.2"><span class="ln">5</span>a &lt;- mean(y) - b * mean(x)                 # Achsenabschnitt 2.2</div><div class="row" data-src="res &lt;- y - (a + b * x)                     # Residuen"><span class="ln">6</span>res &lt;- y - (a + b * x)                     # Residuen</div><div class="row" data-src="s2 &lt;- sum(res^2) / (n - 2)                 # Fehlervarianz, zwei Parameter geschätzt: n - 2"><span class="ln">7</span>s2 &lt;- sum(res^2) / (n - 2)                 # Fehlervarianz, zwei Parameter geschätzt: n - 2</div><div class="row" data-src="se_b &lt;- sqrt(s2 / sum((x - mean(x))^2))    # Standardfehler der Steigung"><span class="ln">8</span>se_b &lt;- sqrt(s2 / sum((x - mean(x))^2))    # Standardfehler der Steigung</div><div class="row" data-src="t &lt;- b / se_b                              # Test H0: beta = 0 (kein linearer Zusammenhang)"><span class="ln">9</span>t &lt;- b / se_b                              # Test H0: beta = 0 (kein linearer Zusammenhang)</div><div class="row" data-src="c(t, 2 * pt(-abs(t), n - 2))               # t = 2.12, p = 0.124"><span class="ln">10</span>c(t, 2 * pt(-abs(t), n - 2))               # t = 2.12, p = 0.124</div><div class="row" data-src="b + c(-1, 1) * qt(0.975, n - 2) * se_b     # 95-%-VI für die Steigung"><span class="ln">11</span>b + c(-1, 1) * qt(0.975, n - 2) * se_b     # 95-%-VI für die Steigung</div><div class="row" data-src="summary(lm(y ~ x))                         # dieselben Zahlen in der Zeile &quot;x&quot;"><span class="ln">12</span>summary(lm(y ~ x))                         # dieselben Zahlen in der Zeile &quot;x&quot;</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · t-Test der Steigung</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Lineare Regression mit t-Test für die Steigung"><span class="ln">1</span># Lineare Regression mit t-Test für die Steigung</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src="from scipy import stats"><span class="ln">3</span>from scipy import stats</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="x = np.array([1, 2, 3, 4, 5]); y = np.array([2, 4, 5, 4, 5])   # Daten"><span class="ln">5</span>x = np.array([1, 2, 3, 4, 5]); y = np.array([2, 4, 5, 4, 5])   # Daten</div><div class="row" data-src="n = len(x)"><span class="ln">6</span>n = len(x)</div><div class="row" data-src="b = np.sum((x - x.mean()) * (y - y.mean())) / np.sum((x - x.mean()) ** 2)   # Steigung 0.6"><span class="ln">7</span>b = np.sum((x - x.mean()) * (y - y.mean())) / np.sum((x - x.mean()) ** 2)   # Steigung 0.6</div><div class="row" data-src="a = y.mean() - b * x.mean()                # Achsenabschnitt 2.2"><span class="ln">8</span>a = y.mean() - b * x.mean()                # Achsenabschnitt 2.2</div><div class="row" data-src="res = y - (a + b * x)                      # Residuen"><span class="ln">9</span>res = y - (a + b * x)                      # Residuen</div><div class="row" data-src="s2 = np.sum(res ** 2) / (n - 2)            # Fehlervarianz, zwei Parameter geschätzt: n - 2"><span class="ln">10</span>s2 = np.sum(res ** 2) / (n - 2)            # Fehlervarianz, zwei Parameter geschätzt: n - 2</div><div class="row" data-src="se_b = np.sqrt(s2 / np.sum((x - x.mean()) ** 2))   # Standardfehler der Steigung"><span class="ln">11</span>se_b = np.sqrt(s2 / np.sum((x - x.mean()) ** 2))   # Standardfehler der Steigung</div><div class="row" data-src="t = b / se_b                               # Test H0: beta = 0 (kein linearer Zusammenhang)"><span class="ln">12</span>t = b / se_b                               # Test H0: beta = 0 (kein linearer Zusammenhang)</div><div class="row" data-src="print(t, 2 * stats.t.sf(abs(t), n - 2))    # t = 2.12, p = 0.124"><span class="ln">13</span>print(t, 2 * stats.t.sf(abs(t), n - 2))    # t = 2.12, p = 0.124</div><div class="row" data-src="print(b + np.array([-1, 1]) * stats.t.ppf(0.975, n - 2) * se_b)   # 95-%-VI für die Steigung"><span class="ln">14</span>print(b + np.array([-1, 1]) * stats.t.ppf(0.975, n - 2) * se_b)   # 95-%-VI für die Steigung</div><div class="row" data-src="print(stats.linregress(x, y))              # slope, stderr, pvalue: dieselben Zahlen"><span class="ln">15</span>print(stats.linregress(x, y))              # slope, stderr, pvalue: dieselben Zahlen</div></pre></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="statquest/Linear Regression, Clearly Explained!!! [7ArmBVF2dCs].mp4"><span class="vt">🎬 Linear Regression, Clearly Explained!!!</span> <span class="muted small">Regression inkl. p-Wert</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Linear Regression, Clearly Explained!!! [7ArmBVF2dCs].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Linear Regression in R, Step-by-Step [u1cc1r_Y7M0].mp4"><span class="vt">🎬 Linear Regression in R, Step-by-Step</span> <span class="muted small">lm in R</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Linear Regression in R, Step-by-Step [u1cc1r_Y7M0].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ Werkzeuge -->
+<section id="s8-6" data-m="🧰 Werkzeuge|eigene Daten vergleichen">
+<h2>🧰 Interaktive Werkzeuge: eigene Daten vergleichen</h2>
+<p>Trag deine eigenen Messwerte ein (Komma, Leerzeichen oder Zeilenumbruch). Alle Rechnungen laufen lokal und stimmen mit R/SciPy überein.</p>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧰 1 · Boxplot und überlagerte Histogramme</b>
+  <div class="viz" style="margin:0"><div class="two"><label>Gruppe A<textarea id="w1A">402, 415, 388, 397, 410, 385, 399, 421, 393, 379</textarea></label><label>Gruppe B<textarea id="w1B">378, 395, 362, 388, 401, 370, 383, 359</textarea></label></div>
+  <div class="two"><div id="w1Box" class="plot"></div><div id="w1Hist" class="plot"></div></div><div class="out" id="w1Out"></div></div>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧰 2 · Zwei-Stichproben-t-Test-Rechner (ungepaart)</b>
+  <div class="viz" style="margin:0"><div class="two"><label>Gruppe X<textarea id="w2X">402, 415, 388, 397, 410, 385, 399, 421, 393, 379</textarea></label><label>Gruppe Y<textarea id="w2Y">378, 395, 362, 388, 401, 370, 383, 359</textarea></label></div>
+  <div class="ctl"><label>1 − α <input type="range" id="w2L" min="0.8" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="w2L"></output></label><label><input type="checkbox" id="w2W"> Welch (ungleiche Varianzen)</label></div>
+  <div class="out" id="w2Out"></div></div>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧰 3 · Gepaarter Vergleich</b>
+  <div class="viz" style="margin:0"><div class="two"><label>Bedingung A<textarea id="w3A">5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0</textarea></label><label>Bedingung B<textarea id="w3B">4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3</textarea></label></div>
+  <div class="two"><div id="w3Pairs" class="plot"></div><div id="w3Diff" class="plot"></div></div><div class="out" id="w3Out"></div></div>
+</div>
+</section>
+
+<section id="s8-7" data-m="📐 Schema & Beispiele|5 Schritte Zwei-Gruppen-Vergleich">
+<h2>📐 Schema: Zwei-Gruppen-Vergleich in 5 Schritten</h2>
+<ol class="cook is-g"><li><b>Einordnen:</b> gepaart (eine Einheit, zwei Messungen) oder ungepaart (zwei Gruppen)?</li><li><b>Reduzieren:</b> gepaart → Differenzen \(U_i\). Ungepaart → \(S^2_{\text{pool}}\).</li><li><b>Modell prüfen:</b> normal (Normalplot)? → t-basiert. Sonst → Vorzeichen/Wilcoxon.</li><li><b>Testen:</b> Statistik, Freiheitsgrade (n − 1 bzw. n + m − 2), Verwerfungsbereich, Entscheid.</li><li><b>Berichten:</b> VI für die Differenz + Relevanz beurteilen (VI gegen 0 und Relevanzbereich).</li></ol>
+<div class="ex3">
+  <div class="ex is-g"><div class="lvl l1">Beispiel 1 · leicht <span class="srcin">📘 Grundlage</span></div><b>Gepaart</b>2 Labore, 7 Prüfkörper.<div class="verdict"><b>Verdict:</b> Differenzen, t = 3.30 &gt; 2.447 → verwerfen.</div></div>
+  <div class="ex is-g"><div class="lvl l2">Beispiel 2 · mittel <span class="srcin">📘 Grundlage</span></div><b>Ungepaart</b>Alu A/B.<div class="verdict"><b>Verdict:</b> S²_pool = 300.14, t = 2.20 &gt; 2.12 → verwerfen.</div></div>
+  <div class="ex is-g"><div class="lvl l3">Beispiel 3 · schwer <span class="srcin">📘 Grundlage</span></div><b>Relevanz</b>VI der Differenz [0.68; 35.5].<div class="verdict"><b>Verdict:</b> ∌ 0 → signifikant, aber nahe 0 → Relevanz nicht gesichert.</div></div>
+</div>
+</section>
+
+<section id="s8-9" data-m="🌉 Brücke & Lernziele|Abschluss Statistik I">
+<h2>🌉 Die große Brücke: Statistik I als ein roter Faden</h2>
+<div class="card has-src "><span class="src n" title="neu ergänzt">✚ Neu</span><b>🧵 Vom Zufallsexperiment bis zum Zwei-Gruppen-Test</b>
+<svg viewBox="0 0 1200 200" role="img" aria-label="roter Faden Statistik I">
+  <defs><marker id="arrK8b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="15" text-anchor="middle">
+    <rect x="10" y="20" width="270" height="60" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="145" y="45" fill="#f778ba" font-weight="700">Kap. 1–2 Modelle</text><text x="145" y="67" fill="#8b949e">P, Zufallsvariable, Verteilungen</text>
+    <rect x="310" y="20" width="270" height="60" rx="10" fill="#1c2129" stroke="#d29922"/><text x="445" y="45" fill="#d29922" font-weight="700">Kap. 3–4 Daten und Paare</text><text x="445" y="67" fill="#8b949e">Kennzahlen, Cov, Regression</text>
+    <rect x="610" y="20" width="270" height="60" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="745" y="45" fill="#bc8cff" font-weight="700">Kap. 5–6 Grenzwerte, Schätzen</text><text x="745" y="67" fill="#8b949e">ZGS, ML, SE, VI</text>
+    <rect x="910" y="20" width="280" height="60" rx="10" fill="#1c2129" stroke="#f85149"/><text x="1050" y="45" fill="#f85149" font-weight="700">Kap. 7–8 Testen</text><text x="1050" y="67" fill="#8b949e">eine, zwei Stichproben, Steigung</text>
+    <line x1="280" y1="50" x2="308" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8b)"/>
+    <line x1="580" y1="50" x2="608" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8b)"/>
+    <line x1="880" y1="50" x2="908" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8b)"/>
+    <text x="600" y="130" fill="#bc8cff" font-weight="700">Jeder Test: (beobachtet − erwartet) / Standardfehler → Verwerfungsbereich, P-Wert, VI</text>
+    <text x="600" y="165" fill="#8b949e">Ausblick Statistik II: χ²-Tests, Bayes-Inferenz, Bootstrap, multiple Regression (siehe Notizen im Repo)</text>
+  </g>
+</svg>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>✅ Lernziele-Check (8.5)</b>
+  <ul><li>Ich unterscheide gepaarte und ungepaarte Stichproben sicher.</li><li>Ich behandle gepaarte Stichproben mit den Ein-Stichproben-Methoden (Differenzen).</li><li>Ich kenne und wende den Zwei-Stichproben-t-Test an, auch für Vertrauensintervalle.</li><li>✚ Ich kann die Steigung einer Regressionsgeraden testen (Modul).</li></ul>
+</div>
+</section>
+
+<section id="s8-cheat" data-m="📋 Cheat-Sheet|Formeln Kap. 8">
+<h2>📋 Cheat-Sheet Kapitel 8</h2>
+<table class="tbl cheat">
+<tr><th>Was</th><th>Formel</th><th>R</th><th>Python</th></tr>
+<tr><td>gepaart</td><td>\(t=\frac{\bar u}{s_U/\sqrt n}\), df n − 1</td><td><code>t.test(x, y, paired = TRUE)</code></td><td><code>stats.ttest_rel(x, y)</code></td></tr>
+<tr><td>gepoolte Varianz</td><td>\(\frac{(n-1)s_X^2+(m-1)s_Y^2}{n+m-2}\)</td><td>—</td><td>—</td></tr>
+<tr><td>ungepaart</td><td>\(t=\frac{\bar x-\bar y}{s_{\text{pool}}\sqrt{1/n+1/m}}\), df n + m − 2</td><td><code>t.test(x, y, var.equal = TRUE)</code></td><td><code>stats.ttest_ind(x, y)</code></td></tr>
+<tr><td>Welch</td><td>ungleiche Varianzen</td><td><code>t.test(x, y)</code></td><td><code>stats.ttest_ind(x, y, equal_var=False)</code></td></tr>
+<tr><td>VI der Differenz</td><td>\((\bar x-\bar y)\pm s_{\text{pool}}\sqrt{1/n+1/m}\,t_{n+m-2,1-\alpha/2}\)</td><td><code>$conf.int</code></td><td>—</td></tr>
+<tr><td>Wilcoxon</td><td>gepaart: auf Differenzen; ungepaart: Mann-Whitney</td><td><code>wilcox.test</code></td><td><code>stats.wilcoxon</code>, <code>stats.mannwhitneyu</code></td></tr>
+<tr><td>✚ Steigung</td><td>\(t=b/\operatorname{SE}(b)\), df n − 2</td><td><code>summary(lm(y ~ x))</code></td><td><code>stats.linregress(x, y)</code></td></tr>
+</table>
+</section>
+
+<section id="s8-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-rule">gepaarte Stichprobe</span></td><td>paired sample</td><td>dieselbe Einheit, zwei Messungen</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-rule">ungepaarte Stichprobe</span></td><td>independent samples</td><td>zwei getrennte Gruppen</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Randomisierung</span></td><td>randomization</td><td>zufällige Zuordnung</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Blockbildung</span></td><td>blocking</td><td>Einheit als eigener Vergleich</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Differenz Uᵢ</span></td><td>within-pair difference</td><td>macht aus Paaren eine Stichprobe</td><td><a href="#s8-2">8.2</a></td></tr>
+<tr><td><span class="kw kw-chg">gepoolte Varianz</span></td><td>pooled variance</td><td>gewichtetes Mittel der Gruppenvarianzen</td><td><a href="#s8-3">8.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Zwei-Stichproben-t-Test</span></td><td>two-sample t-test</td><td>μ_X = μ_Y bei gleicher Varianz</td><td><a href="#s8-3">8.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Welch-Test</span></td><td>Welch's t-test</td><td>ohne gleiche Varianz</td><td><a href="#s8-3">8.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Mann-Whitney / Zwei-Stichproben-Wilcoxon</span></td><td>Mann–Whitney U test</td><td>rangbasiert, verteilungsfrei</td><td><a href="#s8-4">8.4</a></td></tr>
+<tr><td><span class="kw kw-res">Standardfehler der Steigung</span></td><td>standard error of the slope</td><td>Genauigkeit von b</td><td><a href="#s8-5">8.5</a></td></tr>
+</table>
+</section>
+
+<section id="s8-train" data-m="🏋 Training|gepaart oder ungepaart rechnen">
+<h2>🏋 Training</h2>
+<div class="card has-src " id="qz8"><span class="src n" title="neu ergänzt">✚ Neu</span><b>Zufällige Zwei-Gruppen-Aufgabe</b>
+  <div id="q8Task"></div>
+  <div class="quiz two"><p>t = <input id="q8t"></p><p>Freiheitsgrade = <input id="q8d"></p></div>
+  <p><button class="btn" id="q8Chk">Prüfen</button> <button class="btn" id="q8New">Neue Aufgabe</button></p>
+  <div class="out" id="q8Res"></div>
+</div>
+</section>
+
+<footer class="foot">Lernbegleiter Statistik I · Kap. 8 · Vergleich zweier Stichproben · 📘 Grundlage = Inhalt aus dem bisherigen Lernbegleiter (Skript L. Meier, ETH) · ✚ Neu = ergänzt · alle Zahlen per Skript nachgerechnet.</footer>
+</main>
+<script>
+/* =====================================================================
+   Lernbegleiter-Engine (gemeinsam für alle Kapitel)
+   Namensraum window.LB · KaTeX-Makros · Menü · Farbwörter · Tracer
+   Statistik-Funktionen · Plotly-Hilfen · Video-Links · Teilwechsel
+   ===================================================================== */
+(function () {
+'use strict';
+const LB = window.LB = window.LB || {};
+LB.inits = LB.inits || [];
+LB.on = fn => LB.inits.push(fn);                                   // Kapitel-Skripte melden Init-Funktionen an
+
+/* ---------- Rollenfarben (identisch zu :root in base.css) ---------- */
+LB.C = { res: '#f85149', chg: '#d29922', rule: '#bc8cff', par: '#58a6ff', idx: '#3fb950', cond: '#56d4dd', mem: '#f778ba',
+         text: '#e6edf3', muted: '#8b949e', border: '#30363d', card2: '#1c2129' };
+LB.rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+
+/* ---------- KaTeX: eine Konfiguration für alle Aufrufe ---------- */
+LB.KOPT = {
+  delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }],
+  throwOnError: false,
+  macros: {
+    '\\Res': '\\textcolor{f85149}{#1}', '\\Chg': '\\textcolor{d29922}{#1}', '\\Rule': '\\textcolor{bc8cff}{#1}',
+    '\\Par': '\\textcolor{58a6ff}{#1}', '\\Idx': '\\textcolor{3fb950}{#1}', '\\Cond': '\\textcolor{56d4dd}{#1}',
+    '\\Mem': '\\textcolor{f778ba}{#1}',
+    '\\PP': '\\Rule{P}',                                            // Wahrscheinlichkeits-Operator
+    '\\EE': '\\Rule{E}',                                            // Erwartungswert-Operator
+    '\\Var': '\\Rule{\\operatorname{Var}}',
+    '\\Cov': '\\Rule{\\operatorname{Cov}}',
+    '\\Corr': '\\Rule{\\operatorname{Corr}}',
+    '\\sd': '\\Rule{\\sigma}',
+    '\\given': '\\,\\Cond{\\vert}\\,',                              // Bedingungsstrich
+    '\\Om': '\\Mem{\\Omega}',                                       // Grundraum
+    '\\iid': '\\Rule{\\overset{\\text{i.i.d.}}{\\sim}}',
+    '\\dd': '\\,\\mathrm{d}',
+    '\\mA': '\\Mem{A}', '\\mB': '\\Mem{B}', '\\mX': '\\Mem{X}', '\\mY': '\\Mem{Y}',
+    '\\capc': '\\mathbin{\\Chg{\\cap}}', '\\cupc': '\\mathbin{\\Chg{\\cup}}', '\\co': '^{\\Chg{c}}',
+    '\\setm': '\\mathbin{\\Chg{\\setminus}}',
+    '\\pf': '\\Rule{p}', '\\ff': '\\Rule{f}', '\\FF': '\\Rule{F}', '\\WW': '\\Mem{\\mathcal{W}}',
+    '\\mx': '\\Mem{x}', '\\mZ': '\\Mem{Z}', '\\mT': '\\Mem{T}',
+    '\\Bin': '\\Rule{\\operatorname{Bin}}', '\\Pois': '\\Rule{\\operatorname{Pois}}', '\\Geom': '\\Rule{\\operatorname{Geom}}',
+    '\\Bern': '\\Rule{\\operatorname{Bernoulli}}', '\\Uni': '\\Rule{\\operatorname{Uni}}', '\\Nor': '\\Rule{\\mathcal{N}}', '\\Expo': '\\Rule{\\operatorname{Exp}}'
+  }
+};
+LB.tex = el => { if (window.renderMathInElement && el) window.renderMathInElement(el, LB.KOPT); };
+LB.esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+LB.$ = (s, r) => (r || document).querySelector(s);
+LB.$$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+LB.fmt = (v, d) => { if (d === undefined) d = 4; if (!isFinite(v)) return '–'; const s = Number(v).toFixed(d); return s === '-' + (0).toFixed(d) ? (0).toFixed(d) : s; };
+LB.store = {                                                       // localStorage ist unter file:// oft gesperrt
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* egal */ } }
+};
+LB.inFrame = (() => { try { return window.parent !== window; } catch (e) { return true; } })();
+
+/* =====================================================================
+   Statistik-Funktionen (JS-Spiegel der C++-Programme)
+   ===================================================================== */
+const S = LB.S = {};
+S.lgamma = function (x) {                                         // log Γ(x), Lanczos g=7
+  const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
+    12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - S.lgamma(1 - x);
+  x -= 1; let a = c[0]; const t = x + 7.5;
+  for (let i = 1; i < 9; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+};
+S.choose = (n, k) => (k < 0 || k > n) ? 0 : Math.round(Math.exp(S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1)));
+S.lchoose = (n, k) => S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1);
+S.fact = n => { let f = 1; for (let i = 2; i <= n; i++) f *= i; return f; };
+S.gammaP = function (a, x) {                                      // regularisierte untere unvollständige Gamma-Funktion
+  if (x <= 0) return 0;
+  const gln = S.lgamma(a);
+  if (x < a + 1) { let ap = a, sum = 1 / a, del = sum;
+    for (let n = 0; n < 500; n++) { ap++; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-15) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - gln); }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 500; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return 1 - Math.exp(-x + a * Math.log(x) - gln) * h;
+};
+S.betacf = function (a, b, x) {                                    // Kettenbruch für die unvollständige Beta-Funktion
+  const qab = a + b, qap = a + 1, qam = a - 1; let c = 1, d = 1 - qab * x / qap; if (Math.abs(d) < 1e-300) d = 1e-300; d = 1 / d; let h = d;
+  for (let m = 1; m <= 300; m++) { const m2 = 2 * m; let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d;
+    const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return h;
+};
+S.betaI = function (a, b, x) {                                     // regularisierte unvollständige Beta-Funktion I_x(a,b)
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  const bt = Math.exp(S.lgamma(a + b) - S.lgamma(a) - S.lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  return (x < (a + 1) / (a + b + 2)) ? bt * S.betacf(a, b, x) / a : 1 - bt * S.betacf(b, a, 1 - x) / b;
+};
+S.erfc = x => x >= 0 ? 1 - S.gammaP(0.5, x * x) : 1 + S.gammaP(0.5, x * x);
+S.normPdf = (x, mu = 0, s = 1) => { const z = (x - mu) / s; return Math.exp(-0.5 * z * z) / (s * Math.sqrt(2 * Math.PI)); };
+S.Phi = x => 0.5 * S.erfc(-x / Math.SQRT2);                        // Standardnormal-Verteilungsfunktion Φ
+S.normCdf = (x, mu = 0, s = 1) => S.Phi((x - mu) / s);
+S.PhiInv = function (p) {                                          // Φ⁻¹(p): Acklam + zwei Newton-Schritte
+  if (p <= 0) return -Infinity; if (p >= 1) return Infinity;
+  const a = [-3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.383577518672690e2, -3.066479806614716e1, 2.506628277459239e0],
+    b = [-5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1, -1.328068155288572e1],
+    c = [-7.784894002430293e-3, -3.223964580411365e-1, -2.400758277161838e0, -2.549732539343734e0, 4.374664141464968e0, 2.938163982698783e0],
+    d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996e0, 3.754408661907416e0];
+  let q, r, x;
+  if (p < 0.02425) { q = Math.sqrt(-2 * Math.log(p)); x = (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  else if (p <= 1 - 0.02425) { q = p - 0.5; r = q * q; x = (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1); }
+  else { q = Math.sqrt(-2 * Math.log(1 - p)); x = -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  for (let k = 0; k < 2; k++) { const e = S.Phi(x) - p, u = e * Math.sqrt(2 * Math.PI) * Math.exp(x * x / 2); x = x - u / (1 + x * u / 2); }
+  return x;
+};
+S.tPdf = (t, nu) => Math.exp(S.lgamma((nu + 1) / 2) - S.lgamma(nu / 2)) / Math.sqrt(nu * Math.PI) * Math.pow(1 + t * t / nu, -(nu + 1) / 2);
+S.tCdf = (t, nu) => { const p = 0.5 * S.betaI(nu / 2, 0.5, nu / (nu + t * t)); return t > 0 ? 1 - p : p; };
+S.chi2Cdf = (x, k) => x <= 0 ? 0 : S.gammaP(k / 2, x / 2);
+S.chi2Pdf = (x, k) => x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.log(2) - S.lgamma(k / 2));
+S.invert = function (cdf, p, lo, hi) {                             // Quantil per Bisektion einer monotonen Verteilungsfunktion
+  for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (cdf(m) < p) lo = m; else hi = m; if (hi - lo < 1e-12) break; }
+  return (lo + hi) / 2;
+};
+S.tInv = (p, nu) => S.invert(x => S.tCdf(x, nu), p, -1e4, 1e4);
+S.chi2Inv = (p, k) => S.invert(x => S.chi2Cdf(x, k), p, 0, 1e4);
+S.binomPmf = (k, n, p) => { if (k < 0 || k > n || k !== Math.floor(k)) return 0; if (p <= 0) return k === 0 ? 1 : 0; if (p >= 1) return k === n ? 1 : 0;
+  return Math.exp(S.lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)); };
+S.binomCdf = (k, n, p) => { let s = 0; for (let i = 0; i <= Math.min(k, n); i++) s += S.binomPmf(i, n, p); return Math.min(1, s); };
+S.poisPmf = (k, l) => (k < 0 || k !== Math.floor(k)) ? 0 : Math.exp(-l + k * Math.log(l) - S.lgamma(k + 1));
+S.poisCdf = (k, l) => { let s = 0; for (let i = 0; i <= k; i++) s += S.poisPmf(i, l); return Math.min(1, s); };
+S.geomPmf = (k, p) => k < 1 ? 0 : Math.pow(1 - p, k - 1) * p;       // Anzahl Versuche bis zum ersten Erfolg (k = 1, 2, …)
+S.hyperPmf = (k, N, M, n) => Math.exp(S.lchoose(M, k) + S.lchoose(N - M, n - k) - S.lchoose(N, n));
+S.expPdf = (x, l) => x < 0 ? 0 : l * Math.exp(-l * x);
+S.expCdf = (x, l) => x < 0 ? 0 : 1 - Math.exp(-l * x);
+/* Deskriptive Kennzahlen, Quantil-Definition wie im Skript */
+S.sum = a => a.reduce((s, x) => s + x, 0);
+S.mean = a => S.sum(a) / a.length;
+S.var = a => { const m = S.mean(a); return a.reduce((s, x) => s + (x - m) * (x - m), 0) / (a.length - 1); };
+S.sd = a => Math.sqrt(S.var(a));
+S.sorted = a => a.slice().sort((x, y) => x - y);
+S.quantile = function (a, alpha) {                                 // α·n ganzzahlig → Mittel zweier Nachbarn, sonst x_(⌈α n⌉)
+  const s = S.sorted(a), n = s.length, an = alpha * n, r = Math.round(an);
+  if (Math.abs(an - r) < 1e-9) { if (r <= 0) return s[0]; if (r >= n) return s[n - 1]; return 0.5 * (s[r - 1] + s[r]); }
+  return s[Math.ceil(an) - 1];
+};
+S.median = a => S.quantile(a, 0.5);
+S.cor = (x, y) => { const mx = S.mean(x), my = S.mean(y); let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < x.length; i++) { sxy += (x[i] - mx) * (y[i] - my); sxx += (x[i] - mx) ** 2; syy += (y[i] - my) ** 2; }
+  return sxy / Math.sqrt(sxx * syy); };
+S.parse = str => (str || '').split(/[\s,;]+/).map(s => s.trim()).filter(s => s !== '').map(Number).filter(x => !isNaN(x));
+S.rng = function (seed) {                                          // reproduzierbarer Zufall (mulberry32)
+  let t = seed >>> 0;
+  const u = () => { t += 0x6D2B79F5; let r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; };
+  u.norm = () => { let a = 0; while (a === 0) a = u(); return Math.sqrt(-2 * Math.log(a)) * Math.cos(2 * Math.PI * u()); };
+  return u;
+};
+
+/* =====================================================================
+   Plotly-Hilfen (dunkles Layout, Rollenfarben)
+   ===================================================================== */
+LB.PCFG = { displayModeBar: false, responsive: true };
+LB.lay = function (extra) {
+  const L = { margin: { l: 55, r: 18, t: 20, b: 45 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: 'Source Sans 3, Segoe UI, sans-serif', size: 13, color: LB.C.text }, showlegend: false,
+    xaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border }, yaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border },
+    legend: { bgcolor: 'rgba(0,0,0,0)', orientation: 'h', y: 1.12 } };
+  if (extra) for (const k in extra) {
+    if ((k === 'xaxis' || k === 'yaxis') && typeof extra[k] === 'object') L[k] = Object.assign({}, L[k], extra[k]); else L[k] = extra[k];
+  }
+  return L;
+};
+LB.plot = (el, traces, layout) => { if (!window.Plotly) return; const e = typeof el === 'string' ? document.getElementById(el) : el; if (e) Plotly.react(e, traces, LB.lay(layout), LB.PCFG); };
+LB.area = function (f, a, b, color, n) {                           // gefüllte Fläche unter einer Dichte
+  n = n || 120; const xs = [a], ys = [0];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  xs.push(b); ys.push(0);
+  return { x: xs, y: ys, fill: 'toself', mode: 'none', fillcolor: color, hoverinfo: 'skip' };
+};
+LB.curve = function (f, a, b, color, n, extra) {
+  n = n || 200; const xs = [], ys = [];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  return Object.assign({ x: xs, y: ys, mode: 'lines', line: { color: color, width: 2.6 }, hoverinfo: 'skip' }, extra || {});
+};
+/* Regler binden: bind(['id1','id2'], fn) → fn(values) bei jeder Änderung, Ausgabe in <output for=id> */
+LB.bind = function (ids, fn) {
+  const els = ids.map(id => document.getElementById(id));
+  const run = () => {
+    const v = {};
+    els.forEach(e => { if (!e) return; const val = e.type === 'checkbox' ? e.checked : (e.type === 'range' || e.type === 'number' ? parseFloat(e.value) : e.value);
+      v[e.id] = val; const o = document.querySelector('output[for="' + e.id + '"]'); if (o) o.textContent = e.dataset.fmt ? LB.fmt(val, +e.dataset.fmt) : e.value; });
+    fn(v);
+  };
+  els.forEach(e => e && e.addEventListener('input', run));
+  run(); return run;
+};
+
+/* =====================================================================
+   Code-Hervorhebung für R und Python: Kommentare, Strings, Schlüsselwörter,
+   Funktionen, Zahlen, Zuweisung. Marker "#@name" am Zeilenende werden entfernt.
+   ===================================================================== */
+const KW = {
+  R: new Set('function if else for while repeat in return TRUE FALSE NULL NA Inf break next library'.split(' ')),
+  Python: new Set('def if elif else for while in return True False None import from as lambda with and or not pass break continue print'.split(' '))
+};
+LB.stripMark = l => l.replace(/\s*#@[\w-]+\s*$/, '');
+LB.markOf = l => { const m = l.match(/#@([\w-]+)\s*$/); return m ? m[1] : ''; };
+LB.hlLine = function (line, lang) {
+  lang = lang || 'R'; const kws = KW[lang] || KW.R;
+  let out = '', i = 0; const n = line.length;
+  while (i < n) {
+    const ch = line[i];
+    if (ch === '#') { out += '<span class="tok-c">' + LB.esc(line.slice(i)) + '</span>'; break; }
+    if (ch === '"' || ch === "'") { let j = i + 1; while (j < n && line[j] !== ch) { if (line[j] === '\\') j++; j++; }
+      out += '<span class="tok-s">' + LB.esc(line.slice(i, j + 1)) + '</span>'; i = j + 1; continue; }
+    if (line.startsWith('<-', i)) { out += '<span class="tok-a">&lt;-</span>'; i += 2; continue; }
+    if (/[A-Za-z_.]/.test(ch)) { let j = i + 1; while (j < n && /[A-Za-z0-9_.]/.test(line[j])) j++;
+      const w = line.slice(i, j);
+      if (kws.has(w)) out += '<span class="tok-k">' + LB.esc(w) + '</span>';
+      else if (line[j] === '(') out += '<span class="tok-t">' + LB.esc(w) + '</span>';
+      else out += LB.esc(w);
+      i = j; continue; }
+    if (/[0-9]/.test(ch)) { let j = i + 1; while (j < n && /[0-9.eE]/.test(line[j])) j++; out += '<span class="tok-n">' + line.slice(i, j) + '</span>'; i = j; continue; }
+    out += LB.esc(ch); i++;
+  }
+  return out;
+};
+
+/* =====================================================================
+   Code-Tracer: zeichnet alle Schritte einmal auf, spielt dann ab
+   ===================================================================== */
+LB.Tracer = class {
+  constructor(o) {
+    this.o = o; this.root = document.getElementById(o.id); if (!this.root) return;
+    this.langs = o.langs || { R: o.code };                            // {R: [...], Python: [...]}
+    this.lang = LB.store.get('lb-lang', 'R'); if (!this.langs[this.lang]) this.lang = Object.keys(this.langs)[0];
+    this.root.classList.add('tracer');
+    const ex = (o.examples || []).map((e, k) => '<option value="' + k + '">' + LB.esc(e[0]) + '</option>').join('');
+    this.root.innerHTML =
+      '<div class="tr-head"><b>▶ ' + LB.esc(o.title) + '</b>' +
+      '<label>Eingabe <input class="tr-in" value="' + LB.esc(o.input) + '" aria-label="Eingabe"></label>' +
+      (ex ? '<select class="tr-ex" aria-label="Beispiele"><option value="">Beispiele …</option>' + ex + '</select>' : '') +
+      '<span class="seg tr-lang">' + Object.keys(this.langs).map(L => '<button data-lang="' + L + '">' + L + '</button>').join('') + '</span>' +
+      '<button data-a="run">↻ neu starten</button>' + (o.hint ? '<span class="muted small">' + o.hint + '</span>' : '') + '</div>' +
+      '<div class="tr-grid"><pre class="tr-code"></pre><div class="tr-state"></div></div>' +
+      '<div class="tr-ctl"><button data-a="first" title="Anfang">⏮</button><button data-a="prev" title="zurück">◀</button>' +
+      '<input type="range" class="tr-pos" min="0" value="0" aria-label="Schritt">' +
+      '<button data-a="next" title="vor">▶</button><button data-a="last" title="Ende">⏭</button>' +
+      '<button data-a="auto">⏯ auto</button><span class="tr-cnt"></span></div>' +
+      '<div class="tr-msg"></div>';
+    this.q = s => this.root.querySelector(s);
+    this.root.addEventListener('click', e => {
+      const b = e.target.closest('[data-a]'); if (b) this.act(b.dataset.a);
+      const l = e.target.closest('[data-lang]'); if (l) { LB.store.set('lb-lang', l.dataset.lang); LB.$$('.tracer').forEach(t => t._tr && t._tr.setLang(l.dataset.lang)); }
+    });
+    this.root._tr = this;
+    this.q('.tr-pos').addEventListener('input', e => this.show(+e.target.value));
+    this.q('.tr-in').addEventListener('keydown', e => { if (e.key === 'Enter') this.run(); });
+    const sel = this.q('.tr-ex');
+    if (sel) sel.addEventListener('change', () => { if (sel.value !== '') { this.q('.tr-in').value = o.examples[+sel.value][1]; this.run(); } sel.value = ''; });
+    this.run();
+  }
+  setLang(L) { if (!this.langs[L]) return; this.lang = L; this.renderCode(); this.show(this.i || 0); }
+  renderCode() {
+    let lines = this.langs[this.lang];
+    if (this.o.codeFor && this.inp !== undefined) lines = this.o.codeFor(this.inp, this.lang, lines);
+    this.q('.tr-code').innerHTML = lines.map((l, i) =>
+      '<div class="row" data-k="' + LB.markOf(l) + '"><span class="ln">' + (i + 1) + '</span>' + LB.hlLine(LB.stripMark(l), this.lang) + '<span class="hits"></span></div>').join('');
+    LB.$$('[data-lang]', this.root).forEach(b => b.classList.toggle('on', b.dataset.lang === this.lang));
+  }
+  run() {
+    const snaps = [];
+    const rec = { step: (line, msg, st) => snaps.push({ line, msg, st: JSON.parse(JSON.stringify(st)) }) };
+    let inp;
+    try { inp = this.o.parse(this.q('.tr-in').value); }
+    catch (e) { snaps.push({ line: 0, msg: '⚠ Eingabe nicht lesbar: ' + LB.esc(e.message), st: null }); }
+    this.inp = inp; this.renderCode();
+    if (inp !== undefined) { try { this.o.run(rec, inp); } catch (e) { snaps.push({ line: 0, msg: '⚠ ' + LB.esc(e.message), st: null }); } }
+    this.snaps = snaps.length ? snaps : [{ line: 0, msg: '(keine Schritte)', st: null }];
+    this.q('.tr-pos').max = this.snaps.length - 1;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    this.show(0);
+  }
+  act(a) {
+    const n = this.snaps.length - 1;
+    if (a === 'run') this.run();
+    else if (a === 'first') this.show(0);
+    else if (a === 'prev') this.show(Math.max(0, this.i - 1));
+    else if (a === 'next') this.show(Math.min(n, this.i + 1));
+    else if (a === 'last') this.show(n);
+    else if (a === 'auto') {
+      if (this.timer) { clearInterval(this.timer); this.timer = null; return; }
+      if (this.i >= n) this.show(0);
+      this.timer = setInterval(() => { if (this.i >= n) { clearInterval(this.timer); this.timer = null; } else this.show(this.i + 1); }, this.o.speed || 750);
+    }
+  }
+  show(i) {
+    this.i = i; const s = this.snaps[i]; this.q('.tr-pos').value = i;
+    const hits = {};
+    for (let k = 0; k <= i; k++) hits[this.snaps[k].line] = (hits[this.snaps[k].line] || 0) + 1;
+    this.root.querySelectorAll('.tr-code .row').forEach(r => {
+      const k = r.dataset.k; r.classList.toggle('cur', !!k && k === s.line);
+      r.querySelector('.hits').textContent = k && hits[k] ? '×' + hits[k] : '';
+    });
+    const st = this.q('.tr-state'); st.innerHTML = s.st ? this.o.view(s.st) : '';
+    this.q('.tr-msg').innerHTML = s.msg;
+    this.q('.tr-cnt').textContent = 'Schritt ' + i + ' / ' + (this.snaps.length - 1);
+    LB.tex(this.q('.tr-msg')); LB.tex(st);
+  }
+};
+/* Hilfen für Zustandsansichten */
+LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div><i>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span></div>').join('') + '</div>';
+LB.cellsHTML = (arr, cls, base) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
+
+/* =====================================================================
+   Farbige Schlüsselwörter im Fließtext (Wortliste Begriff → Rolle)
+   ===================================================================== */
+LB.KW = LB.KW || [];
+const SKIP = 'pre, code, .katex, h1, h2, h3, h4, h5, button, svg, .vn-badge, .src, .srcin, .vn-res, .kw, a, summary, .lbtop, .lbmenu, .vid, .tracer, .legend, th, label, output, .plot, .anat .sym, select, textarea, .nokw';
+LB.kwColor = function () {
+  if (!LB.KW.length) return;
+  const terms = LB.KW.slice().sort((a, b) => b[0].length - a[0].length);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp('(?<![\\p{L}\\p{N}])(' + terms.map(t => esc(t[0])).join('|') + ')(\\p{Ll}{0,3})(?![\\p{L}\\p{N}])', 'u');
+  const role = {}; terms.forEach(t => role[t[0]] = t[1]);
+  const blocks = LB.$$('main p, main li, main td, main .vn-step > div, main .vn-task, main .pt-grid > div, main .ptq, main .anat > div > span:last-child, main .read, main .why, main .recog, main .verdict, main .trap, main .gblk > div');
+  blocks.forEach(bl => {
+    if (bl.closest(SKIP)) return;
+    const used = new Set(); let count = 0;
+    const walker = document.createTreeWalker(bl, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.parentElement && n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      if (count >= 6) break;
+      let txt = node.nodeValue, m, frag = null, last = 0, off = 0;
+      while (count < 6 && (m = re.exec(txt.slice(off))) !== null) {
+        const start = off + m.index, word = m[0], base = m[1];
+        off = start + word.length;
+        if (used.has(base)) continue;
+        used.add(base); count++;
+        if (!frag) frag = document.createDocumentFragment();
+        frag.appendChild(document.createTextNode(txt.slice(last, start)));
+        const sp = document.createElement('span'); sp.className = 'kw kw-' + role[base]; sp.textContent = word; frag.appendChild(sp);
+        last = start + word.length;
+      }
+      if (frag) { frag.appendChild(document.createTextNode(txt.slice(last))); node.parentNode.replaceChild(frag, node); }
+    }
+  });
+};
+
+/* =====================================================================
+   Menü, Grundlage-Hervorhebung, Teilwechsel
+   ===================================================================== */
+LB.menu = open => document.body.classList.toggle('menu-open', open);
+function initMenu() {
+  const m = document.getElementById('lbMenu'); if (!m) return;
+  LB.$$('#lbOpen, #lbFab').forEach(b => b.addEventListener('click', () => LB.menu(true)));
+  m.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (a && a.dataset.part !== undefined && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'part', i: +a.dataset.part }, '*'); LB.menu(false); return; }
+    if (e.target.closest('[data-close]') || a || e.target.id === 'lbMenu') LB.menu(false);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') LB.menu(false);
+    if ((e.key === 't' || e.key === 'T') && !e.target.closest('input, textarea, select') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (LB.inFrame) window.parent.postMessage({ lb: 'overview' }, '*'); else LB.menu(!document.body.classList.contains('menu-open'));
+    }
+  });
+  const hl = document.getElementById('lbHlG');
+  if (hl) { hl.checked = LB.store.get('lb-hlg', '0') === '1'; document.body.classList.toggle('hl-g', hl.checked);
+    hl.addEventListener('change', () => { document.body.classList.toggle('hl-g', hl.checked); LB.store.set('lb-hlg', hl.checked ? '1' : '0'); }); }
+}
+
+/* =====================================================================
+   Video-Links auf lokale .mp4-Dateien (Linux Mint, file://)
+   Standard: Ordner „videos/" neben der HTML-Datei (Symlink genügt),
+   sonst absoluten Pfad im ☰-Menü eintragen.
+   ===================================================================== */
+LB.vbase = LB.store.get('lb-vbase', 'videos/');
+LB.vbaseAbs = null;                                                // von der Gesamtdatei gesetzt
+function vurl(f) {
+  const enc = f.split('/').map(encodeURIComponent).join('/');
+  let base = LB.vbaseAbs || LB.vbase || 'videos/';
+  if (!/\/$/.test(base)) base += '/';
+  if (/^\//.test(base)) base = 'file://' + base;                   // /home/… → file:///home/…
+  try { return new URL(base + enc, LB.vbaseAbs ? undefined : document.baseURI).href; } catch (e) { return base + enc; }
+}
+LB.vpath = f => { const u = vurl(f); try { return decodeURIComponent(new URL(u).pathname); } catch (e) { return u; } };
+function initVideos() {
+  const upd = () => LB.$$('.vid').forEach(v => { const a = v.querySelector('a.vopen'); if (a) a.href = vurl(v.dataset.f); });
+  upd();
+  document.addEventListener('click', e => {
+    const a = e.target.closest('.vid a.vopen');
+    if (a && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'open', f: a.closest('.vid').dataset.f }, '*'); return; }
+    const c = e.target.closest('.vid .vcopy');
+    if (c) {
+      const p = LB.vpath(c.closest('.vid').dataset.f);
+      const done = () => { c.textContent = '✓ kopiert'; setTimeout(() => { c.textContent = '📋 Pfad'; }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(p).then(done, () => window.prompt('Pfad (Strg+C):', p));
+      else window.prompt('Pfad (Strg+C):', p);
+    }
+  });
+  const inp = document.getElementById('lbVbase');
+  if (inp) { inp.value = LB.vbase; inp.addEventListener('change', () => { LB.vbase = inp.value.trim() || 'videos/'; LB.store.set('lb-vbase', LB.vbase); upd();
+    if (LB.inFrame) window.parent.postMessage({ lb: 'vbase', v: LB.vbase }, '*'); }); }
+  window.addEventListener('message', e => {
+    const d = e.data || {};
+    if (d.lb === 'vbase') { LB.vbaseAbs = d.abs; LB.vbase = d.v; if (inp) inp.value = d.v; upd(); }
+    if (d.lb === 'menu') LB.menu(true);
+  });
+  LB.updVideos = upd;
+}
+
+/* =====================================================================
+   Start
+   ===================================================================== */
+function start() {
+  initMenu(); initVideos();
+  LB.$$('.code pre .row').forEach(r => { const ln = r.querySelector('.ln'); const txt = r.dataset.src !== undefined ? r.dataset.src : ''; r.innerHTML = ''; r.appendChild(ln); r.insertAdjacentHTML('beforeend', LB.hlLine(txt, r.closest('.code').dataset.lang)); });
+  LB.inits.forEach(fn => { try { fn(); } catch (e) { console.error(e); if (window.__lbErrors) window.__lbErrors.push(String(e)); throw e; } });
+  LB.tex(document.body);
+  LB.kwColor();
+  document.addEventListener('toggle', e => { if (window.Plotly && e.target.open) LB.$$('.js-plotly-plot', e.target).forEach(p => Plotly.Plots.resize(p)); }, true);
+  if (LB.inFrame) window.parent.postMessage({ lb: 'ready' }, '*');
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+</script>
+<script>
+/* Kapitel 8 · Vergleich zweier Stichproben: Visuals, Werkzeuge, Tracer, Training */
+LB.KW = [
+  ['gepaart', 'rule'], ['ungepaart', 'rule'], ['Differenzen', 'chg'], ['gepoolte Varianz', 'chg'], ['gepoolten Varianz', 'chg'], ['Blockbildung', 'rule'], ['Randomisierung', 'rule'],
+  ['Zwei-Stichproben-t-Test', 'rule'], ['Welch-Test', 'rule'], ['Wilcoxon', 'rule'], ['Mann-Whitney', 'rule'], ['Nullhypothese', 'cond'],
+  ['Teststatistik', 'chg'], ['P-Wert', 'res'], ['Vertrauensintervall', 'res'], ['verwerfen', 'res'], ['Freiheitsgrade', 'idx'], ['Steigung', 'par'], ['signifikant', 'rule']
+];
+const S = LB.S, C = LB.C;
+const segBind = (id, cb) => { let v = document.querySelector('#' + id + ' .btn.on').dataset.s; document.getElementById(id).addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (!b) return; v = b.dataset.s; LB.$$('#' + id + ' .btn').forEach(x => x.classList.toggle('on', x === b)); cb(); }); return () => v; };
+const VOR = [5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0], NACH = [4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3];
+
+/* Zwei-Stichproben-Kennzahlen (gepoolt oder Welch) */
+function two(x, y, lvl, welch) {
+  const n = x.length, m = y.length, mx = S.mean(x), my = S.mean(y), vx = S.var(x), vy = S.var(y), d = mx - my;
+  let se, df, sp2 = ((n - 1) * vx + (m - 1) * vy) / (n + m - 2);
+  if (welch) { se = Math.sqrt(vx / n + vy / m); df = (vx / n + vy / m) ** 2 / ((vx / n) ** 2 / (n - 1) + (vy / m) ** 2 / (m - 1)); }
+  else { se = Math.sqrt(sp2) * Math.sqrt(1 / n + 1 / m); df = n + m - 2; }
+  const t = d / se, p = 2 * (1 - S.tCdf(Math.abs(t), df)), q = S.tInv(1 - (1 - lvl) / 2, df);
+  return { n, m, mx, my, vx, vy, d, sp2, se, df, t, p, q, lo: d - q * se, hi: d + q * se };
+}
+/* Einfacher Mann-Whitney-P-Wert (Normalapproximation mit Bindungskorrektur, ohne Stetigkeitskorrektur) */
+function mwP(x, y) {
+  const all = x.map(v => [v, 0]).concat(y.map(v => [v, 1])).sort((a, b) => a[0] - b[0]), N = all.length, rk = new Array(N);
+  let tie = 0;
+  for (let i = 0; i < N;) { let j = i; while (j + 1 < N && all[j + 1][0] === all[i][0]) j++; const r = (i + j) / 2 + 1, c = j - i + 1; tie += c ** 3 - c; for (let k = i; k <= j; k++) rk[k] = r; i = j + 1; }
+  const n = x.length, m = y.length; let R = 0; all.forEach((a, i) => { if (a[1] === 0) R += rk[i]; });
+  const U = R - n * (n + 1) / 2, mu = n * m / 2, sg = Math.sqrt(n * m / 12 * ((N + 1) - tie / (N * (N - 1))));
+  return { U, p: 2 * (1 - S.Phi(Math.abs(U - mu) / sg)) };
+}
+
+/* ---------------------------------------------------------------- 8.1 gepaart vs. ungepaart */
+LB.on(function gpViz() {
+  if (!document.getElementById('gpPlot')) return;
+  let mode = () => 'u';
+  const run = () => {
+    const tr = [];
+    if (mode() === 'u') {
+      tr.push({ x: VOR.map(() => 'vorher'), y: VOR, type: 'box', boxpoints: 'all', jitter: 0.4, pointpos: 0, marker: { color: C.par }, line: { color: C.par }, name: 'vorher' });
+      tr.push({ x: NACH.map(() => 'nachher'), y: NACH, type: 'box', boxpoints: 'all', jitter: 0.4, pointpos: 0, marker: { color: C.chg }, line: { color: C.chg }, name: 'nachher' });
+    } else {
+      VOR.forEach((v, i) => tr.push({ x: ['vorher', 'nachher'], y: [v, NACH[i]], mode: 'lines+markers', line: { color: NACH[i] < v ? C.idx : C.res, width: 2 }, marker: { color: [C.par, C.chg], size: 9 }, name: 'Person ' + (i + 1) }));
+    }
+    LB.plot('gpPlot', tr, { height: 300, showlegend: false, yaxis: { title: 'Messwert' } });
+  };
+  mode = segBind('gpSeg', run); run();
+});
+
+/* ---------------------------------------------------------------- 8.2 Block-Varianz */
+LB.on(function blockViz() {
+  if (!document.getElementById('blRaw')) return;
+  const r = S.rng(81), base = [], e1 = [], e2 = []; for (let i = 0; i < 12; i++) { base.push(r.norm()); e1.push(r.norm() * 0.6); e2.push(r.norm() * 0.6); }
+  LB.bind(['blS', 'blE'], v => {
+    const a = base.map((b, i) => 20 + v.blS * b + v.blE + e1[i]), b = base.map((bb, i) => 20 + v.blS * bb + e2[i]), u = a.map((x, i) => x - b[i]);
+    const tr = a.map((x, i) => ({ x: ['A', 'B'], y: [x, b[i]], mode: 'lines+markers', line: { color: LB.rgba(C.muted, 0.7), width: 1.5 }, marker: { color: [C.par, C.chg], size: 8 } }));
+    LB.plot('blRaw', tr, { height: 280, showlegend: false, title: { text: 'Rohwerte (12 Einheiten)', font: { size: 13 } }, yaxis: { title: 'Wert' } });
+    LB.plot('blDiff', [{ y: u, x: u.map(() => 'U = A − B'), type: 'box', boxpoints: 'all', pointpos: 0, jitter: 0.4, marker: { color: C.chg }, line: { color: C.chg } },
+      { x: ['U = A − B', 'U = A − B'], y: [0, 0], mode: 'markers', marker: { color: C.muted, symbol: 'line-ew-open', size: 40 } }],
+      { height: 280, showlegend: false, title: { text: 'Differenzen', font: { size: 13 } } });
+    const g = two(a, b, 0.95, false), su = S.sd(u), tp = S.mean(u) / (su / Math.sqrt(12)), pp = 2 * (1 - S.tCdf(Math.abs(tp), 11));
+    document.getElementById('blOut').innerHTML = 'ungepaart: \\(S_{\\text{pool}}=' + LB.fmt(Math.sqrt(g.sp2), 3) + '\\), t = ' + LB.fmt(g.t, 3) + ', P = ' + LB.fmt(g.p, 4) + ' · gepaart: \\(s_U=' + LB.fmt(su, 3) + '\\), <b class="kw-res">t = ' + LB.fmt(tp, 3) + ', P = ' + LB.fmt(pp, 4) + '</b>';
+    LB.tex(document.getElementById('blOut'));
+  });
+});
+
+/* ---------------------------------------------------------------- 8.3 Zwei-Stichproben-t live */
+LB.on(function tsViz() {
+  if (!document.getElementById('tsDens')) return;
+  LB.bind(['tsX', 'tsY', 'tsN', 'tsM', 'tsS'], v => {
+    const n = v.tsN, m = v.tsM, se = v.tsS * Math.sqrt(1 / n + 1 / m), df = n + m - 2, d = v.tsX - v.tsY, t = d / se, q = S.tInv(0.975, df), p = 2 * (1 - S.tCdf(Math.abs(t), df));
+    const f = x => S.tPdf(x, df), R = Math.max(5, Math.abs(t) + 1);
+    LB.plot('tsDens', [LB.curve(f, -R, R, C.rule, 300), LB.area(f, q, R, LB.rgba(C.res, 0.5)), LB.area(f, -R, -q, LB.rgba(C.res, 0.5)), { x: [t, t], y: [0, 0.42], mode: 'lines', line: { color: C.idx, width: 3 } }],
+      { height: 260, showlegend: false, xaxis: { title: 'T unter H₀ ~ t_' + df }, yaxis: { rangemode: 'tozero' } });
+    const lo = d - q * se, hi = d + q * se;
+    LB.plot('tsCI', [{ x: [lo, hi], y: [1, 1], mode: 'lines', line: { color: C.res, width: 8 } }, { x: [d], y: [1], mode: 'markers', marker: { color: C.mem, size: 13, symbol: 'diamond' } },
+      { x: [0, 0], y: [0.5, 1.5], mode: 'lines', line: { color: C.muted, dash: 'dot', width: 2 } }],
+      { height: 220, showlegend: false, xaxis: { title: 'VI für μ_X − μ_Y' }, yaxis: { visible: false, range: [0.4, 1.6] } });
+    document.getElementById('tsOut').innerHTML = 'SE = ' + LB.fmt(se, 3) + ' · <b class="kw-res">t = ' + LB.fmt(t, 3) + '</b> (df ' + df + ', Grenze ±' + LB.fmt(q, 3) + ') · P = ' + LB.fmt(p, 4) + ' · VI [' + LB.fmt(lo, 2) + '; ' + LB.fmt(hi, 2) + '] ' +
+      (Math.abs(t) >= q ? '→ <b class="bad">H₀ verwerfen</b> (0 ∉ VI)' : '→ <b class="ok">nicht verwerfen</b> (0 ∈ VI)');
+  });
+});
+
+/* ---------------------------------------------------------------- Werkzeuge */
+LB.on(function tools8() {
+  if (!document.getElementById('w1A')) return;
+  const val = id => S.parse(document.getElementById(id).value);
+  const w1 = () => {
+    const a = val('w1A'), b = val('w1B'), o = document.getElementById('w1Out');
+    if (a.length < 2 || b.length < 2) { o.textContent = 'Je Gruppe mindestens 2 Werte.'; return; }
+    LB.plot('w1Box', [{ y: a, type: 'box', name: 'A', boxpoints: 'all', pointpos: 0, jitter: 0.3, marker: { color: C.par }, line: { color: C.par } }, { y: b, type: 'box', name: 'B', boxpoints: 'all', pointpos: 0, jitter: 0.3, marker: { color: C.chg }, line: { color: C.chg } }],
+      { height: 280, showlegend: false });
+    LB.plot('w1Hist', [{ x: a, type: 'histogram', name: 'A', opacity: 0.6, marker: { color: C.par } }, { x: b, type: 'histogram', name: 'B', opacity: 0.6, marker: { color: C.chg } }], { height: 280, barmode: 'overlay', showlegend: true });
+    const row = (nm, x) => '<tr><td>' + nm + '</td><td class="r">' + x.length + '</td><td class="r">' + LB.fmt(S.mean(x), 3) + '</td><td class="r">' + LB.fmt(S.median(x), 3) + '</td><td class="r">' + LB.fmt(S.sd(x), 3) + '</td><td class="r">' + LB.fmt(S.quantile(x, 0.25), 3) + '</td><td class="r">' + LB.fmt(S.quantile(x, 0.75), 3) + '</td></tr>';
+    o.innerHTML = '<table class="tbl"><tr><th>Gruppe</th><th class="r">n</th><th class="r">x̄</th><th class="r">Median</th><th class="r">s</th><th class="r">q₀.₂₅</th><th class="r">q₀.₇₅</th></tr>' + row('A', a) + row('B', b) + '</table>';
+  };
+  const w2 = () => {
+    const x = val('w2X'), y = val('w2Y'), o = document.getElementById('w2Out'), lvl = +document.getElementById('w2L').value, W = document.getElementById('w2W').checked;
+    document.querySelector('output[for="w2L"]').textContent = LB.fmt(lvl, 2);
+    if (x.length < 2 || y.length < 2) { o.textContent = 'Je Gruppe mindestens 2 Werte.'; return; }
+    const g = two(x, y, lvl, W), mw = mwP(x, y);
+    o.innerHTML = LB.kvHTML([['n, m', g.n + ', ' + g.m, 'idx'], ['x̄ − ȳ', LB.fmt(g.d, 4), 'mem'], [W ? 'SE (Welch)' : 'S²_pool', W ? LB.fmt(g.se, 4) : LB.fmt(g.sp2, 4), 'chg'], ['t', LB.fmt(g.t, 4), 'res'],
+      ['df', W ? LB.fmt(g.df, 2) : g.df, 'idx'], ['P-Wert', LB.fmt(g.p, 4), 'res'], ['VI ' + Math.round(lvl * 100) + ' %', '[' + LB.fmt(g.lo, 3) + '; ' + LB.fmt(g.hi, 3) + ']', 'res'], ['Mann-Whitney P ≈', LB.fmt(mw.p, 4), 'rule']]) +
+      '<p>' + (g.p <= 1 - lvl ? '<b class="bad">H₀: μ_X = μ_Y verwerfen</b> (0 ∉ VI)' : '<b class="ok">H₀ nicht verwerfen</b> (0 ∈ VI)') + ' · Mann-Whitney hier per Normalapproximation (R/SciPy rechnen bei kleinen n exakt).</p>';
+  };
+  const w3 = () => {
+    const a = val('w3A'), b = val('w3B'), o = document.getElementById('w3Out');
+    if (a.length !== b.length || a.length < 2) { o.innerHTML = '<span class="bad">Gepaart braucht gleich viele Werte (≥ 2) in beiden Feldern.</span>'; return; }
+    const u = a.map((x, i) => x - b[i]), n = u.length, ub = S.mean(u), su = S.sd(u), t = ub / (su / Math.sqrt(n)), q = S.tInv(0.975, n - 1), p = 2 * (1 - S.tCdf(Math.abs(t), n - 1)), se = su / Math.sqrt(n);
+    LB.plot('w3Pairs', a.map((x, i) => ({ x: ['A', 'B'], y: [x, b[i]], mode: 'lines+markers', line: { color: b[i] < x ? C.idx : C.res }, marker: { color: [C.par, C.chg], size: 8 } })), { height: 280, showlegend: false });
+    LB.plot('w3Diff', [{ x: u.map((_, i) => i + 1), y: u, type: 'bar', marker: { color: u.map(v => v >= 0 ? C.chg : C.res) } }, { x: [0.5, n + 0.5], y: [ub, ub], mode: 'lines', line: { color: C.mem, dash: 'dash' } }],
+      { height: 280, showlegend: false, xaxis: { title: 'Paar i', dtick: 1 }, yaxis: { title: 'uᵢ = aᵢ − bᵢ' } });
+    const g = two(a, b, 0.95, false);
+    o.innerHTML = LB.kvHTML([['n Paare', n, 'idx'], ['ū', LB.fmt(ub, 4), 'chg'], ['s_U', LB.fmt(su, 4), 'chg'], ['t', LB.fmt(t, 4), 'res'], ['df', n - 1, 'idx'], ['P-Wert', LB.fmt(p, 4), 'res'],
+      ['VI 95 %', '[' + LB.fmt(ub - q * se, 3) + '; ' + LB.fmt(ub + q * se, 3) + ']', 'res'], ['ungepaart (falsch) P', LB.fmt(g.p, 4), 'muted']]);
+  };
+  ['w1A', 'w1B'].forEach(id => document.getElementById(id).addEventListener('input', w1));
+  ['w2X', 'w2Y', 'w2L', 'w2W'].forEach(id => document.getElementById(id).addEventListener('input', w2));
+  ['w3A', 'w3B'].forEach(id => document.getElementById(id).addEventListener('input', w3));
+  w1(); w2(); w3();
+});
+
+/* ================================================================ Tracer */
+LB.on(function tracers8() {
+  const f = (v, k) => v === null ? '–' : LB.fmt(v, k || 4);
+  new LB.Tracer({
+    id: 'trGp', title: 'gepaarter t-Test: Differenzen → Ein-Stichproben-t', langs: {"R": ["# Gepaarter t-Test: Differenzen bilden, dann Ein-Stichproben-t-Test", "vorher <- c(5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0)    # Bedingung A #@a", "nachher <- c(4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3)   # Bedingung B, gleiche Einheiten #@b", "u <- vorher - nachher                      # Differenz pro Paar #@u", "n <- length(u)                             # Anzahl Paare #@n", "ubar <- mean(u); su <- sd(u)               # Mittel und Standardabweichung der Differenzen #@ms", "t <- ubar / (su / sqrt(n))                 # Teststatistik für H0: E[U] = 0 #@t", "krit <- qt(0.975, n - 1)                   # t_{n-1, 0.975}, zweiseitig alpha = 0.05 #@krit", "p <- 2 * pt(-abs(t), n - 1)                # P-Wert #@p", "cat(\"t =\", t, \" krit =\", krit, \" p =\", p, \"\\n\")   #@out", "t.test(vorher, nachher, paired = TRUE)     # eingebaut, identisch", "t.test(vorher, nachher, var.equal = TRUE)  # FALSCH für gepaarte Daten: verschenkt das Pairing"], "Python": ["# Gepaarter t-Test: Differenzen bilden, dann Ein-Stichproben-t-Test", "import numpy as np", "from scipy import stats", "", "vorher = np.array([5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0])    # Bedingung A #@a", "nachher = np.array([4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3])   # Bedingung B, gleiche Einheiten #@b", "u = vorher - nachher                       # Differenz pro Paar #@u", "n = len(u)                                 # Anzahl Paare #@n", "ubar, su = u.mean(), u.std(ddof=1)         # Mittel und Standardabweichung der Differenzen #@ms", "t = ubar / (su / np.sqrt(n))               # Teststatistik für H0: E[U] = 0 #@t", "krit = stats.t.ppf(0.975, n - 1)           # t_{n-1, 0.975}, zweiseitig alpha = 0.05 #@krit", "p = 2 * stats.t.sf(abs(t), n - 1)          # P-Wert #@p", "print(f\"t = {t:.4f}  krit = {krit:.4f}  p = {p:.4f}\")   #@out", "print(stats.ttest_rel(vorher, nachher))    # eingebaut, identisch", "print(stats.ttest_ind(vorher, nachher))    # FALSCH für gepaarte Daten: verschenkt das Pairing"]}, input: VOR.join(' ') + ' ; ' + NACH.join(' '), hint: 'Werte A ; Werte B (gleich viele)',
+    examples: [['vorher/nachher', VOR.join(' ') + ' ; ' + NACH.join(' ')], ['kein Effekt', '10 12 9 11 13 ; 10.2 11.7 9.3 10.8 13.1'], ['Laborvergleich', '31.2 28.4 30.1 29.8 32.5 27.9 30.6 ; 29.1 27.6 28.0 29.9 30.2 26.8 28.1']],
+    parse: s => { const p = s.split(';'); if (p.length !== 2) throw new Error('Format: A-Werte ; B-Werte'); const a = S.parse(p[0]), b = S.parse(p[1]);
+      if (a.length !== b.length || a.length < 2) throw new Error('gleich viele Werte (≥ 2) nötig'); return { a, b }; },
+    codeFor: (d, L, lines) => lines.map(l => /#@a\s*$/.test(l) ? (L === 'R' ? 'vorher <- c(' + d.a.join(', ') + ')' : 'vorher = np.array([' + d.a.join(', ') + '])') + '   # Bedingung A #@a' :
+      /#@b\s*$/.test(l) ? (L === 'R' ? 'nachher <- c(' + d.b.join(', ') + ')' : 'nachher = np.array([' + d.b.join(', ') + '])') + '   # Bedingung B #@b' : l),
+    run(rec, d) {
+      const v = { u: [], n: null, ub: null, su: null, t: null, k: null, p: null }; const st = () => Object.assign({}, v, { u: v.u.slice() });
+      rec.step('a', 'Bedingung A: ' + d.a.length + ' Werte.', st());
+      rec.step('b', 'Bedingung B an denselben Einheiten.', st());
+      v.u = d.a.map((x, i) => Math.round((x - d.b[i]) * 1e10) / 1e10); rec.step('u', 'Differenzen \\(\\Chg{u_i}=a_i-b_i\\): ' + v.u.map(x => LB.fmt(x, 3)).join(', '), st());
+      v.n = v.u.length; rec.step('n', 'n = ' + v.n + ' Paare → df = ' + (v.n - 1) + '.', st());
+      v.ub = S.mean(v.u); v.su = S.sd(v.u); rec.step('ms', '\\(\\bar u=' + LB.fmt(v.ub, 4) + '\\), \\(s_U=' + LB.fmt(v.su, 4) + '\\)', st());
+      v.t = v.ub / (v.su / Math.sqrt(v.n)); rec.step('t', '\\(\\Res{t}=\\tfrac{' + LB.fmt(v.ub, 4) + '}{' + LB.fmt(v.su, 4) + '/\\sqrt{' + v.n + '}}=\\Res{' + LB.fmt(v.t, 4) + '}\\)', st());
+      v.k = S.tInv(0.975, v.n - 1); rec.step('krit', '\\(t_{' + (v.n - 1) + ',0.975}=' + LB.fmt(v.k, 4) + '\\)', st());
+      v.p = 2 * (1 - S.tCdf(Math.abs(v.t), v.n - 1)); rec.step('p', 'P-Wert = ' + LB.fmt(v.p, 4), st());
+      rec.step('out', Math.abs(v.t) >= v.k ? '<b class="bad">|t| ≥ Grenze → H₀: E[U] = 0 verwerfen</b>' : '<b class="ok">|t| &lt; Grenze → H₀ nicht verwerfen</b>', st());
+    },
+    view: s => (s.u.length ? '<div class="cells">' + s.u.map(x => '<span class="kw-chg">' + LB.fmt(x, 3) + '</span>').join(' · ') + '</div>' : '') +
+      LB.kvHTML([['n', s.n === null ? '–' : s.n, 'idx'], ['ū', f(s.ub), 'chg'], ['s_U', f(s.su), 'chg'], ['t', f(s.t), 'res'], ['krit', f(s.k), 'rule'], ['P-Wert', f(s.p), 'res']])
+  });
+
+  new LB.Tracer({
+    id: 'trZs', title: 'Zwei-Stichproben-t-Test mit gepoolter Varianz', langs: {"R": ["# Zwei-Stichproben-t-Test (ungepaart, gleiche Varianz)", "x <- c(402, 415, 388, 397, 410, 385, 399, 421, 393, 379)   # Gruppe X #@x", "y <- c(378, 395, 362, 388, 401, 370, 383, 359)             # Gruppe Y #@y", "n <- length(x); m <- length(y)             # Umfänge dürfen verschieden sein #@nm", "sp2 <- ((n - 1) * var(x) + (m - 1) * var(y)) / (n + m - 2) # gepoolte Varianz #@sp", "se <- sqrt(sp2) * sqrt(1 / n + 1 / m)      # Standardfehler der Differenz #@se", "t <- (mean(x) - mean(y)) / se              # Teststatistik #@t", "df <- n + m - 2                            # Freiheitsgrade #@df", "p <- 2 * pt(-abs(t), df)                   # P-Wert zweiseitig #@p", "vi <- mean(x) - mean(y) + c(-1, 1) * qt(0.975, df) * se    # 95-%-VI für mu_X - mu_Y #@vi", "cat(\"t =\", t, \" df =\", df, \" p =\", p, \" VI =\", vi, \"\\n\")   #@out", "t.test(x, y, var.equal = TRUE)             # eingebaut; ohne var.equal: Welch-Test", "wilcox.test(x, y)                          # Zwei-Stichproben-Wilcoxon (Mann-Whitney)"], "Python": ["# Zwei-Stichproben-t-Test (ungepaart, gleiche Varianz)", "import numpy as np", "from scipy import stats", "", "x = np.array([402, 415, 388, 397, 410, 385, 399, 421, 393, 379])   # Gruppe X #@x", "y = np.array([378, 395, 362, 388, 401, 370, 383, 359])             # Gruppe Y #@y", "n, m = len(x), len(y)                      # Umfänge dürfen verschieden sein #@nm", "sp2 = ((n - 1) * x.var(ddof=1) + (m - 1) * y.var(ddof=1)) / (n + m - 2)   # gepoolte Varianz #@sp", "se = np.sqrt(sp2) * np.sqrt(1 / n + 1 / m) # Standardfehler der Differenz #@se", "t = (x.mean() - y.mean()) / se             # Teststatistik #@t", "df = n + m - 2                             # Freiheitsgrade #@df", "p = 2 * stats.t.sf(abs(t), df)             # P-Wert zweiseitig #@p", "vi = x.mean() - y.mean() + np.array([-1, 1]) * stats.t.ppf(0.975, df) * se   # 95-%-VI #@vi", "print(f\"t = {t:.4f}  df = {df}  p = {p:.4f}  VI = {vi.round(2)}\")   #@out", "print(stats.ttest_ind(x, y))               # eingebaut; equal_var=False: Welch-Test", "print(stats.mannwhitneyu(x, y))            # Zwei-Stichproben-Wilcoxon (Mann-Whitney)"]}, input: '402 415 388 397 410 385 399 421 393 379 ; 378 395 362 388 401 370 383 359', hint: 'Gruppe X ; Gruppe Y',
+    examples: [['Produktionslinien', '402 415 388 397 410 385 399 421 393 379 ; 378 395 362 388 401 370 383 359'], ['vorher/nachher ungepaart (falsch!)', VOR.join(' ') + ' ; ' + NACH.join(' ')], ['kein Unterschied', '20 22 19 21 23 20 ; 21 20 22 19 21']],
+    parse: s => { const p = s.split(';'); if (p.length !== 2) throw new Error('Format: X-Werte ; Y-Werte'); const x = S.parse(p[0]), y = S.parse(p[1]);
+      if (x.length < 2 || y.length < 2) throw new Error('je Gruppe mindestens 2 Werte'); return { x, y }; },
+    codeFor: (d, L, lines) => lines.map(l => /#@x\s*$/.test(l) ? (L === 'R' ? 'x <- c(' + d.x.join(', ') + ')' : 'x = np.array([' + d.x.join(', ') + '])') + '   # Gruppe X #@x' :
+      /#@y\s*$/.test(l) ? (L === 'R' ? 'y <- c(' + d.y.join(', ') + ')' : 'y = np.array([' + d.y.join(', ') + '])') + '   # Gruppe Y #@y' : l),
+    run(rec, d) {
+      const v = { n: null, m: null, sp2: null, se: null, t: null, df: null, p: null, lo: null, hi: null }; const st = () => Object.assign({}, v);
+      rec.step('x', 'Gruppe X: ' + d.x.length + ' Werte, \\(\\bar x=' + LB.fmt(S.mean(d.x), 4) + '\\), \\(s_X=' + LB.fmt(S.sd(d.x), 4) + '\\)', st());
+      rec.step('y', 'Gruppe Y: ' + d.y.length + ' Werte, \\(\\bar y=' + LB.fmt(S.mean(d.y), 4) + '\\), \\(s_Y=' + LB.fmt(S.sd(d.y), 4) + '\\)', st());
+      const g = two(d.x, d.y, 0.95, false);
+      v.n = g.n; v.m = g.m; rec.step('nm', 'n = ' + g.n + ', m = ' + g.m + '.', st());
+      v.sp2 = g.sp2; rec.step('sp', '\\(\\Chg{S^2_{\\text{pool}}}=\\tfrac{' + (g.n - 1) + '\\cdot' + LB.fmt(g.vx, 3) + '+' + (g.m - 1) + '\\cdot' + LB.fmt(g.vy, 3) + '}{' + g.df + '}=' + LB.fmt(g.sp2, 4) + '\\)', st());
+      v.se = g.se; rec.step('se', '\\(\\operatorname{SE}=S_{\\text{pool}}\\sqrt{1/n+1/m}=' + LB.fmt(g.se, 4) + '\\)', st());
+      v.t = g.t; rec.step('t', '\\(\\Res{t}=\\tfrac{' + LB.fmt(g.d, 4) + '}{' + LB.fmt(g.se, 4) + '}=\\Res{' + LB.fmt(g.t, 4) + '}\\)', st());
+      v.df = g.df; rec.step('df', 'df = n + m − 2 = ' + g.df + ', Grenze \\(t_{' + g.df + ',0.975}=' + LB.fmt(g.q, 4) + '\\)', st());
+      v.p = g.p; rec.step('p', 'P-Wert = ' + LB.fmt(g.p, 4), st());
+      v.lo = g.lo; v.hi = g.hi; rec.step('vi', '95-%-VI für \\(\\mu_X-\\mu_Y\\): [' + LB.fmt(g.lo, 3) + '; ' + LB.fmt(g.hi, 3) + ']', st());
+      rec.step('out', Math.abs(g.t) >= g.q ? '<b class="bad">|t| ≥ Grenze → H₀: μ_X = μ_Y verwerfen</b>' : '<b class="ok">|t| &lt; Grenze → H₀ nicht verwerfen</b>', st());
+    },
+    view: s => LB.kvHTML([['n, m', s.n === null ? '–' : s.n + ', ' + s.m, 'idx'], ['S²_pool', f(s.sp2), 'chg'], ['SE', f(s.se), 'rule'], ['t', f(s.t), 'res'], ['df', s.df === null ? '–' : s.df, 'idx'], ['P-Wert', f(s.p), 'res'],
+      ['VI', s.lo === null ? '–' : '[' + LB.fmt(s.lo, 3) + '; ' + LB.fmt(s.hi, 3) + ']', 'res']])
+  });
+});
+
+/* ---------------------------------------------------------------- Training */
+LB.on(function train8() {
+  if (!document.getElementById('q8Task')) return;
+  const r = S.rng(Date.now() % 8888); let cur; const pick = a => a[Math.floor(r() * a.length)];
+  const neu = () => {
+    if (r() < 0.5) {
+      const n = pick([6, 8, 10, 12]), ub = pick([0.4, 0.8, 1.2, 2.5]), su = pick([0.9, 1.5, 2.0]);
+      cur = { t: ub / (su / Math.sqrt(n)), df: n - 1 };
+      document.getElementById('q8Task').innerHTML = '<b>Gepaart:</b> n = ' + n + ' Paare, mittlere Differenz \\(\\bar u=' + ub + '\\), \\(s_U=' + su + '\\). Teste \\(H_0:\\EE[U]=0\\).';
+    } else {
+      const n = pick([8, 10, 12, 15]), m = pick([7, 9, 12, 14]), xb = pick([50, 52.4, 61.3]), d = pick([1.5, 3, 4.2, 6]), sx = pick([3, 4.5, 6]), sy = pick([3.5, 5, 6.5]);
+      const sp = Math.sqrt(((n - 1) * sx * sx + (m - 1) * sy * sy) / (n + m - 2));
+      cur = { t: d / (sp * Math.sqrt(1 / n + 1 / m)), df: n + m - 2 };
+      document.getElementById('q8Task').innerHTML = '<b>Ungepaart:</b> n = ' + n + ', \\(\\bar x=' + xb + '\\), \\(s_X=' + sx + '\\); m = ' + m + ', \\(\\bar y=' + LB.fmt(xb - d, 2) + '\\), \\(s_Y=' + sy + '\\). Zwei-Stichproben-t-Test (gleiche Varianz).';
+    }
+    LB.tex(document.getElementById('q8Task'));
+    ['q8t', 'q8d'].forEach(id => document.getElementById(id).value = ''); document.getElementById('q8Res').innerHTML = '';
+  };
+  document.getElementById('q8New').addEventListener('click', neu);
+  document.getElementById('q8Chk').addEventListener('click', () => {
+    const a = parseFloat(document.getElementById('q8t').value.replace(',', '.')), b = parseFloat(document.getElementById('q8d').value);
+    const p = 2 * (1 - S.tCdf(Math.abs(cur.t), cur.df));
+    document.getElementById('q8Res').innerHTML = (Math.abs(a - cur.t) < 0.01 ? '<span class="ok">✔ ' : '<span class="bad">✗ ') + 't = ' + LB.fmt(cur.t, 4) + '</span> · ' + (b === cur.df ? '<span class="ok">✔ ' : '<span class="bad">✗ ') + 'df = ' + cur.df + '</span> · P = ' + LB.fmt(p, 4) + ' → bei α = 0.05 ' + (p <= 0.05 ? 'verwerfen' : 'nicht verwerfen');
+  });
+  neu();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!-- title: Kap. 8 · Vergleich zweier Stichproben -->
+<!-- sub: gepaart vs. ungepaart, Differenzen, gepoolte Varianz, Zwei-Stichproben-t-Test, Wilcoxon, t-Test in der Regression -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 8 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Vergleich zweier Stichproben</h1>
+  <p class="lead">Zwei Messreihen: Unterscheiden sich ihre Erwartungswerte? Die wichtigste Vorfrage ist <b>gepaart oder ungepaart</b>. Gepaart wird mit <b>Differenzen</b> auf Kapitel 7 zurückgeführt, ungepaart mit der <b>gepoolten Varianz</b> zum <b>Zwei-Stichproben-t-Test</b>. Neu aus der Modulbeschreibung („Lineare Regression und t-Tests“): der <b>t-Test für die Steigung</b> einer Regressionsgeraden.</p>
+</div>
+<x-card t="🎨 Farblegende für Kapitel 8" src="GN">
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: Teststatistik T, P-Wert, VI der Differenz</div>
+    <div><b class="kw-chg">orange · Umformung</b>: Differenzen \(\Chg{u_i=x_i-y_i}\), gepoolte Varianz \(\Chg{S^2_{\text{pool}}}\)</div>
+    <div><b class="kw-rule">lila · Verteilung/Test</b>: \(t_{n-1}\), \(t_{n+m-2}\), Wilcoxon</div>
+    <div><b class="kw-par">blau · Parameter</b>: \(\Par{\mu_X},\Par{\mu_Y},\Par{\sigma^2}\), Differenz \(\Par{d}\), \(\Par{\alpha}\)</div>
+    <div><b class="kw-idx">grün · Umfang/Freiheitsgrade</b>: \(\Idx{n},\Idx{m}\), \(\Idx{n-1}\), \(\Idx{n+m-2}\)</div>
+    <div><b class="kw-cond">cyan · Hypothesen</b>: \(\Cond{H_0:\mu_X=\mu_Y}\), Paar-Zuordnung</div>
+    <div><b class="kw-mem">pink · Daten</b>: Gruppen \(\Mem{X},\Mem{Y}\), Mittel \(\Mem{\bar X},\Mem{\bar Y}\)</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Roter Faden:</b> alles baut auf Kapitel 7 auf. Gepaart → Differenzen \(U_i\) bilden und einen Ein-Stichproben-Test machen. Ungepaart → gemeinsame Varianz \(S^2_{\text{pool}}\) schätzen und den Zwei-Stichproben-t-Test rechnen. Beide enden in Teststatistik, Verwerfungsbereich und Vertrauensintervall.</div>
+</x-card>
+<x-course cur="8"/>
+
+<section id="s8-0" data-m="🗺️ Übersicht|Entscheidungsbaum, Leitfragen">
+<h2><span class="num">8.0</span>Master-Anatomie und Entscheidungsbaum</h2>
+<x-anat t="jeder Zwei-Gruppen-Test hat dieselbe Form" f="\Res{T}=\frac{\text{beobachtet}-\text{erwartet}}{\text{Standardfehler}}:\qquad \underbrace{\frac{\bar U}{S_U/\sqrt n}}_{\text{gepaart, }t_{n-1}}\qquad \underbrace{\frac{\bar X-\bar Y}{S_{\text{pool}}\sqrt{\frac1n+\frac1m}}}_{\text{ungepaart, }t_{n+m-2}}">
+  <x-a s="\bar U">Mittel der Paar-Differenzen: der gepaarte Fall ist eine Stichprobe</x-a>
+  <x-a s="S_{\text{pool}}">gemeinsame Standardabweichung beider Gruppen (gleiche Varianz angenommen)</x-a>
+  <x-a s="\sqrt{1/n+1/m}">Faktor für die Streuung der Differenz zweier unabhängiger Mittel</x-a>
+  <x-read>„Gepaart: Differenzmittel durch seinen Standardfehler. Ungepaart: Mitteldifferenz durch S-pool mal Wurzel aus eins durch n plus eins durch m.“</x-read>
+</x-anat>
+<x-card t="🗺️ Entscheidungsbaum: welcher Test?" src="G">
+<svg viewBox="0 0 1200 330" role="img" aria-label="Entscheidungsbaum">
+  <defs><marker id="arrK8a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="420" y="10" width="360" height="50" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="600" y="32" fill="#bc8cff" font-weight="700">Zwei Gruppen vergleichen</text><text x="600" y="52" fill="#8b949e">dieselbe Einheit zweimal gemessen?</text>
+    <rect x="80" y="100" width="440" height="110" rx="10" fill="#1c2129" stroke="#d29922"/><text x="300" y="124" fill="#d29922" font-weight="700">JA → gepaart</text><text x="300" y="148" fill="#e6edf3">Differenzen Uᵢ = Xᵢ − Yᵢ → eine Stichprobe (Kap. 7)</text><text x="300" y="172" fill="#8b949e">normal → t-Test (n − 1) · sonst Vorzeichen</text><text x="300" y="194" fill="#8b949e">Kompromiss → Wilcoxon</text>
+    <rect x="680" y="100" width="440" height="110" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="900" y="124" fill="#58a6ff" font-weight="700">NEIN → ungepaart</text><text x="900" y="148" fill="#e6edf3">X₁…Xₙ und Y₁…Yₘ unabhängig</text><text x="900" y="172" fill="#8b949e">normal, gleiche Varianz → Zwei-Stichproben-t (n + m − 2)</text><text x="900" y="194" fill="#8b949e">nicht normal → Zwei-Stichproben-Wilcoxon</text>
+    <rect x="330" y="250" width="540" height="56" rx="10" fill="#1c2129" stroke="#f85149"/><text x="600" y="274" fill="#f85149" font-weight="700">Teststatistik in K? → Entscheid</text><text x="600" y="296" fill="#8b949e">+ Vertrauensintervall für die Differenz</text>
+    <line x1="560" y1="60" x2="320" y2="98" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+    <line x1="640" y1="60" x2="880" y2="98" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+    <line x1="300" y1="210" x2="500" y2="248" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+    <line x1="900" y1="210" x2="700" y2="248" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8a)"/>
+  </g>
+</svg>
+<p><b>Kernidee:</b> jeder Zwei-Gruppen-Vergleich wird auf einen bekannten Ein-Gruppen-Test zurückgeführt.</p>
+</x-card>
+<x-card t="🎓 Das Spitzenwerkzeug für JEDEN Zwei-Gruppen-Vergleich" src="G">
+  <ol class="cook"><li><b>ERKENNEN:</b> Zwei Gruppen von Messungen; unterscheiden sich \(\mu_X\) und \(\mu_Y\)?</li>
+  <li><b>WÄHLEN:</b> gepaart? → Differenzen, Ein-Stichproben-Test (t/Vorzeichen/Wilcoxon). Ungepaart? → Zwei-Stichproben-t-Test (gleiche Varianz) oder Zwei-Stichproben-Wilcoxon.</li>
+  <li><b>RECHNEN:</b> gepaart: t auf die Differenzen, n − 1 Freiheitsgrade. Ungepaart: \(S^2_{\text{pool}}\), dann T, n + m − 2 Freiheitsgrade.</li>
+  <li><b>ARTIKULIEREN:</b> „Die Teststatistik ist […]; sie liegt (nicht) in K. Also unterscheiden sich die Gruppen (nicht) signifikant. Das VI für die Differenz ist […].“</li></ol>
+</x-card>
+<x-vids><x-vid f="statquest/StatQuickie： Which t test to use [nnBJeb_I-q8].mp4" n="welcher t-Test?"/></x-vids>
+</section>
+
+<!-- ============================================================ 8.1 -->
+<section id="s8-1" data-vn data-m="8.1 gepaart vs. ungepaart|Block, Randomisierung, Zuordnung">
+<h2><span class="num">8.1</span>Gepaarte und ungepaarte Stichproben</h2>
+<x-vn id="vn-8-1" sec="8.1" q="Vier Studien richtig einordnen">
+  <x-task>Entscheide jeweils gepaart oder ungepaart und nenne den passenden Test (Normalverteilung plausibel): (a) Blutdruck von 20 Personen vor und nach einer Therapie; (b) 30 Mäuse zufällig auf Futter A oder B verteilt, Gewichtszunahme gemessen; (c) linkes und rechtes Auge von 15 Patienten mit zwei Augentropfen; (d) Prüfungspunkte zweier verschiedener Jahrgänge.</x-task>
+  <x-step h="Die Schlüsselfrage.">„Kann ich jede Einheit der einen Gruppe genau einer Einheit der anderen zuordnen?“ Ja → gepaart. Nein → ungepaart.</x-step>
+  <x-step h="(a)">Dieselbe Person zweimal → <b>gepaart</b>, t-Test auf die 20 Differenzen (df = 19).</x-step>
+  <x-step h="(b)">Verschiedene Mäuse, zufällig zugelost → <b>ungepaart</b>, Zwei-Stichproben-t-Test (df = 28 bei 15 + 15).</x-step>
+  <x-step h="(c)">Beide Augen gehören zu einer Person (Block) → <b>gepaart</b>, df = 14.</x-step>
+  <x-step h="(d)">Verschiedene Studierende → <b>ungepaart</b>, df = n + m − 2.</x-step>
+  <x-res>(a) gepaart, (b) ungepaart, (c) gepaart, (d) ungepaart.</x-res>
+  <x-trap>Gleich große Gruppen machen Daten noch nicht gepaart. Entscheidend ist die natürliche Zuordnung über dieselbe Einheit.</x-trap>
+</x-vn>
+<x-g><p>Die wichtigste Vorfrage überhaupt. Zwei Prinzipien guter Versuchsplanung: <b>Randomisierung</b> (zufällige Zuordnung) und <b>Blockbildung</b> (dieselbe Einheit als Block).</p></x-g>
+<x-anat t="die zwei Datenstrukturen" src="G">
+  <x-a s="\text{ungepaart}">zwei unabhängige Gruppen; Beobachtungen \(x_1,\dots,x_n\) und \(y_1,\dots,y_m\), Umfänge dürfen verschieden sein. Entsteht durch Randomisierung</x-a>
+  <x-a s="\text{gepaart}">beide Bedingungen an derselben Einheit; zu jeder Einheit ein Paar \((x_i,y_i)\), zwingend gleicher Umfang. Jede Einheit ist ein Block</x-a>
+  <x-a s="\text{Test}">„Kann ich jede Einheit genau einer der anderen Gruppe zuordnen?“ Ja → gepaart</x-a>
+  <x-read>„Gepaart heißt: dieselbe Versuchseinheit, zwei Messungen. Ungepaart heißt: zwei getrennte Gruppen.“ Reifen A/B am selben Auto = gepaart; Drähte aus zwei Werken = ungepaart.</x-read>
+</x-anat>
+<x-pt><x-q>Ein Bremstest rüstet jedes von 12 Testautos einmal mit Reifen A und einmal mit B aus. Gepaart oder ungepaart?</x-q><x-e>Dieselbe Versuchseinheit (Auto) unter beiden Bedingungen → Block → gepaart.</x-e><x-l>Gepaart: für jedes Auto \(U_i\) = Bremsweg A − Bremsweg B, dann Ein-Stichproben-Test.</x-l><x-s>„Das ist gepaart, weil jedes Auto beide Reifen fährt: ich bilde die Differenzen und teste sie wie eine Stichprobe.“</x-s></x-pt>
+<x-viz t="gepaart vs. ungepaart" src="G">
+  <div class="ctl"><span class="seg" id="gpSeg"><button class="btn on" data-s="u">ungepaart (2 Gruppen)</button><button class="btn" data-s="g">gepaart (verbundene Paare)</button></span></div>
+  <div id="gpPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> dieselben Messwerte, zwei Lesarten. Gepaart: jede Einheit liefert ein verbundenes Paar; die Steigung jeder Linie ist die individuelle Differenz, fast alle fallen.</div>
+</x-viz>
+<x-card t="🎯 Beispiele: richtig einordnen" src="G">
+  <table class="tbl"><tr><th>Situation</th><th>Versuchseinheit</th><th>Struktur</th></tr>
+  <tr><td>Zugfestigkeit von Drähten aus 2 Werken</td><td>ein Draht</td><td>ungepaart</td></tr>
+  <tr><td>100 Patienten zufällig auf Medikament/Placebo</td><td>ein Patient</td><td>ungepaart</td></tr>
+  <tr><td>Bremsweg Reifen A vs. B am selben Testauto</td><td>ein Testauto</td><td>gepaart</td></tr>
+  <tr><td>15 Prüfkörper von 2 Laboren gemessen</td><td>ein Prüfkörper</td><td>gepaart</td></tr></table>
+  <p><b>Faustregel:</b> Wird eine Einheit zweimal gemessen (Block), ist es gepaart. Werden verschiedene Einheiten zwei Gruppen zugelost, ist es ungepaart.</p>
+</x-card>
+</section>
+
+<!-- ============================================================ 8.2 -->
+<section id="s8-2" data-vn data-m="8.2 Gepaart|Differenzen U_i, t-Test mit n−1">
+<h2><span class="num">8.2</span>Gepaarte Vergleiche: der Trick mit den Differenzen</h2>
+<x-vn id="vn-8-2" sec="8.2" q="Vorher/nachher: gepaarter t-Test von Hand">
+  <x-task>Ein Messwert wird an 8 Personen vor und nach einer Maßnahme erhoben: vorher 5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0; nachher 4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3. Hat die Maßnahme den Wert verändert? (zweiseitig, α = 0.05) Gib auch das 95-%-VI für die mittlere Differenz an.</x-task>
+  <x-step h="Einordnen.">Dieselben Personen → gepaart → Differenzen \(\Chg{u_i}\) = vorher − nachher.</x-step>
+  <x-step h="Differenzen.">0.5, 0.7, −0.1, 0.8, 0.5, 0.7, 0.3, 0.7.</x-step>
+  <x-step h="Kennzahlen.">\(\bar u=\tfrac{4.1}{8}=0.5125\), \(s_U=0.2949\), n = 8.</x-step>
+  <x-step h="Teststatistik.">
+  \[\begin{aligned}
+  \Res{t} &= \frac{\bar u-0}{s_U/\sqrt n}=\frac{0.5125}{0.2949/\sqrt8}=\frac{0.5125}{0.1043} && H_0:\EE[U_i]=0 \\
+  &\approx \Res{4.92} && \text{ausgerechnet}
+  \end{aligned}\]</x-step>
+  <x-step h="Entscheid und VI.">\(t_{7,0.975}=2.365\); \(4.92\ge2.365\) → <b>verwerfen</b>, P ≈ 0.0017. VI: \(0.5125\pm2.365\cdot0.1043=\Res{[0.266;\ 0.759]}\) (enthält 0 nicht ✓).</x-step>
+  <x-res>t ≈ 4.92, df = 7, P ≈ 0.002; die Maßnahme senkt den Wert im Mittel um 0.27 bis 0.76.</x-res>
+</x-vn>
+<x-g><p>Der ganze gepaarte Fall wird auf Kapitel 7 zurückgeführt: man bildet eine neue Stichprobe aus den Differenzen und testet sie wie eine einzelne Stichprobe.</p></x-g>
+<x-anat t="die Differenzen U_i" f="\underbrace{\Chg{u_{\Idx{i}}}=\Mem{x_{\Idx{i}}}-\Mem{y_{\Idx{i}}}}_{\text{Differenz pro Paar}},\quad i=1,\dots,n\qquad\Longrightarrow\qquad \Cond{H_0}:\ \EE[U_i]=0" src="G">
+  <x-a s="U_i">die Differenz innerhalb von Paar i; aus n Paaren wird eine i.i.d.-Stichprobe \(U_1,\dots,U_n\)</x-a>
+  <x-a s="H_0">„kein Unterschied zwischen den Bedingungen“; Alternative zwei- oder einseitig</x-a>
+  <x-a s="\text{Test}">genau die Tests aus Kapitel 7 auf die Differenzen: t-Test (normal), Vorzeichen-Test, Wilcoxon-Test</x-a>
+  <x-read>„u i ist x i minus y i; getestet wird, ob der Erwartungswert der Differenzen null ist.“</x-read>
+</x-anat>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>💡 Warum das genial ist:</b> Innerhalb eines Blocks fällt das einheitsspezifische Niveau weg. Misst man zwei Größen an derselben Person, kürzt sich die große Variabilität zwischen Personen in der Differenz heraus → kleinere Varianz, schärferer Test.</div>
+<x-pt><x-q>9 Paare, Differenzen annähernd normal. Welcher Test, wie viele Freiheitsgrade?</x-q><x-e>Gepaart + normal → t-Test auf die Differenzen, n − 1.</x-e><x-l>Ein-Stichproben-t-Test auf \(U_1,\dots,U_9\), df = 8, Grenze \(t_{8,0.975}=2.306\).</x-l><x-s>„t-Test auf die Differenzen mit 8 Freiheitsgraden.“</x-s></x-pt>
+<x-viz t="warum Pairing die Varianz schrumpfen lässt" src="G">
+  <div class="ctl"><label>Block-Streuung zwischen Einheiten <input type="range" id="blS" min="0" max="6" step="0.1" value="3" data-fmt="1"><output for="blS"></output></label>
+  <label>echter Effekt A − B <input type="range" id="blE" min="-3" max="3" step="0.1" value="1.5" data-fmt="1"><output for="blE"></output></label></div>
+  <div class="two"><div id="blRaw" class="plot"></div><div id="blDiff" class="plot"></div></div>
+  <div class="out" id="blOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> links streuen die Rohwerte stark (Block-Variabilität); rechts in den Differenzen kürzt sich das persönliche Niveau weg, nur der echte Effekt bleibt.</div>
+</x-viz>
+<x-card t="🧱 Bauplan: gepaarter t-Test (7 Prüfkörper, zwei Labore)" src="G">
+  \[\begin{aligned}
+  \bar u &= 1.657,\quad S_U=1.328,\quad n=7 && \text{Differenzen und Kennzahlen} \\
+  t &= \frac{1.657}{1.328/\sqrt7}=\Res{3.30} && \text{Ein-Stichproben-t auf U} \\
+  3.30 &\ge t_{6,0.975}=2.447\ \Rightarrow\ H_0\ \text{verwerfen} && \text{Entscheidung}
+  \end{aligned}\]
+  <p>Die Labore unterscheiden sich signifikant; es ist exakt der Ein-Stichproben-t-Test aus 7.2, angewendet auf die Differenzen.</p>
+</x-card>
+<div id="trGp"></div>
+<x-code2 f="k8_gepaart" t="gepaarter t-Test"/>
+</section>
+
+<!-- ============================================================ 8.3 -->
+<section id="s8-3" data-vn data-m="8.3 Zwei-Stichproben-t|S²_pool, t mit n+m−2, VI der Differenz">
+<h2><span class="num">8.3</span>Zwei-Stichproben-t-Test (ungepaart)</h2>
+<x-vn id="vn-8-3" sec="8.3" q="Zwei Produktionslinien vergleichen">
+  <x-task>Zugfestigkeiten zweier unabhängiger Linien: X (n = 10): 402, 415, 388, 397, 410, 385, 399, 421, 393, 379; Y (m = 8): 378, 395, 362, 388, 401, 370, 383, 359. Teste \(H_0:\mu_X=\mu_Y\) zweiseitig mit α = 0.05 (normal, gleiche Varianz) und gib das 95-%-VI für \(\mu_X-\mu_Y\) an.</x-task>
+  <x-step h="Kennzahlen je Gruppe.">\(\bar x=398.9\), \(s_X=13.445\); \(\bar y=379.5\), \(s_Y=15.147\).</x-step>
+  <x-step h="Gepoolte Varianz.">
+  \[\Chg{S^2_{\text{pool}}}=\frac{(n-1)s_X^2+(m-1)s_Y^2}{n+m-2}=\frac{9\cdot180.77+7\cdot229.43}{16}\approx\Res{202.06},\quad S_{\text{pool}}\approx14.21\]</x-step>
+  <x-step h="Teststatistik.">
+  \[\begin{aligned}
+  \Res{t} &= \frac{\bar x-\bar y}{S_{\text{pool}}\sqrt{\frac1n+\frac1m}}=\frac{19.4}{14.21\cdot\sqrt{0.1+0.125}} && \text{Mitteldifferenz durch SE} \\
+  &= \frac{19.4}{6.743}\approx\Res{2.88} && df=n+m-2=16
+  \end{aligned}\]</x-step>
+  <x-step h="Entscheid.">\(t_{16,0.975}=2.120\); \(2.88\ge2.12\) → <b>verwerfen</b>, P ≈ 0.011.</x-step>
+  <x-step h="VI.">\(19.4\pm2.120\cdot6.743=\Res{[5.11;\ 33.69]}\), enthält 0 nicht ✓.</x-step>
+  <x-res>S²_pool ≈ 202.1, t ≈ 2.88 (df 16), P ≈ 0.011; VI [5.1; 33.7]. Welch-Test (ohne gleiche Varianz): t = 2.84, P = 0.013; Wilcoxon: P = 0.021.</x-res>
+  <x-trap>Nenner n + m − 2, nicht n + m. Und die Gewichte in S²_pool sind (n − 1) und (m − 1), nicht n und m.</x-trap>
+</x-vn>
+<x-g><p>Bei unabhängigen Gruppen gibt es keine Paare. Modell: beide normalverteilt mit <b>gleicher Varianz</b> σ². Getestet wird \(\mu_X=\mu_Y\).</p></x-g>
+<x-anat t="Modell und Hypothese" f="X_1,\dots,X_n\sim\Nor(\Par{\mu_X},\Par{\sigma^2}),\quad Y_1,\dots,Y_m\sim\Nor(\Par{\mu_Y},\Par{\sigma^2})\ \text{unabhängig},\qquad \Cond{H_0}:\ \mu_X=\mu_Y" src="G">
+  <x-a s="X,\ Y">die zwei unabhängigen Gruppen (Umfänge n und m); alle ZV unabhängig</x-a>
+  <x-a s="\sigma^2">die gemeinsame Varianz: zentrale Annahme</x-a>
+  <x-a s="H_0">„die Erwartungswerte unterscheiden sich nicht“</x-a>
+  <x-read>„X-Gruppe normal mit mü-X, Y-Gruppe normal mit mü-Y, gleiche Varianz; Nullhypothese: die beiden mü sind gleich.“</x-read>
+</x-anat>
+<x-pt><x-q>Werk X soll höhere mittlere Zugfestigkeit haben als Werk Y. Modell und Hypothesen?</x-q><x-e>Ungepaart, einseitige Alternative.</x-e><x-l>X ~ N(µX, σ²), Y ~ N(µY, σ²), unabhängig. H₀: µX = µY, H_A: µX &gt; µY.</x-l><x-s>„Beide normal mit gleicher Varianz; H₀: mü-X gleich mü-Y, einseitige Alternative mü-X größer.“</x-s></x-pt>
+<x-card t="🔍 Von null: die Teststatistik herleiten" src="G">
+  \[\begin{aligned}
+  \Var(\bar X_n-\bar Y_m) &= \frac{\sigma^2}{n}+\frac{\sigma^2}{m}=\sigma^2\Big(\frac1n+\frac1m\Big) && \text{unabhängig: Varianzen addieren (Kap. 4)} \\
+  Z &= \frac{(\bar X_n-\bar Y_m)-(\mu_X-\mu_Y)}{\sigma\sqrt{1/n+1/m}}\sim\Nor(0,1) && \text{mit bekanntem }\sigma \\
+  S^2_{\text{pool}} &= \frac{(n-1)S_X^2+(m-1)S_Y^2}{n+m-2} && \sigma\text{ schätzen, größere Gruppe zählt mehr} \\
+  T &= \frac{(\bar X_n-\bar Y_m)-(\mu_X-\mu_Y)}{S_{\text{pool}}\sqrt{1/n+1/m}}\sim t_{n+m-2} && \text{zwei Mittel geschätzt: zwei Freiheitsgrade bezahlt}
+  \end{aligned}\]
+</x-card>
+<x-anat t="Entscheidung und Vertrauensintervall" f="|t|\ge t_{n+m-2,1-\alpha/2}\Rightarrow H_0\ \text{verwerfen},\qquad \Res{I_d}=(\bar X_n-\bar Y_m)\pm S_{\text{pool}}\sqrt{\tfrac1n+\tfrac1m}\;t_{n+m-2,1-\alpha/2}" src="G">
+  <x-a s="d=\mu_X-\mu_Y">die Differenz der Erwartungswerte; das VI sammelt alle nicht verworfenen Differenzwerte</x-a>
+  <x-a s="\text{Dualität}">enthält das VI die 0 nicht, wird \(H_0:\mu_X=\mu_Y\) verworfen</x-a>
+  <x-a s="\text{Erweiterungen}">ungleiche Varianzen → Welch-Test; nicht normal → Zwei-Stichproben-Wilcoxon (Mann-Whitney), in der Praxis oft die bessere Wahl</x-a>
+  <x-read>„Das Intervall für die Differenz ist Mitteldifferenz plus/minus S-pool mal Wurzel aus eins durch n plus eins durch m mal das t-Quantil.“</x-read>
+</x-anat>
+<x-pt><x-q>n = 12, x̄ = 25.4, s_X = 3.1; m = 15, ȳ = 23.1, s_Y = 2.8; zweiseitig, α = 0.05. S²_pool, t, Entscheid?</x-q><x-e>Erst gepoolte Varianz, dann t, df = 25.</x-e><x-l>\(S^2_{\text{pool}}=\tfrac{11\cdot3.1^2+14\cdot2.8^2}{25}=8.62\); \(t=\tfrac{2.3}{\sqrt{8.62}\sqrt{1/12+1/15}}=\Res{2.02}<2.06\) → nicht verwerfen.</x-l><x-s>„t ist 2.02, knapp unter 2.06: der Unterschied ist nicht signifikant.“</x-s></x-pt>
+<x-viz t="Zwei-Stichproben-t-Test live" src="G">
+  <div class="ctl"><label>x̄ <input type="range" id="tsX" min="360" max="420" step="0.1" value="398.9" data-fmt="1"><output for="tsX"></output></label>
+  <label>ȳ <input type="range" id="tsY" min="360" max="420" step="0.1" value="380.8" data-fmt="1"><output for="tsY"></output></label>
+  <label>n <input type="range" id="tsN" min="2" max="50" value="10"><output for="tsN"></output></label>
+  <label>m <input type="range" id="tsM" min="2" max="50" value="8"><output for="tsM"></output></label>
+  <label>s_pool <input type="range" id="tsS" min="3" max="40" step="0.1" value="17.3" data-fmt="1"><output for="tsS"></output></label></div>
+  <div class="two"><div id="tsDens" class="plot"></div><div id="tsCI" class="plot" style="min-height:220px"></div></div>
+  <div class="out" id="tsOut"></div>
+</x-viz>
+<x-card t="🧱 Bauplan: Aluminiumlegierung A vs. B" src="G">
+  <p>Linie A: n = 10, x̄ = 398.9, s_X = 15.9. Linie B: m = 8, ȳ = 380.8, s_Y = 19.0. Ungepaart, α = 0.05.</p>
+  \[\begin{aligned}
+  S^2_{\text{pool}} &= \frac{9\cdot15.9^2+7\cdot19.0^2}{16}=\Res{300.14} && \text{gepoolte Varianz} \\
+  t &= \frac{398.9-380.8}{\sqrt{300.14}\sqrt{\frac1{10}+\frac18}}=\Res{2.2} && \text{Teststatistik} \\
+  K &= (-\infty,-2.12]\cup[2.12,\infty) && t_{16,0.975}=2.12 \\
+  2.2 &\ge 2.12\Rightarrow\text{verwerfen};\quad I_d=18.1\pm17.42=[0.68;\ 35.5] && \text{Entscheid und VI}
+  \end{aligned}\]
+  <p>Signifikant, aber das VI reicht fast an 0 heran: die Relevanz des Unterschieds ist nicht gesichert (vgl. 7.4).</p>
+</x-card>
+<div id="trZs"></div>
+<x-code2 f="k8_zweistich" t="Zwei-Stichproben-t-Test"/>
+</section>
+
+<!-- ============================================================ 8.4 -->
+<section id="s8-4" data-vn data-m="8.4 Vergleich der Konzepte|Landkarte aller Tests, Pairing ignorieren?">
+<h2><span class="num">8.4</span>Vergleich der Konzepte: alles auf einen Blick</h2>
+<x-vn id="vn-8-4" sec="8.4" q="Was passiert, wenn man gepaarte Daten ungepaart auswertet?">
+  <x-task>Werte die vorher/nachher-Daten aus 8.2 fälschlich mit dem Zwei-Stichproben-t-Test aus. Vergleiche Teststatistik, Freiheitsgrade und P-Wert mit dem gepaarten Test und erkläre den Unterschied.</x-task>
+  <x-step h="Ungepaart gerechnet.">\(\bar x=5.5875\), \(\bar y=5.075\), \(S_{\text{pool}}\approx0.496\): \(t=\tfrac{0.5125}{0.496\sqrt{2/8}}\approx\Res{2.07}\), df = 14, P ≈ \(\Res{0.058}\) → <b>nicht</b> signifikant.</x-step>
+  <x-step h="Gepaart (richtig).">t ≈ 4.92, df = 7, P ≈ 0.0017 → hochsignifikant.</x-step>
+  <x-step h="Warum?">Der Zähler (0.5125) ist gleich. Aber ungepaart steckt die große Streuung <i>zwischen</i> Personen im Nenner; gepaart fällt sie in den Differenzen weg (\(s_U=0.29\) statt \(S_{\text{pool}}\sqrt{2}\approx0.70\)).</x-step>
+  <x-res>Ungepaart: t = 2.07, P = 0.058 (verpasster Effekt); gepaart: t = 4.92, P = 0.002. Die Paar-Struktur ignorieren kostet Macht.</x-res>
+  <x-trap>Umgekehrt ist es genauso falsch, bei wirklich unabhängigen Gruppen Paare zu erfinden (z. B. nach Sortierung).</x-trap>
+</x-vn>
+<x-g><p>Die komplette Landkarte der Tests bei stetigen Messgrößen: von einer Stichprobe (Kapitel 7) bis zum Zwei-Gruppen-Vergleich (Kapitel 8).</p></x-g>
+<table class="tbl is-g"><tr><th>Situation</th><th>Voraussetzung</th><th>Teststatistik</th><th>Verteilung unter H₀</th><th>df</th><th>R</th></tr>
+<tr><td>1 Stichprobe, σ bekannt</td><td>normal</td><td>\(Z=\frac{\bar X-\mu_0}{\sigma/\sqrt n}\)</td><td>\(\Nor(0,1)\)</td><td>—</td><td><code>pnorm</code></td></tr>
+<tr><td>1 Stichprobe, σ unbekannt</td><td>normal</td><td>\(T=\frac{\bar X-\mu_0}{S/\sqrt n}\)</td><td>\(t_{n-1}\)</td><td>n − 1</td><td><code>t.test(x, mu=)</code></td></tr>
+<tr><td>1 Stichprobe, nicht normal</td><td>Median</td><td>Q / W</td><td>Bin(n, ½) / Tabelle</td><td>—</td><td><code>binom.test</code>, <code>wilcox.test</code></td></tr>
+<tr><td>gepaart</td><td>→ Differenzen</td><td>wie 1 Stichprobe auf U</td><td>t / Bin / Tabelle</td><td>n − 1</td><td><code>t.test(x, y, paired=TRUE)</code></td></tr>
+<tr><td>ungepaart</td><td>normal, gleiche Varianz</td><td>\(T=\frac{\bar X-\bar Y}{S_{\text{pool}}\sqrt{1/n+1/m}}\)</td><td>\(t_{n+m-2}\)</td><td>n + m − 2</td><td><code>t.test(x, y, var.equal=TRUE)</code></td></tr>
+<tr><td>ungepaart, nicht normal</td><td>—</td><td>Zwei-Stichproben-Wilcoxon</td><td>Tabelle</td><td>—</td><td><code>wilcox.test(x, y)</code></td></tr></table>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🧭 Die eine Kernidee:</b> Jeder Test hat dieselbe Form (beobachtet − erwartet)/Standardfehler. Gepaart reduziert man auf eine Stichprobe; ungepaart schätzt man eine gemeinsame Varianz. Verwerfungsbereich, P-Wert, VI und Dualität sind überall identisch.</div>
+<x-pt><x-q>Zwei unabhängige Gruppen mit n = 12 und m = 15, Daten klar nicht normal. Welcher Test?</x-q><x-e>Ungepaart + nicht normal → rangbasiert.</x-e><x-l>Zwei-Stichproben-Wilcoxon (Mann-Whitney): verteilungsfrei, Grenzen aus Tabellen bzw. Computer-P-Wert.</x-l><x-s>„Zwei-Stichproben-Wilcoxon-Test: ideal bei nicht-normalen ungepaarten Gruppen.“</x-s></x-pt>
+<table class="tbl is-g"><tr><th></th><th>gepaart</th><th>ungepaart</th></tr><tr><td>reduziert auf</td><td>1 Stichprobe (Differenzen)</td><td>Differenz zweier Mittel</td></tr><tr><td>Varianz</td><td>klein (Block fällt raus)</td><td>gepoolt aus beiden Gruppen</td></tr><tr><td>Freiheitsgrade</td><td>n − 1</td><td>n + m − 2</td></tr><tr><td>Umfänge</td><td>zwingend gleich</td><td>dürfen verschieden sein</td></tr></table>
+</section>
+
+<!-- ============================================================ 8.5 Regression -->
+<section id="s8-5" data-vn data-m="8.5 Regression: t-Test der Steigung|H₀: β = 0, SE(b), df n−2 (Modul)">
+<h2><span class="num">8.5</span>Lineare Regression und t-Test für die Steigung <span class="srcin n">✚ Neu · Modulinhalt</span></h2>
+<p class="one">Die Modulbeschreibung nennt „Lineare Regression und t-Tests“. Hier kommt beides zusammen: Ist die Steigung der Ausgleichsgeraden (3.4.1) signifikant von 0 verschieden?</p>
+<x-vn id="vn-8-5" sec="8.5" q="Ist der lineare Zusammenhang signifikant?">
+  <x-task>Für die fünf Punkte (1, 2), (2, 4), (3, 5), (4, 4), (5, 5) ist die Kleinste-Quadrate-Gerade \(\hat y=2.2+0.6x\) (3.4.1). Modell \(Y_i=\alpha+\beta x_i+\varepsilon_i\), \(\varepsilon_i\iid\Nor(0,\sigma^2)\). Teste \(H_0:\beta=0\) zweiseitig mit α = 0.05 und gib ein 95-%-VI für β an.</x-task>
+  <x-step h="Fehlervarianz schätzen.">SSE = 2.4 (aus 3.4.1). Zwei Parameter (α, β) geschätzt → Nenner n − 2 = 3: \(\hat\sigma^2=\tfrac{2.4}{3}=0.8\).</x-step>
+  <x-step h="Standardfehler der Steigung.">\(\operatorname{SE}(b)=\sqrt{\hat\sigma^2/S_{xx}}=\sqrt{0.8/10}\approx\Res{0.283}\).</x-step>
+  <x-step h="Teststatistik.">
+  \[\begin{aligned}
+  \Res{t} &= \frac{b-0}{\operatorname{SE}(b)}=\frac{0.6}{0.283}\approx\Res{2.12} && \text{beobachtet minus erwartet durch SE} \\
+  t_{3,0.975} &= 3.182 && df=n-2
+  \end{aligned}\]</x-step>
+  <x-step h="Entscheid und VI.">\(|2.12|<3.182\) → <b>nicht verwerfen</b>, P ≈ 0.124. VI: \(0.6\pm3.182\cdot0.283=\Res{[-0.30;\ 1.50]}\) enthält 0.</x-step>
+  <x-res>t = 2.12 (df 3), P ≈ 0.12: bei nur fünf Punkten ist der Zusammenhang (r = 0.77) nicht signifikant. R: <code>summary(lm(y ~ x))</code>.</x-res>
+  <x-trap>Ein großes r bei kleinem n ist nicht automatisch signifikant; umgekehrt wird bei riesigem n schon ein winziges r signifikant (Relevanz, 7.4).</x-trap>
+</x-vn>
+<x-anat t="t-Test für die Steigung" f="\Res{T}=\frac{\Chg{b}-\Par{\beta_0}}{\operatorname{SE}(b)},\qquad \operatorname{SE}(b)=\sqrt{\frac{\hat\sigma^2}{\sum(x_i-\bar x)^2}},\qquad \hat\sigma^2=\frac{\sum e_i^2}{n-2},\qquad T\sim t_{\Idx{n-2}}">
+  <x-a s="b">geschätzte Steigung (Kleinste Quadrate)</x-a>
+  <x-a s="\beta_0">meist 0: „kein linearer Zusammenhang“</x-a>
+  <x-a s="\hat\sigma^2">geschätzte Streuung um die Gerade; Nenner n − 2, weil Achsenabschnitt und Steigung geschätzt wurden</x-a>
+  <x-a s="t_{n-2}">gleiche Logik wie beim t-Test: pro geschätztem Parameter ein Freiheitsgrad weniger</x-a>
+  <x-why>Äquivalent: \(H_0:\beta=0\) ist derselbe Test wie „wahre Korrelation 0“; es gilt \(t=r\sqrt{n-2}/\sqrt{1-r^2}\). Hier: \(0.775\sqrt3/\sqrt{0.4}=2.12\) ✓.</x-why>
+  <x-read>„T ist die geschätzte Steigung minus beta null, geteilt durch ihren Standardfehler; unter H null t-verteilt mit n minus zwei Freiheitsgraden.“</x-read>
+</x-anat>
+<x-card t="🔗 Brücke: der Zwei-Stichproben-t-Test ist eine Regression">
+  <p>Kodiert man die Gruppe als \(x_i=0\) (Gruppe Y) bzw. \(x_i=1\) (Gruppe X), dann ist die Steigung der Regressionsgeraden genau \(\bar x-\bar y\), und der t-Test für die Steigung ist exakt der Zwei-Stichproben-t-Test mit gepoolter Varianz (df = n + m − 2). In R: <code>summary(lm(wert ~ gruppe))</code> liefert dasselbe t wie <code>t.test(..., var.equal = TRUE)</code>.</p>
+</x-card>
+<x-code2 f="k8_regtest" t="t-Test der Steigung"/>
+<x-vids><x-vid f="statquest/Linear Regression, Clearly Explained!!! [7ArmBVF2dCs].mp4" n="Regression inkl. p-Wert"/><x-vid f="statquest/Linear Regression in R, Step-by-Step [u1cc1r_Y7M0].mp4" n="lm in R"/></x-vids>
+</section>
+
+<!-- ============================================================ Werkzeuge -->
+<section id="s8-6" data-m="🧰 Werkzeuge|eigene Daten vergleichen">
+<h2>🧰 Interaktive Werkzeuge: eigene Daten vergleichen</h2>
+<p>Trag deine eigenen Messwerte ein (Komma, Leerzeichen oder Zeilenumbruch). Alle Rechnungen laufen lokal und stimmen mit R/SciPy überein.</p>
+<x-card t="🧰 1 · Boxplot und überlagerte Histogramme" src="G">
+  <div class="viz" style="margin:0"><div class="two"><label>Gruppe A<textarea id="w1A">402, 415, 388, 397, 410, 385, 399, 421, 393, 379</textarea></label><label>Gruppe B<textarea id="w1B">378, 395, 362, 388, 401, 370, 383, 359</textarea></label></div>
+  <div class="two"><div id="w1Box" class="plot"></div><div id="w1Hist" class="plot"></div></div><div class="out" id="w1Out"></div></div>
+</x-card>
+<x-card t="🧰 2 · Zwei-Stichproben-t-Test-Rechner (ungepaart)" src="G">
+  <div class="viz" style="margin:0"><div class="two"><label>Gruppe X<textarea id="w2X">402, 415, 388, 397, 410, 385, 399, 421, 393, 379</textarea></label><label>Gruppe Y<textarea id="w2Y">378, 395, 362, 388, 401, 370, 383, 359</textarea></label></div>
+  <div class="ctl"><label>1 − α <input type="range" id="w2L" min="0.8" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="w2L"></output></label><label><input type="checkbox" id="w2W"> Welch (ungleiche Varianzen)</label></div>
+  <div class="out" id="w2Out"></div></div>
+</x-card>
+<x-card t="🧰 3 · Gepaarter Vergleich" src="G">
+  <div class="viz" style="margin:0"><div class="two"><label>Bedingung A<textarea id="w3A">5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0</textarea></label><label>Bedingung B<textarea id="w3B">4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3</textarea></label></div>
+  <div class="two"><div id="w3Pairs" class="plot"></div><div id="w3Diff" class="plot"></div></div><div class="out" id="w3Out"></div></div>
+</x-card>
+</section>
+
+<section id="s8-7" data-m="📐 Schema & Beispiele|5 Schritte Zwei-Gruppen-Vergleich">
+<h2>📐 Schema: Zwei-Gruppen-Vergleich in 5 Schritten</h2>
+<ol class="cook is-g"><li><b>Einordnen:</b> gepaart (eine Einheit, zwei Messungen) oder ungepaart (zwei Gruppen)?</li><li><b>Reduzieren:</b> gepaart → Differenzen \(U_i\). Ungepaart → \(S^2_{\text{pool}}\).</li><li><b>Modell prüfen:</b> normal (Normalplot)? → t-basiert. Sonst → Vorzeichen/Wilcoxon.</li><li><b>Testen:</b> Statistik, Freiheitsgrade (n − 1 bzw. n + m − 2), Verwerfungsbereich, Entscheid.</li><li><b>Berichten:</b> VI für die Differenz + Relevanz beurteilen (VI gegen 0 und Relevanzbereich).</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Gepaart" src="G">2 Labore, 7 Prüfkörper.<x-v>Differenzen, t = 3.30 &gt; 2.447 → verwerfen.</x-v></x-ex>
+  <x-ex l="2" t="Ungepaart" src="G">Alu A/B.<x-v>S²_pool = 300.14, t = 2.20 &gt; 2.12 → verwerfen.</x-v></x-ex>
+  <x-ex l="3" t="Relevanz" src="G">VI der Differenz [0.68; 35.5].<x-v>∌ 0 → signifikant, aber nahe 0 → Relevanz nicht gesichert.</x-v></x-ex>
+</x-ex3>
+</section>
+
+<section id="s8-9" data-m="🌉 Brücke & Lernziele|Abschluss Statistik I">
+<h2>🌉 Die große Brücke: Statistik I als ein roter Faden</h2>
+<x-card t="🧵 Vom Zufallsexperiment bis zum Zwei-Gruppen-Test">
+<svg viewBox="0 0 1200 200" role="img" aria-label="roter Faden Statistik I">
+  <defs><marker id="arrK8b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="15" text-anchor="middle">
+    <rect x="10" y="20" width="270" height="60" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="145" y="45" fill="#f778ba" font-weight="700">Kap. 1–2 Modelle</text><text x="145" y="67" fill="#8b949e">P, Zufallsvariable, Verteilungen</text>
+    <rect x="310" y="20" width="270" height="60" rx="10" fill="#1c2129" stroke="#d29922"/><text x="445" y="45" fill="#d29922" font-weight="700">Kap. 3–4 Daten und Paare</text><text x="445" y="67" fill="#8b949e">Kennzahlen, Cov, Regression</text>
+    <rect x="610" y="20" width="270" height="60" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="745" y="45" fill="#bc8cff" font-weight="700">Kap. 5–6 Grenzwerte, Schätzen</text><text x="745" y="67" fill="#8b949e">ZGS, ML, SE, VI</text>
+    <rect x="910" y="20" width="280" height="60" rx="10" fill="#1c2129" stroke="#f85149"/><text x="1050" y="45" fill="#f85149" font-weight="700">Kap. 7–8 Testen</text><text x="1050" y="67" fill="#8b949e">eine, zwei Stichproben, Steigung</text>
+    <line x1="280" y1="50" x2="308" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8b)"/>
+    <line x1="580" y1="50" x2="608" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8b)"/>
+    <line x1="880" y1="50" x2="908" y2="50" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK8b)"/>
+    <text x="600" y="130" fill="#bc8cff" font-weight="700">Jeder Test: (beobachtet − erwartet) / Standardfehler → Verwerfungsbereich, P-Wert, VI</text>
+    <text x="600" y="165" fill="#8b949e">Ausblick Statistik II: χ²-Tests, Bayes-Inferenz, Bootstrap, multiple Regression (siehe Notizen im Repo)</text>
+  </g>
+</svg>
+</x-card>
+<x-card t="✅ Lernziele-Check (8.5)" src="G">
+  <ul><li>Ich unterscheide gepaarte und ungepaarte Stichproben sicher.</li><li>Ich behandle gepaarte Stichproben mit den Ein-Stichproben-Methoden (Differenzen).</li><li>Ich kenne und wende den Zwei-Stichproben-t-Test an, auch für Vertrauensintervalle.</li><li>✚ Ich kann die Steigung einer Regressionsgeraden testen (Modul).</li></ul>
+</x-card>
+</section>
+
+<section id="s8-cheat" data-m="📋 Cheat-Sheet|Formeln Kap. 8">
+<h2>📋 Cheat-Sheet Kapitel 8</h2>
+<table class="tbl cheat">
+<tr><th>Was</th><th>Formel</th><th>R</th><th>Python</th></tr>
+<tr><td>gepaart</td><td>\(t=\frac{\bar u}{s_U/\sqrt n}\), df n − 1</td><td><code>t.test(x, y, paired = TRUE)</code></td><td><code>stats.ttest_rel(x, y)</code></td></tr>
+<tr><td>gepoolte Varianz</td><td>\(\frac{(n-1)s_X^2+(m-1)s_Y^2}{n+m-2}\)</td><td>—</td><td>—</td></tr>
+<tr><td>ungepaart</td><td>\(t=\frac{\bar x-\bar y}{s_{\text{pool}}\sqrt{1/n+1/m}}\), df n + m − 2</td><td><code>t.test(x, y, var.equal = TRUE)</code></td><td><code>stats.ttest_ind(x, y)</code></td></tr>
+<tr><td>Welch</td><td>ungleiche Varianzen</td><td><code>t.test(x, y)</code></td><td><code>stats.ttest_ind(x, y, equal_var=False)</code></td></tr>
+<tr><td>VI der Differenz</td><td>\((\bar x-\bar y)\pm s_{\text{pool}}\sqrt{1/n+1/m}\,t_{n+m-2,1-\alpha/2}\)</td><td><code>$conf.int</code></td><td>—</td></tr>
+<tr><td>Wilcoxon</td><td>gepaart: auf Differenzen; ungepaart: Mann-Whitney</td><td><code>wilcox.test</code></td><td><code>stats.wilcoxon</code>, <code>stats.mannwhitneyu</code></td></tr>
+<tr><td>✚ Steigung</td><td>\(t=b/\operatorname{SE}(b)\), df n − 2</td><td><code>summary(lm(y ~ x))</code></td><td><code>stats.linregress(x, y)</code></td></tr>
+</table>
+</section>
+
+<section id="s8-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-rule">gepaarte Stichprobe</span></td><td>paired sample</td><td>dieselbe Einheit, zwei Messungen</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-rule">ungepaarte Stichprobe</span></td><td>independent samples</td><td>zwei getrennte Gruppen</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Randomisierung</span></td><td>randomization</td><td>zufällige Zuordnung</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Blockbildung</span></td><td>blocking</td><td>Einheit als eigener Vergleich</td><td><a href="#s8-1">8.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Differenz Uᵢ</span></td><td>within-pair difference</td><td>macht aus Paaren eine Stichprobe</td><td><a href="#s8-2">8.2</a></td></tr>
+<tr><td><span class="kw kw-chg">gepoolte Varianz</span></td><td>pooled variance</td><td>gewichtetes Mittel der Gruppenvarianzen</td><td><a href="#s8-3">8.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Zwei-Stichproben-t-Test</span></td><td>two-sample t-test</td><td>μ_X = μ_Y bei gleicher Varianz</td><td><a href="#s8-3">8.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Welch-Test</span></td><td>Welch's t-test</td><td>ohne gleiche Varianz</td><td><a href="#s8-3">8.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Mann-Whitney / Zwei-Stichproben-Wilcoxon</span></td><td>Mann–Whitney U test</td><td>rangbasiert, verteilungsfrei</td><td><a href="#s8-4">8.4</a></td></tr>
+<tr><td><span class="kw kw-res">Standardfehler der Steigung</span></td><td>standard error of the slope</td><td>Genauigkeit von b</td><td><a href="#s8-5">8.5</a></td></tr>
+</table>
+</section>
+
+<section id="s8-train" data-m="🏋 Training|gepaart oder ungepaart rechnen">
+<h2>🏋 Training</h2>
+<x-card t="Zufällige Zwei-Gruppen-Aufgabe" id="qz8">
+  <div id="q8Task"></div>
+  <div class="quiz two"><p>t = <input id="q8t"></p><p>Freiheitsgrade = <input id="q8d"></p></div>
+  <p><button class="btn" id="q8Chk">Prüfen</button> <button class="btn" id="q8New">Neue Aufgabe</button></p>
+  <div class="out" id="q8Res"></div>
+</x-card>
+</section>
