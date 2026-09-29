@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kap. 5 · Grenzwertsätze · Lernbegleiter Statistik I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Crimson+Pro:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+/* ================================================================
+   Lernbegleiter Statistik I · gemeinsamer Stil (dunkler Bildatlas)
+   Farbe = Rolle, überall gleich: Formel, Code, Plot, Fließtext.
+   ================================================================ */
+:root{
+  --bg:#0d1117; --card:#161b22; --card2:#1c2129; --panel:#11161d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+  --res:#f85149;  /* Ergebnis / gesuchte Größe                 rot    */
+  --chg:#d29922;  /* Änderung / Operation / Transformation     orange */
+  --rule:#bc8cff; /* Regel / Operator P,E,Var / Verteilung     lila   */
+  --par:#58a6ff;  /* Parameter / Eingabe  p, λ, μ, σ, n, α     blau   */
+  --idx:#3fb950;  /* Index / Zähler / Freiheitsgrad / „richtig" grün  */
+  --cond:#56d4dd; /* Bedingung / Vergleich / Hypothese         cyan   */
+  --mem:#f778ba;  /* Ereignis / Zufallsvariable / Daten        pink   */
+  --gl:#6e9fd8;   /* Kennzeichen „Grundlage"                          */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{hyphens:auto;overflow-wrap:break-word;margin:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.6}
+a{color:var(--par)}
+.wrap{max-width:1640px;margin:0 auto;padding:1.2rem 1.6rem 5rem}
+h1{font-family:'Crimson Pro',Georgia,serif;font-size:2.4rem;line-height:1.15;margin:.4rem 0 .4rem}
+h2{font-size:1.6rem;margin:2.6rem 0 .7rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+h2 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.5rem}
+h3{font-size:1.25rem;margin:1.9rem 0 .5rem}
+h3 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.4rem}
+h4{font-size:1.05rem;margin:1.2rem 0 .4rem}
+.one{color:var(--muted);margin:-.3rem 0 .8rem}
+p{margin:.5rem 0}
+code{hyphens:none;font-family:'JetBrains Mono',Consolas,monospace;font-size:.86em;background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:0 .3rem}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
+th,td{border:1px solid var(--border);padding:.3rem .55rem;text-align:left;vertical-align:top}
+th{background:var(--card2);color:var(--muted);font-weight:600}
+td.r,th.r{text-align:right}
+.tbl{max-width:100%}
+svg{max-width:100%;height:auto}
+.katex-display{margin:.5rem 0;max-width:100%}
+.katex{font-size:1.07em}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0;position:relative}
+.card>b:first-child,.ctitle{display:block;font-size:1.08rem;margin-bottom:.35rem}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin:.15rem 0}
+
+/* ---------- Farbige Schlüsselwörter im Fließtext ---------- */
+.kw{font-weight:600}
+.kw-res{color:var(--res)} .kw-chg{color:var(--chg)} .kw-rule{color:var(--rule)} .kw-par{color:var(--par)}
+.kw-idx{color:var(--idx)} .kw-cond{color:var(--cond)} .kw-mem{color:var(--mem)}
+
+/* ---------- Herkunfts-Kennzeichen ---------- */
+.src{position:absolute;top:.55rem;right:.7rem;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.05rem .45rem;border:1px solid var(--border);color:var(--muted);background:var(--bg)}
+.src.g{color:var(--gl);border-color:var(--gl)}
+.src.n{color:var(--idx);border-color:color-mix(in srgb,var(--idx) 60%,transparent)}
+.srcin{display:inline-block;font-size:.72rem;font-family:'JetBrains Mono',monospace;border-radius:6px;padding:.02rem .42rem;border:1px solid var(--gl);color:var(--gl);vertical-align:middle;margin-left:.35rem}
+.srcin.n{border-color:var(--idx);color:var(--idx)}
+.gblk{border-left:3px solid color-mix(in srgb,var(--gl) 70%,transparent);padding-left:.8rem;margin:.6rem 0}
+body.hl-g .is-g{box-shadow:0 0 0 2px var(--gl)}
+body.hl-g .gblk{background:color-mix(in srgb,var(--gl) 9%,transparent)}
+.has-src{padding-top:1.5rem}
+
+/* ---------- Kopf: NICHT sticky ---------- */
+.lbtop{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.1rem;padding:.8rem 1.4rem;border-bottom:1px solid var(--border);background:var(--card)}
+.lbtop .lbt{min-width:0;flex:1 1 280px}
+.lbtop .lbt b{font-size:1.05rem;margin-right:.6rem}
+.lbtop .lbt span{color:var(--muted);font-size:.85rem;display:block}
+.lbq{display:flex;flex-wrap:wrap;gap:.3rem .45rem;flex:1 1 520px}
+.lbq a{font-size:.8rem;text-decoration:none;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.12rem .5rem;white-space:nowrap}
+.lbq a:hover{border-color:var(--rule);color:var(--rule)}
+.lbq a small{color:var(--muted);margin-left:.3rem}
+.lbburger,.lbfab{font:inherit;font-weight:700;cursor:pointer;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--text);padding:.3rem .75rem}
+.lbfab{position:fixed;right:18px;bottom:18px;z-index:300;border-radius:50%;width:48px;height:48px;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.lbmenu{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.6);display:none;overflow:auto;padding:2.2rem 2rem}
+body.menu-open .lbmenu{display:block}
+.lbm-in{max-width:1640px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.4rem 1.4rem}
+.lbm-head{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-bottom:.6rem}
+.lbm-head .sp{margin-left:auto}
+.lbm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.9rem 1.4rem}
+.lbm-grid h5{margin:.2rem 0 .3rem;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--rule)}
+.lbm-grid a{display:flex;gap:.5rem;align-items:baseline;text-decoration:none;color:var(--text);padding:.16rem .35rem;border-radius:6px;font-size:.9rem}
+.lbm-grid a:hover{background:var(--card2)}
+.lbm-grid a span{color:var(--muted);font-size:.8rem}
+.lbm-grid a.sub{padding-left:1.1rem;font-size:.86rem}
+.lbm-opts{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;align-items:center;margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--border);font-size:.88rem;color:var(--muted)}
+.lbm-opts input[type=text]{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:min(30rem,100%)}
+.lbm-parts{display:flex;flex-wrap:wrap;gap:.35rem .5rem;align-items:center;margin:.2rem 0 .8rem;font-size:.86rem}
+.lbm-parts a{border:1px solid var(--border);border-radius:7px;padding:.1rem .5rem;text-decoration:none;color:var(--text)}
+.lbm-parts a.cur{border-color:var(--rule);color:var(--rule)}
+
+/* ---------- Titelbereich ---------- */
+.hero{padding:1rem 0 .4rem}
+.hero .kick{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--rule);font-weight:700}
+.hero .lead{font-size:1.1rem;color:#c9d1d9;max-width:1100px}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.45rem .9rem;margin:.6rem 0}
+.legend div{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.35rem .6rem;font-size:.92rem}
+.legend b{font-family:'JetBrains Mono',monospace}
+
+/* ---------- Anatomie ---------- */
+.anat-f{text-align:center;font-size:1.15rem;margin:.3rem 0 .6rem}
+.anat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.45rem 1.2rem}
+.anat>div{display:grid;grid-template-columns:minmax(4.2rem,auto) minmax(0,1fr);gap:.6rem;align-items:baseline;background:var(--card2);border-radius:8px;padding:.35rem .6rem}
+.anat .sym{font-weight:600;text-align:center}
+.anat>div>span{min-width:0}
+.read{border-left:4px solid var(--rule);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+.why{border-left:4px solid var(--chg);background:var(--card2);border-radius:8px;padding:.45rem .8rem;margin-top:.6rem}
+
+/* ---------- Von-null-Karte ---------- */
+.vonnull{border:1.6px solid var(--rule);border-radius:14px;background:var(--panel);padding:1rem 1.2rem .8rem;margin:1.1rem 0 1.4rem;position:relative}
+.vonnull .vn-ttl{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem;font-size:1.2rem;font-weight:700;padding-right:6rem}
+.vn-badge{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#fff;background:var(--rule);border-radius:6px;padding:.16rem .55rem;font-weight:600}
+.vonnull .vn-task{border-left:4px solid var(--res);background:var(--card2);border-radius:8px;padding:.6rem .9rem;margin:.5rem 0 .6rem}
+details>summary{cursor:pointer;font-weight:700;color:var(--rule);padding:.35rem 0}
+.vn-step{display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.65rem;align-items:start;margin:.55rem 0}
+.vnn{display:inline-flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--rule);color:#fff;font-weight:700;font-size:.85rem}
+.vn-res{margin:.6rem 0 .3rem;padding:.45rem .85rem;border-radius:9px;font-weight:700;border:1.5px solid var(--idx);color:var(--idx);background:color-mix(in srgb,var(--idx) 8%,transparent)}
+.trap{margin:.5rem 0;padding:.45rem .85rem;border-radius:9px;border:1.3px solid var(--chg);background:color-mix(in srgb,var(--chg) 8%,transparent)}
+.trap b:first-child{color:var(--chg)}
+.blsol{border-color:var(--par)}
+.blsol .vn-badge{background:var(--par)}
+
+/* ---------- Prüfungs-Trainer (aus der Grundlage) ---------- */
+.pt{border:1px dashed color-mix(in srgb,var(--gl) 70%,transparent);border-radius:12px;padding:.7rem 1rem;margin:.9rem 0;background:#121a24;position:relative}
+.pt .ptq{padding-right:6rem}
+.pt .ptq b:first-child{color:var(--gl)}
+.pt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-top:.4rem}
+.pt-grid>div{background:var(--card2);border-radius:8px;padding:.4rem .6rem;font-size:.95rem}
+.pt-grid>div>i{display:block;font-style:normal;font-size:.78rem;color:var(--muted);font-weight:700;letter-spacing:.04em}
+
+/* ---------- Bausteine ---------- */
+.idea{border-left:4px solid var(--rule);background:var(--card);border-radius:10px;padding:.6rem 1rem;margin:.8rem 0}
+.idea>b:first-child{color:var(--rule)}
+.cook{counter-reset:ck;list-style:none;padding-left:0}
+.cook>li{counter-increment:ck;position:relative;padding-left:2.3rem;margin:.4rem 0}
+.cook>li::before{content:counter(ck);position:absolute;left:0;top:.05rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--card2);border:1px solid var(--rule);color:var(--rule);font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.ex3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem}
+.ex{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.7rem .9rem}
+.ex .lvl{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.ex .lvl.l1{color:var(--idx)} .ex .lvl.l2{color:var(--chg)} .ex .lvl.l3{color:var(--res)}
+.verdict{margin-top:.5rem;border-top:1px solid var(--border);padding-top:.4rem}
+.verdict b{color:var(--idx)}
+.vs{border:1.3px solid var(--cond);border-radius:12px;padding:.6rem 1rem;margin:.8rem 0;background:color-mix(in srgb,var(--cond) 6%,transparent)}
+.vs>b:first-child{color:var(--cond)}
+.cheat td:first-child{white-space:normal}
+
+/* ---------- Video-Chips ---------- */
+.vids{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}
+.vid{display:inline-flex;flex-wrap:wrap;align-items:center;gap:.35rem;background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:.2rem .35rem .2rem .6rem;font-size:.86rem;max-width:100%}
+.vid .vt{color:var(--text)}
+.vid .vs2{color:var(--muted);font-size:.74rem;font-family:'JetBrains Mono',monospace}
+.vid a,.vid button{font:inherit;font-size:.8rem;cursor:pointer;border:1px solid var(--border);border-radius:6px;padding:0 .4rem;background:var(--bg);color:var(--text);text-decoration:none}
+.vid a:hover{border-color:var(--chg);color:var(--chg)}
+
+/* ---------- Code ---------- */
+.code{margin:.7rem 0;border:1px solid var(--border);border-radius:10px;background:#0b0f14;overflow:hidden}
+.code .ch{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;background:var(--card2);padding:.3rem .8rem;font-size:.85rem;border-bottom:1px solid var(--border)}
+.code .ch b{color:var(--text)}
+.code .ch span{color:var(--muted)}
+.code pre{margin:0;padding:.5rem 0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.83rem;line-height:1.5}
+.code .row,.tr-code .row{white-space:pre-wrap;word-break:break-word;padding:0 .7rem 0 3.4em;text-indent:-2.7em}
+.code .ln,.tr-code .ln{display:inline-block;width:2.2em;text-indent:0;color:#5c6370;margin-right:.5em;text-align:right;user-select:none}
+.tok-c{color:#7d8590;font-style:italic}
+.tok-k{color:#ff7b72}
+.tok-t{color:#79c0ff}
+.tok-s{color:#a5d6ff}
+.tok-n{color:#e3b341}
+.tok-a{color:var(--chg);font-weight:700}
+
+/* ---------- Tracer ---------- */
+.tracer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0}
+.tr-head{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-bottom:.6rem}
+.tr-head input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.2rem .5rem;width:min(28rem,100%)}
+.tr-head select{max-width:100%;font:inherit;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .4rem}
+.tracer button,.btn{font:inherit;cursor:pointer;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.2rem .6rem}
+.tracer button:hover,.btn:hover{border-color:var(--chg)}
+.btn.on,.tracer button.on{border-color:var(--rule);color:var(--rule);background:color-mix(in srgb,var(--rule) 14%,transparent)}
+.tr-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1rem}
+.tr-code{margin:0;font-family:'JetBrains Mono',Consolas,monospace;font-size:.82rem;background:#0b0f14;border:1px solid var(--border);border-radius:10px;padding:.5rem 0;line-height:1.5}
+.tr-code .row.cur{background:color-mix(in srgb,var(--chg) 22%,transparent);outline:1px solid var(--chg)}
+.tr-code .hits{color:var(--idx);margin-left:.6em;font-size:.75rem}
+.tr-state{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.6rem .8rem;min-width:0}
+.tr-ctl{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin-top:.6rem}
+.tr-ctl input[type=range]{flex:1 1 200px}
+.tr-cnt{color:var(--muted);font-size:.85rem}
+.tr-msg{margin-top:.5rem;border-left:4px solid var(--chg);padding:.3rem .8rem;background:var(--card2);border-radius:6px;min-height:2.2rem}
+.cells{display:flex;flex-wrap:wrap;gap:3px;margin:.2rem 0 .4rem}
+.cells .c{min-width:2.4rem;text-align:center;border:1px solid var(--border);border-radius:5px;padding:.1rem .25rem;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem}
+.cells .c i{display:block;font-style:normal;font-size:.62rem;font-weight:400;color:var(--muted)}
+.cells .c.m{border-color:var(--idx);background:color-mix(in srgb,var(--idx) 22%,transparent)}
+.cells .c.h{border-color:var(--res);background:color-mix(in srgb,var(--res) 18%,transparent)}
+.cells .c.o{border-color:var(--chg);background:color-mix(in srgb,var(--chg) 20%,transparent)}
+.cells .c.out{opacity:.3}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.35rem;margin:.3rem 0}
+.kv div{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.2rem .45rem;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.kv div i{display:block;font-style:normal;color:var(--muted);font-size:.7rem;font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Visuals / Regler ---------- */
+.viz{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0;position:relative}
+.viz .ctl{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;align-items:center;margin:.3rem 0 .5rem}
+.viz .ctl label{display:flex;align-items:center;gap:.5rem;font-size:.92rem;flex:1 1 230px}
+.viz .ctl input[type=range]{flex:1 1 120px;accent-color:var(--par)}
+.viz .ctl output{font-family:'JetBrains Mono',monospace;color:var(--par);min-width:3.5rem}
+.viz input[type=number],.viz input[type=text],.viz textarea{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;max-width:100%}
+.viz textarea{width:100%;min-height:3rem}
+.plot{width:100%;min-height:280px}
+.recog{margin-top:.4rem;font-size:.92rem;color:#c9d1d9}
+.recog b:first-child{color:var(--chg)}
+.out{font-family:'JetBrains Mono',monospace;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:.4rem .6rem;margin:.4rem 0}
+.ok{color:var(--idx)} .bad{color:var(--res)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:.25rem}
+
+/* ---------- Brücke ---------- */
+.bridge svg text{font-family:'Source Sans 3',sans-serif}
+
+/* ---------- Training ---------- */
+.quiz input{font:inherit;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem;width:8rem}
+
+footer.foot{color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem;padding-top:1rem}
+
+@media(max-width:900px){
+  .wrap{padding:1rem .9rem 5rem}
+  .tr-grid,.anat,.two,.three,.ex3,.pt-grid{grid-template-columns:minmax(0,1fr)}
+  .lbmenu{padding:1rem .6rem}
+  h1{font-size:1.8rem}
+  .vonnull .vn-ttl,.pt .ptq{padding-right:0;padding-top:1rem}
+}
+@media(max-width:640px){
+  /* Tabellen werden zu gestapelten Karten: nie seitwärts scrollen */
+  .tbl,.tbl tbody,.tbl tr,.tbl td,.tbl th{display:block;width:100%}
+  .tbl tr{border:1px solid var(--border);border-radius:8px;margin:.4rem 0;padding:.2rem}
+  .tbl td,.tbl th{border:0;padding:.15rem .4rem;text-align:left!important}
+  .tbl th{background:none}
+  .dgrid{grid-template-columns:2.2rem repeat(6,minmax(0,1fr))}
+  body{font-size:16px}
+  .katex-display{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+  .anat>div{grid-template-columns:minmax(0,1fr)}
+  .anat>div>span,.pt-grid>div,.vn-step>div,td{overflow-x:auto}
+  .katex{font-size:1em}
+}
+
+
+</style>
+</head>
+<body>
+<header class="lbtop">
+  <button class="lbburger" id="lbOpen" aria-label="Inhalt öffnen">☰ Inhalt</button>
+  <div class="lbt"><b>Kap. 5 · Grenzwertsätze</b><span>i.i.d., Summe und Mittel, √n-Gesetz, Gesetz der großen Zahlen, zentraler Grenzwertsatz, Normalapproximation</span></div>
+  <nav class="lbq"><a href="#s5-0">🔬 Master-Anatomie<small>Leitfragen</small></a><a href="#s5-1">5.1 i.i.d.<small>unabhängig und identisch verteilt</small></a><a href="#s5-2">5.2 Summe &amp; Mittel<small>E</small></a><a href="#s5-3">5.3 Gesetz der großen Zahlen<small>X̄_n → μ</small></a><a href="#s5-4">5.3 Zentraler Grenzwertsatz<small>S_n ≈ N(nμ</small></a><a href="#s5-5">5.3.1 Normalapproximation<small>Bin</small></a><a href="#s5-9">🌉 Brücke &amp; Lernziele<small>von vielen Messungen zur Glocke</small></a><a href="#s5-cheat">📋 Cheat-Sheet<small>Formeln Kap. 5</small></a><a href="#s5-glossar">📚 Glossar<small>Fachwörter deutsch/englisch</small></a><a href="#s5-train">🏋 Training<small>ZGS-Aufgaben mit Prüfen</small></a></nav>
+</header>
+<div class="lbmenu" id="lbMenu"><div class="lbm-in">
+  <div class="lbm-head"><b>☰ Inhalt · Kap. 5 · Grenzwertsätze</b><button class="lbburger sp" data-close>✕ schließen</button></div>
+  <div class="lbm-parts"><span class="muted">Teil wechseln:</span><a href="01_Grundlagen_Wahrscheinlichkeit.html" data-part="0">Kap. 1 · Grundlagen W-Rechnung</a><a href="02_Verteilungen.html" data-part="1">Kap. 2 · Verteilungen</a><a href="03_Deskriptive_Statistik.html" data-part="2">Kap. 3 · Deskriptive Statistik</a><a href="04_Mehrdimensionale_Verteilungen.html" data-part="3">Kap. 4 · Mehrdimensional</a><a href="05_Grenzwertsaetze.html" data-part="4" class="cur">Kap. 5 · Grenzwertsätze</a><a href="06_Parameterschaetzung.html" data-part="5">Kap. 6 · Parameterschätzung</a><a href="07_Tests_und_Vertrauensintervalle.html" data-part="6">Kap. 7 · Tests &amp; VI</a><a href="08_Zwei_Stichproben.html" data-part="7">Kap. 8 · Zwei Stichproben</a><a href="09_Rechner.html" data-part="8">🧰 Statistik-Rechner</a></div>
+  <div class="lbm-grid"><div><h5>🔬 Master-Anatomie</h5><a href="#s5-0"><b>🔬 Master-Anatomie</b><span>Leitfragen, 4-Schritte-Werkzeug</span></a></div><div><h5>5.1 i.i.d.</h5><a href="#s5-1"><b>5.1 i.i.d.</b><span>unabhängig und identisch verteilt</span></a></div><div><h5>5.2 Summe &amp; Mittel</h5><a href="#s5-2"><b>5.2 Summe &amp; Mittel</b><span>E, Var von S_n und X̄_n, √n-Gesetz</span></a></div><div><h5>5.3 Gesetz der großen Zahlen</h5><a href="#s5-3"><b>5.3 Gesetz der großen Zahlen</b><span>X̄_n → μ, Tschebyschow</span></a></div><div><h5>5.3 Zentraler Grenzwertsatz</h5><a href="#s5-4"><b>5.3 Zentraler Grenzwertsatz</b><span>S_n ≈ N(nμ, nσ²), egal welche Verteilung</span></a></div><div><h5>5.3.1 Normalapproximation</h5><a href="#s5-5"><b>5.3.1 Normalapproximation</b><span>Bin, Pois ≈ N, Stetigkeitskorrektur</span></a><a href="#s5-5-a" class="sub"><b>Schema &amp; Beispiele 5</b><span>Modell → Näherung → Φ</span></a></div><div><h5>🌉 Brücke &amp; Lernziele</h5><a href="#s5-9"><b>🌉 Brücke &amp; Lernziele</b><span>von vielen Messungen zur Glocke</span></a></div><div><h5>📋 Cheat-Sheet</h5><a href="#s5-cheat"><b>📋 Cheat-Sheet</b><span>Formeln Kap. 5</span></a></div><div><h5>📚 Glossar</h5><a href="#s5-glossar"><b>📚 Glossar</b><span>Fachwörter deutsch/englisch</span></a></div><div><h5>🏋 Training</h5><a href="#s5-train"><b>🏋 Training</b><span>ZGS-Aufgaben mit Prüfen</span></a></div></div>
+  <div class="lbm-opts">
+    <label><input type="checkbox" id="lbHlG"> 📘 Grundlage-Inhalte hervorheben</label>
+    <label>🎬 Video-Ordner <input type="text" id="lbVbase" value="videos/" title="relativ zur HTML-Datei (z. B. Symlink „videos") oder absolut, z. B. /home/NAME/Videos/Statistik/"></label>
+    <span>Esc schließt · T = Teile</span>
+  </div>
+</div></div>
+<button class="lbfab" id="lbFab" aria-label="Inhalt öffnen">☰</button>
+<main class="wrap">
+<!-- title: Kap. 5 · Grenzwertsätze -->
+<!-- sub: i.i.d., Summe und Mittel, √n-Gesetz, Gesetz der großen Zahlen, zentraler Grenzwertsatz, Normalapproximation -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 5 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Grenzwertsätze</h1>
+  <p class="lead">Was passiert, wenn man ein Zufallsexperiment sehr oft wiederholt? Zwei berühmte Sätze geben Antwort: das <b>Gesetz der großen Zahlen</b> (das Mittel strebt gegen den Erwartungswert) und der <b>Zentrale Grenzwertsatz</b> (Summe und Mittel werden, egal welche Ausgangsverteilung, näherungsweise normalverteilt). Dazu die <b>Normalapproximation</b> von Binomial und Poisson.</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Grundlage, hier vertieft und erweitert">📘 Grundlage ✚ erweitert</span><b>🎨 Farblegende für Kapitel 5</b>
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: gesuchte W'keit \(\Res{\Phi(z)}\), benötigtes n</div>
+    <div><b class="kw-chg">orange · Umformung</b>: Standardisieren \(\Chg{z=(x-\mu)/\sigma}\), Stetigkeitskorrektur</div>
+    <div><b class="kw-rule">lila · Satz/Operator</b>: GGZ, ZGS, \(\EE,\Var,\Phi,\Nor\)</div>
+    <div><b class="kw-par">blau · Parameter</b>: \(\Par{\mu},\Par{\sigma},\Par{n},\Par{p},\Par{\lambda}\)</div>
+    <div><b class="kw-idx">grün · Index</b>: \(\Idx{i}\) der i-ten Wiederholung</div>
+    <div><b class="kw-cond">cyan · Vergleich</b>: \(\Cond{\le}\), \(\Cond{\ge\varepsilon}\), Konvergenz \(\Cond{\to}\)</div>
+    <div><b class="kw-mem">pink · Zufallsvariablen</b>: \(\Mem{X_i}\), Summe \(\Mem{S_n}\), Mittel \(\Mem{\bar X_n}\)</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Roter Faden:</b> Aus vielen Einzelmessungen \(X_i\) baut man Summe \(S_n\) und Mittel \(\bar X_n\). Deren Kennzahlen kennt man exakt; ihre Verteilung ist für großes n näherungsweise normal. Das ist der Grund, warum die Normalverteilung überall auftaucht.</div>
+</div>
+<div class="bridge"><svg viewBox="0 0 1638 128" role="img" aria-label="Brücke durch Statistik I"><defs><marker id="arrC1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs><rect x="10" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="105" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 1 · Grundlagen</text><text x="105" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Ω, P, Bayes</text><line x1="200" y1="73" x2="213" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="214" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="309" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 2 · Verteilungen</text><text x="309" y="90" fill="#8b949e" font-size="14" text-anchor="middle">X, E, Var</text><line x1="404" y1="73" x2="417" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="418" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="513" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 3 · Deskriptiv</text><text x="513" y="90" fill="#8b949e" font-size="14" text-anchor="middle">x̄, s, Quantile</text><line x1="608" y1="73" x2="621" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="622" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="717" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 4 · Mehrdim.</text><text x="717" y="90" fill="#8b949e" font-size="14" text-anchor="middle">Cov, Corr</text><line x1="812" y1="73" x2="825" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="826" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#bc8cff" stroke-width="3"/><text x="921" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 5 · Grenzwerte</text><text x="921" y="90" fill="#8b949e" font-size="14" text-anchor="middle">GGZ, ZGS</text><line x1="1016" y1="73" x2="1029" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><text x="921" y="28" fill="#bc8cff" font-size="16" font-weight="700" text-anchor="middle">▼ DU BIST HIER</text><rect x="1030" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1125" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 6 · Schätzen</text><text x="1125" y="90" fill="#8b949e" font-size="14" text-anchor="middle">MoM, ML, SE</text><line x1="1220" y1="73" x2="1233" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="1234" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1329" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 7 · Tests & VI</text><text x="1329" y="90" fill="#8b949e" font-size="14" text-anchor="middle">H₀, p, VI</text><line x1="1424" y1="73" x2="1437" y2="73" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrC1)"/><rect x="1438" y="40" width="190" height="66" rx="11" fill="#1c2129" stroke="#30363d" stroke-width="1.2"/><text x="1533" y="66" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">Kap. 8 · Zwei Stichpr.</text><text x="1533" y="90" fill="#8b949e" font-size="14" text-anchor="middle">gepaart, t</text></svg></div>
+
+<section id="s5-0" data-m="🔬 Master-Anatomie|Leitfragen, 4-Schritte-Werkzeug">
+<h2><span class="num">5.0</span>Master-Anatomie</h2>
+<div class="card anat-card has-src"><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔬 Anatomie: der ganze Kapitelinhalt in einer Zeile</b><div class="anat-f">\[ \Mem{X_1},\dots,\Mem{X_{\Par{n}}}\ \Rule{\text{i.i.d.}}\ (\Par{\mu},\Par{\sigma^2})\ \Longrightarrow\ \Mem{\bar X_n}\ \underbrace{\Cond{\to}\ \Par{\mu}}_{\text{GGZ}}\quad\text{und}\quad \Mem{\bar X_n}\ \underbrace{\approx\ \Nor\Big(\Par{\mu},\frac{\Par{\sigma^2}}{\Par{n}}\Big)}_{\text{ZGS}} \]</div><div class="anat"><div><span class="sym">\(\text{i.i.d.}\)</span><span>unabhängig und identisch verteilt: die Grundannahme</span></div><div><span class="sym">\(\bar X_n\to\mu\)</span><span>Gesetz der großen Zahlen: wohin das Mittel strebt</span></div><div><span class="sym">\(\approx\Nor(\mu,\sigma^2/n)\)</span><span>Zentraler Grenzwertsatz: welche Verteilung es dabei hat</span></div><div><span class="sym">\(\sigma^2/n\)</span><span>die Varianz schrumpft mit n, die Standardabweichung mit √n</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Das Mittel von n unabhängigen, gleich verteilten Größen strebt gegen mü und ist ungefähr normalverteilt mit Varianz Sigma-Quadrat durch n.“</div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🎓 Das agnostische Spitzenwerkzeug</b>
+  <ol class="cook"><li><b>ERKENNEN:</b> Geht es um viele i.i.d. Wiederholungen? Gefragt: eine Kennzahl von \(S_n\) oder \(\bar X_n\) · das Konvergenzverhalten (GGZ) · oder eine W'keit über die Normalapproximation (ZGS)?</li>
+  <li><b>WÄHLEN:</b> Kennzahl → \(\EE[S_n]=n\mu\), \(\Var(S_n)=n\sigma^2\), \(\sigma_{\bar X}=\sigma/\sqrt n\) · „Wie viele Beobachtungen für Ziel-σ?“ → √n-Gesetz · „Wahrscheinlichkeit?“ → standardisieren und Φ ablesen.</li>
+  <li><b>RECHNEN:</b> μ und σ² der Näherung bestimmen (\(S_n\): nμ, nσ²; \(\bar X_n\): μ, σ²/n; Bin: np, np(1−p); Pois: λ, λ), dann \(z=\frac{x-\mu}{\sigma}\) und \(\Phi(z)\).</li>
+  <li><b>ARTIKULIEREN:</b> „Als i.i.d.-Summe ist X nach dem ZGS näherungsweise \(\Nor(\mu,\sigma^2)\)-verteilt; die gesuchte W'keit ist Φ(z) = […].“</li></ol>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧭 Die 6 Leitfragen dieses Kapitels</b>
+  <ol class="cook"><li><b>Was heißt i.i.d.?</b> Unabhängig und identisch verteilt.</li><li><b>Wie verhalten sich Summe und Mittel?</b> \(\EE[S_n]=n\mu\), \(\Var(S_n)=n\sigma^2\), \(\EE[\bar X_n]=\mu\), \(\Var(\bar X_n)=\sigma^2/n\).</li><li><b>Wie schnell schrumpft die Streuung des Mittels?</b> Das √n-Gesetz.</li><li><b>Wohin strebt das Mittel?</b> GGZ: \(\bar X_n\to\mu\).</li><li><b>Welche Verteilung hat \(S_n\) bzw. \(\bar X_n\)?</b> ZGS: näherungsweise normal.</li><li><b>Wie rechnet man W'keiten aus?</b> Normalapproximation: standardisieren, dann Φ.</li></ol>
+</div>
+</section>
+
+<!-- ============================================================ 5.1 -->
+<section id="s5-1" data-vn data-m="5.1 i.i.d.|unabhängig und identisch verteilt">
+<h2><span class="num">5.1</span>Die i.i.d.-Annahme</h2>
+<div class="vonnull" id="vn-5-1" data-sec="5.1"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 5.1</span>Welche Wiederholungen sind i.i.d., und was bringt es?</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> (a) Entscheide jeweils, ob \(X_1,\dots,X_n\) i.i.d. sind: (i) fünf Würfe eines fairen Würfels; (ii) fünf Kugeln nacheinander <b>ohne Zurücklegen</b> aus einer Urne mit 3 roten und 7 blauen, \(X_i=1\) falls rot; (iii) 20 Temperaturmessungen eines Sensors, der sich im Lauf des Tages erwärmt. (b) Berechne für (i) die W'keit, dass alle fünf Würfe mindestens 2 zeigen.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Zwei Bedingungen.</b> i.i.d. = <b>unabhängig</b> (kein Wurf beeinflusst einen anderen) <b>und</b> <b>identisch verteilt</b> (jedes \(X_i\) hat dieselbe Verteilung).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(i)</b> Würfe beeinflussen sich nicht, jeder ist gleichverteilt auf 1–6 → <b>i.i.d.</b></div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(ii)</b> Jedes einzelne \(X_i\) ist zwar Bernoulli(0.3) (Symmetrie), aber die Züge sind <b>abhängig</b> (Kap. 1.4: \(\PP(R_2\given R_1)\ne\PP(R_2)\)) → nicht i.i.d. (Mit Zurücklegen wäre es i.i.d.)</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(iii)</b> Die Verteilung verschiebt sich mit der Erwärmung → <b>nicht identisch verteilt</b> → nicht i.i.d.</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">(b) Unabhängigkeit ausnutzen.</b> 
+  \[\begin{aligned}
+  \PP(X_1\ge2,\dots,X_5\ge2) &= \prod_{\Idx{i}=1}^{5}\PP(X_{\Idx{i}}\ge2) && \text{unabhängig: Produkt} \\
+  &= \Big(\tfrac56\Big)^5 && \text{identisch verteilt: fünfmal derselbe Faktor} \\
+  &\approx \Res{0.4019} && \text{ausgerechnet}
+  \end{aligned}\]</div></div>
+  <div class="vn-res">✔ (i) i.i.d., (ii) nicht unabhängig, (iii) nicht identisch verteilt; (b) (5/6)⁵ ≈ 0.402.</div>
+</details></div>
+<div class="gblk is-g"><div><p>Der Erwartungswert ist das idealisierte Mittel bei unendlich vielen Wiederholungen. Um das präzise zu machen, braucht man eine Annahme über die Wiederholungen.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: i.i.d.</b><div class="anat-f">\[ \Mem{X_1},\ \Mem{X_2},\ \dots,\ \Mem{X_{\Par{n}}}\quad\text{sind}\quad\Rule{\text{i.i.d.}} \]</div><div class="anat"><div><span class="sym">\(\Mem{X_i}\)</span><span>die i-te Wiederholung des Zufallsexperiments (z. B. der i-te Münzwurf, die i-te Messung)</span></div><div><span class="sym">\(\text{i.i.d.}\)</span><span>independent and identically distributed: unabhängig (keine Wechselwirkung) und identisch verteilt (alle \(X_i\) haben dieselbe Verteilung)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Die Zufallsvariablen X eins bis X n sind unabhängig und identisch verteilt“: ein Postulat, das in der Praxis oft vernünftig ist und die Rechnungen enorm vereinfacht.</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Du wirfst einen fairen Würfel 50-mal. Sind die Würfe \(X_1,\dots,X_{50}\) i.i.d.?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Zwei Bedingungen prüfen: unabhängig? identisch verteilt?</div><div><i>⚙️ LÖSEN</i>Jeder Wurf beeinflusst die anderen nicht und hat dieselbe Verteilung 1–6 mit je 1/6. Beides erfüllt.</div><div><i>🗣️ SAGEN</i>„Ja, die 50 Würfe sind i.i.d.: unabhängig und identisch verteilt.“</div></div></div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init2/Population Statistics and Random Sampling [OlkL1YatyHI].mp4"><span class="vt">🎬 Population Statistics and Random Sampling</span> <span class="muted small">Zufallsstichprobe</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Population Statistics and Random Sampling [OlkL1YatyHI].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Sampling from a Distribution, Clearly Explained!!! [XLCWeSVzHUU].mp4"><span class="vt">🎬 Sampling from a Distribution, Clearly Explained!!!</span> <span class="muted small">aus einer Verteilung ziehen</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Sampling from a Distribution, Clearly Explained!!! [XLCWeSVzHUU].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 5.2 -->
+<section id="s5-2" data-vn data-m="5.2 Summe & Mittel|E, Var von S_n und X̄_n, √n-Gesetz">
+<h2><span class="num">5.2</span>Summen und arithmetische Mittel</h2>
+<div class="vonnull" id="vn-5-2" data-sec="5.2"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 5.2</span>Wie viele Messungen braucht man für eine gewünschte Genauigkeit?</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Ein Messgerät misst eine Länge mit zufälligem Fehler: \(X_i\) i.i.d. mit \(\mu=50\) mm und \(\sigma=6\) mm. (a) Berechne \(\EE[S_{36}]\), \(\Var(S_{36})\), \(\sigma_{S_{36}}\). (b) Berechne \(\EE[\bar X_{36}]\) und \(\sigma_{\bar X_{36}}\). (c) Wie viele Messungen braucht man, damit \(\sigma_{\bar X}=0.5\) mm ist?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) Summe: alles wächst linear, σ mit √n.</b> \(\EE[S_{36}]=36\cdot50=\Res{1800}\), \(\Var(S_{36})=36\cdot36=\Res{1296}\), \(\sigma_{S}=\sqrt{36}\cdot6=\Res{36}\) mm.</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(b) Mittel: E bleibt, σ schrumpft mit √n.</b> \(\EE[\bar X_{36}]=\Res{50}\), \(\sigma_{\bar X}=\tfrac{6}{\sqrt{36}}=\Res{1}\) mm.</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(c) √n-Gesetz nach n auflösen.</b> 
+  \[\begin{aligned}
+  \frac{\sigma}{\sqrt n} &= 0.5 && \text{Ziel} \\
+  \sqrt n &= \frac{6}{0.5}=12 && \text{umgestellt} \\
+  n &= \Res{144} && \text{halbe Streuung kostet viermal so viele Messungen}
+  \end{aligned}\]</div></div>
+  <div class="vn-res">✔ E[S₃₆] = 1800, Var = 1296, σ_S = 36; E[X̄] = 50, σ_X̄ = 1; für 0.5 mm braucht man n = 144.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> \(\Var(\bar X_n)=\sigma^2/n\), aber \(\sigma_{\bar X}=\sigma/\sqrt n\) (nicht \(\sigma/n\)). Und die Formeln brauchen Unabhängigkeit, sonst kommen Kovarianzen dazu (Kap. 4).</div>
+</details></div>
+<div class="gblk is-g"><div><p>Aus \(X_1,\dots,X_n\) bildet man zwei wichtige neue Zufallsvariablen: die <b>Summe</b> und das <b>arithmetische Mittel</b>.</p></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Summe S_n und Mittel X̄_n</b><div class="anat-f">\[ \Mem{S_n}=X_1+\dots+X_{\Par{n}},\qquad \Mem{\bar X_n}=\frac1{\Par{n}}\sum_{\Idx{i}=1}^{\Par{n}}X_{\Idx{i}}=\frac1{\Par{n}}S_n \]</div><div class="anat"><div><span class="sym">\(S_n\)</span><span>die Summe aller n Wiederholungen</span></div><div><span class="sym">\(\bar X_n\)</span><span>das arithmetische Mittel: Summe durch n. „X quer n“</span></div><div><span class="sym">\(X_i\in\{0,1\}\)</span><span>Spezialfall: dann ist \(\bar X_n\) genau die relative Häufigkeit des Ereignisses</span></div></div><div class="read">📖 <b>Vorlesen:</b> „S n ist die Summe X eins bis X n; X quer n ist ein Entel mal diese Summe.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> \(X_1,\dots,X_4\) i.i.d. mit \(\EE[X_i]=10\). Berechne \(\EE[S_4]\).</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Erwartungswert einer i.i.d.-Summe → n·E[Xᵢ].</div><div><i>⚙️ LÖSEN</i>\(4\cdot10=\Res{40}\).</div><div><i>🗣️ SAGEN</i>„Der Erwartungswert der Summe ist n mal E[Xᵢ] = 40.“</div></div></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Kennzahlen von S_n und X̄_n</b><div class="anat-f">\[\begin{aligned}
+  \EE[S_n] &= n\,\EE[X_i], & \Var(S_n) &= n\,\Var(X_i), & \sigma_{S_n} &= \sqrt n\,\sigma_{X_i} \\
+  \EE[\bar X_n] &= \EE[X_i], & \Var(\bar X_n) &= \tfrac1n\Var(X_i), & \sigma_{\bar X_n} &= \tfrac1{\sqrt n}\,\sigma_{X_i}
+  \end{aligned}\]</div><div class="anat"><div><span class="sym">\(\text{Summe}\)</span><span>E und Var wachsen linear mit n, die Standardabweichung mit √n, also langsamer als n</span></div><div><span class="sym">\(\text{Mittel}\)</span><span>E bleibt gleich (μ); Var schrumpft mit 1/n, σ mit 1/√n</span></div><div><span class="sym">\(\text{zentral}\)</span><span>für Var und σ ist die Unabhängigkeit entscheidend (sonst käme 2·Cov dazu)</span></div></div><div class="why">🧠 <b>Warum so?</b> Kap. 4: \(\Var(\sum X_i)=\sum\Var(X_i)=n\sigma^2\) bei Unabhängigkeit, und \(\Var(\tfrac1nS_n)=\tfrac1{n^2}\Var(S_n)=\tfrac{\sigma^2}{n}\).</div><div class="read">📖 <b>Vorlesen:</b> „Die Summe streut absolut immer mehr, aber relativ immer weniger; das Mittel zieht sich um mü zusammen.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> \(X_1,\dots,X_{25}\) i.i.d. mit \(\Var(X_i)=9\). Berechne \(\Var(S_{25})\) und \(\sigma_{\bar X_{25}}\).</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Varianz der Summe → ×n; σ des Mittels → σ/√n.</div><div><i>⚙️ LÖSEN</i>\(25\cdot9=\Res{225}\); \(\tfrac{3}{5}=\Res{0.6}\).</div><div><i>🗣️ SAGEN</i>„Var(S₂₅)=225 und die Standardabweichung des Mittels ist 3/5 = 0.6.“</div></div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: 100 Würfelwürfe mitteln</b>
+  <p>Fairer Würfel: \(\EE[X_i]=3.5\), \(\Var(X_i)=\tfrac{35}{12}\approx2.917\); n = 100.</p>
+  \[\begin{aligned}
+  \EE[\bar X_{100}] &= \Res{3.5} && \text{unverändert} \\
+  \Var(\bar X_{100}) &= \tfrac{2.917}{100}\approx\Res{0.0292} && \div n \\
+  \sigma_{\bar X_{100}} &= \tfrac{1.708}{10}\approx\Res{0.171} && \div\sqrt n
+  \end{aligned}\]
+  <p>Das Mittel aus 100 Würfen liegt fast sicher sehr nahe bei 3.5.</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔧 Ausnahmen: wenn die Verteilung von S_n exakt bekannt ist</b>
+  <div class="anat">
+    <div><span class="sym">\(\text{Bernoulli}\)</span><span>\(X_i\in\{0,1\}\), \(\PP(X_i=1)=p\) ⟹ \(S_n\sim\Bin(n,p)\)</span></div>
+    <div><span class="sym">\(\text{Poisson}\)</span><span>\(X_i\sim\Pois(\lambda)\) ⟹ \(S_n\sim\Pois(n\lambda)\)</span></div>
+    <div><span class="sym">\(\text{Normal}\)</span><span>\(X_i\sim\Nor(\mu,\sigma^2)\) ⟹ \(S_n\sim\Nor(n\mu,n\sigma^2)\), \(\bar X_n\sim\Nor(\mu,\sigma^2/n)\) exakt</span></div>
+  </div>
+  <p>Beim Normalfall ist das Mittel exakt normal, kein „für großes n“ nötig. Das ist der Grenzfall, dem sich alle anderen annähern (ZGS).</p>
+</div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: das √n-Gesetz</b><div class="anat-f">\[ \sigma_{\bar X_n}=\frac{\sigma_{X_i}}{\sqrt{\Par{n}}} \]</div><div class="anat"><div><span class="sym">\(\sqrt n\)</span><span>die Streuung des Mittels nimmt mit \(1/\sqrt n\) ab, nicht mit 1/n. Präzision kostet</span></div><div><span class="sym">\(\text{Faustregel}\)</span><span>σ halbieren → 4× so viele Beobachtungen; dritteln → 9×</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Die Standardabweichung des Mittels ist Sigma durch Wurzel n“: doppelte Genauigkeit kostet vierfachen Aufwand.</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> Bei \(\sigma=10\) und n = 25 ist \(\sigma_{\bar X}=2\). Wie viele Beobachtungen für \(\sigma_{\bar X}=1\)?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>σ/√n nach n auflösen.</div><div><i>⚙️ LÖSEN</i>\(1=\tfrac{10}{\sqrt n}\Rightarrow n=\Res{100}\) (4× so viele).</div><div><i>🗣️ SAGEN</i>„Um σ von 2 auf 1 zu halbieren, braucht man das Vierfache: n = 100.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? das √n-Gesetz</b>
+  <div class="ctl"><label>Stichprobengröße n <input type="range" id="snN" min="1" max="400" value="25"><output for="snN"></output></label></div>
+  <div class="two"><div id="snPlot" class="plot"></div><div id="snCurve" class="plot"></div></div>
+  <div class="recog"><b>Erkennbar an:</b> links zieht sich die Glocke \(\Nor(3.5,\sigma^2/n)\) des Würfel-Mittels zusammen; rechts \(\sigma/\sqrt n\) gegen n: der Gewinn an Genauigkeit wird immer kleiner.</div>
+</div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init2/Random Sampling in Statistics： Expected Value and Variance of the Sample Mean [Gg3d-rn9eEU].mp4"><span class="vt">🎬 Random Sampling in Statistics: Expected Value and Variance of the Sample Mean</span> <span class="muted small">E und Var des Mittels</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Random Sampling in Statistics： Expected Value and Variance of the Sample Mean [Gg3d-rn9eEU].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/Standard Deviation vs Standard Error, Clearly Explained!!! [A82brFpdr9g].mp4"><span class="vt">🎬 Standard Deviation vs Standard Error, Clearly Explained!!!</span> <span class="muted small">σ vs. σ/√n</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/Standard Deviation vs Standard Error, Clearly Explained!!! [A82brFpdr9g].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 5.3 GGZ -->
+<section id="s5-3" data-vn data-m="5.3 Gesetz der großen Zahlen|X̄_n → μ, Tschebyschow">
+<h2><span class="num">5.3</span>Gesetz der großen Zahlen</h2>
+<div class="vonnull" id="vn-5-3" data-sec="5.3"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 5.3</span>Wie weit weicht das Mittel von 100 Würfen höchstens ab?</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> \(\bar X_{100}\) sei das Mittel von 100 Würfen eines fairen Würfels. (a) Wogegen strebt \(\bar X_n\) für \(n\to\infty\)? (b) ✚ Schätze \(\PP(|\bar X_{100}-3.5|\ge0.5)\) mit der Ungleichung von Tschebyschow nach oben ab. (c) Vergleiche mit der ZGS-Näherung.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">(a) GGZ.</b> \(\EE[X_i]=3.5\), also \(\bar X_n\to\Res{3.5}\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(b) ✚ Tschebyschow: \(\PP(|Y-\EE Y|\ge\varepsilon)\le\Var(Y)/\varepsilon^2\).</b> 
+  \[\begin{aligned}
+  \Var(\bar X_{100}) &= \frac{35/12}{100}\approx0.02917 && \text{aus 5.2} \\
+  \PP(|\bar X_{100}-3.5|\ge0.5) &\le \frac{0.02917}{0.5^2}\approx\Res{0.117} && \text{Tschebyschow, gilt für jede Verteilung}
+  \end{aligned}\]</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(c) ZGS-Näherung.</b> \(\sigma_{\bar X}\approx0.1708\), \(z=0.5/0.1708\approx2.93\): \(\PP\approx2(1-\Phi(2.93))\approx\Res{0.0034}\). Tschebyschow ist eine grobe, aber immer gültige Schranke.</div></div>
+  <div class="vn-res">✔ \(\bar X_n\to3.5\); Tschebyschow: ≤ 0.117; ZGS: ≈ 0.0034.</div>
+</details></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Gesetz der großen Zahlen (GGZ)</b><div class="anat-f">\[ X_1,\dots,X_n\ \text{i.i.d. mit}\ \EE[X_i]=\Par{\mu}\quad\Longrightarrow\quad\Mem{\bar X_n}\ \Cond{\longrightarrow}\ \Par{\mu}\quad(n\to\infty) \]</div><div class="anat"><div><span class="sym">\(\text{GGZ}\)</span><span>das arithmetische Mittel konvergiert gegen den Erwartungswert; weil \(\Var(\bar X_n)\to0\), bleibt im Limes keine Variabilität</span></div><div><span class="sym">\(f_n(A)\to\PP(A)\)</span><span>Spezialfall: die relative Häufigkeit eines Ereignisses strebt gegen seine W'keit (Frequenz-Interpretation aus Kap. 1)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „X quer n konvergiert gegen mü, wenn n gegen unendlich geht“: je mehr Daten, desto näher liegt das Mittel am wahren Wert.</div></div>
+<div class="card has-src "><span class="src n" title="neu ergänzt">✚ Neu</span><b>🔍 ✚ Beweisidee mit der Ungleichung von Tschebyschow (Henze)</b>
+  <p>Für jede Zufallsvariable Y mit endlicher Varianz und jedes \(\varepsilon>0\) gilt \(\PP(|Y-\EE[Y]|\ge\varepsilon)\le\frac{\Var(Y)}{\varepsilon^2}\). Mit \(Y=\bar X_n\):</p>
+  \[\begin{aligned}
+  \PP(|\bar X_n-\mu|\Cond{\ge}\varepsilon) &\le \frac{\Var(\bar X_n)}{\varepsilon^2} && \text{Tschebyschow} \\
+  &= \frac{\sigma^2}{n\,\varepsilon^2} && \text{√n-Gesetz} \\
+  &\longrightarrow 0\quad(n\to\infty) && \text{für jedes feste }\varepsilon>0
+  \end{aligned}\]
+  <p>Das ist das <b>schwache Gesetz der großen Zahlen</b>. In der Grundlage (Meier) steht nur die Aussage; in Henze wird sie so bewiesen.</p>
+  <div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init/Chebyshev&#x27;s Inequality in Probability： Second Order Estimates [otCHN3s52ho].mp4"><span class="vt">🎬 Chebyshev&#x27;s Inequality in Probability: Second Order Estimates</span> <span class="muted small">Tschebyschow</span><span class="vs2">init</span><a class="vopen" href="videos/init/Chebyshev&#x27;s Inequality in Probability： Second Order Estimates [otCHN3s52ho].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init/Markov&#x27;s Inequality in Probability： First Order Estimates [onZSWfbTeho].mp4"><span class="vt">🎬 Markov&#x27;s Inequality in Probability: First Order Estimates</span> <span class="muted small">Markov (Vorstufe)</span><span class="vs2">init</span><a class="vopen" href="videos/init/Markov&#x27;s Inequality in Probability： First Order Estimates [onZSWfbTeho].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> \(\bar X_n\) ist das Mittel von n Würfen eines fairen Würfels. Wogegen strebt \(\bar X_n\)?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>GGZ: Mittel → μ.</div><div><i>⚙️ LÖSEN</i>\(\EE[X_i]=\tfrac{1+\dots+6}{6}=3.5\Rightarrow\bar X_n\to\Res{3.5}\).</div><div><i>🗣️ SAGEN</i>„Nach dem Gesetz der großen Zahlen strebt X̄ₙ gegen μ = 3.5.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? GGZ: das laufende Mittel</b>
+  <div class="ctl"><button class="btn" id="ggNew">🎲 neu würfeln</button><label>Würfe n <input type="range" id="ggN" min="50" max="5000" step="50" value="1000"><output for="ggN"></output></label></div>
+  <div id="ggPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> fünf Serien; jede Linie ist das laufende Mittel nach n Würfen. Alle streben gegen μ = 3.5 (rot), anfangs zappelig, dann immer ruhiger. Die gestrichelten Linien zeigen \(3.5\pm2\sigma/\sqrt n\).</div>
+</div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init/The Law of Large Numbers [0VoRWJMt6mk].mp4"><span class="vt">🎬 The Law of Large Numbers</span> <span class="muted small">GGZ</span><span class="vs2">init</span><a class="vopen" href="videos/init/The Law of Large Numbers [0VoRWJMt6mk].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 5.3 ZGS -->
+<section id="s5-4" data-vn data-m="5.3 Zentraler Grenzwertsatz|S_n ≈ N(nμ, nσ²), egal welche Verteilung">
+<h2><span class="num">5.3</span>Zentraler Grenzwertsatz</h2>
+<div class="vonnull" id="vn-5-4" data-sec="5.3"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 5.3</span>Gesamte Bedienzeit von 50 Kunden</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> Die Bedienzeiten \(X_1,\dots,X_{50}\) von 50 Kunden seien i.i.d. exponentialverteilt mit Erwartungswert 2 Minuten. (a) Bestimme \(\EE[S_{50}]\) und \(\sigma_{S_{50}}\). (b) Approximiere mit dem ZGS die W'keit, dass alle zusammen länger als 110 Minuten brauchen. (c) Wie groß ist näherungsweise \(\PP(\bar X_{50}\le1.8)\)?</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">Parameter der Einzelzeit.</b> Exp mit \(\EE=2\) → \(\lambda=0.5\), \(\sigma=1/\lambda=2\), \(\sigma^2=4\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(a)</b> \(\EE[S_{50}]=50\cdot2=\Res{100}\), \(\Var(S_{50})=50\cdot4=200\), \(\sigma_S=\sqrt{200}\approx\Res{14.14}\).</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(b) ZGS: S ≈ N(100, 200).</b> 
+  \[\begin{aligned}
+  \PP(S_{50}>110) &\approx 1-\Phi\Big(\frac{110-100}{14.14}\Big) && \text{standardisiert} \\
+  &= 1-\Phi(0.707)\approx\Res{0.240} && \text{Tabelle}
+  \end{aligned}\]
+  (Exakt, da \(S_{50}\) eine Gammaverteilung hat: 0.232, die Näherung ist gut.)</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(c) Mittel: N(μ, σ²/n).</b> \(\sigma_{\bar X}=2/\sqrt{50}\approx0.283\); \(\PP(\bar X\le1.8)\approx\Phi\big(\tfrac{1.8-2}{0.283}\big)=\Phi(-0.707)\approx\Res{0.240}\).</div></div>
+  <div class="vn-res">✔ E[S] = 100 min, σ_S ≈ 14.1 min; P(S > 110) ≈ 0.24; P(X̄ ≤ 1.8) ≈ 0.24.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Der ZGS gilt für Summen und Mittel, <b>nicht</b> für die einzelne Bedienzeit: \(\PP(X_1>2.2)\) ist exakt \(e^{-1.1}\), nicht Φ-Rechnung.</div>
+</details></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Zentraler Grenzwertsatz (ZGS)</b><div class="anat-f">\[ X_1,\dots,X_n\ \text{i.i.d.},\ \EE=\Par{\mu},\ \Var=\Par{\sigma^2}\ \Longrightarrow\ \Mem{S_n}\approx\Nor(\Par{n}\Par{\mu},\ \Par{n}\Par{\sigma^2}),\quad \Mem{\bar X_n}\approx\Nor\Big(\Par{\mu},\ \frac{\Par{\sigma^2}}{\Par{n}}\Big) \]</div><div class="anat"><div><span class="sym">\(\text{ZGS}\)</span><span>für großes n sind Summe und Mittel näherungsweise normalverteilt, egal welche Verteilung die \(X_i\) haben!</span></div><div><span class="sym">\(\approx\Nor\)</span><span>die Kennzahlen kennt man schon (5.2); der ZGS liefert zusätzlich die Form: die Glockenkurve</span></div><div><span class="sym">\(\text{standardisiert}\)</span><span>äquivalent: \(\frac{S_n-n\mu}{\sigma\sqrt n}\approx\Nor(0,1)\), also \(\PP(S_n\le x)\approx\Phi\big(\frac{x-n\mu}{\sigma\sqrt n}\big)\)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „Die Summe ist näherungsweise normalverteilt mit Erwartungswert n mü und Varianz n Sigma-Quadrat; das Mittel mit mü und Sigma-Quadrat durch n.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> \(X_1,\dots,X_{100}\) i.i.d. mit \(\mu=5\), \(\sigma^2=4\). Welche Näherungsverteilung hat \(\bar X_{100}\)?</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>ZGS für das Mittel → N(μ, σ²/n).</div><div><i>⚙️ LÖSEN</i>\(\Nor(5,\ 0.04)\), also \(\sigma_{\bar X}=\Res{0.2}\).</div><div><i>🗣️ SAGEN</i>„Das Mittel ist näherungsweise N(5, 0.04)-verteilt, mit σ = 0.2.“</div></div></div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? der ZGS „wächst“</b>
+  <div class="ctl"><span class="seg" id="zgSeg"><button class="btn on" data-d="uni">Uniform</button><button class="btn" data-d="bern">Bernoulli (0/1, p = 0.2)</button><button class="btn" data-d="exp">Exponential</button><button class="btn" data-d="die">Würfel</button></span>
+  <label>Summanden n <input type="range" id="zgN" min="1" max="60" value="1"><output for="zgN"></output></label></div>
+  <div id="zgPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> Histogramm des Mittels aus 4000 Stichproben. Schon bei wenigen Summanden wird es glockenförmig; die lila Kurve ist die ZGS-Näherung \(\Nor(\mu,\sigma^2/n)\). Bei der schiefen Exponentialverteilung dauert es länger.</div>
+</div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · ZGS und GGZ simulieren</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Zentraler Grenzwertsatz per Simulation: Mittel von n Exponential-Werten"><span class="ln">1</span># Zentraler Grenzwertsatz per Simulation: Mittel von n Exponential-Werten</div><div class="row" data-src="set.seed(1)"><span class="ln">2</span>set.seed(1)</div><div class="row" data-src="n &lt;- 30; m &lt;- 10000                        # Stichprobenumfang und Anzahl Wiederholungen"><span class="ln">3</span>n &lt;- 30; m &lt;- 10000                        # Stichprobenumfang und Anzahl Wiederholungen</div><div class="row" data-src="mittel &lt;- replicate(m, mean(rexp(n, rate = 1)))   # m Stichprobenmittel, Exp(1): mu = 1, sigma = 1"><span class="ln">4</span>mittel &lt;- replicate(m, mean(rexp(n, rate = 1)))   # m Stichprobenmittel, Exp(1): mu = 1, sigma = 1</div><div class="row" data-src="c(mean(mittel), sd(mittel), 1 / sqrt(n))   # E = 1 und sd = sigma / sqrt(n)"><span class="ln">5</span>c(mean(mittel), sd(mittel), 1 / sqrt(n))   # E = 1 und sd = sigma / sqrt(n)</div><div class="row" data-src="hist(mittel, breaks = 50, freq = FALSE)    # fast eine Glocke, obwohl Exp schief ist"><span class="ln">6</span>hist(mittel, breaks = 50, freq = FALSE)    # fast eine Glocke, obwohl Exp schief ist</div><div class="row" data-src="curve(dnorm(x, 1, 1 / sqrt(n)), add = TRUE, lwd = 2)   # ZGS-Näherung N(mu, sigma^2 / n)"><span class="ln">7</span>curve(dnorm(x, 1, 1 / sqrt(n)), add = TRUE, lwd = 2)   # ZGS-Näherung N(mu, sigma^2 / n)</div><div class="row" data-src="laufend &lt;- cumsum(sample(1:6, 1000, replace = TRUE)) / (1:1000)   # GGZ: laufendes Mittel"><span class="ln">8</span>laufend &lt;- cumsum(sample(1:6, 1000, replace = TRUE)) / (1:1000)   # GGZ: laufendes Mittel</div><div class="row" data-src="plot(laufend, type = &quot;l&quot;); abline(h = 3.5, col = &quot;red&quot;)"><span class="ln">9</span>plot(laufend, type = &quot;l&quot;); abline(h = 3.5, col = &quot;red&quot;)</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · ZGS und GGZ simulieren</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Zentraler Grenzwertsatz per Simulation: Mittel von n Exponential-Werten"><span class="ln">1</span># Zentraler Grenzwertsatz per Simulation: Mittel von n Exponential-Werten</div><div class="row" data-src="import numpy as np"><span class="ln">2</span>import numpy as np</div><div class="row" data-src="import matplotlib.pyplot as plt"><span class="ln">3</span>import matplotlib.pyplot as plt</div><div class="row" data-src="from scipy.stats import norm"><span class="ln">4</span>from scipy.stats import norm</div><div class="row" data-src=""><span class="ln">5</span></div><div class="row" data-src="rng = np.random.default_rng(1)"><span class="ln">6</span>rng = np.random.default_rng(1)</div><div class="row" data-src="n, m = 30, 10_000                          # Stichprobenumfang und Anzahl Wiederholungen"><span class="ln">7</span>n, m = 30, 10_000                          # Stichprobenumfang und Anzahl Wiederholungen</div><div class="row" data-src="mittel = rng.exponential(1.0, size=(m, n)).mean(axis=1)   # m Stichprobenmittel, Exp(1)"><span class="ln">8</span>mittel = rng.exponential(1.0, size=(m, n)).mean(axis=1)   # m Stichprobenmittel, Exp(1)</div><div class="row" data-src="print(mittel.mean(), mittel.std(ddof=1), 1 / np.sqrt(n))  # E = 1 und sd = sigma / sqrt(n)"><span class="ln">9</span>print(mittel.mean(), mittel.std(ddof=1), 1 / np.sqrt(n))  # E = 1 und sd = sigma / sqrt(n)</div><div class="row" data-src="fig, ax = plt.subplots(1, 2, figsize=(11, 3.5))"><span class="ln">10</span>fig, ax = plt.subplots(1, 2, figsize=(11, 3.5))</div><div class="row" data-src="ax[0].hist(mittel, bins=50, density=True)  # fast eine Glocke, obwohl Exp schief ist"><span class="ln">11</span>ax[0].hist(mittel, bins=50, density=True)  # fast eine Glocke, obwohl Exp schief ist</div><div class="row" data-src="t = np.linspace(0.3, 1.8, 200); ax[0].plot(t, norm.pdf(t, 1, 1 / np.sqrt(n)))   # ZGS-Näherung"><span class="ln">12</span>t = np.linspace(0.3, 1.8, 200); ax[0].plot(t, norm.pdf(t, 1, 1 / np.sqrt(n)))   # ZGS-Näherung</div><div class="row" data-src="laufend = np.cumsum(rng.integers(1, 7, 1000)) / np.arange(1, 1001)   # GGZ: laufendes Mittel"><span class="ln">13</span>laufend = np.cumsum(rng.integers(1, 7, 1000)) / np.arange(1, 1001)   # GGZ: laufendes Mittel</div><div class="row" data-src="ax[1].plot(laufend); ax[1].axhline(3.5, color=&quot;red&quot;); plt.show()"><span class="ln">14</span>ax[1].plot(laufend); ax[1].axhline(3.5, color=&quot;red&quot;); plt.show()</div></pre></div></div>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>📌 Merksatz: wann ist etwas normalverteilt?</b> Immer wenn eine Zufallsvariable als <b>Summe vieler kleiner unabhängiger Effekte</b> aufgefasst werden kann, ist sie nach dem ZGS in erster Näherung normalverteilt. Das wichtigste Beispiel sind Messfehler. Multiplizieren sich die Effekte eher, kommt man zur Lognormal-Verteilung.</div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init/The Central Limit Theorem [ckkrS752tjU].mp4"><span class="vt">🎬 The Central Limit Theorem</span> <span class="muted small">ZGS</span><span class="vs2">init</span><a class="vopen" href="videos/init/The Central Limit Theorem [ckkrS752tjU].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="statquest/The Central Limit Theorem, Clearly Explained!!! [YAlJCEDH2uY].mp4"><span class="vt">🎬 The Central Limit Theorem, Clearly Explained!!!</span> <span class="muted small">StatQuest</span><span class="vs2">statquest</span><a class="vopen" href="videos/statquest/The Central Limit Theorem, Clearly Explained!!! [YAlJCEDH2uY].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Normal Approximation to Sample Mean [Arbj9SoU9Cs].mp4"><span class="vt">🎬 Normal Approximation to Sample Mean</span> <span class="muted small">Mittel ≈ normal</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Normal Approximation to Sample Mean [Arbj9SoU9Cs].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<!-- ============================================================ 5.3.1 Normalapproximation -->
+<section id="s5-5" data-vn data-m="5.3.1 Normalapproximation|Bin, Pois ≈ N, Stetigkeitskorrektur">
+<h2><span class="num">5.3.1</span>Normalapproximation von Binomial und Poisson</h2>
+<div class="vonnull" id="vn-5-5" data-sec="5.3.1"><span class="src n" title="neu ergänzt">✚ Neu</span><div class="vn-ttl"><span class="vn-badge">Von null · Abschnitt 5.3.1</span>Bin(100, 0.3): P(X ≤ 25) mit und ohne Stetigkeitskorrektur</div><div class="vn-task"><b>Prüfungsaufgabe (für sich allein lösbar).</b> \(X\sim\Bin(100,\,0.3)\). (a) Approximiere \(\PP(X\le25)\) mit dem ZGS. (b) ✚ Wiederhole mit Stetigkeitskorrektur. (c) Vergleiche mit dem exakten Wert 0.1631. (d) \(Y\sim\Pois(100)\): approximiere \(\PP(Y\ge115)\) mit Korrektur.</div><details><summary>Lösung von null, Schritt für Schritt</summary>
+  
+  <div class="vn-step"><span class="vnn">1</span><div><b class="h">μ und σ.</b> \(\mu=np=30\), \(\sigma=\sqrt{np(1-p)}=\sqrt{21}\approx4.583\).</div></div>
+  <div class="vn-step"><span class="vnn">2</span><div><b class="h">(a) ohne Korrektur.</b> \(z=\tfrac{25-30}{4.583}=-1.091\), \(\PP\approx\Phi(-1.091)\approx\Res{0.1376}\).</div></div>
+  <div class="vn-step"><span class="vnn">3</span><div><b class="h">(b) ✚ mit Korrektur: der Balken bei 25 reicht bis 25.5.</b> \(z=\tfrac{25.5-30}{4.583}=-0.982\), \(\PP\approx\Phi(-0.982)\approx\Res{0.1631}\).</div></div>
+  <div class="vn-step"><span class="vnn">4</span><div><b class="h">(c) Vergleich.</b> Exakt (R: <code>pbinom(25, 100, 0.3)</code>) 0.1631: die korrigierte Näherung trifft auf vier Stellen, die unkorrigierte liegt 0.025 daneben.</div></div>
+  <div class="vn-step"><span class="vnn">5</span><div><b class="h">(d) Poisson.</b> \(\mu=\sigma^2=100\), \(\sigma=10\). „≥ 115“ = „> 114“, Grenze 114.5: \(1-\Phi(1.45)\approx\Res{0.0735}\) (exakt 0.0759; ohne Korrektur 0.0668).</div></div>
+  <div class="vn-res">✔ (a) 0.138, (b) 0.163, exakt 0.163; (d) ≈ 0.074.</div>
+  <div class="trap"><b>⚠ Typische Falle.</b> Die Stetigkeitskorrektur steht nicht in der Grundlage (Meier). Wenn die Aufgabe sie nicht verlangt, beide Werte kennen und die Konvention der Vorlesung nehmen.</div>
+</details></div>
+<div class="card anat-card has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🔬 Anatomie: Normalapproximation der Binomialverteilung</b><div class="anat-f">\[ X\sim\Bin(\Par{n},\Par{p}):\qquad\PP(X\le x)\approx\Phi\Big(\Chg{\frac{x-\Par{n}\Par{p}}{\sqrt{\Par{n}\Par{p}(1-\Par{p})}}}\Big) \]</div><div class="anat"><div><span class="sym">\(\text{Idee}\)</span><span>Bin(n, p) ist eine i.i.d.-Summe von Bernoulli-Variablen, nach dem ZGS also für großes n normal</span></div><div><span class="sym">\(\mu,\ \sigma^2\)</span><span>\(\mu=np\), \(\sigma^2=np(1-p)\); damit standardisieren und \(\Phi(z)\) ablesen</span></div><div><span class="sym">\(\text{Poisson}\)</span><span>\(X\sim\Pois(\lambda)\), λ groß: \(\PP(X\le x)\approx\Phi\big(\tfrac{x-\lambda}{\sqrt\lambda}\big)\)</span></div><div><span class="sym">\(\text{Faustregel}\)</span><span>brauchbar, wenn \(np(1-p)\) groß ist (oft: \(\ge9\)); ✚ Korrektur: \(x\to x+0.5\)</span></div></div><div class="read">📖 <b>Vorlesen:</b> „P von X kleiner gleich x ist ungefähr Phi von x minus n p, geteilt durch Wurzel aus n p mal eins minus p.“</div></div>
+<div class="pt is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><div class="ptq"><b>🎓 Prüfungs-Trainer.</b> \(X\sim\Bin(100,0.5)\). Approximiere \(\PP(X\le55)\).</div><div class="pt-grid"><div><i>🗝️ ERKENNEN</i>Binomial → N(np, np(1−p)).</div><div><i>⚙️ LÖSEN</i>\(\mu=50\), \(\sigma=5\); \(z=1\Rightarrow\Phi(1)\approx\Res{0.841}\).</div><div><i>🗣️ SAGEN</i>„Mit μ=50, σ=5 ist z=1, also P(X≤55) ≈ Φ(1) ≈ 0.841.“</div></div></div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧱 Bauplan: 1000 Münzwürfe, höchstens 530-mal Kopf</b>
+  <p>\(X\sim\Bin(1000,0.5)\). Gesucht \(\PP(X\le530)\).</p>
+  \[\begin{aligned}
+  \mu &= 1000\cdot0.5=500,\quad\sigma^2=1000\cdot0.5\cdot0.5=250 && \text{Parameter der Näherung} \\
+  z &= \frac{530-500}{\sqrt{250}}=\frac{30}{15.81}\approx1.897 && \text{standardisieren} \\
+  \PP(X\le530) &\approx \Phi(1.897)\approx\Res{0.971} && \text{Tabelle}
+  \end{aligned}\]
+  <p>Also ~97 % (exakt 0.973).</p>
+</div>
+<div class="viz has-src is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>👁️ Woran erkennbar? Normalapproximation der Binomialverteilung</b>
+  <div class="ctl"><label>n <input type="range" id="naN" min="5" max="200" value="30"><output for="naN"></output></label>
+  <label>p <input type="range" id="naP" min="0.02" max="0.98" step="0.01" value="0.5" data-fmt="2"><output for="naP"></output></label>
+  <label>x <input type="range" id="naX" min="0" max="200" value="17"><output for="naX"></output></label></div>
+  <div id="naPlot" class="plot"></div>
+  <div class="out" id="naOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> Stäbe (blau) gegen \(\Nor(np,np(1-p))\) (lila). Für großes n und p nicht zu nah an 0 oder 1 schmiegt sich die Glocke an die Stäbe.</div>
+</div>
+<div id="trNa"></div>
+<div class="two code2"><div class="code" data-lang="R"><div class="ch"><b>R · Normalapproximation</b><span>Basis-R, vollständig lauffähig</span></div><pre><div class="row" data-src="# Normalapproximation der Binomialverteilung, mit und ohne Stetigkeitskorrektur"><span class="ln">1</span># Normalapproximation der Binomialverteilung, mit und ohne Stetigkeitskorrektur</div><div class="row" data-src="n &lt;- 100; p &lt;- 0.3; x &lt;- 25                # X ~ Bin(n, p), gesucht P(X &lt;= x)"><span class="ln">2</span>n &lt;- 100; p &lt;- 0.3; x &lt;- 25                # X ~ Bin(n, p), gesucht P(X &lt;= x)</div><div class="row" data-src="mu &lt;- n * p                                # Erwartungswert np"><span class="ln">3</span>mu &lt;- n * p                                # Erwartungswert np</div><div class="row" data-src="sigma &lt;- sqrt(n * p * (1 - p))             # Standardabweichung sqrt(np(1-p))"><span class="ln">4</span>sigma &lt;- sqrt(n * p * (1 - p))             # Standardabweichung sqrt(np(1-p))</div><div class="row" data-src="z &lt;- (x - mu) / sigma                      # standardisieren"><span class="ln">5</span>z &lt;- (x - mu) / sigma                      # standardisieren</div><div class="row" data-src="naeh &lt;- pnorm(z)                           # ZGS: P(X &lt;= x) ungefähr Phi(z)"><span class="ln">6</span>naeh &lt;- pnorm(z)                           # ZGS: P(X &lt;= x) ungefähr Phi(z)</div><div class="row" data-src="zk &lt;- (x + 0.5 - mu) / sigma               # Stetigkeitskorrektur: Grenze x + 0.5"><span class="ln">7</span>zk &lt;- (x + 0.5 - mu) / sigma               # Stetigkeitskorrektur: Grenze x + 0.5</div><div class="row" data-src="naehk &lt;- pnorm(zk)                         # korrigierte Näherung"><span class="ln">8</span>naehk &lt;- pnorm(zk)                         # korrigierte Näherung</div><div class="row" data-src="exakt &lt;- pbinom(x, n, p)                   # exakter Wert zum Vergleich"><span class="ln">9</span>exakt &lt;- pbinom(x, n, p)                   # exakter Wert zum Vergleich</div><div class="row" data-src="cat(naeh, naehk, exakt, &quot;\n&quot;)"><span class="ln">10</span>cat(naeh, naehk, exakt, &quot;\n&quot;)</div></pre></div><div class="code" data-lang="Python"><div class="ch"><b>Python · Normalapproximation</b><span>numpy / scipy / matplotlib, vollständig lauffähig</span></div><pre><div class="row" data-src="# Normalapproximation der Binomialverteilung, mit und ohne Stetigkeitskorrektur"><span class="ln">1</span># Normalapproximation der Binomialverteilung, mit und ohne Stetigkeitskorrektur</div><div class="row" data-src="import math"><span class="ln">2</span>import math</div><div class="row" data-src="from scipy.stats import norm, binom"><span class="ln">3</span>from scipy.stats import norm, binom</div><div class="row" data-src=""><span class="ln">4</span></div><div class="row" data-src="n, p, x = 100, 0.3, 25                     # X ~ Bin(n, p), gesucht P(X &lt;= x)"><span class="ln">5</span>n, p, x = 100, 0.3, 25                     # X ~ Bin(n, p), gesucht P(X &lt;= x)</div><div class="row" data-src="mu = n * p                                 # Erwartungswert np"><span class="ln">6</span>mu = n * p                                 # Erwartungswert np</div><div class="row" data-src="sigma = math.sqrt(n * p * (1 - p))         # Standardabweichung sqrt(np(1-p))"><span class="ln">7</span>sigma = math.sqrt(n * p * (1 - p))         # Standardabweichung sqrt(np(1-p))</div><div class="row" data-src="z = (x - mu) / sigma                       # standardisieren"><span class="ln">8</span>z = (x - mu) / sigma                       # standardisieren</div><div class="row" data-src="naeh = norm.cdf(z)                         # ZGS: P(X &lt;= x) ungefähr Phi(z)"><span class="ln">9</span>naeh = norm.cdf(z)                         # ZGS: P(X &lt;= x) ungefähr Phi(z)</div><div class="row" data-src="zk = (x + 0.5 - mu) / sigma                # Stetigkeitskorrektur: Grenze x + 0.5"><span class="ln">10</span>zk = (x + 0.5 - mu) / sigma                # Stetigkeitskorrektur: Grenze x + 0.5</div><div class="row" data-src="naehk = norm.cdf(zk)                       # korrigierte Näherung"><span class="ln">11</span>naehk = norm.cdf(zk)                       # korrigierte Näherung</div><div class="row" data-src="exakt = binom.cdf(x, n, p)                 # exakter Wert zum Vergleich"><span class="ln">12</span>exakt = binom.cdf(x, n, p)                 # exakter Wert zum Vergleich</div><div class="row" data-src="print(naeh, naehk, exakt)"><span class="ln">13</span>print(naeh, naehk, exakt)</div></pre></div></div>
+<h3 id="s5-5-a" data-m="Schema & Beispiele 5|Modell → Näherung → Φ">📐 Schema: Grenzwertsatz-Aufgabe in 3 Schritten</h3>
+<ol class="cook is-g"><li><b>Modell:</b> n i.i.d. \(X_i\) mit μ und σ². Geht es um die Summe oder das Mittel?</li><li><b>Näherung:</b> \(S_n\approx\Nor(n\mu,n\sigma^2)\), \(\bar X_n\approx\Nor(\mu,\sigma^2/n)\), Bin ≈ N(np, np(1−p)).</li><li><b>Rechnen:</b> \(z=(x-\mu)/\sigma\), dann Φ(z) (bzw. σ/√n fürs √n-Gesetz).</li></ol>
+<div class="ex3">
+  <div class="ex is-g"><div class="lvl l1">Beispiel 1 · leicht <span class="srcin">📘 Grundlage</span></div><b>Einfach</b>\(\sigma=10\), n = 25.<div class="verdict"><b>Verdict:</b> σ des Mittels = 10/√25 = 2 (reines √n-Gesetz).</div></div>
+  <div class="ex is-g"><div class="lvl l2">Beispiel 2 · mittel <span class="srcin">📘 Grundlage</span></div><b>Mittel</b>Bin(100, 0.5), P(X ≤ 55).<div class="verdict"><b>Verdict:</b> μ = 50, σ = 5 → Φ(1) = 0.841 (mit Korrektur Φ(1.1) = 0.864 = exakt).</div></div>
+  <div class="ex is-g"><div class="lvl l3">Beispiel 3 · schwer <span class="srcin">📘 Grundlage</span></div><b>Aufbauend</b>1000 Münzwürfe, P(X ≤ 530).<div class="verdict"><b>Verdict:</b> μ = 500, σ² = 250 → Φ(1.897) ≈ 0.97 (voller Dreischritt).</div></div>
+</div>
+<div class="vids"><span class="muted small" style="align-self:center">Passende Videos (lokal):</span><span class="vid" data-f="init/The Normal Distribution： The Limit of Binomial Distribution for Large ＂n＂ [8n1n0OM4gLk].mp4"><span class="vt">🎬 The Normal Distribution: The Limit of Binomial Distribution for Large &quot;n&quot;</span> <span class="muted small">Binomial → Normal</span><span class="vs2">init</span><a class="vopen" href="videos/init/The Normal Distribution： The Limit of Binomial Distribution for Large ＂n＂ [8n1n0OM4gLk].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span><span class="vid" data-f="init2/Central Limit Theorem Example &amp; Hypothesis Testing [bOrihOzYXWA].mp4"><span class="vt">🎬 Central Limit Theorem Example &amp; Hypothesis Testing</span> <span class="muted small">ZGS-Beispiel (Test-Teil: Kap. 7)</span><span class="vs2">init2</span><a class="vopen" href="videos/init2/Central Limit Theorem Example &amp; Hypothesis Testing [bOrihOzYXWA].mp4" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span></div>
+</section>
+
+<section id="s5-9" data-m="🌉 Brücke & Lernziele|von vielen Messungen zur Glocke">
+<h2>🌉 Die große Brücke: von vielen Messungen zur Glockenkurve</h2>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>🧵 Fluss-Diagramm</b>
+<svg viewBox="0 0 1200 300" role="img" aria-label="Fluss von Kapitel 5">
+  <defs><marker id="arrK5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="430" y="10" width="340" height="56" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="600" y="34" fill="#f778ba" font-weight="700">i.i.d. Stichprobe X₁, …, Xₙ</text><text x="600" y="56" fill="#8b949e">μ = E[Xᵢ], σ² = Var(Xᵢ)</text>
+    <rect x="80" y="110" width="440" height="56" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="300" y="134" fill="#58a6ff" font-weight="700">Summe Sₙ: E = nμ · Var = nσ² · σ = √n σ</text><text x="300" y="156" fill="#8b949e">streut absolut mehr</text>
+    <rect x="680" y="110" width="440" height="56" rx="10" fill="#1c2129" stroke="#d29922"/><text x="900" y="134" fill="#d29922" font-weight="700">Mittel X̄ₙ: E = μ · Var = σ²/n · σ/√n</text><text x="900" y="156" fill="#8b949e">√n-Gesetz: Präzision ∝ √Aufwand</text>
+    <rect x="80" y="210" width="330" height="56" rx="10" fill="#1c2129" stroke="#3fb950"/><text x="245" y="234" fill="#3fb950" font-weight="700">GGZ: X̄ₙ → μ</text><text x="245" y="256" fill="#8b949e">(✚ Tschebyschow)</text>
+    <rect x="435" y="210" width="330" height="56" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="600" y="234" fill="#bc8cff" font-weight="700">ZGS: Sₙ ≈ N(nμ, nσ²)</text><text x="600" y="256" fill="#8b949e">egal welche Ausgangsverteilung</text>
+    <rect x="790" y="210" width="330" height="56" rx="10" fill="#1c2129" stroke="#f85149"/><text x="955" y="234" fill="#f85149" font-weight="700">Normalapproximation</text><text x="955" y="256" fill="#8b949e">Bin, Pois, Messfehler → Φ(z)</text>
+    <line x1="560" y1="66" x2="320" y2="108" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="640" y1="66" x2="880" y2="108" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="820" y1="166" x2="260" y2="208" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="880" y1="166" x2="620" y2="208" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="765" y1="238" x2="788" y2="238" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+  </g>
+</svg>
+<p><b>→ Wofür brauchst du das in Kapitel 6?</b> Ab jetzt beginnt die schließende Statistik. \(\bar X_n\) wird zum <span class="kw kw-chg">Schätzer</span> für μ, \(\sigma/\sqrt n\) zum <span class="kw kw-res">Standardfehler</span>, und der ZGS liefert Vertrauensintervalle \(\bar x\pm1.96\,\sigma/\sqrt n\).</p>
+</div>
+<div class="card has-src  is-g"><span class="src g" title="Inhalt aus der Grundlage (Lernbegleiter-HTML / Skript L. Meier)">📘 Grundlage</span><b>✅ Lernziele-Check (5.4)</b>
+  <ul><li>Ich weiß, was die i.i.d.-Annahme bedeutet und warum sie zentral ist.</li><li>Ich kenne das Gesetz der großen Zahlen und das √n-Gesetz (σ des Mittels ∝ 1/√n).</li><li>Ich kenne den Zentralen Grenzwertsatz und kann ihn anwenden (Normalapproximation von Bin/Pois, Standardisieren, Φ ablesen).</li><li>✚ Ich kann mit Tschebyschow abschätzen und die Stetigkeitskorrektur anwenden.</li></ul>
+</div>
+</section>
+
+<section id="s5-cheat" data-m="📋 Cheat-Sheet|Formeln Kap. 5">
+<h2>📋 Cheat-Sheet Kapitel 5</h2>
+<table class="tbl cheat">
+<tr><th>Was</th><th>Formel</th><th>R</th><th>Python</th></tr>
+<tr><td>Summe</td><td>\(\EE=n\mu,\ \Var=n\sigma^2\)</td><td>—</td><td>—</td></tr>
+<tr><td>Mittel</td><td>\(\EE=\mu,\ \sigma_{\bar X}=\sigma/\sqrt n\)</td><td><code>sigma/sqrt(n)</code></td><td><code>sigma/np.sqrt(n)</code></td></tr>
+<tr><td>n für Ziel-σ</td><td>\(n=(\sigma/\sigma_{\text{Ziel}})^2\)</td><td><code>ceiling((s/z)^2)</code></td><td><code>math.ceil((s/z)**2)</code></td></tr>
+<tr><td>GGZ</td><td>\(\bar X_n\to\mu\)</td><td><code>cumsum(x)/seq_along(x)</code></td><td><code>np.cumsum(x)/np.arange(1,n+1)</code></td></tr>
+<tr><td>✚ Tschebyschow</td><td>\(\PP(|Y-\EE Y|\ge\varepsilon)\le\Var Y/\varepsilon^2\)</td><td>—</td><td>—</td></tr>
+<tr><td>ZGS</td><td>\(\PP(S_n\le x)\approx\Phi\big(\frac{x-n\mu}{\sigma\sqrt n}\big)\)</td><td><code>pnorm(x, n*mu, sqrt(n)*sigma)</code></td><td><code>norm.cdf(x, n*mu, np.sqrt(n)*sigma)</code></td></tr>
+<tr><td>Bin ≈ N</td><td>\(\Phi\big(\frac{x(+0.5)-np}{\sqrt{np(1-p)}}\big)\)</td><td><code>pnorm(x+0.5, n*p, sqrt(n*p*(1-p)))</code></td><td>analog</td></tr>
+<tr><td>Pois ≈ N</td><td>\(\Phi\big(\frac{x(+0.5)-\lambda}{\sqrt\lambda}\big)\)</td><td><code>pnorm(x+0.5, l, sqrt(l))</code></td><td>analog</td></tr>
+</table>
+</section>
+
+<section id="s5-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-rule">i.i.d.</span></td><td>independent and identically distributed</td><td>unabhängig und gleich verteilt</td><td><a href="#s5-1">5.1</a></td></tr>
+<tr><td><span class="kw kw-mem">Summe Sₙ</span></td><td>sum</td><td>E = nμ, Var = nσ²</td><td><a href="#s5-2">5.2</a></td></tr>
+<tr><td><span class="kw kw-mem">arithmetisches Mittel X̄ₙ</span></td><td>sample mean</td><td>E = μ, Var = σ²/n</td><td><a href="#s5-2">5.2</a></td></tr>
+<tr><td><span class="kw kw-rule">√n-Gesetz</span></td><td>square-root law</td><td>σ halbieren kostet 4× Daten</td><td><a href="#s5-2">5.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Gesetz der großen Zahlen</span></td><td>law of large numbers</td><td>Mittel → Erwartungswert</td><td><a href="#s5-3">5.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Ungleichung von Tschebyschow</span></td><td>Chebyshev's inequality</td><td>Abweichungs-W'keit ≤ Var/ε²</td><td><a href="#s5-3">5.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Zentraler Grenzwertsatz</span></td><td>central limit theorem</td><td>Summen werden normal</td><td><a href="#s5-4">5.3</a></td></tr>
+<tr><td><span class="kw kw-chg">Normalapproximation</span></td><td>normal approximation</td><td>Bin, Pois ≈ N</td><td><a href="#s5-5">5.3.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Stetigkeitskorrektur</span></td><td>continuity correction</td><td>Grenze um 0.5 verschieben</td><td><a href="#s5-5">5.3.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Lognormal-Verteilung</span></td><td>log-normal distribution</td><td>Produkt vieler Effekte</td><td><a href="#s5-4">5.3</a></td></tr>
+</table>
+</section>
+
+<section id="s5-train" data-m="🏋 Training|ZGS-Aufgaben mit Prüfen">
+<h2>🏋 Training</h2>
+<div class="card has-src " id="qz5"><span class="src n" title="neu ergänzt">✚ Neu</span><b>Zufallsaufgabe zum ZGS</b>
+  <p id="q5Task"></p>
+  <p class="quiz">Antwort: <input id="q5In"> <button class="btn" id="q5Chk">Prüfen</button> <button class="btn" id="q5New">Neue Aufgabe</button></p>
+  <div class="out" id="q5Res"></div>
+</div>
+</section>
+
+<footer class="foot">Lernbegleiter Statistik I · Kap. 5 · Grenzwertsätze · 📘 Grundlage = Inhalt aus dem bisherigen Lernbegleiter (Skript L. Meier, ETH) · ✚ Neu = ergänzt · alle Zahlen per Skript nachgerechnet.</footer>
+</main>
+<script>
+/* =====================================================================
+   Lernbegleiter-Engine (gemeinsam für alle Kapitel)
+   Namensraum window.LB · KaTeX-Makros · Menü · Farbwörter · Tracer
+   Statistik-Funktionen · Plotly-Hilfen · Video-Links · Teilwechsel
+   ===================================================================== */
+(function () {
+'use strict';
+const LB = window.LB = window.LB || {};
+LB.inits = LB.inits || [];
+LB.on = fn => LB.inits.push(fn);                                   // Kapitel-Skripte melden Init-Funktionen an
+
+/* ---------- Rollenfarben (identisch zu :root in base.css) ---------- */
+LB.C = { res: '#f85149', chg: '#d29922', rule: '#bc8cff', par: '#58a6ff', idx: '#3fb950', cond: '#56d4dd', mem: '#f778ba',
+         text: '#e6edf3', muted: '#8b949e', border: '#30363d', card2: '#1c2129' };
+LB.rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; };
+
+/* ---------- KaTeX: eine Konfiguration für alle Aufrufe ---------- */
+LB.KOPT = {
+  delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }],
+  throwOnError: false,
+  macros: {
+    '\\Res': '\\textcolor{f85149}{#1}', '\\Chg': '\\textcolor{d29922}{#1}', '\\Rule': '\\textcolor{bc8cff}{#1}',
+    '\\Par': '\\textcolor{58a6ff}{#1}', '\\Idx': '\\textcolor{3fb950}{#1}', '\\Cond': '\\textcolor{56d4dd}{#1}',
+    '\\Mem': '\\textcolor{f778ba}{#1}',
+    '\\PP': '\\Rule{P}',                                            // Wahrscheinlichkeits-Operator
+    '\\EE': '\\Rule{E}',                                            // Erwartungswert-Operator
+    '\\Var': '\\Rule{\\operatorname{Var}}',
+    '\\Cov': '\\Rule{\\operatorname{Cov}}',
+    '\\Corr': '\\Rule{\\operatorname{Corr}}',
+    '\\sd': '\\Rule{\\sigma}',
+    '\\given': '\\,\\Cond{\\vert}\\,',                              // Bedingungsstrich
+    '\\Om': '\\Mem{\\Omega}',                                       // Grundraum
+    '\\iid': '\\Rule{\\overset{\\text{i.i.d.}}{\\sim}}',
+    '\\dd': '\\,\\mathrm{d}',
+    '\\mA': '\\Mem{A}', '\\mB': '\\Mem{B}', '\\mX': '\\Mem{X}', '\\mY': '\\Mem{Y}',
+    '\\capc': '\\mathbin{\\Chg{\\cap}}', '\\cupc': '\\mathbin{\\Chg{\\cup}}', '\\co': '^{\\Chg{c}}',
+    '\\setm': '\\mathbin{\\Chg{\\setminus}}',
+    '\\pf': '\\Rule{p}', '\\ff': '\\Rule{f}', '\\FF': '\\Rule{F}', '\\WW': '\\Mem{\\mathcal{W}}',
+    '\\mx': '\\Mem{x}', '\\mZ': '\\Mem{Z}', '\\mT': '\\Mem{T}',
+    '\\Bin': '\\Rule{\\operatorname{Bin}}', '\\Pois': '\\Rule{\\operatorname{Pois}}', '\\Geom': '\\Rule{\\operatorname{Geom}}',
+    '\\Bern': '\\Rule{\\operatorname{Bernoulli}}', '\\Uni': '\\Rule{\\operatorname{Uni}}', '\\Nor': '\\Rule{\\mathcal{N}}', '\\Expo': '\\Rule{\\operatorname{Exp}}'
+  }
+};
+LB.tex = el => { if (window.renderMathInElement && el) window.renderMathInElement(el, LB.KOPT); };
+LB.esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+LB.$ = (s, r) => (r || document).querySelector(s);
+LB.$$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+LB.fmt = (v, d) => { if (d === undefined) d = 4; if (!isFinite(v)) return '–'; const s = Number(v).toFixed(d); return s === '-' + (0).toFixed(d) ? (0).toFixed(d) : s; };
+LB.store = {                                                       // localStorage ist unter file:// oft gesperrt
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* egal */ } }
+};
+LB.inFrame = (() => { try { return window.parent !== window; } catch (e) { return true; } })();
+
+/* =====================================================================
+   Statistik-Funktionen (JS-Spiegel der C++-Programme)
+   ===================================================================== */
+const S = LB.S = {};
+S.lgamma = function (x) {                                         // log Γ(x), Lanczos g=7
+  const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
+    12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  if (x < 0.5) return Math.log(Math.PI / Math.abs(Math.sin(Math.PI * x))) - S.lgamma(1 - x);
+  x -= 1; let a = c[0]; const t = x + 7.5;
+  for (let i = 1; i < 9; i++) a += c[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+};
+S.choose = (n, k) => (k < 0 || k > n) ? 0 : Math.round(Math.exp(S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1)));
+S.lchoose = (n, k) => S.lgamma(n + 1) - S.lgamma(k + 1) - S.lgamma(n - k + 1);
+S.fact = n => { let f = 1; for (let i = 2; i <= n; i++) f *= i; return f; };
+S.gammaP = function (a, x) {                                      // regularisierte untere unvollständige Gamma-Funktion
+  if (x <= 0) return 0;
+  const gln = S.lgamma(a);
+  if (x < a + 1) { let ap = a, sum = 1 / a, del = sum;
+    for (let n = 0; n < 500; n++) { ap++; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-15) break; }
+    return sum * Math.exp(-x + a * Math.log(x) - gln); }
+  let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+  for (let i = 1; i < 500; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300;
+    c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return 1 - Math.exp(-x + a * Math.log(x) - gln) * h;
+};
+S.betacf = function (a, b, x) {                                    // Kettenbruch für die unvollständige Beta-Funktion
+  const qab = a + b, qap = a + 1, qam = a - 1; let c = 1, d = 1 - qab * x / qap; if (Math.abs(d) < 1e-300) d = 1e-300; d = 1 / d; let h = d;
+  for (let m = 1; m <= 300; m++) { const m2 = 2 * m; let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d;
+    const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+  return h;
+};
+S.betaI = function (a, b, x) {                                     // regularisierte unvollständige Beta-Funktion I_x(a,b)
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  const bt = Math.exp(S.lgamma(a + b) - S.lgamma(a) - S.lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  return (x < (a + 1) / (a + b + 2)) ? bt * S.betacf(a, b, x) / a : 1 - bt * S.betacf(b, a, 1 - x) / b;
+};
+S.erfc = x => x >= 0 ? 1 - S.gammaP(0.5, x * x) : 1 + S.gammaP(0.5, x * x);
+S.normPdf = (x, mu = 0, s = 1) => { const z = (x - mu) / s; return Math.exp(-0.5 * z * z) / (s * Math.sqrt(2 * Math.PI)); };
+S.Phi = x => 0.5 * S.erfc(-x / Math.SQRT2);                        // Standardnormal-Verteilungsfunktion Φ
+S.normCdf = (x, mu = 0, s = 1) => S.Phi((x - mu) / s);
+S.PhiInv = function (p) {                                          // Φ⁻¹(p): Acklam + zwei Newton-Schritte
+  if (p <= 0) return -Infinity; if (p >= 1) return Infinity;
+  const a = [-3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.383577518672690e2, -3.066479806614716e1, 2.506628277459239e0],
+    b = [-5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1, -1.328068155288572e1],
+    c = [-7.784894002430293e-3, -3.223964580411365e-1, -2.400758277161838e0, -2.549732539343734e0, 4.374664141464968e0, 2.938163982698783e0],
+    d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996e0, 3.754408661907416e0];
+  let q, r, x;
+  if (p < 0.02425) { q = Math.sqrt(-2 * Math.log(p)); x = (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  else if (p <= 1 - 0.02425) { q = p - 0.5; r = q * q; x = (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1); }
+  else { q = Math.sqrt(-2 * Math.log(1 - p)); x = -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  for (let k = 0; k < 2; k++) { const e = S.Phi(x) - p, u = e * Math.sqrt(2 * Math.PI) * Math.exp(x * x / 2); x = x - u / (1 + x * u / 2); }
+  return x;
+};
+S.tPdf = (t, nu) => Math.exp(S.lgamma((nu + 1) / 2) - S.lgamma(nu / 2)) / Math.sqrt(nu * Math.PI) * Math.pow(1 + t * t / nu, -(nu + 1) / 2);
+S.tCdf = (t, nu) => { const p = 0.5 * S.betaI(nu / 2, 0.5, nu / (nu + t * t)); return t > 0 ? 1 - p : p; };
+S.chi2Cdf = (x, k) => x <= 0 ? 0 : S.gammaP(k / 2, x / 2);
+S.chi2Pdf = (x, k) => x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.log(2) - S.lgamma(k / 2));
+S.invert = function (cdf, p, lo, hi) {                             // Quantil per Bisektion einer monotonen Verteilungsfunktion
+  for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (cdf(m) < p) lo = m; else hi = m; if (hi - lo < 1e-12) break; }
+  return (lo + hi) / 2;
+};
+S.tInv = (p, nu) => S.invert(x => S.tCdf(x, nu), p, -1e4, 1e4);
+S.chi2Inv = (p, k) => S.invert(x => S.chi2Cdf(x, k), p, 0, 1e4);
+S.binomPmf = (k, n, p) => { if (k < 0 || k > n || k !== Math.floor(k)) return 0; if (p <= 0) return k === 0 ? 1 : 0; if (p >= 1) return k === n ? 1 : 0;
+  return Math.exp(S.lchoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p)); };
+S.binomCdf = (k, n, p) => { let s = 0; for (let i = 0; i <= Math.min(k, n); i++) s += S.binomPmf(i, n, p); return Math.min(1, s); };
+S.poisPmf = (k, l) => (k < 0 || k !== Math.floor(k)) ? 0 : Math.exp(-l + k * Math.log(l) - S.lgamma(k + 1));
+S.poisCdf = (k, l) => { let s = 0; for (let i = 0; i <= k; i++) s += S.poisPmf(i, l); return Math.min(1, s); };
+S.geomPmf = (k, p) => k < 1 ? 0 : Math.pow(1 - p, k - 1) * p;       // Anzahl Versuche bis zum ersten Erfolg (k = 1, 2, …)
+S.hyperPmf = (k, N, M, n) => Math.exp(S.lchoose(M, k) + S.lchoose(N - M, n - k) - S.lchoose(N, n));
+S.expPdf = (x, l) => x < 0 ? 0 : l * Math.exp(-l * x);
+S.expCdf = (x, l) => x < 0 ? 0 : 1 - Math.exp(-l * x);
+/* Deskriptive Kennzahlen, Quantil-Definition wie im Skript */
+S.sum = a => a.reduce((s, x) => s + x, 0);
+S.mean = a => S.sum(a) / a.length;
+S.var = a => { const m = S.mean(a); return a.reduce((s, x) => s + (x - m) * (x - m), 0) / (a.length - 1); };
+S.sd = a => Math.sqrt(S.var(a));
+S.sorted = a => a.slice().sort((x, y) => x - y);
+S.quantile = function (a, alpha) {                                 // α·n ganzzahlig → Mittel zweier Nachbarn, sonst x_(⌈α n⌉)
+  const s = S.sorted(a), n = s.length, an = alpha * n, r = Math.round(an);
+  if (Math.abs(an - r) < 1e-9) { if (r <= 0) return s[0]; if (r >= n) return s[n - 1]; return 0.5 * (s[r - 1] + s[r]); }
+  return s[Math.ceil(an) - 1];
+};
+S.median = a => S.quantile(a, 0.5);
+S.cor = (x, y) => { const mx = S.mean(x), my = S.mean(y); let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < x.length; i++) { sxy += (x[i] - mx) * (y[i] - my); sxx += (x[i] - mx) ** 2; syy += (y[i] - my) ** 2; }
+  return sxy / Math.sqrt(sxx * syy); };
+S.parse = str => (str || '').split(/[\s,;]+/).map(s => s.trim()).filter(s => s !== '').map(Number).filter(x => !isNaN(x));
+S.rng = function (seed) {                                          // reproduzierbarer Zufall (mulberry32)
+  let t = seed >>> 0;
+  const u = () => { t += 0x6D2B79F5; let r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; };
+  u.norm = () => { let a = 0; while (a === 0) a = u(); return Math.sqrt(-2 * Math.log(a)) * Math.cos(2 * Math.PI * u()); };
+  return u;
+};
+
+/* =====================================================================
+   Plotly-Hilfen (dunkles Layout, Rollenfarben)
+   ===================================================================== */
+LB.PCFG = { displayModeBar: false, responsive: true };
+LB.lay = function (extra) {
+  const L = { margin: { l: 55, r: 18, t: 20, b: 45 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+    font: { family: 'Source Sans 3, Segoe UI, sans-serif', size: 13, color: LB.C.text }, showlegend: false,
+    xaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border }, yaxis: { zeroline: false, gridcolor: '#252b33', linecolor: LB.C.border },
+    legend: { bgcolor: 'rgba(0,0,0,0)', orientation: 'h', y: 1.12 } };
+  if (extra) for (const k in extra) {
+    if ((k === 'xaxis' || k === 'yaxis') && typeof extra[k] === 'object') L[k] = Object.assign({}, L[k], extra[k]); else L[k] = extra[k];
+  }
+  return L;
+};
+LB.plot = (el, traces, layout) => { if (!window.Plotly) return; const e = typeof el === 'string' ? document.getElementById(el) : el; if (e) Plotly.react(e, traces, LB.lay(layout), LB.PCFG); };
+LB.area = function (f, a, b, color, n) {                           // gefüllte Fläche unter einer Dichte
+  n = n || 120; const xs = [a], ys = [0];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  xs.push(b); ys.push(0);
+  return { x: xs, y: ys, fill: 'toself', mode: 'none', fillcolor: color, hoverinfo: 'skip' };
+};
+LB.curve = function (f, a, b, color, n, extra) {
+  n = n || 200; const xs = [], ys = [];
+  for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n; xs.push(x); ys.push(f(x)); }
+  return Object.assign({ x: xs, y: ys, mode: 'lines', line: { color: color, width: 2.6 }, hoverinfo: 'skip' }, extra || {});
+};
+/* Regler binden: bind(['id1','id2'], fn) → fn(values) bei jeder Änderung, Ausgabe in <output for=id> */
+LB.bind = function (ids, fn) {
+  const els = ids.map(id => document.getElementById(id));
+  const run = () => {
+    const v = {};
+    els.forEach(e => { if (!e) return; const val = e.type === 'checkbox' ? e.checked : (e.type === 'range' || e.type === 'number' ? parseFloat(e.value) : e.value);
+      v[e.id] = val; const o = document.querySelector('output[for="' + e.id + '"]'); if (o) o.textContent = e.dataset.fmt ? LB.fmt(val, +e.dataset.fmt) : e.value; });
+    fn(v);
+  };
+  els.forEach(e => e && e.addEventListener('input', run));
+  run(); return run;
+};
+
+/* =====================================================================
+   Code-Hervorhebung für R und Python: Kommentare, Strings, Schlüsselwörter,
+   Funktionen, Zahlen, Zuweisung. Marker "#@name" am Zeilenende werden entfernt.
+   ===================================================================== */
+const KW = {
+  R: new Set('function if else for while repeat in return TRUE FALSE NULL NA Inf break next library'.split(' ')),
+  Python: new Set('def if elif else for while in return True False None import from as lambda with and or not pass break continue print'.split(' '))
+};
+LB.stripMark = l => l.replace(/\s*#@[\w-]+\s*$/, '');
+LB.markOf = l => { const m = l.match(/#@([\w-]+)\s*$/); return m ? m[1] : ''; };
+LB.hlLine = function (line, lang) {
+  lang = lang || 'R'; const kws = KW[lang] || KW.R;
+  let out = '', i = 0; const n = line.length;
+  while (i < n) {
+    const ch = line[i];
+    if (ch === '#') { out += '<span class="tok-c">' + LB.esc(line.slice(i)) + '</span>'; break; }
+    if (ch === '"' || ch === "'") { let j = i + 1; while (j < n && line[j] !== ch) { if (line[j] === '\\') j++; j++; }
+      out += '<span class="tok-s">' + LB.esc(line.slice(i, j + 1)) + '</span>'; i = j + 1; continue; }
+    if (line.startsWith('<-', i)) { out += '<span class="tok-a">&lt;-</span>'; i += 2; continue; }
+    if (/[A-Za-z_.]/.test(ch)) { let j = i + 1; while (j < n && /[A-Za-z0-9_.]/.test(line[j])) j++;
+      const w = line.slice(i, j);
+      if (kws.has(w)) out += '<span class="tok-k">' + LB.esc(w) + '</span>';
+      else if (line[j] === '(') out += '<span class="tok-t">' + LB.esc(w) + '</span>';
+      else out += LB.esc(w);
+      i = j; continue; }
+    if (/[0-9]/.test(ch)) { let j = i + 1; while (j < n && /[0-9.eE]/.test(line[j])) j++; out += '<span class="tok-n">' + line.slice(i, j) + '</span>'; i = j; continue; }
+    out += LB.esc(ch); i++;
+  }
+  return out;
+};
+
+/* =====================================================================
+   Code-Tracer: zeichnet alle Schritte einmal auf, spielt dann ab
+   ===================================================================== */
+LB.Tracer = class {
+  constructor(o) {
+    this.o = o; this.root = document.getElementById(o.id); if (!this.root) return;
+    this.langs = o.langs || { R: o.code };                            // {R: [...], Python: [...]}
+    this.lang = LB.store.get('lb-lang', 'R'); if (!this.langs[this.lang]) this.lang = Object.keys(this.langs)[0];
+    this.root.classList.add('tracer');
+    const ex = (o.examples || []).map((e, k) => '<option value="' + k + '">' + LB.esc(e[0]) + '</option>').join('');
+    this.root.innerHTML =
+      '<div class="tr-head"><b>▶ ' + LB.esc(o.title) + '</b>' +
+      '<label>Eingabe <input class="tr-in" value="' + LB.esc(o.input) + '" aria-label="Eingabe"></label>' +
+      (ex ? '<select class="tr-ex" aria-label="Beispiele"><option value="">Beispiele …</option>' + ex + '</select>' : '') +
+      '<span class="seg tr-lang">' + Object.keys(this.langs).map(L => '<button data-lang="' + L + '">' + L + '</button>').join('') + '</span>' +
+      '<button data-a="run">↻ neu starten</button>' + (o.hint ? '<span class="muted small">' + o.hint + '</span>' : '') + '</div>' +
+      '<div class="tr-grid"><pre class="tr-code"></pre><div class="tr-state"></div></div>' +
+      '<div class="tr-ctl"><button data-a="first" title="Anfang">⏮</button><button data-a="prev" title="zurück">◀</button>' +
+      '<input type="range" class="tr-pos" min="0" value="0" aria-label="Schritt">' +
+      '<button data-a="next" title="vor">▶</button><button data-a="last" title="Ende">⏭</button>' +
+      '<button data-a="auto">⏯ auto</button><span class="tr-cnt"></span></div>' +
+      '<div class="tr-msg"></div>';
+    this.q = s => this.root.querySelector(s);
+    this.root.addEventListener('click', e => {
+      const b = e.target.closest('[data-a]'); if (b) this.act(b.dataset.a);
+      const l = e.target.closest('[data-lang]'); if (l) { LB.store.set('lb-lang', l.dataset.lang); LB.$$('.tracer').forEach(t => t._tr && t._tr.setLang(l.dataset.lang)); }
+    });
+    this.root._tr = this;
+    this.q('.tr-pos').addEventListener('input', e => this.show(+e.target.value));
+    this.q('.tr-in').addEventListener('keydown', e => { if (e.key === 'Enter') this.run(); });
+    const sel = this.q('.tr-ex');
+    if (sel) sel.addEventListener('change', () => { if (sel.value !== '') { this.q('.tr-in').value = o.examples[+sel.value][1]; this.run(); } sel.value = ''; });
+    this.run();
+  }
+  setLang(L) { if (!this.langs[L]) return; this.lang = L; this.renderCode(); this.show(this.i || 0); }
+  renderCode() {
+    let lines = this.langs[this.lang];
+    if (this.o.codeFor && this.inp !== undefined) lines = this.o.codeFor(this.inp, this.lang, lines);
+    this.q('.tr-code').innerHTML = lines.map((l, i) =>
+      '<div class="row" data-k="' + LB.markOf(l) + '"><span class="ln">' + (i + 1) + '</span>' + LB.hlLine(LB.stripMark(l), this.lang) + '<span class="hits"></span></div>').join('');
+    LB.$$('[data-lang]', this.root).forEach(b => b.classList.toggle('on', b.dataset.lang === this.lang));
+  }
+  run() {
+    const snaps = [];
+    const rec = { step: (line, msg, st) => snaps.push({ line, msg, st: JSON.parse(JSON.stringify(st)) }) };
+    let inp;
+    try { inp = this.o.parse(this.q('.tr-in').value); }
+    catch (e) { snaps.push({ line: 0, msg: '⚠ Eingabe nicht lesbar: ' + LB.esc(e.message), st: null }); }
+    this.inp = inp; this.renderCode();
+    if (inp !== undefined) { try { this.o.run(rec, inp); } catch (e) { snaps.push({ line: 0, msg: '⚠ ' + LB.esc(e.message), st: null }); } }
+    this.snaps = snaps.length ? snaps : [{ line: 0, msg: '(keine Schritte)', st: null }];
+    this.q('.tr-pos').max = this.snaps.length - 1;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    this.show(0);
+  }
+  act(a) {
+    const n = this.snaps.length - 1;
+    if (a === 'run') this.run();
+    else if (a === 'first') this.show(0);
+    else if (a === 'prev') this.show(Math.max(0, this.i - 1));
+    else if (a === 'next') this.show(Math.min(n, this.i + 1));
+    else if (a === 'last') this.show(n);
+    else if (a === 'auto') {
+      if (this.timer) { clearInterval(this.timer); this.timer = null; return; }
+      if (this.i >= n) this.show(0);
+      this.timer = setInterval(() => { if (this.i >= n) { clearInterval(this.timer); this.timer = null; } else this.show(this.i + 1); }, this.o.speed || 750);
+    }
+  }
+  show(i) {
+    this.i = i; const s = this.snaps[i]; this.q('.tr-pos').value = i;
+    const hits = {};
+    for (let k = 0; k <= i; k++) hits[this.snaps[k].line] = (hits[this.snaps[k].line] || 0) + 1;
+    this.root.querySelectorAll('.tr-code .row').forEach(r => {
+      const k = r.dataset.k; r.classList.toggle('cur', !!k && k === s.line);
+      r.querySelector('.hits').textContent = k && hits[k] ? '×' + hits[k] : '';
+    });
+    const st = this.q('.tr-state'); st.innerHTML = s.st ? this.o.view(s.st) : '';
+    this.q('.tr-msg').innerHTML = s.msg;
+    this.q('.tr-cnt').textContent = 'Schritt ' + i + ' / ' + (this.snaps.length - 1);
+    LB.tex(this.q('.tr-msg')); LB.tex(st);
+  }
+};
+/* Hilfen für Zustandsansichten */
+LB.kvHTML = (pairs) => '<div class="kv">' + pairs.map(p => '<div><i>' + p[0] + '</i><span' + (p[2] ? ' class="kw-' + p[2] + '"' : '') + '>' + p[1] + '</span></div>').join('') + '</div>';
+LB.cellsHTML = (arr, cls, base) => '<div class="cells">' + arr.map((x, k) => '<span class="c ' + ((cls && cls(k)) || '') + '">' + x + '<i>' + (k + (base || 0)) + '</i></span>').join('') + '</div>';
+
+/* =====================================================================
+   Farbige Schlüsselwörter im Fließtext (Wortliste Begriff → Rolle)
+   ===================================================================== */
+LB.KW = LB.KW || [];
+const SKIP = 'pre, code, .katex, h1, h2, h3, h4, h5, button, svg, .vn-badge, .src, .srcin, .vn-res, .kw, a, summary, .lbtop, .lbmenu, .vid, .tracer, .legend, th, label, output, .plot, .anat .sym, select, textarea, .nokw';
+LB.kwColor = function () {
+  if (!LB.KW.length) return;
+  const terms = LB.KW.slice().sort((a, b) => b[0].length - a[0].length);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp('(?<![\\p{L}\\p{N}])(' + terms.map(t => esc(t[0])).join('|') + ')(\\p{Ll}{0,3})(?![\\p{L}\\p{N}])', 'u');
+  const role = {}; terms.forEach(t => role[t[0]] = t[1]);
+  const blocks = LB.$$('main p, main li, main td, main .vn-step > div, main .vn-task, main .pt-grid > div, main .ptq, main .anat > div > span:last-child, main .read, main .why, main .recog, main .verdict, main .trap, main .gblk > div');
+  blocks.forEach(bl => {
+    if (bl.closest(SKIP)) return;
+    const used = new Set(); let count = 0;
+    const walker = document.createTreeWalker(bl, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.parentElement && n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      if (count >= 6) break;
+      let txt = node.nodeValue, m, frag = null, last = 0, off = 0;
+      while (count < 6 && (m = re.exec(txt.slice(off))) !== null) {
+        const start = off + m.index, word = m[0], base = m[1];
+        off = start + word.length;
+        if (used.has(base)) continue;
+        used.add(base); count++;
+        if (!frag) frag = document.createDocumentFragment();
+        frag.appendChild(document.createTextNode(txt.slice(last, start)));
+        const sp = document.createElement('span'); sp.className = 'kw kw-' + role[base]; sp.textContent = word; frag.appendChild(sp);
+        last = start + word.length;
+      }
+      if (frag) { frag.appendChild(document.createTextNode(txt.slice(last))); node.parentNode.replaceChild(frag, node); }
+    }
+  });
+};
+
+/* =====================================================================
+   Menü, Grundlage-Hervorhebung, Teilwechsel
+   ===================================================================== */
+LB.menu = open => document.body.classList.toggle('menu-open', open);
+function initMenu() {
+  const m = document.getElementById('lbMenu'); if (!m) return;
+  LB.$$('#lbOpen, #lbFab').forEach(b => b.addEventListener('click', () => LB.menu(true)));
+  m.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (a && a.dataset.part !== undefined && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'part', i: +a.dataset.part }, '*'); LB.menu(false); return; }
+    if (e.target.closest('[data-close]') || a || e.target.id === 'lbMenu') LB.menu(false);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') LB.menu(false);
+    if ((e.key === 't' || e.key === 'T') && !e.target.closest('input, textarea, select') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (LB.inFrame) window.parent.postMessage({ lb: 'overview' }, '*'); else LB.menu(!document.body.classList.contains('menu-open'));
+    }
+  });
+  const hl = document.getElementById('lbHlG');
+  if (hl) { hl.checked = LB.store.get('lb-hlg', '0') === '1'; document.body.classList.toggle('hl-g', hl.checked);
+    hl.addEventListener('change', () => { document.body.classList.toggle('hl-g', hl.checked); LB.store.set('lb-hlg', hl.checked ? '1' : '0'); }); }
+}
+
+/* =====================================================================
+   Video-Links auf lokale .mp4-Dateien (Linux Mint, file://)
+   Standard: Ordner „videos/" neben der HTML-Datei (Symlink genügt),
+   sonst absoluten Pfad im ☰-Menü eintragen.
+   ===================================================================== */
+LB.vbase = LB.store.get('lb-vbase', 'videos/');
+LB.vbaseAbs = null;                                                // von der Gesamtdatei gesetzt
+function vurl(f) {
+  const enc = f.split('/').map(encodeURIComponent).join('/');
+  let base = LB.vbaseAbs || LB.vbase || 'videos/';
+  if (!/\/$/.test(base)) base += '/';
+  if (/^\//.test(base)) base = 'file://' + base;                   // /home/… → file:///home/…
+  try { return new URL(base + enc, LB.vbaseAbs ? undefined : document.baseURI).href; } catch (e) { return base + enc; }
+}
+LB.vpath = f => { const u = vurl(f); try { return decodeURIComponent(new URL(u).pathname); } catch (e) { return u; } };
+function initVideos() {
+  const upd = () => LB.$$('.vid').forEach(v => { const a = v.querySelector('a.vopen'); if (a) a.href = vurl(v.dataset.f); });
+  upd();
+  document.addEventListener('click', e => {
+    const a = e.target.closest('.vid a.vopen');
+    if (a && LB.inFrame) { e.preventDefault(); window.parent.postMessage({ lb: 'open', f: a.closest('.vid').dataset.f }, '*'); return; }
+    const c = e.target.closest('.vid .vcopy');
+    if (c) {
+      const p = LB.vpath(c.closest('.vid').dataset.f);
+      const done = () => { c.textContent = '✓ kopiert'; setTimeout(() => { c.textContent = '📋 Pfad'; }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(p).then(done, () => window.prompt('Pfad (Strg+C):', p));
+      else window.prompt('Pfad (Strg+C):', p);
+    }
+  });
+  const inp = document.getElementById('lbVbase');
+  if (inp) { inp.value = LB.vbase; inp.addEventListener('change', () => { LB.vbase = inp.value.trim() || 'videos/'; LB.store.set('lb-vbase', LB.vbase); upd();
+    if (LB.inFrame) window.parent.postMessage({ lb: 'vbase', v: LB.vbase }, '*'); }); }
+  window.addEventListener('message', e => {
+    const d = e.data || {};
+    if (d.lb === 'vbase') { LB.vbaseAbs = d.abs; LB.vbase = d.v; if (inp) inp.value = d.v; upd(); }
+    if (d.lb === 'menu') LB.menu(true);
+  });
+  LB.updVideos = upd;
+}
+
+/* =====================================================================
+   Start
+   ===================================================================== */
+function start() {
+  initMenu(); initVideos();
+  LB.$$('.code pre .row').forEach(r => { const ln = r.querySelector('.ln'); const txt = r.dataset.src !== undefined ? r.dataset.src : ''; r.innerHTML = ''; r.appendChild(ln); r.insertAdjacentHTML('beforeend', LB.hlLine(txt, r.closest('.code').dataset.lang)); });
+  LB.inits.forEach(fn => { try { fn(); } catch (e) { console.error(e); if (window.__lbErrors) window.__lbErrors.push(String(e)); throw e; } });
+  LB.tex(document.body);
+  LB.kwColor();
+  document.addEventListener('toggle', e => { if (window.Plotly && e.target.open) LB.$$('.js-plotly-plot', e.target).forEach(p => Plotly.Plots.resize(p)); }, true);
+  if (LB.inFrame) window.parent.postMessage({ lb: 'ready' }, '*');
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+</script>
+<script>
+/* Kapitel 5 · Grenzwertsätze: Visuals, Tracer, Training */
+LB.KW = [
+  ['i.i.d.', 'rule'], ['Gesetz der großen Zahlen', 'rule'], ['Grenzwertsatz', 'rule'], ['Tschebyschow', 'rule'], ['Normalapproximation', 'chg'],
+  ['Stetigkeitskorrektur', 'chg'], ['standardisieren', 'chg'], ['unabhängig', 'rule'], ['identisch verteilt', 'rule'],
+  ['Summe', 'mem'], ['Mittel', 'mem'], ['Wiederholungen', 'mem'], ['Standardfehler', 'res'], ['Schätzer', 'chg']
+];
+const S = LB.S, C = LB.C;
+
+/* ---------------------------------------------------------------- √n */
+LB.on(function sqrtn() {
+  if (!document.getElementById('snPlot')) return;
+  const sig = Math.sqrt(35 / 12), ns = [], ss = []; for (let n = 1; n <= 400; n++) { ns.push(n); ss.push(sig / Math.sqrt(n)); }
+  LB.bind(['snN'], v => {
+    const n = v.snN, s = sig / Math.sqrt(n);
+    LB.plot('snPlot', [LB.curve(x => S.normPdf(x, 3.5, s), 1, 6, C.rule, 400), LB.area(x => S.normPdf(x, 3.5, s), 3.5 - s, 3.5 + s, LB.rgba(C.par, 0.3))],
+      { height: 280, xaxis: { range: [1, 6], title: 'Mittel von n Würfen · σ_X̄ = ' + LB.fmt(s, 4) }, yaxis: { rangemode: 'tozero' } });
+    LB.plot('snCurve', [{ x: ns, y: ss, mode: 'lines', line: { color: C.chg, width: 2.5 } }, { x: [n], y: [s], mode: 'markers', marker: { color: C.res, size: 12 } }],
+      { height: 280, xaxis: { title: 'n', type: 'log' }, yaxis: { title: 'σ/√n', rangemode: 'tozero' } });
+  });
+});
+
+/* ---------------------------------------------------------------- GGZ */
+LB.on(function ggz() {
+  if (!document.getElementById('ggPlot')) return;
+  let seed = 1;
+  const run = LB.bind(['ggN'], v => {
+    const N = v.ggN, cols = [C.mem, C.par, C.idx, C.chg, C.cond], tr = [];
+    for (let k = 0; k < 5; k++) { const r = S.rng(seed * 10 + k); let s = 0; const ys = [];
+      for (let i = 1; i <= N; i++) { s += 1 + Math.floor(r() * 6); ys.push(s / i); } tr.push({ y: ys, mode: 'lines', line: { color: cols[k], width: 1.4 }, hoverinfo: 'skip' }); }
+    const xs = [], up = [], lo = []; const sg = Math.sqrt(35 / 12); for (let i = 1; i <= N; i++) { xs.push(i); up.push(3.5 + 2 * sg / Math.sqrt(i)); lo.push(3.5 - 2 * sg / Math.sqrt(i)); }
+    tr.forEach(t => t.x = xs);
+    tr.push({ x: xs, y: up, mode: 'lines', line: { color: C.muted, dash: 'dot' } }, { x: xs, y: lo, mode: 'lines', line: { color: C.muted, dash: 'dot' } }, { x: [1, N], y: [3.5, 3.5], mode: 'lines', line: { color: C.res, width: 2.5 } });
+    LB.plot('ggPlot', tr, { height: 320, xaxis: { title: 'Anzahl Würfe n', type: 'log' }, yaxis: { title: 'laufendes Mittel', range: [1, 6] } });
+  });
+  document.getElementById('ggNew').addEventListener('click', () => { seed++; run(); });
+});
+
+/* ---------------------------------------------------------------- ZGS wächst */
+LB.on(function zgs() {
+  if (!document.getElementById('zgPlot')) return;
+  const D = { uni: { g: r => r(), m: 0.5, v: 1 / 12, lo: 0, hi: 1 }, bern: { g: r => r() < 0.2 ? 1 : 0, m: 0.2, v: 0.16, lo: 0, hi: 1 },
+    exp: { g: r => -Math.log(1 - r()), m: 1, v: 1, lo: 0, hi: 4 }, die: { g: r => 1 + Math.floor(r() * 6), m: 3.5, v: 35 / 12, lo: 1, hi: 6 } };
+  let cur = 'uni';
+  const draw = () => {
+    const n = +document.getElementById('zgN').value, d = D[cur], r = S.rng(77), M = 4000, mean = [];
+    document.querySelector('output[for="zgN"]').textContent = n;
+    for (let k = 0; k < M; k++) { let s = 0; for (let i = 0; i < n; i++) s += d.g(r); mean.push(s / n); }
+    const sd = Math.sqrt(d.v / n), lo = Math.min(d.lo, d.m - 4 * sd), hi = Math.max(d.hi, d.m + 4 * sd);
+    LB.plot('zgPlot', [{ type: 'histogram', x: mean, histnorm: 'probability density', nbinsx: cur === 'bern' || cur === 'die' ? Math.min(80, n * (cur === 'die' ? 5 : 1) + 1) : 50, marker: { color: LB.rgba(C.mem, 0.6) } },
+      LB.curve(x => S.normPdf(x, d.m, sd), lo, hi, C.rule, 300)], { height: 320, xaxis: { range: [lo, hi], title: 'Mittel von n Summanden' }, yaxis: { title: 'Dichte' } });
+    LB.$$('#zgSeg .btn').forEach(b => b.classList.toggle('on', b.dataset.d === cur));
+  };
+  document.getElementById('zgSeg').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) { cur = b.dataset.d; draw(); } });
+  document.getElementById('zgN').addEventListener('input', draw); draw();
+});
+
+/* ---------------------------------------------------------------- Normalapprox */
+LB.on(function napprox() {
+  if (!document.getElementById('naPlot')) return;
+  LB.bind(['naN', 'naP', 'naX'], v => {
+    const n = v.naN, p = v.naP, x = Math.min(v.naX, n), mu = n * p, sd = Math.sqrt(n * p * (1 - p)), xs = [];
+    for (let k = 0; k <= n; k++) xs.push(k);
+    LB.plot('naPlot', [{ type: 'bar', x: xs, y: xs.map(k => S.binomPmf(k, n, p)), marker: { color: xs.map(k => k <= x ? C.par : LB.rgba(C.par, 0.35)) } },
+      LB.curve(t => S.normPdf(t, mu, sd), Math.max(-1, mu - 5 * sd), Math.min(n + 1, mu + 5 * sd), C.rule, 300)],
+      { height: 300, xaxis: { range: [Math.max(-1, mu - 5 * sd), Math.min(n + 1, mu + 5 * sd)] } });
+    const o = document.getElementById('naOut');
+    o.innerHTML = '\\(\\mu=' + LB.fmt(mu, 2) + ',\\ \\sigma=' + LB.fmt(sd, 3) + '\\) · exakt \\(\\PP(X\\le' + x + ')=\\Res{' + LB.fmt(S.binomCdf(x, n, p), 4) + '}\\) · ZGS \\(\\Phi(' + LB.fmt((x - mu) / sd, 3) + ')=' + LB.fmt(S.Phi((x - mu) / sd), 4) + '\\) · mit Korrektur \\(\\Phi(' + LB.fmt((x + 0.5 - mu) / sd, 3) + ')=' + LB.fmt(S.Phi((x + 0.5 - mu) / sd), 4) + '\\) · \\(np(1-p)=' + LB.fmt(n * p * (1 - p), 1) + '\\)';
+    LB.tex(o);
+  });
+});
+
+/* ---------------------------------------------------------------- Tracer */
+LB.on(function tracer5() {
+  new LB.Tracer({
+    id: 'trNa', title: 'Normalapproximation Schritt für Schritt', langs: {"R": ["# Normalapproximation der Binomialverteilung, mit und ohne Stetigkeitskorrektur", "n <- 100; p <- 0.3; x <- 25                # X ~ Bin(n, p), gesucht P(X <= x) #@par", "mu <- n * p                                # Erwartungswert np #@mu", "sigma <- sqrt(n * p * (1 - p))             # Standardabweichung sqrt(np(1-p)) #@sd", "z <- (x - mu) / sigma                      # standardisieren #@z", "naeh <- pnorm(z)                           # ZGS: P(X <= x) ungefähr Phi(z) #@phi", "zk <- (x + 0.5 - mu) / sigma               # Stetigkeitskorrektur: Grenze x + 0.5 #@zk", "naehk <- pnorm(zk)                         # korrigierte Näherung #@phik", "exakt <- pbinom(x, n, p)                   # exakter Wert zum Vergleich #@ex", "cat(naeh, naehk, exakt, \"\\n\")              #@out"], "Python": ["# Normalapproximation der Binomialverteilung, mit und ohne Stetigkeitskorrektur", "import math", "from scipy.stats import norm, binom", "", "n, p, x = 100, 0.3, 25                     # X ~ Bin(n, p), gesucht P(X <= x) #@par", "mu = n * p                                 # Erwartungswert np #@mu", "sigma = math.sqrt(n * p * (1 - p))         # Standardabweichung sqrt(np(1-p)) #@sd", "z = (x - mu) / sigma                       # standardisieren #@z", "naeh = norm.cdf(z)                         # ZGS: P(X <= x) ungefähr Phi(z) #@phi", "zk = (x + 0.5 - mu) / sigma                # Stetigkeitskorrektur: Grenze x + 0.5 #@zk", "naehk = norm.cdf(zk)                       # korrigierte Näherung #@phik", "exakt = binom.cdf(x, n, p)                 # exakter Wert zum Vergleich #@ex", "print(naeh, naehk, exakt)                  #@out"]},
+    input: '100 0.3 25', hint: 'n p x (gesucht P(X ≤ x))',
+    examples: [['Bin(100, 0.3), x = 25', '100 0.3 25'], ['Grundlage Bin(100, 0.5), x = 55', '100 0.5 55'], ['1000 Münzwürfe, x = 530', '1000 0.5 530'], ['kleines n: Bin(10, 0.1), x = 1', '10 0.1 1']],
+    parse: s => { const v = S.parse(s); if (v.length !== 3) throw new Error('Format: n p x'); const [n, p, x] = v; if (n < 1 || n > 5000 || p <= 0 || p >= 1 || x < 0 || x > n) throw new Error('1 ≤ n ≤ 5000, 0 < p < 1, 0 ≤ x ≤ n'); return { n: Math.round(n), p, x: Math.round(x) }; },
+    codeFor: (d, L, lines) => lines.map(l => /#@par\s*$/.test(l) ? (L === 'R' ? 'n <- ' + d.n + '; p <- ' + d.p + '; x <- ' + d.x : 'n, p, x = ' + d.n + ', ' + d.p + ', ' + d.x) + '   # X ~ Bin(n, p), P(X <= x) #@par' : l),
+    run(rec, d) {
+      const v = { mu: null, sd: null, z: null, a: null, zk: null, ak: null, ex: null }; const st = () => Object.assign({ d }, v);
+      rec.step('par', '\\(X\\sim\\Bin(' + d.n + ',' + d.p + ')\\), gesucht \\(\\PP(X\\le' + d.x + ')\\).', st());
+      v.mu = d.n * d.p; rec.step('mu', '\\(\\mu=np=' + LB.fmt(v.mu, 3) + '\\)', st());
+      v.sd = Math.sqrt(d.n * d.p * (1 - d.p)); rec.step('sd', '\\(\\sigma=\\sqrt{np(1-p)}=' + LB.fmt(v.sd, 4) + '\\)' + (v.sd * v.sd < 9 ? ' ⚠ np(1−p) &lt; 9: Näherung grob' : ''), st());
+      v.z = (d.x - v.mu) / v.sd; rec.step('z', '\\(\\Chg{z}=\\tfrac{' + d.x + '-' + LB.fmt(v.mu, 2) + '}{' + LB.fmt(v.sd, 3) + '}=' + LB.fmt(v.z, 4) + '\\)', st());
+      v.a = S.Phi(v.z); rec.step('phi', '\\(\\Phi(' + LB.fmt(v.z, 3) + ')=\\Res{' + LB.fmt(v.a, 4) + '}\\)', st());
+      v.zk = (d.x + 0.5 - v.mu) / v.sd; rec.step('zk', 'Korrektur: \\(z=\\tfrac{' + d.x + '.5-' + LB.fmt(v.mu, 2) + '}{' + LB.fmt(v.sd, 3) + '}=' + LB.fmt(v.zk, 4) + '\\)', st());
+      v.ak = S.Phi(v.zk); rec.step('phik', '\\(\\Phi(' + LB.fmt(v.zk, 3) + ')=\\Res{' + LB.fmt(v.ak, 4) + '}\\)', st());
+      v.ex = S.binomCdf(d.x, d.n, d.p); rec.step('ex', 'exakt \\(\\PP(X\\le' + d.x + ')=' + LB.fmt(v.ex, 4) + '\\)', st());
+      rec.step('out', 'Fehler ohne Korrektur ' + LB.fmt(Math.abs(v.a - v.ex), 4) + ', mit Korrektur ' + LB.fmt(Math.abs(v.ak - v.ex), 4) + '.', st());
+    },
+    view: s => LB.kvHTML([['μ', s.mu === null ? '–' : LB.fmt(s.mu, 3), 'par'], ['σ', s.sd === null ? '–' : LB.fmt(s.sd, 4), 'par'], ['z', s.z === null ? '–' : LB.fmt(s.z, 4), 'chg'], ['Φ(z)', s.a === null ? '–' : LB.fmt(s.a, 4), 'res'],
+      ['z korr.', s.zk === null ? '–' : LB.fmt(s.zk, 4), 'chg'], ['Φ korr.', s.ak === null ? '–' : LB.fmt(s.ak, 4), 'res'], ['exakt', s.ex === null ? '–' : LB.fmt(s.ex, 4), 'idx']])
+  });
+});
+
+/* ---------------------------------------------------------------- Training */
+LB.on(function train5() {
+  if (!document.getElementById('q5Task')) return;
+  const r = S.rng(Date.now() % 31337); let cur; const pick = a => a[Math.floor(r() * a.length)];
+  const tasks = [
+    () => { const s = pick([4, 6, 10, 12, 15]), n = pick([16, 25, 36, 64, 100]); return { t: 'Einzelmessungen haben σ = ' + s + '. Wie groß ist die Standardabweichung des Mittels von n = ' + n + ' unabhängigen Messungen?', a: s / Math.sqrt(n), s: 'σ/√n = ' + s + '/' + Math.sqrt(n) }; },
+    () => { const s = pick([5, 8, 10, 20]), z = pick([0.5, 1, 2, 2.5]); return { t: 'σ = ' + s + '. Wie viele Messungen braucht man mindestens, damit σ des Mittels höchstens ' + z + ' ist?', a: Math.ceil((s / z) ** 2), s: 'n ≥ (σ/Ziel)² = ' + LB.fmt((s / z) ** 2, 2) + ' → aufrunden', tol: 0.5 }; },
+    () => { const n = pick([100, 200, 400]), p = pick([0.2, 0.4, 0.5]), mu = n * p, sd = Math.sqrt(n * p * (1 - p)), x = Math.round(mu + pick([-1, 0.5, 1, 1.5]) * sd);
+      return { t: 'X ~ Bin(' + n + ', ' + p + '). Approximiere P(X ≤ ' + x + ') mit dem ZGS <b>ohne</b> Stetigkeitskorrektur.', a: S.Phi((x - mu) / sd), s: 'μ = ' + mu + ', σ = ' + LB.fmt(sd, 3) + ', z = ' + LB.fmt((x - mu) / sd, 3) }; },
+    () => { const n = pick([30, 50, 100]), m = pick([2, 5, 10]), s = pick([1, 2, 4]), x = n * m + pick([-1, 1, 2]) * s * Math.sqrt(n);
+      return { t: n + ' unabhängige Größen mit μ = ' + m + ', σ = ' + s + '. Approximiere P(Summe ≤ ' + LB.fmt(x, 2) + ').', a: S.normCdf(x, n * m, s * Math.sqrt(n)), s: 'S ≈ N(' + n * m + ', ' + n * s * s + '), z = ' + LB.fmt((x - n * m) / (s * Math.sqrt(n)), 3) }; }
+  ];
+  const neu = () => { cur = pick(tasks)(); document.getElementById('q5Task').innerHTML = cur.t + ' (4 Nachkommastellen bzw. ganze Zahl)'; document.getElementById('q5In').value = ''; document.getElementById('q5Res').innerHTML = ''; };
+  document.getElementById('q5New').addEventListener('click', neu);
+  document.getElementById('q5Chk').addEventListener('click', () => { const v = parseFloat(document.getElementById('q5In').value.replace(',', '.'));
+    document.getElementById('q5Res').innerHTML = (Math.abs(v - cur.a) < (cur.tol || 6e-4) ? '<b class="ok">✔ richtig.</b> ' : '<b class="bad">✗ noch nicht.</b> ') + 'Lösung: <b class="kw-res">' + LB.fmt(cur.a, 4) + '</b> · ' + cur.s; });
+  neu();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!-- title: Kap. 5 · Grenzwertsätze -->
+<!-- sub: i.i.d., Summe und Mittel, √n-Gesetz, Gesetz der großen Zahlen, zentraler Grenzwertsatz, Normalapproximation -->
+<div class="hero">
+  <div class="kick">Statistik I · Kapitel 5 von 8 · interaktiver Lernbegleiter</div>
+  <h1>Grenzwertsätze</h1>
+  <p class="lead">Was passiert, wenn man ein Zufallsexperiment sehr oft wiederholt? Zwei berühmte Sätze geben Antwort: das <b>Gesetz der großen Zahlen</b> (das Mittel strebt gegen den Erwartungswert) und der <b>Zentrale Grenzwertsatz</b> (Summe und Mittel werden, egal welche Ausgangsverteilung, näherungsweise normalverteilt). Dazu die <b>Normalapproximation</b> von Binomial und Poisson.</p>
+</div>
+<x-card t="🎨 Farblegende für Kapitel 5" src="GN">
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: gesuchte W'keit \(\Res{\Phi(z)}\), benötigtes n</div>
+    <div><b class="kw-chg">orange · Umformung</b>: Standardisieren \(\Chg{z=(x-\mu)/\sigma}\), Stetigkeitskorrektur</div>
+    <div><b class="kw-rule">lila · Satz/Operator</b>: GGZ, ZGS, \(\EE,\Var,\Phi,\Nor\)</div>
+    <div><b class="kw-par">blau · Parameter</b>: \(\Par{\mu},\Par{\sigma},\Par{n},\Par{p},\Par{\lambda}\)</div>
+    <div><b class="kw-idx">grün · Index</b>: \(\Idx{i}\) der i-ten Wiederholung</div>
+    <div><b class="kw-cond">cyan · Vergleich</b>: \(\Cond{\le}\), \(\Cond{\ge\varepsilon}\), Konvergenz \(\Cond{\to}\)</div>
+    <div><b class="kw-mem">pink · Zufallsvariablen</b>: \(\Mem{X_i}\), Summe \(\Mem{S_n}\), Mittel \(\Mem{\bar X_n}\)</div>
+  </div>
+  <div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>🔗 Roter Faden:</b> Aus vielen Einzelmessungen \(X_i\) baut man Summe \(S_n\) und Mittel \(\bar X_n\). Deren Kennzahlen kennt man exakt; ihre Verteilung ist für großes n näherungsweise normal. Das ist der Grund, warum die Normalverteilung überall auftaucht.</div>
+</x-card>
+<x-course cur="5"/>
+
+<section id="s5-0" data-m="🔬 Master-Anatomie|Leitfragen, 4-Schritte-Werkzeug">
+<h2><span class="num">5.0</span>Master-Anatomie</h2>
+<x-anat t="der ganze Kapitelinhalt in einer Zeile" f="\Mem{X_1},\dots,\Mem{X_{\Par{n}}}\ \Rule{\text{i.i.d.}}\ (\Par{\mu},\Par{\sigma^2})\ \Longrightarrow\ \Mem{\bar X_n}\ \underbrace{\Cond{\to}\ \Par{\mu}}_{\text{GGZ}}\quad\text{und}\quad \Mem{\bar X_n}\ \underbrace{\approx\ \Nor\Big(\Par{\mu},\frac{\Par{\sigma^2}}{\Par{n}}\Big)}_{\text{ZGS}}">
+  <x-a s="\text{i.i.d.}">unabhängig und identisch verteilt: die Grundannahme</x-a>
+  <x-a s="\bar X_n\to\mu">Gesetz der großen Zahlen: wohin das Mittel strebt</x-a>
+  <x-a s="\approx\Nor(\mu,\sigma^2/n)">Zentraler Grenzwertsatz: welche Verteilung es dabei hat</x-a>
+  <x-a s="\sigma^2/n">die Varianz schrumpft mit n, die Standardabweichung mit √n</x-a>
+  <x-read>„Das Mittel von n unabhängigen, gleich verteilten Größen strebt gegen mü und ist ungefähr normalverteilt mit Varianz Sigma-Quadrat durch n.“</x-read>
+</x-anat>
+<x-card t="🎓 Das agnostische Spitzenwerkzeug" src="G">
+  <ol class="cook"><li><b>ERKENNEN:</b> Geht es um viele i.i.d. Wiederholungen? Gefragt: eine Kennzahl von \(S_n\) oder \(\bar X_n\) · das Konvergenzverhalten (GGZ) · oder eine W'keit über die Normalapproximation (ZGS)?</li>
+  <li><b>WÄHLEN:</b> Kennzahl → \(\EE[S_n]=n\mu\), \(\Var(S_n)=n\sigma^2\), \(\sigma_{\bar X}=\sigma/\sqrt n\) · „Wie viele Beobachtungen für Ziel-σ?“ → √n-Gesetz · „Wahrscheinlichkeit?“ → standardisieren und Φ ablesen.</li>
+  <li><b>RECHNEN:</b> μ und σ² der Näherung bestimmen (\(S_n\): nμ, nσ²; \(\bar X_n\): μ, σ²/n; Bin: np, np(1−p); Pois: λ, λ), dann \(z=\frac{x-\mu}{\sigma}\) und \(\Phi(z)\).</li>
+  <li><b>ARTIKULIEREN:</b> „Als i.i.d.-Summe ist X nach dem ZGS näherungsweise \(\Nor(\mu,\sigma^2)\)-verteilt; die gesuchte W'keit ist Φ(z) = […].“</li></ol>
+</x-card>
+<x-card t="🧭 Die 6 Leitfragen dieses Kapitels" src="G">
+  <ol class="cook"><li><b>Was heißt i.i.d.?</b> Unabhängig und identisch verteilt.</li><li><b>Wie verhalten sich Summe und Mittel?</b> \(\EE[S_n]=n\mu\), \(\Var(S_n)=n\sigma^2\), \(\EE[\bar X_n]=\mu\), \(\Var(\bar X_n)=\sigma^2/n\).</li><li><b>Wie schnell schrumpft die Streuung des Mittels?</b> Das √n-Gesetz.</li><li><b>Wohin strebt das Mittel?</b> GGZ: \(\bar X_n\to\mu\).</li><li><b>Welche Verteilung hat \(S_n\) bzw. \(\bar X_n\)?</b> ZGS: näherungsweise normal.</li><li><b>Wie rechnet man W'keiten aus?</b> Normalapproximation: standardisieren, dann Φ.</li></ol>
+</x-card>
+</section>
+
+<!-- ============================================================ 5.1 -->
+<section id="s5-1" data-vn data-m="5.1 i.i.d.|unabhängig und identisch verteilt">
+<h2><span class="num">5.1</span>Die i.i.d.-Annahme</h2>
+<x-vn id="vn-5-1" sec="5.1" q="Welche Wiederholungen sind i.i.d., und was bringt es?">
+  <x-task>(a) Entscheide jeweils, ob \(X_1,\dots,X_n\) i.i.d. sind: (i) fünf Würfe eines fairen Würfels; (ii) fünf Kugeln nacheinander <b>ohne Zurücklegen</b> aus einer Urne mit 3 roten und 7 blauen, \(X_i=1\) falls rot; (iii) 20 Temperaturmessungen eines Sensors, der sich im Lauf des Tages erwärmt. (b) Berechne für (i) die W'keit, dass alle fünf Würfe mindestens 2 zeigen.</x-task>
+  <x-step h="Zwei Bedingungen.">i.i.d. = <b>unabhängig</b> (kein Wurf beeinflusst einen anderen) <b>und</b> <b>identisch verteilt</b> (jedes \(X_i\) hat dieselbe Verteilung).</x-step>
+  <x-step h="(i)">Würfe beeinflussen sich nicht, jeder ist gleichverteilt auf 1–6 → <b>i.i.d.</b></x-step>
+  <x-step h="(ii)">Jedes einzelne \(X_i\) ist zwar Bernoulli(0.3) (Symmetrie), aber die Züge sind <b>abhängig</b> (Kap. 1.4: \(\PP(R_2\given R_1)\ne\PP(R_2)\)) → nicht i.i.d. (Mit Zurücklegen wäre es i.i.d.)</x-step>
+  <x-step h="(iii)">Die Verteilung verschiebt sich mit der Erwärmung → <b>nicht identisch verteilt</b> → nicht i.i.d.</x-step>
+  <x-step h="(b) Unabhängigkeit ausnutzen.">
+  \[\begin{aligned}
+  \PP(X_1\ge2,\dots,X_5\ge2) &= \prod_{\Idx{i}=1}^{5}\PP(X_{\Idx{i}}\ge2) && \text{unabhängig: Produkt} \\
+  &= \Big(\tfrac56\Big)^5 && \text{identisch verteilt: fünfmal derselbe Faktor} \\
+  &\approx \Res{0.4019} && \text{ausgerechnet}
+  \end{aligned}\]</x-step>
+  <x-res>(i) i.i.d., (ii) nicht unabhängig, (iii) nicht identisch verteilt; (b) (5/6)⁵ ≈ 0.402.</x-res>
+</x-vn>
+<x-g><p>Der Erwartungswert ist das idealisierte Mittel bei unendlich vielen Wiederholungen. Um das präzise zu machen, braucht man eine Annahme über die Wiederholungen.</p></x-g>
+<x-anat t="i.i.d." f="\Mem{X_1},\ \Mem{X_2},\ \dots,\ \Mem{X_{\Par{n}}}\quad\text{sind}\quad\Rule{\text{i.i.d.}}" src="G">
+  <x-a s="\Mem{X_i}">die i-te Wiederholung des Zufallsexperiments (z. B. der i-te Münzwurf, die i-te Messung)</x-a>
+  <x-a s="\text{i.i.d.}">independent and identically distributed: unabhängig (keine Wechselwirkung) und identisch verteilt (alle \(X_i\) haben dieselbe Verteilung)</x-a>
+  <x-read>„Die Zufallsvariablen X eins bis X n sind unabhängig und identisch verteilt“: ein Postulat, das in der Praxis oft vernünftig ist und die Rechnungen enorm vereinfacht.</x-read>
+</x-anat>
+<x-pt><x-q>Du wirfst einen fairen Würfel 50-mal. Sind die Würfe \(X_1,\dots,X_{50}\) i.i.d.?</x-q><x-e>Zwei Bedingungen prüfen: unabhängig? identisch verteilt?</x-e><x-l>Jeder Wurf beeinflusst die anderen nicht und hat dieselbe Verteilung 1–6 mit je 1/6. Beides erfüllt.</x-l><x-s>„Ja, die 50 Würfe sind i.i.d.: unabhängig und identisch verteilt.“</x-s></x-pt>
+<x-vids><x-vid f="init2/Population Statistics and Random Sampling [OlkL1YatyHI].mp4" n="Zufallsstichprobe"/><x-vid f="statquest/Sampling from a Distribution, Clearly Explained!!! [XLCWeSVzHUU].mp4" n="aus einer Verteilung ziehen"/></x-vids>
+</section>
+
+<!-- ============================================================ 5.2 -->
+<section id="s5-2" data-vn data-m="5.2 Summe & Mittel|E, Var von S_n und X̄_n, √n-Gesetz">
+<h2><span class="num">5.2</span>Summen und arithmetische Mittel</h2>
+<x-vn id="vn-5-2" sec="5.2" q="Wie viele Messungen braucht man für eine gewünschte Genauigkeit?">
+  <x-task>Ein Messgerät misst eine Länge mit zufälligem Fehler: \(X_i\) i.i.d. mit \(\mu=50\) mm und \(\sigma=6\) mm. (a) Berechne \(\EE[S_{36}]\), \(\Var(S_{36})\), \(\sigma_{S_{36}}\). (b) Berechne \(\EE[\bar X_{36}]\) und \(\sigma_{\bar X_{36}}\). (c) Wie viele Messungen braucht man, damit \(\sigma_{\bar X}=0.5\) mm ist?</x-task>
+  <x-step h="(a) Summe: alles wächst linear, σ mit √n.">\(\EE[S_{36}]=36\cdot50=\Res{1800}\), \(\Var(S_{36})=36\cdot36=\Res{1296}\), \(\sigma_{S}=\sqrt{36}\cdot6=\Res{36}\) mm.</x-step>
+  <x-step h="(b) Mittel: E bleibt, σ schrumpft mit √n.">\(\EE[\bar X_{36}]=\Res{50}\), \(\sigma_{\bar X}=\tfrac{6}{\sqrt{36}}=\Res{1}\) mm.</x-step>
+  <x-step h="(c) √n-Gesetz nach n auflösen.">
+  \[\begin{aligned}
+  \frac{\sigma}{\sqrt n} &= 0.5 && \text{Ziel} \\
+  \sqrt n &= \frac{6}{0.5}=12 && \text{umgestellt} \\
+  n &= \Res{144} && \text{halbe Streuung kostet viermal so viele Messungen}
+  \end{aligned}\]</x-step>
+  <x-res>E[S₃₆] = 1800, Var = 1296, σ_S = 36; E[X̄] = 50, σ_X̄ = 1; für 0.5 mm braucht man n = 144.</x-res>
+  <x-trap>\(\Var(\bar X_n)=\sigma^2/n\), aber \(\sigma_{\bar X}=\sigma/\sqrt n\) (nicht \(\sigma/n\)). Und die Formeln brauchen Unabhängigkeit, sonst kommen Kovarianzen dazu (Kap. 4).</x-trap>
+</x-vn>
+<x-g><p>Aus \(X_1,\dots,X_n\) bildet man zwei wichtige neue Zufallsvariablen: die <b>Summe</b> und das <b>arithmetische Mittel</b>.</p></x-g>
+<x-anat t="Summe S_n und Mittel X̄_n" f="\Mem{S_n}=X_1+\dots+X_{\Par{n}},\qquad \Mem{\bar X_n}=\frac1{\Par{n}}\sum_{\Idx{i}=1}^{\Par{n}}X_{\Idx{i}}=\frac1{\Par{n}}S_n" src="G">
+  <x-a s="S_n">die Summe aller n Wiederholungen</x-a>
+  <x-a s="\bar X_n">das arithmetische Mittel: Summe durch n. „X quer n“</x-a>
+  <x-a s="X_i\in\{0,1\}">Spezialfall: dann ist \(\bar X_n\) genau die relative Häufigkeit des Ereignisses</x-a>
+  <x-read>„S n ist die Summe X eins bis X n; X quer n ist ein Entel mal diese Summe.“</x-read>
+</x-anat>
+<x-pt><x-q>\(X_1,\dots,X_4\) i.i.d. mit \(\EE[X_i]=10\). Berechne \(\EE[S_4]\).</x-q><x-e>Erwartungswert einer i.i.d.-Summe → n·E[Xᵢ].</x-e><x-l>\(4\cdot10=\Res{40}\).</x-l><x-s>„Der Erwartungswert der Summe ist n mal E[Xᵢ] = 40.“</x-s></x-pt>
+<x-anat t="Kennzahlen von S_n und X̄_n" src="G">
+  <div class="anat-f">\[\begin{aligned}
+  \EE[S_n] &= n\,\EE[X_i], & \Var(S_n) &= n\,\Var(X_i), & \sigma_{S_n} &= \sqrt n\,\sigma_{X_i} \\
+  \EE[\bar X_n] &= \EE[X_i], & \Var(\bar X_n) &= \tfrac1n\Var(X_i), & \sigma_{\bar X_n} &= \tfrac1{\sqrt n}\,\sigma_{X_i}
+  \end{aligned}\]</div>
+  <x-a s="\text{Summe}">E und Var wachsen linear mit n, die Standardabweichung mit √n, also langsamer als n</x-a>
+  <x-a s="\text{Mittel}">E bleibt gleich (μ); Var schrumpft mit 1/n, σ mit 1/√n</x-a>
+  <x-a s="\text{zentral}">für Var und σ ist die Unabhängigkeit entscheidend (sonst käme 2·Cov dazu)</x-a>
+  <x-why>Kap. 4: \(\Var(\sum X_i)=\sum\Var(X_i)=n\sigma^2\) bei Unabhängigkeit, und \(\Var(\tfrac1nS_n)=\tfrac1{n^2}\Var(S_n)=\tfrac{\sigma^2}{n}\).</x-why>
+  <x-read>„Die Summe streut absolut immer mehr, aber relativ immer weniger; das Mittel zieht sich um mü zusammen.“</x-read>
+</x-anat>
+<x-pt><x-q>\(X_1,\dots,X_{25}\) i.i.d. mit \(\Var(X_i)=9\). Berechne \(\Var(S_{25})\) und \(\sigma_{\bar X_{25}}\).</x-q><x-e>Varianz der Summe → ×n; σ des Mittels → σ/√n.</x-e><x-l>\(25\cdot9=\Res{225}\); \(\tfrac{3}{5}=\Res{0.6}\).</x-l><x-s>„Var(S₂₅)=225 und die Standardabweichung des Mittels ist 3/5 = 0.6.“</x-s></x-pt>
+<x-card t="🧱 Bauplan: 100 Würfelwürfe mitteln" src="G">
+  <p>Fairer Würfel: \(\EE[X_i]=3.5\), \(\Var(X_i)=\tfrac{35}{12}\approx2.917\); n = 100.</p>
+  \[\begin{aligned}
+  \EE[\bar X_{100}] &= \Res{3.5} && \text{unverändert} \\
+  \Var(\bar X_{100}) &= \tfrac{2.917}{100}\approx\Res{0.0292} && \div n \\
+  \sigma_{\bar X_{100}} &= \tfrac{1.708}{10}\approx\Res{0.171} && \div\sqrt n
+  \end{aligned}\]
+  <p>Das Mittel aus 100 Würfen liegt fast sicher sehr nahe bei 3.5.</p>
+</x-card>
+<x-card t="🔧 Ausnahmen: wenn die Verteilung von S_n exakt bekannt ist" src="G">
+  <div class="anat">
+    <div><span class="sym">\(\text{Bernoulli}\)</span><span>\(X_i\in\{0,1\}\), \(\PP(X_i=1)=p\) ⟹ \(S_n\sim\Bin(n,p)\)</span></div>
+    <div><span class="sym">\(\text{Poisson}\)</span><span>\(X_i\sim\Pois(\lambda)\) ⟹ \(S_n\sim\Pois(n\lambda)\)</span></div>
+    <div><span class="sym">\(\text{Normal}\)</span><span>\(X_i\sim\Nor(\mu,\sigma^2)\) ⟹ \(S_n\sim\Nor(n\mu,n\sigma^2)\), \(\bar X_n\sim\Nor(\mu,\sigma^2/n)\) exakt</span></div>
+  </div>
+  <p>Beim Normalfall ist das Mittel exakt normal, kein „für großes n“ nötig. Das ist der Grenzfall, dem sich alle anderen annähern (ZGS).</p>
+</x-card>
+<x-anat t="das √n-Gesetz" f="\sigma_{\bar X_n}=\frac{\sigma_{X_i}}{\sqrt{\Par{n}}}" src="G">
+  <x-a s="\sqrt n">die Streuung des Mittels nimmt mit \(1/\sqrt n\) ab, nicht mit 1/n. Präzision kostet</x-a>
+  <x-a s="\text{Faustregel}">σ halbieren → 4× so viele Beobachtungen; dritteln → 9×</x-a>
+  <x-read>„Die Standardabweichung des Mittels ist Sigma durch Wurzel n“: doppelte Genauigkeit kostet vierfachen Aufwand.</x-read>
+</x-anat>
+<x-pt><x-q>Bei \(\sigma=10\) und n = 25 ist \(\sigma_{\bar X}=2\). Wie viele Beobachtungen für \(\sigma_{\bar X}=1\)?</x-q><x-e>σ/√n nach n auflösen.</x-e><x-l>\(1=\tfrac{10}{\sqrt n}\Rightarrow n=\Res{100}\) (4× so viele).</x-l><x-s>„Um σ von 2 auf 1 zu halbieren, braucht man das Vierfache: n = 100.“</x-s></x-pt>
+<x-viz t="das √n-Gesetz" src="G">
+  <div class="ctl"><label>Stichprobengröße n <input type="range" id="snN" min="1" max="400" value="25"><output for="snN"></output></label></div>
+  <div class="two"><div id="snPlot" class="plot"></div><div id="snCurve" class="plot"></div></div>
+  <div class="recog"><b>Erkennbar an:</b> links zieht sich die Glocke \(\Nor(3.5,\sigma^2/n)\) des Würfel-Mittels zusammen; rechts \(\sigma/\sqrt n\) gegen n: der Gewinn an Genauigkeit wird immer kleiner.</div>
+</x-viz>
+<x-vids><x-vid f="init2/Random Sampling in Statistics： Expected Value and Variance of the Sample Mean [Gg3d-rn9eEU].mp4" n="E und Var des Mittels"/><x-vid f="statquest/Standard Deviation vs Standard Error, Clearly Explained!!! [A82brFpdr9g].mp4" n="σ vs. σ/√n"/></x-vids>
+</section>
+
+<!-- ============================================================ 5.3 GGZ -->
+<section id="s5-3" data-vn data-m="5.3 Gesetz der großen Zahlen|X̄_n → μ, Tschebyschow">
+<h2><span class="num">5.3</span>Gesetz der großen Zahlen</h2>
+<x-vn id="vn-5-3" sec="5.3" q="Wie weit weicht das Mittel von 100 Würfen höchstens ab?">
+  <x-task>\(\bar X_{100}\) sei das Mittel von 100 Würfen eines fairen Würfels. (a) Wogegen strebt \(\bar X_n\) für \(n\to\infty\)? (b) ✚ Schätze \(\PP(|\bar X_{100}-3.5|\ge0.5)\) mit der Ungleichung von Tschebyschow nach oben ab. (c) Vergleiche mit der ZGS-Näherung.</x-task>
+  <x-step h="(a) GGZ.">\(\EE[X_i]=3.5\), also \(\bar X_n\to\Res{3.5}\).</x-step>
+  <x-step h="(b) ✚ Tschebyschow: \(\PP(|Y-\EE Y|\ge\varepsilon)\le\Var(Y)/\varepsilon^2\).">
+  \[\begin{aligned}
+  \Var(\bar X_{100}) &= \frac{35/12}{100}\approx0.02917 && \text{aus 5.2} \\
+  \PP(|\bar X_{100}-3.5|\ge0.5) &\le \frac{0.02917}{0.5^2}\approx\Res{0.117} && \text{Tschebyschow, gilt für jede Verteilung}
+  \end{aligned}\]</x-step>
+  <x-step h="(c) ZGS-Näherung.">\(\sigma_{\bar X}\approx0.1708\), \(z=0.5/0.1708\approx2.93\): \(\PP\approx2(1-\Phi(2.93))\approx\Res{0.0034}\). Tschebyschow ist eine grobe, aber immer gültige Schranke.</x-step>
+  <x-res>\(\bar X_n\to3.5\); Tschebyschow: ≤ 0.117; ZGS: ≈ 0.0034.</x-res>
+</x-vn>
+<x-anat t="Gesetz der großen Zahlen (GGZ)" f="X_1,\dots,X_n\ \text{i.i.d. mit}\ \EE[X_i]=\Par{\mu}\quad\Longrightarrow\quad\Mem{\bar X_n}\ \Cond{\longrightarrow}\ \Par{\mu}\quad(n\to\infty)" src="G">
+  <x-a s="\text{GGZ}">das arithmetische Mittel konvergiert gegen den Erwartungswert; weil \(\Var(\bar X_n)\to0\), bleibt im Limes keine Variabilität</x-a>
+  <x-a s="f_n(A)\to\PP(A)">Spezialfall: die relative Häufigkeit eines Ereignisses strebt gegen seine W'keit (Frequenz-Interpretation aus Kap. 1)</x-a>
+  <x-read>„X quer n konvergiert gegen mü, wenn n gegen unendlich geht“: je mehr Daten, desto näher liegt das Mittel am wahren Wert.</x-read>
+</x-anat>
+<x-card t="🔍 ✚ Beweisidee mit der Ungleichung von Tschebyschow (Henze)">
+  <p>Für jede Zufallsvariable Y mit endlicher Varianz und jedes \(\varepsilon>0\) gilt \(\PP(|Y-\EE[Y]|\ge\varepsilon)\le\frac{\Var(Y)}{\varepsilon^2}\). Mit \(Y=\bar X_n\):</p>
+  \[\begin{aligned}
+  \PP(|\bar X_n-\mu|\Cond{\ge}\varepsilon) &\le \frac{\Var(\bar X_n)}{\varepsilon^2} && \text{Tschebyschow} \\
+  &= \frac{\sigma^2}{n\,\varepsilon^2} && \text{√n-Gesetz} \\
+  &\longrightarrow 0\quad(n\to\infty) && \text{für jedes feste }\varepsilon>0
+  \end{aligned}\]
+  <p>Das ist das <b>schwache Gesetz der großen Zahlen</b>. In der Grundlage (Meier) steht nur die Aussage; in Henze wird sie so bewiesen.</p>
+  <x-vids><x-vid f="init/Chebyshev's Inequality in Probability： Second Order Estimates [otCHN3s52ho].mp4" n="Tschebyschow"/><x-vid f="init/Markov's Inequality in Probability： First Order Estimates [onZSWfbTeho].mp4" n="Markov (Vorstufe)"/></x-vids>
+</x-card>
+<x-pt><x-q>\(\bar X_n\) ist das Mittel von n Würfen eines fairen Würfels. Wogegen strebt \(\bar X_n\)?</x-q><x-e>GGZ: Mittel → μ.</x-e><x-l>\(\EE[X_i]=\tfrac{1+\dots+6}{6}=3.5\Rightarrow\bar X_n\to\Res{3.5}\).</x-l><x-s>„Nach dem Gesetz der großen Zahlen strebt X̄ₙ gegen μ = 3.5.“</x-s></x-pt>
+<x-viz t="GGZ: das laufende Mittel" src="G">
+  <div class="ctl"><button class="btn" id="ggNew">🎲 neu würfeln</button><label>Würfe n <input type="range" id="ggN" min="50" max="5000" step="50" value="1000"><output for="ggN"></output></label></div>
+  <div id="ggPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> fünf Serien; jede Linie ist das laufende Mittel nach n Würfen. Alle streben gegen μ = 3.5 (rot), anfangs zappelig, dann immer ruhiger. Die gestrichelten Linien zeigen \(3.5\pm2\sigma/\sqrt n\).</div>
+</x-viz>
+<x-vids><x-vid f="init/The Law of Large Numbers [0VoRWJMt6mk].mp4" n="GGZ"/></x-vids>
+</section>
+
+<!-- ============================================================ 5.3 ZGS -->
+<section id="s5-4" data-vn data-m="5.3 Zentraler Grenzwertsatz|S_n ≈ N(nμ, nσ²), egal welche Verteilung">
+<h2><span class="num">5.3</span>Zentraler Grenzwertsatz</h2>
+<x-vn id="vn-5-4" sec="5.3" q="Gesamte Bedienzeit von 50 Kunden">
+  <x-task>Die Bedienzeiten \(X_1,\dots,X_{50}\) von 50 Kunden seien i.i.d. exponentialverteilt mit Erwartungswert 2 Minuten. (a) Bestimme \(\EE[S_{50}]\) und \(\sigma_{S_{50}}\). (b) Approximiere mit dem ZGS die W'keit, dass alle zusammen länger als 110 Minuten brauchen. (c) Wie groß ist näherungsweise \(\PP(\bar X_{50}\le1.8)\)?</x-task>
+  <x-step h="Parameter der Einzelzeit.">Exp mit \(\EE=2\) → \(\lambda=0.5\), \(\sigma=1/\lambda=2\), \(\sigma^2=4\).</x-step>
+  <x-step h="(a)">\(\EE[S_{50}]=50\cdot2=\Res{100}\), \(\Var(S_{50})=50\cdot4=200\), \(\sigma_S=\sqrt{200}\approx\Res{14.14}\).</x-step>
+  <x-step h="(b) ZGS: S ≈ N(100, 200).">
+  \[\begin{aligned}
+  \PP(S_{50}>110) &\approx 1-\Phi\Big(\frac{110-100}{14.14}\Big) && \text{standardisiert} \\
+  &= 1-\Phi(0.707)\approx\Res{0.240} && \text{Tabelle}
+  \end{aligned}\]
+  (Exakt, da \(S_{50}\) eine Gammaverteilung hat: 0.232, die Näherung ist gut.)</x-step>
+  <x-step h="(c) Mittel: N(μ, σ²/n).">\(\sigma_{\bar X}=2/\sqrt{50}\approx0.283\); \(\PP(\bar X\le1.8)\approx\Phi\big(\tfrac{1.8-2}{0.283}\big)=\Phi(-0.707)\approx\Res{0.240}\).</x-step>
+  <x-res>E[S] = 100 min, σ_S ≈ 14.1 min; P(S > 110) ≈ 0.24; P(X̄ ≤ 1.8) ≈ 0.24.</x-res>
+  <x-trap>Der ZGS gilt für Summen und Mittel, <b>nicht</b> für die einzelne Bedienzeit: \(\PP(X_1>2.2)\) ist exakt \(e^{-1.1}\), nicht Φ-Rechnung.</x-trap>
+</x-vn>
+<x-anat t="Zentraler Grenzwertsatz (ZGS)" f="X_1,\dots,X_n\ \text{i.i.d.},\ \EE=\Par{\mu},\ \Var=\Par{\sigma^2}\ \Longrightarrow\ \Mem{S_n}\approx\Nor(\Par{n}\Par{\mu},\ \Par{n}\Par{\sigma^2}),\quad \Mem{\bar X_n}\approx\Nor\Big(\Par{\mu},\ \frac{\Par{\sigma^2}}{\Par{n}}\Big)" src="G">
+  <x-a s="\text{ZGS}">für großes n sind Summe und Mittel näherungsweise normalverteilt, egal welche Verteilung die \(X_i\) haben!</x-a>
+  <x-a s="\approx\Nor">die Kennzahlen kennt man schon (5.2); der ZGS liefert zusätzlich die Form: die Glockenkurve</x-a>
+  <x-a s="\text{standardisiert}">äquivalent: \(\frac{S_n-n\mu}{\sigma\sqrt n}\approx\Nor(0,1)\), also \(\PP(S_n\le x)\approx\Phi\big(\frac{x-n\mu}{\sigma\sqrt n}\big)\)</x-a>
+  <x-read>„Die Summe ist näherungsweise normalverteilt mit Erwartungswert n mü und Varianz n Sigma-Quadrat; das Mittel mit mü und Sigma-Quadrat durch n.“</x-read>
+</x-anat>
+<x-pt><x-q>\(X_1,\dots,X_{100}\) i.i.d. mit \(\mu=5\), \(\sigma^2=4\). Welche Näherungsverteilung hat \(\bar X_{100}\)?</x-q><x-e>ZGS für das Mittel → N(μ, σ²/n).</x-e><x-l>\(\Nor(5,\ 0.04)\), also \(\sigma_{\bar X}=\Res{0.2}\).</x-l><x-s>„Das Mittel ist näherungsweise N(5, 0.04)-verteilt, mit σ = 0.2.“</x-s></x-pt>
+<x-viz t="der ZGS „wächst“" src="G">
+  <div class="ctl"><span class="seg" id="zgSeg"><button class="btn on" data-d="uni">Uniform</button><button class="btn" data-d="bern">Bernoulli (0/1, p = 0.2)</button><button class="btn" data-d="exp">Exponential</button><button class="btn" data-d="die">Würfel</button></span>
+  <label>Summanden n <input type="range" id="zgN" min="1" max="60" value="1"><output for="zgN"></output></label></div>
+  <div id="zgPlot" class="plot"></div>
+  <div class="recog"><b>Erkennbar an:</b> Histogramm des Mittels aus 4000 Stichproben. Schon bei wenigen Summanden wird es glockenförmig; die lila Kurve ist die ZGS-Näherung \(\Nor(\mu,\sigma^2/n)\). Bei der schiefen Exponentialverteilung dauert es länger.</div>
+</x-viz>
+<x-code2 f="k5_zgs" t="ZGS und GGZ simulieren"/>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>📌 Merksatz: wann ist etwas normalverteilt?</b> Immer wenn eine Zufallsvariable als <b>Summe vieler kleiner unabhängiger Effekte</b> aufgefasst werden kann, ist sie nach dem ZGS in erster Näherung normalverteilt. Das wichtigste Beispiel sind Messfehler. Multiplizieren sich die Effekte eher, kommt man zur Lognormal-Verteilung.</div>
+<x-vids><x-vid f="init/The Central Limit Theorem [ckkrS752tjU].mp4" n="ZGS"/><x-vid f="statquest/The Central Limit Theorem, Clearly Explained!!! [YAlJCEDH2uY].mp4" n="StatQuest"/><x-vid f="init2/Normal Approximation to Sample Mean [Arbj9SoU9Cs].mp4" n="Mittel ≈ normal"/></x-vids>
+</section>
+
+<!-- ============================================================ 5.3.1 Normalapproximation -->
+<section id="s5-5" data-vn data-m="5.3.1 Normalapproximation|Bin, Pois ≈ N, Stetigkeitskorrektur">
+<h2><span class="num">5.3.1</span>Normalapproximation von Binomial und Poisson</h2>
+<x-vn id="vn-5-5" sec="5.3.1" q="Bin(100, 0.3): P(X ≤ 25) mit und ohne Stetigkeitskorrektur">
+  <x-task>\(X\sim\Bin(100,\,0.3)\). (a) Approximiere \(\PP(X\le25)\) mit dem ZGS. (b) ✚ Wiederhole mit Stetigkeitskorrektur. (c) Vergleiche mit dem exakten Wert 0.1631. (d) \(Y\sim\Pois(100)\): approximiere \(\PP(Y\ge115)\) mit Korrektur.</x-task>
+  <x-step h="μ und σ.">\(\mu=np=30\), \(\sigma=\sqrt{np(1-p)}=\sqrt{21}\approx4.583\).</x-step>
+  <x-step h="(a) ohne Korrektur.">\(z=\tfrac{25-30}{4.583}=-1.091\), \(\PP\approx\Phi(-1.091)\approx\Res{0.1376}\).</x-step>
+  <x-step h="(b) ✚ mit Korrektur: der Balken bei 25 reicht bis 25.5.">\(z=\tfrac{25.5-30}{4.583}=-0.982\), \(\PP\approx\Phi(-0.982)\approx\Res{0.1631}\).</x-step>
+  <x-step h="(c) Vergleich.">Exakt (R: <code>pbinom(25, 100, 0.3)</code>) 0.1631: die korrigierte Näherung trifft auf vier Stellen, die unkorrigierte liegt 0.025 daneben.</x-step>
+  <x-step h="(d) Poisson.">\(\mu=\sigma^2=100\), \(\sigma=10\). „≥ 115“ = „> 114“, Grenze 114.5: \(1-\Phi(1.45)\approx\Res{0.0735}\) (exakt 0.0759; ohne Korrektur 0.0668).</x-step>
+  <x-res>(a) 0.138, (b) 0.163, exakt 0.163; (d) ≈ 0.074.</x-res>
+  <x-trap>Die Stetigkeitskorrektur steht nicht in der Grundlage (Meier). Wenn die Aufgabe sie nicht verlangt, beide Werte kennen und die Konvention der Vorlesung nehmen.</x-trap>
+</x-vn>
+<x-anat t="Normalapproximation der Binomialverteilung" f="X\sim\Bin(\Par{n},\Par{p}):\qquad\PP(X\le x)\approx\Phi\Big(\Chg{\frac{x-\Par{n}\Par{p}}{\sqrt{\Par{n}\Par{p}(1-\Par{p})}}}\Big)" src="G">
+  <x-a s="\text{Idee}">Bin(n, p) ist eine i.i.d.-Summe von Bernoulli-Variablen, nach dem ZGS also für großes n normal</x-a>
+  <x-a s="\mu,\ \sigma^2">\(\mu=np\), \(\sigma^2=np(1-p)\); damit standardisieren und \(\Phi(z)\) ablesen</x-a>
+  <x-a s="\text{Poisson}">\(X\sim\Pois(\lambda)\), λ groß: \(\PP(X\le x)\approx\Phi\big(\tfrac{x-\lambda}{\sqrt\lambda}\big)\)</x-a>
+  <x-a s="\text{Faustregel}">brauchbar, wenn \(np(1-p)\) groß ist (oft: \(\ge9\)); ✚ Korrektur: \(x\to x+0.5\)</x-a>
+  <x-read>„P von X kleiner gleich x ist ungefähr Phi von x minus n p, geteilt durch Wurzel aus n p mal eins minus p.“</x-read>
+</x-anat>
+<x-pt><x-q>\(X\sim\Bin(100,0.5)\). Approximiere \(\PP(X\le55)\).</x-q><x-e>Binomial → N(np, np(1−p)).</x-e><x-l>\(\mu=50\), \(\sigma=5\); \(z=1\Rightarrow\Phi(1)\approx\Res{0.841}\).</x-l><x-s>„Mit μ=50, σ=5 ist z=1, also P(X≤55) ≈ Φ(1) ≈ 0.841.“</x-s></x-pt>
+<x-card t="🧱 Bauplan: 1000 Münzwürfe, höchstens 530-mal Kopf" src="G">
+  <p>\(X\sim\Bin(1000,0.5)\). Gesucht \(\PP(X\le530)\).</p>
+  \[\begin{aligned}
+  \mu &= 1000\cdot0.5=500,\quad\sigma^2=1000\cdot0.5\cdot0.5=250 && \text{Parameter der Näherung} \\
+  z &= \frac{530-500}{\sqrt{250}}=\frac{30}{15.81}\approx1.897 && \text{standardisieren} \\
+  \PP(X\le530) &\approx \Phi(1.897)\approx\Res{0.971} && \text{Tabelle}
+  \end{aligned}\]
+  <p>Also ~97 % (exakt 0.973).</p>
+</x-card>
+<x-viz t="Normalapproximation der Binomialverteilung" src="G">
+  <div class="ctl"><label>n <input type="range" id="naN" min="5" max="200" value="30"><output for="naN"></output></label>
+  <label>p <input type="range" id="naP" min="0.02" max="0.98" step="0.01" value="0.5" data-fmt="2"><output for="naP"></output></label>
+  <label>x <input type="range" id="naX" min="0" max="200" value="17"><output for="naX"></output></label></div>
+  <div id="naPlot" class="plot"></div>
+  <div class="out" id="naOut"></div>
+  <div class="recog"><b>Erkennbar an:</b> Stäbe (blau) gegen \(\Nor(np,np(1-p))\) (lila). Für großes n und p nicht zu nah an 0 oder 1 schmiegt sich die Glocke an die Stäbe.</div>
+</x-viz>
+<div id="trNa"></div>
+<x-code2 f="k5_normapprox" t="Normalapproximation"/>
+<h3 id="s5-5-a" data-m="Schema & Beispiele 5|Modell → Näherung → Φ">📐 Schema: Grenzwertsatz-Aufgabe in 3 Schritten</h3>
+<ol class="cook is-g"><li><b>Modell:</b> n i.i.d. \(X_i\) mit μ und σ². Geht es um die Summe oder das Mittel?</li><li><b>Näherung:</b> \(S_n\approx\Nor(n\mu,n\sigma^2)\), \(\bar X_n\approx\Nor(\mu,\sigma^2/n)\), Bin ≈ N(np, np(1−p)).</li><li><b>Rechnen:</b> \(z=(x-\mu)/\sigma\), dann Φ(z) (bzw. σ/√n fürs √n-Gesetz).</li></ol>
+<x-ex3>
+  <x-ex l="1" t="Einfach" src="G">\(\sigma=10\), n = 25.<x-v>σ des Mittels = 10/√25 = 2 (reines √n-Gesetz).</x-v></x-ex>
+  <x-ex l="2" t="Mittel" src="G">Bin(100, 0.5), P(X ≤ 55).<x-v>μ = 50, σ = 5 → Φ(1) = 0.841 (mit Korrektur Φ(1.1) = 0.864 = exakt).</x-v></x-ex>
+  <x-ex l="3" t="Aufbauend" src="G">1000 Münzwürfe, P(X ≤ 530).<x-v>μ = 500, σ² = 250 → Φ(1.897) ≈ 0.97 (voller Dreischritt).</x-v></x-ex>
+</x-ex3>
+<x-vids><x-vid f="init/The Normal Distribution： The Limit of Binomial Distribution for Large ＂n＂ [8n1n0OM4gLk].mp4" n="Binomial → Normal"/><x-vid f="init2/Central Limit Theorem Example & Hypothesis Testing [bOrihOzYXWA].mp4" n="ZGS-Beispiel (Test-Teil: Kap. 7)"/></x-vids>
+</section>
+
+<section id="s5-9" data-m="🌉 Brücke & Lernziele|von vielen Messungen zur Glocke">
+<h2>🌉 Die große Brücke: von vielen Messungen zur Glockenkurve</h2>
+<x-card t="🧵 Fluss-Diagramm" src="G">
+<svg viewBox="0 0 1200 300" role="img" aria-label="Fluss von Kapitel 5">
+  <defs><marker id="arrK5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker></defs>
+  <g font-family="Source Sans 3, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="430" y="10" width="340" height="56" rx="10" fill="#1c2129" stroke="#f778ba"/><text x="600" y="34" fill="#f778ba" font-weight="700">i.i.d. Stichprobe X₁, …, Xₙ</text><text x="600" y="56" fill="#8b949e">μ = E[Xᵢ], σ² = Var(Xᵢ)</text>
+    <rect x="80" y="110" width="440" height="56" rx="10" fill="#1c2129" stroke="#58a6ff"/><text x="300" y="134" fill="#58a6ff" font-weight="700">Summe Sₙ: E = nμ · Var = nσ² · σ = √n σ</text><text x="300" y="156" fill="#8b949e">streut absolut mehr</text>
+    <rect x="680" y="110" width="440" height="56" rx="10" fill="#1c2129" stroke="#d29922"/><text x="900" y="134" fill="#d29922" font-weight="700">Mittel X̄ₙ: E = μ · Var = σ²/n · σ/√n</text><text x="900" y="156" fill="#8b949e">√n-Gesetz: Präzision ∝ √Aufwand</text>
+    <rect x="80" y="210" width="330" height="56" rx="10" fill="#1c2129" stroke="#3fb950"/><text x="245" y="234" fill="#3fb950" font-weight="700">GGZ: X̄ₙ → μ</text><text x="245" y="256" fill="#8b949e">(✚ Tschebyschow)</text>
+    <rect x="435" y="210" width="330" height="56" rx="10" fill="#1c2129" stroke="#bc8cff"/><text x="600" y="234" fill="#bc8cff" font-weight="700">ZGS: Sₙ ≈ N(nμ, nσ²)</text><text x="600" y="256" fill="#8b949e">egal welche Ausgangsverteilung</text>
+    <rect x="790" y="210" width="330" height="56" rx="10" fill="#1c2129" stroke="#f85149"/><text x="955" y="234" fill="#f85149" font-weight="700">Normalapproximation</text><text x="955" y="256" fill="#8b949e">Bin, Pois, Messfehler → Φ(z)</text>
+    <line x1="560" y1="66" x2="320" y2="108" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="640" y1="66" x2="880" y2="108" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="820" y1="166" x2="260" y2="208" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="880" y1="166" x2="620" y2="208" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+    <line x1="765" y1="238" x2="788" y2="238" stroke="#8b949e" stroke-width="1.6" marker-end="url(#arrK5)"/>
+  </g>
+</svg>
+<p><b>→ Wofür brauchst du das in Kapitel 6?</b> Ab jetzt beginnt die schließende Statistik. \(\bar X_n\) wird zum <span class="kw kw-chg">Schätzer</span> für μ, \(\sigma/\sqrt n\) zum <span class="kw kw-res">Standardfehler</span>, und der ZGS liefert Vertrauensintervalle \(\bar x\pm1.96\,\sigma/\sqrt n\).</p>
+</x-card>
+<x-card t="✅ Lernziele-Check (5.4)" src="G">
+  <ul><li>Ich weiß, was die i.i.d.-Annahme bedeutet und warum sie zentral ist.</li><li>Ich kenne das Gesetz der großen Zahlen und das √n-Gesetz (σ des Mittels ∝ 1/√n).</li><li>Ich kenne den Zentralen Grenzwertsatz und kann ihn anwenden (Normalapproximation von Bin/Pois, Standardisieren, Φ ablesen).</li><li>✚ Ich kann mit Tschebyschow abschätzen und die Stetigkeitskorrektur anwenden.</li></ul>
+</x-card>
+</section>
+
+<section id="s5-cheat" data-m="📋 Cheat-Sheet|Formeln Kap. 5">
+<h2>📋 Cheat-Sheet Kapitel 5</h2>
+<table class="tbl cheat">
+<tr><th>Was</th><th>Formel</th><th>R</th><th>Python</th></tr>
+<tr><td>Summe</td><td>\(\EE=n\mu,\ \Var=n\sigma^2\)</td><td>—</td><td>—</td></tr>
+<tr><td>Mittel</td><td>\(\EE=\mu,\ \sigma_{\bar X}=\sigma/\sqrt n\)</td><td><code>sigma/sqrt(n)</code></td><td><code>sigma/np.sqrt(n)</code></td></tr>
+<tr><td>n für Ziel-σ</td><td>\(n=(\sigma/\sigma_{\text{Ziel}})^2\)</td><td><code>ceiling((s/z)^2)</code></td><td><code>math.ceil((s/z)**2)</code></td></tr>
+<tr><td>GGZ</td><td>\(\bar X_n\to\mu\)</td><td><code>cumsum(x)/seq_along(x)</code></td><td><code>np.cumsum(x)/np.arange(1,n+1)</code></td></tr>
+<tr><td>✚ Tschebyschow</td><td>\(\PP(|Y-\EE Y|\ge\varepsilon)\le\Var Y/\varepsilon^2\)</td><td>—</td><td>—</td></tr>
+<tr><td>ZGS</td><td>\(\PP(S_n\le x)\approx\Phi\big(\frac{x-n\mu}{\sigma\sqrt n}\big)\)</td><td><code>pnorm(x, n*mu, sqrt(n)*sigma)</code></td><td><code>norm.cdf(x, n*mu, np.sqrt(n)*sigma)</code></td></tr>
+<tr><td>Bin ≈ N</td><td>\(\Phi\big(\frac{x(+0.5)-np}{\sqrt{np(1-p)}}\big)\)</td><td><code>pnorm(x+0.5, n*p, sqrt(n*p*(1-p)))</code></td><td>analog</td></tr>
+<tr><td>Pois ≈ N</td><td>\(\Phi\big(\frac{x(+0.5)-\lambda}{\sqrt\lambda}\big)\)</td><td><code>pnorm(x+0.5, l, sqrt(l))</code></td><td>analog</td></tr>
+</table>
+</section>
+
+<section id="s5-glossar" data-m="📚 Glossar|Fachwörter deutsch/englisch">
+<h2>📚 Fachwörter-Glossar</h2>
+<table class="tbl">
+<tr><th>Begriff</th><th>englisch</th><th>intuitiv</th><th>wo</th></tr>
+<tr><td><span class="kw kw-rule">i.i.d.</span></td><td>independent and identically distributed</td><td>unabhängig und gleich verteilt</td><td><a href="#s5-1">5.1</a></td></tr>
+<tr><td><span class="kw kw-mem">Summe Sₙ</span></td><td>sum</td><td>E = nμ, Var = nσ²</td><td><a href="#s5-2">5.2</a></td></tr>
+<tr><td><span class="kw kw-mem">arithmetisches Mittel X̄ₙ</span></td><td>sample mean</td><td>E = μ, Var = σ²/n</td><td><a href="#s5-2">5.2</a></td></tr>
+<tr><td><span class="kw kw-rule">√n-Gesetz</span></td><td>square-root law</td><td>σ halbieren kostet 4× Daten</td><td><a href="#s5-2">5.2</a></td></tr>
+<tr><td><span class="kw kw-rule">Gesetz der großen Zahlen</span></td><td>law of large numbers</td><td>Mittel → Erwartungswert</td><td><a href="#s5-3">5.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Ungleichung von Tschebyschow</span></td><td>Chebyshev's inequality</td><td>Abweichungs-W'keit ≤ Var/ε²</td><td><a href="#s5-3">5.3</a></td></tr>
+<tr><td><span class="kw kw-rule">Zentraler Grenzwertsatz</span></td><td>central limit theorem</td><td>Summen werden normal</td><td><a href="#s5-4">5.3</a></td></tr>
+<tr><td><span class="kw kw-chg">Normalapproximation</span></td><td>normal approximation</td><td>Bin, Pois ≈ N</td><td><a href="#s5-5">5.3.1</a></td></tr>
+<tr><td><span class="kw kw-chg">Stetigkeitskorrektur</span></td><td>continuity correction</td><td>Grenze um 0.5 verschieben</td><td><a href="#s5-5">5.3.1</a></td></tr>
+<tr><td><span class="kw kw-rule">Lognormal-Verteilung</span></td><td>log-normal distribution</td><td>Produkt vieler Effekte</td><td><a href="#s5-4">5.3</a></td></tr>
+</table>
+</section>
+
+<section id="s5-train" data-m="🏋 Training|ZGS-Aufgaben mit Prüfen">
+<h2>🏋 Training</h2>
+<x-card t="Zufallsaufgabe zum ZGS" id="qz5">
+  <p id="q5Task"></p>
+  <p class="quiz">Antwort: <input id="q5In"> <button class="btn" id="q5Chk">Prüfen</button> <button class="btn" id="q5New">Neue Aufgabe</button></p>
+  <div class="out" id="q5Res"></div>
+</x-card>
+</section>
