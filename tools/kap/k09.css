@@ -1,0 +1,11 @@
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem;margin:1rem 0}
+.qcell{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:center;position:relative}
+.qcell h4{width:100%;margin:0 0 .2rem;font-size:1rem}
+.qcell.is-n{border-style:dashed;border-color:var(--idx)}
+.qcell label{display:flex;gap:.35rem;align-items:center}
+.qcell input{width:6.5rem;font-family:'JetBrains Mono',monospace;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .45rem}
+.qcell .out{width:100%;margin:.3rem 0 0}
+.calc select{font:inherit;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.15rem .4rem;max-width:100%}
+.calc .ctl input[type=number]{width:6.5rem}
+.vdict{font-size:1.05rem}
+.livecode{margin-top:.8rem}

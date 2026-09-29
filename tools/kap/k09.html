@@ -1,0 +1,163 @@
+<!-- title: Statistik-Rechner -->
+<!-- sub: alle Tests und Verteilungen von Statistik I, mit dem passenden R- und Python-Code zu deinen Daten -->
+<div class="hero">
+  <div class="kick">Statistik I · Teil 9 · Kurs-Werkzeug</div>
+  <h1>Statistik-Rechner</h1>
+  <p class="lead">Alle Tests des Kurses in einem Werkzeug. Trag deine Messwerte ein (Komma, Leerzeichen oder Zeilenumbruch). Teststatistik, P-Wert, Vertrauensintervall und Entscheidung erscheinen sofort. Der Rechner ersetzt auch die z- und t-Tabellen. Alles läuft lokal im Browser und stimmt mit R und SciPy überein. Unter jedem Rechner steht der <b>gleiche Aufruf in R und in Python</b>, fertig mit deinen Daten.</p>
+</div>
+<x-card t="🎨 Farben in den Ergebnissen" src="GN">
+  <div class="legend">
+    <div><b class="kw-res">rot · Ergebnis</b>: Teststatistik, P-Wert, VI, Entscheidung</div>
+    <div><b class="kw-chg">orange · Zwischengröße</b>: Differenzen, gepoolte Varianz, Ränge</div>
+    <div><b class="kw-rule">lila · Verteilung/Test</b>: \(t_{df}\), \(\Nor(0,1)\), \(\Bin(n,p)\)</div>
+    <div><b class="kw-par">blau · Parameter</b>: \(\Par{\mu_0}\), \(\Par{\sigma}\), \(\Par{\alpha}\)</div>
+    <div><b class="kw-idx">grün · Umfang/df</b>: \(\Idx{n}\), \(\Idx{m}\), Freiheitsgrade</div>
+    <div><b class="kw-mem">pink · Daten</b>: Mittelwerte, Stichproben</div>
+  </div>
+</x-card>
+
+<section id="r0" data-m="🧭 Welcher Rechner?|Entscheidungshilfe">
+<h2><span class="num">0</span>Welcher Rechner passt?</h2>
+<table class="tbl"><tr><th>Frage</th><th>Daten</th><th>Rechner</th></tr>
+<tr><td>Wie sehen meine Daten aus?</td><td>1 oder 2 Reihen</td><td><a href="#r1">📊 Deskriptiv</a></td></tr>
+<tr><td>Weicht der Mittelwert/Median von einem Sollwert ab?</td><td>1 Reihe + μ₀</td><td><a href="#r2">1️⃣ Ein-Stichprobe</a> (t, Z, Vorzeichen, ✚ Wilcoxon)</td></tr>
+<tr><td>Unterscheiden sich zwei unabhängige Gruppen?</td><td>2 Reihen, beliebige Längen</td><td><a href="#r3">2️⃣ Zwei-Stichproben</a> (t, ✚ Welch, ✚ Mann-Whitney)</td></tr>
+<tr><td>Vorher/nachher, dieselben Einheiten?</td><td>2 Reihen, gleich lang</td><td><a href="#r4">🔗 Gepaart</a> (t, ✚ Wilcoxon)</td></tr>
+<tr><td>Wie groß muss n sein?</td><td>Effekt d, α</td><td><a href="#r5">🎯 Macht & Umfang</a></td></tr>
+<tr><td>Quantil/Wahrscheinlichkeit nachschlagen</td><td>Parameter</td><td><a href="#r6">📐 Quantile & Verteilungen</a></td></tr>
+<tr><td>Hängt y linear von x ab?</td><td>Paare (x, y)</td><td><a href="#r7">✚ 📈 Regression & Korrelation</a></td></tr>
+<tr><td>Laplace: Anzahl günstiger / möglicher Fälle</td><td>n, k</td><td><a href="#r8">✚ 🎲 Kombinatorik</a></td></tr>
+</table>
+<div class="idea is-g" style="position:relative"><span class="src g">📘 Grundlage</span><b>Merke:</b> Rechner ersetzen nicht das Verständnis. In der Prüfung musst du Modell, Hypothesen, Teststatistik, Verwerfungsbereich und Entscheid selbst hinschreiben. Nutze den Rechner zum <b>Kontrollieren</b> deiner Handrechnung.</div>
+</section>
+
+<section id="r1" data-m="📊 Deskriptiv|Kennzahlen, Boxplot, Histogramm, Normalplot">
+<h2><span class="num">1</span>📊 Deskriptiv & Boxplot <span class="srcin g">📘 Grundlage</span></h2>
+<p class="one">Kennzahlen, Boxplot und Histogramm einer oder zweier Stichproben: der erste Blick auf jede Datenreihe. ✚ Neu: Normalplot (Q-Q) zum Prüfen der Normalverteilungsannahme.</p>
+<div class="viz calc is-g">
+  <div class="two"><label>Stichprobe A<textarea id="dsA">402, 415, 388, 397, 410, 385, 399, 421, 393, 379</textarea></label><label>Stichprobe B (optional)<textarea id="dsB">378, 395, 362, 388, 401, 370, 383, 359</textarea></label></div>
+  <div class="out" id="dsStats"></div>
+  <div class="two"><div id="dsBox" class="plot"></div><div id="dsHist" class="plot"></div></div>
+  <div id="dsQQ" class="plot"></div>
+  <div class="recog" id="dsRead"></div>
+  <div id="dsCode"></div>
+</div>
+</section>
+
+<section id="r2" data-m="1️⃣ Ein-Stichprobe|t, Z, Vorzeichen, Wilcoxon">
+<h2><span class="num">2</span>1️⃣ Ein-Stichproben-Test <span class="srcin g">📘 Grundlage</span></h2>
+<p class="one">Weicht der Mittelwert von einem Sollwert μ₀ ab? Z-Test (σ bekannt), t-Test (σ unbekannt), Vorzeichen-Test (nicht normal) oder ✚ Wilcoxon-Vorzeichen-Rang-Test (Kompromiss).</p>
+<div class="viz calc is-g">
+  <label>Stichprobe<textarea id="osData">10.2, 9.8, 10.5, 10.1, 9.9, 10.3, 10.0, 9.7</textarea></label>
+  <div class="ctl"><label>Sollwert μ₀ <input type="number" id="osMu" value="10" step="any"></label>
+  <label>Niveau 1 − α <input type="range" id="osC" min="0.80" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="osC"></output></label>
+  <label>Test <select id="osTest"><option value="t">t-Test (σ unbekannt)</option><option value="z">Z-Test (σ bekannt)</option><option value="sign">Vorzeichen-Test</option><option value="wil">✚ Wilcoxon-Test</option></select></label>
+  <label id="osSigWrap">bekanntes σ <input type="number" id="osSig" value="0.3" step="any"></label>
+  <label>Alternative <select id="osSide"><option value="ne">zweiseitig (≠)</option><option value="gt">einseitig (&gt;)</option><option value="lt">einseitig (&lt;)</option></select></label></div>
+  <div class="out" id="osStats"></div>
+  <div id="osPlot" class="plot"></div>
+  <div class="out" id="osVerdict"></div>
+  <div id="osCode"></div>
+</div>
+</section>
+
+<section id="r3" data-m="2️⃣ Zwei-Stichproben|ungepaart: t, Welch, Mann-Whitney">
+<h2><span class="num">3</span>2️⃣ Zwei-Stichproben-Test (ungepaart) <span class="srcin g">📘 Grundlage</span></h2>
+<p class="one">Zwei unabhängige Gruppen. Standard: gleiche Varianz, gepoolte Varianz, df = n + m − 2. ✚ Neu: Welch-Test (ungleiche Varianzen) und Mann-Whitney (Zwei-Stichproben-Wilcoxon).</p>
+<div class="viz calc is-g">
+  <div class="two"><label>Gruppe X<textarea id="twA">402, 415, 388, 397, 410, 385, 399, 421, 393, 379</textarea></label><label>Gruppe Y<textarea id="twB">378, 395, 362, 388, 401, 370, 383, 359</textarea></label></div>
+  <div class="ctl"><label>Niveau 1 − α <input type="range" id="twC" min="0.80" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="twC"></output></label>
+  <label>Test <select id="twTest"><option value="pool">t-Test, gleiche Varianz</option><option value="welch">✚ Welch-Test</option><option value="mw">✚ Mann-Whitney</option></select></label>
+  <label>Alternative <select id="twSide"><option value="ne">zweiseitig (≠)</option><option value="gt">einseitig (X &gt; Y)</option><option value="lt">einseitig (X &lt; Y)</option></select></label></div>
+  <div class="out" id="twStats"></div>
+  <div id="twPlot" class="plot"></div>
+  <div class="out" id="twVerdict"></div>
+  <div id="twCode"></div>
+</div>
+</section>
+
+<section id="r4" data-m="🔗 Gepaart|Differenzen, t, Wilcoxon">
+<h2><span class="num">4</span>🔗 Gepaarter Test <span class="srcin g">📘 Grundlage</span></h2>
+<p class="one">Dieselbe Einheit zweimal gemessen. Der Rechner bildet die Differenzen A − B und testet, ob sie im Mittel 0 sind (t-Test) bzw. symmetrisch um 0 liegen (✚ Wilcoxon).</p>
+<div class="viz calc is-g">
+  <div class="two"><label>Bedingung A<textarea id="prA">5.2, 6.1, 4.8, 5.9, 6.3, 5.5, 4.9, 6.0</textarea></label><label>Bedingung B<textarea id="prB">4.7, 5.4, 4.9, 5.1, 5.8, 4.8, 4.6, 5.3</textarea></label></div>
+  <div class="ctl"><label>Niveau 1 − α <input type="range" id="prC" min="0.80" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="prC"></output></label>
+  <label>Test <select id="prTest"><option value="t">t-Test auf Differenzen</option><option value="wil">✚ Wilcoxon auf Differenzen</option></select></label>
+  <label>Alternative <select id="prSide"><option value="ne">zweiseitig (≠)</option><option value="gt">einseitig (A &gt; B)</option><option value="lt">einseitig (A &lt; B)</option></select></label></div>
+  <div class="out" id="prStats"></div>
+  <div class="two"><div id="prPairs" class="plot"></div><div id="prPlot" class="plot"></div></div>
+  <div class="out" id="prVerdict"></div>
+  <div id="prCode"></div>
+</div>
+</section>
+
+<section id="r5" data-m="🎯 Macht & Umfang|1 − β, benötigtes n">
+<h2><span class="num">5</span>🎯 Macht & Stichprobenumfang <span class="srcin g">📘 Grundlage</span></h2>
+<p class="one">Wie sicher findet ein Test einen echten Effekt, und wie groß muss n dafür sein? Z-Test-Näherung mit standardisiertem Effekt \(d=(\mu-\mu_0)/\sigma\).</p>
+<div class="viz calc is-g">
+  <div class="ctl"><label>Effekt d (in σ) <input type="range" id="pwD" min="0.05" max="2" step="0.05" value="0.8" data-fmt="2"><output for="pwD"></output></label>
+  <label>n <input type="range" id="pwN" min="2" max="150" step="1" value="25"><output for="pwN"></output></label>
+  <label>α <input type="range" id="pwA" min="0.01" max="0.15" step="0.005" value="0.05" data-fmt="3"><output for="pwA"></output></label>
+  <label>Zielmacht <input type="range" id="pwT" min="0.5" max="0.99" step="0.01" value="0.8" data-fmt="2"><output for="pwT"></output></label>
+  <label>Alternative <select id="pwSide"><option value="ne">zweiseitig</option><option value="gt">einseitig</option></select></label></div>
+  <div class="out" id="pwOut"></div>
+  <div class="two"><div id="pwPlot" class="plot"></div><div id="pwCurve" class="plot"></div></div>
+  <div class="recog"><b>So liest du es:</b> rote Fläche = α (Fehler 1. Art unter H₀), grüne Fläche = Macht 1 − β unter der Alternative. Formel: \(n\approx\big(\tfrac{z_{1-\alpha/2}+z_{1-\beta}}{d}\big)^2\).</div>
+  <div id="pwCode"></div>
+</div>
+</section>
+
+<section id="r6" data-m="📐 Quantile & Verteilungen|Tabellen-Ersatz: Φ, t, Bin, Pois, Hyp, Exp">
+<h2><span class="num">6</span>📐 Quantile & Verteilungen <span class="srcin g">📘 Grundlage</span></h2>
+<p class="one">Der Tabellen-Ersatz: Quantile und Wahrscheinlichkeiten, beliebig genau. ✚ Neu: Normal mit beliebigem μ, σ; Poisson, hypergeometrisch, geometrisch, exponential.</p>
+<div class="qgrid">
+  <div class="qcell is-g"><h4>Normal-Quantil \(z_p\)</h4><label>p <input type="number" id="qzP" value="0.975" step="any" min="0" max="1"></label><div class="out" id="qzOut"></div></div>
+  <div class="qcell is-g"><h4>t-Quantil \(t_{df,p}\)</h4><label>p <input type="number" id="qtP" value="0.975" step="any"></label><label>df <input type="number" id="qtDf" value="9" step="1" min="1"></label><div class="out" id="qtOut"></div></div>
+  <div class="qcell is-g"><h4>Normal-CDF \(\Phi(x)\)</h4><label>x <input type="number" id="qncX" value="1.96" step="any"></label><div class="out" id="qncOut"></div></div>
+  <div class="qcell is-g"><h4>t-CDF</h4><label>x <input type="number" id="qtcX" value="2.262" step="any"></label><label>df <input type="number" id="qtcDf" value="9" step="1" min="1"></label><div class="out" id="qtcOut"></div></div>
+  <div class="qcell is-g"><h4>Binomial \(\Bin(n,p)\)</h4><label>n <input type="number" id="qbN" value="20" step="1" min="1"></label><label>p <input type="number" id="qbP" value="0.1" step="any" min="0" max="1"></label><label>k <input type="number" id="qbK" value="5" step="1" min="0"></label><div class="out" id="qbOut"></div></div>
+  <div class="qcell is-n"><h4>✚ Normal \(\Nor(\mu,\sigma^2)\)</h4><label>μ <input type="number" id="qnM" value="100" step="any"></label><label>σ <input type="number" id="qnS" value="15" step="any"></label><label>a <input type="number" id="qnA" value="85" step="any"></label><label>b <input type="number" id="qnB" value="115" step="any"></label><div class="out" id="qnOut"></div></div>
+  <div class="qcell is-n"><h4>✚ Poisson \(\Pois(\lambda)\)</h4><label>λ <input type="number" id="qpL" value="3" step="any"></label><label>k <input type="number" id="qpK" value="2" step="1" min="0"></label><div class="out" id="qpOut"></div></div>
+  <div class="qcell is-n"><h4>✚ Hypergeometrisch</h4><label>N <input type="number" id="qhN" value="50" step="1"></label><label>M (Treffer) <input type="number" id="qhM" value="5" step="1"></label><label>n <input type="number" id="qhn" value="10" step="1"></label><label>k <input type="number" id="qhK" value="1" step="1"></label><div class="out" id="qhOut"></div></div>
+  <div class="qcell is-n"><h4>✚ Geometrisch \(\Geom(p)\)</h4><label>p <input type="number" id="qgP" value="0.2" step="any"></label><label>k <input type="number" id="qgK" value="3" step="1" min="1"></label><div class="out" id="qgOut"></div></div>
+  <div class="qcell is-n"><h4>✚ Exponential \(\Expo(\lambda)\)</h4><label>λ <input type="number" id="qeL" value="0.5" step="any"></label><label>x <input type="number" id="qeX" value="2" step="any"></label><div class="out" id="qeOut"></div></div>
+</div>
+<div class="viz calc is-g"><div class="ctl"><label>Verteilung anzeigen <select id="qvSel"><option value="norm">Normal (μ, σ oben)</option><option value="t">t (df oben, t-Quantil)</option><option value="bin">Binomial (n, p oben)</option><option value="pois">Poisson (λ oben)</option><option value="hyp">Hypergeometrisch</option><option value="geom">Geometrisch</option><option value="exp">Exponential</option></select></label></div><div id="qvPlot" class="plot"></div></div>
+<x-card t="📜 Dieselben Funktionen in R und Python">
+<table class="tbl cheat"><tr><th>Größe</th><th>R</th><th>Python (scipy.stats)</th></tr>
+<tr><td>\(z_p\), \(\Phi(x)\)</td><td><code>qnorm(p)</code>, <code>pnorm(x)</code></td><td><code>norm.ppf(p)</code>, <code>norm.cdf(x)</code></td></tr>
+<tr><td>\(t_{df,p}\), t-CDF</td><td><code>qt(p, df)</code>, <code>pt(x, df)</code></td><td><code>t.ppf(p, df)</code>, <code>t.cdf(x, df)</code></td></tr>
+<tr><td>Binomial</td><td><code>dbinom(k, n, p)</code>, <code>pbinom(k, n, p)</code></td><td><code>binom.pmf(k, n, p)</code>, <code>binom.cdf(k, n, p)</code></td></tr>
+<tr><td>Poisson</td><td><code>dpois(k, l)</code>, <code>ppois(k, l)</code></td><td><code>poisson.pmf(k, l)</code>, <code>poisson.cdf(k, l)</code></td></tr>
+<tr><td>Hypergeometrisch</td><td><code>dhyper(k, M, N - M, n)</code></td><td><code>hypergeom.pmf(k, N, M, n)</code></td></tr>
+<tr><td>Geometrisch (Versuche bis 1. Treffer)</td><td><code>dgeom(k - 1, p)</code></td><td><code>geom.pmf(k, p)</code></td></tr>
+<tr><td>Exponential</td><td><code>pexp(x, l)</code></td><td><code>expon.cdf(x, scale=1/l)</code></td></tr></table>
+<p class="muted small">Achtung: R zählt bei <code>dgeom</code> die Misserfolge vor dem ersten Treffer (Start bei 0), SciPy die Versuche (Start bei 1).</p>
+</x-card>
+</section>
+
+<section id="r7" data-m="✚ 📈 Regression|Gerade, r, R², t-Test der Steigung">
+<h2><span class="num">7</span>📈 Regression & Korrelation <span class="srcin n">✚ Neu · Modulinhalt</span></h2>
+<p class="one">Kleinste-Quadrate-Gerade \(\hat y=a+bx\), Korrelation r, Bestimmtheitsmaß R², Residuen und t-Test für \(H_0:\beta=0\) (vgl. Kap. 3.4 und 8.5).</p>
+<div class="viz calc">
+  <div class="two"><label>x-Werte<textarea id="rgX">2, 4, 5, 7, 8, 10, 11, 13</textarea></label><label>y-Werte<textarea id="rgY">52, 61, 58, 70, 66, 79, 74, 85</textarea></label></div>
+  <div class="ctl"><label>Niveau 1 − α <input type="range" id="rgC" min="0.80" max="0.99" step="0.01" value="0.95" data-fmt="2"><output for="rgC"></output></label></div>
+  <div class="out" id="rgStats"></div>
+  <div class="two"><div id="rgPlot" class="plot"></div><div id="rgRes" class="plot"></div></div>
+  <div class="out" id="rgVerdict"></div>
+  <div id="rgCode"></div>
+</div>
+</section>
+
+<section id="r8" data-m="✚ 🎲 Kombinatorik|Laplace: Fakultät, Binomialkoeffizient, Urnenmodelle">
+<h2><span class="num">8</span>🎲 Kombinatorik für Laplace-Modelle <span class="srcin n">✚ Neu · Modulinhalt</span></h2>
+<p class="one">Im Laplace-Modell gilt \(\PP(A)=\tfrac{|A|}{|\Om|}\). Die vier Urnenmodelle zählen \(|\Om|\) beim k-maligen Ziehen aus n Kugeln.</p>
+<div class="viz calc">
+  <div class="ctl"><label>n <input type="number" id="kbN" value="49" step="1" min="0"></label><label>k <input type="number" id="kbK" value="6" step="1" min="0"></label></div>
+  <div class="out" id="kbOut"></div>
+  <table class="tbl"><tr><th></th><th>mit Reihenfolge</th><th>ohne Reihenfolge</th></tr>
+  <tr><td>mit Zurücklegen</td><td>\(n^k\)</td><td>\(\binom{n+k-1}{k}\)</td></tr>
+  <tr><td>ohne Zurücklegen</td><td>\(\frac{n!}{(n-k)!}\)</td><td>\(\binom nk\)</td></tr></table>
+  <div class="recog"><b>Beispiel Lotto 6 aus 49:</b> ohne Zurücklegen, ohne Reihenfolge → \(\binom{49}{6}=13\,983\,816\) Möglichkeiten; P(6 Richtige) = 1/13 983 816.</div>
+</div>
+</section>
