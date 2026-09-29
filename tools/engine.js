@@ -34,7 +34,11 @@ LB.KOPT = {
     '\\dd': '\\,\\mathrm{d}',
     '\\mA': '\\Mem{A}', '\\mB': '\\Mem{B}', '\\mX': '\\Mem{X}', '\\mY': '\\Mem{Y}',
     '\\capc': '\\mathbin{\\Chg{\\cap}}', '\\cupc': '\\mathbin{\\Chg{\\cup}}', '\\co': '^{\\Chg{c}}',
-    '\\setm': '\\mathbin{\\Chg{\\setminus}}'
+    '\\setm': '\\mathbin{\\Chg{\\setminus}}',
+    '\\pf': '\\Rule{p}', '\\ff': '\\Rule{f}', '\\FF': '\\Rule{F}', '\\WW': '\\Mem{\\mathcal{W}}',
+    '\\mx': '\\Mem{x}', '\\mZ': '\\Mem{Z}', '\\mT': '\\Mem{T}',
+    '\\Bin': '\\Rule{\\operatorname{Bin}}', '\\Pois': '\\Rule{\\operatorname{Pois}}', '\\Geom': '\\Rule{\\operatorname{Geom}}',
+    '\\Bern': '\\Rule{\\operatorname{Bernoulli}}', '\\Uni': '\\Rule{\\operatorname{Uni}}', '\\Nor': '\\Rule{\\mathcal{N}}', '\\Expo': '\\Rule{\\operatorname{Exp}}'
   }
 };
 LB.tex = el => { if (window.renderMathInElement && el) window.renderMathInElement(el, LB.KOPT); };

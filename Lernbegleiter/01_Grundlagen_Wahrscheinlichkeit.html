@@ -28,7 +28,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.6}
+body{hyphens:auto;overflow-wrap:break-word;margin:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.6}
 a{color:var(--par)}
 .wrap{max-width:1640px;margin:0 auto;padding:1.2rem 1.6rem 5rem}
 h1{font-family:'Crimson Pro',Georgia,serif;font-size:2.4rem;line-height:1.15;margin:.4rem 0 .4rem}
@@ -39,7 +39,7 @@ h3 .num{color:var(--rule);font-family:'JetBrains Mono',monospace;margin-right:.4
 h4{font-size:1.05rem;margin:1.2rem 0 .4rem}
 .one{color:var(--muted);margin:-.3rem 0 .8rem}
 p{margin:.5rem 0}
-code{font-family:'JetBrains Mono',Consolas,monospace;font-size:.86em;background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:0 .3rem}
+code{hyphens:none;font-family:'JetBrains Mono',Consolas,monospace;font-size:.86em;background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:0 .3rem}
 table{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.95rem}
 th,td{border:1px solid var(--border);padding:.3rem .55rem;text-align:left;vertical-align:top}
 th{background:var(--card2);color:var(--muted);font-weight:600}
@@ -75,8 +75,9 @@ body.hl-g .gblk{background:color-mix(in srgb,var(--gl) 9%,transparent)}
 
 /* ---------- Kopf: NICHT sticky ---------- */
 .lbtop{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.1rem;padding:.8rem 1.4rem;border-bottom:1px solid var(--border);background:var(--card)}
+.lbtop .lbt{min-width:0;flex:1 1 280px}
 .lbtop .lbt b{font-size:1.05rem;margin-right:.6rem}
-.lbtop .lbt span{color:var(--muted);font-size:.85rem}
+.lbtop .lbt span{color:var(--muted);font-size:.85rem;display:block}
 .lbq{display:flex;flex-wrap:wrap;gap:.3rem .45rem;flex:1 1 520px}
 .lbq a{font-size:.8rem;text-decoration:none;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:.12rem .5rem;white-space:nowrap}
 .lbq a:hover{border-color:var(--rule);color:var(--rule)}
@@ -979,7 +980,11 @@ LB.KOPT = {
     '\\dd': '\\,\\mathrm{d}',
     '\\mA': '\\Mem{A}', '\\mB': '\\Mem{B}', '\\mX': '\\Mem{X}', '\\mY': '\\Mem{Y}',
     '\\capc': '\\mathbin{\\Chg{\\cap}}', '\\cupc': '\\mathbin{\\Chg{\\cup}}', '\\co': '^{\\Chg{c}}',
-    '\\setm': '\\mathbin{\\Chg{\\setminus}}'
+    '\\setm': '\\mathbin{\\Chg{\\setminus}}',
+    '\\pf': '\\Rule{p}', '\\ff': '\\Rule{f}', '\\FF': '\\Rule{F}', '\\WW': '\\Mem{\\mathcal{W}}',
+    '\\mx': '\\Mem{x}', '\\mZ': '\\Mem{Z}', '\\mT': '\\Mem{T}',
+    '\\Bin': '\\Rule{\\operatorname{Bin}}', '\\Pois': '\\Rule{\\operatorname{Pois}}', '\\Geom': '\\Rule{\\operatorname{Geom}}',
+    '\\Bern': '\\Rule{\\operatorname{Bernoulli}}', '\\Uni': '\\Rule{\\operatorname{Uni}}', '\\Nor': '\\Rule{\\mathcal{N}}', '\\Expo': '\\Rule{\\operatorname{Exp}}'
   }
 };
 LB.tex = el => { if (window.renderMathInElement && el) window.renderMathInElement(el, LB.KOPT); };
