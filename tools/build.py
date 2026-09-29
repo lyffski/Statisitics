@@ -251,6 +251,9 @@ def expand(body):
     body = re.sub(r'<x-vids>(.*?)</x-vids>', x_vids, body, flags=re.S)
     body = re.sub(r'<x-course((?:\s[^>]*?)?)/>', x_course, body)
     body = common(number_steps(body))
+    bad = re.findall(r'\\text\{[^}]*[%§][^}]*\}', body)
+    if bad:
+        raise SystemExit('Verbotene Zeichen in \\text{}: %s' % bad[:3])
     left = re.findall(r'<x-[a-z0-9]+', body)
     if left:
         raise SystemExit('Nicht expandierte Tags: %s' % sorted(set(left)))
