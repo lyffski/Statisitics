@@ -13,7 +13,7 @@ Nachrichten (postMessage) zwischen Teil und Hülle:
 import base64, gzip, html, json, os, re, sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from build import PARTS, OUT  # noqa: E402
+from build import PARTS, OUT, STAGE, VBASE  # noqa: E402
 
 T = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,15 +27,15 @@ def meta(path):
 def main():
     parts = []
     for n, fname, short in PARTS:
-        p = os.path.join(OUT, fname + '.html')
+        p = os.path.join(STAGE, fname + '.html')
         if not os.path.exists(p):
             raise SystemExit('fehlt: %s (erst tools/build.py laufen lassen)' % p)
         s, title, desc = meta(p)
         z = base64.b64encode(gzip.compress(s.encode('utf-8'), 9, mtime=0)).decode('ascii')
         parts.append({'n': n, 'file': fname + '.html', 'short': short, 'title': title, 'desc': desc, 'z': z})
     blobs = '\n'.join('<script type="application/octet-stream" id="z%d">%s</script>' % (i, p['z']) for i, p in enumerate(parts))
-    info = json.dumps([{k: p[k] for k in ('n', 'file', 'short', 'title', 'desc')} for p in parts], ensure_ascii=False)
-    page = open(os.path.join(T, 'shell.html'), encoding='utf-8').read().replace('/*PARTS*/[]', info).replace('<!--BLOBS-->', blobs)
+    info = json.dumps([{k: p[k] for k in ('n', 'short', 'title', 'desc')} for p in parts], ensure_ascii=False)
+    page = open(os.path.join(T, 'shell.html'), encoding='utf-8').read().replace('/*PARTS*/[]', info).replace('<!--BLOBS-->', blobs).replace('/*VBASE*/', json.dumps(VBASE))
     out = os.path.join(OUT, '00_Alle_Teile.html')
     open(out, 'w', encoding='utf-8').write(page)
     print('gebaut:', os.path.relpath(out, os.path.dirname(T)), '%.0f KB' % (os.path.getsize(out) / 1024))

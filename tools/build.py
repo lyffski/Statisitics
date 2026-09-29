@@ -7,6 +7,7 @@ Jedes Kapitel liegt in tools/kap/kNN.html (Körper) und optional tools/kap/kNN.j
 Die Körper benutzen kleine Baustein-Tags (x-vn, x-anat, x-pt, …), die hier zu HTML werden.
 Ausgabe: Lernbegleiter/NN_Name.html, jede Datei läuft für sich allein.
 """
+import urllib.parse
 import html
 import json
 import os
@@ -16,6 +17,10 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 T = os.path.join(ROOT, 'tools')
 OUT = os.path.join(ROOT, 'Lernbegleiter')
+# Nur die Gesamtdatei wird ausgeliefert: die Teile landen im Zwischenordner build/teile/
+STAGE = os.path.join(ROOT, 'build', 'teile')
+# Video-Ordner auf dem Laptop (Linux Mint): ~/Personal/Statistics mit init/, init2/, statquest/
+VBASE = '/home/lllvrm/Personal/Statistics/'
 
 # Teile: (Nummer, Dateiname, Kurztitel für Menü/Teilwechsel, Plotly nötig?)
 PARTS = [
@@ -196,9 +201,9 @@ def x_vid(m):
     folder = f.split('/')[0] if '/' in f else 'Hauptordner'
     note = a.get('n', '')
     return ('<span class="vid" data-f="%s"><span class="vt">🎬 %s</span>%s<span class="vs2">%s</span>'
-            '<a class="vopen" href="videos/%s" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span>'
+            '<a class="vopen" href="file://%s%s" target="_blank" rel="noopener">▶ öffnen</a><button class="vcopy" type="button">📋 Pfad</button></span>'
             % (aesc(f), html.escape(vid_title(f)), (' <span class="muted small">' + note + '</span>') if note else '',
-               html.escape(folder), aesc(f)))
+               html.escape(folder), aesc(VBASE), aesc('/'.join(urllib.parse.quote(x) for x in f.split('/')))))
 
 
 def x_vids(m):
@@ -278,7 +283,7 @@ def menu(body, num):
             grid += '<a href="#%s"%s><b>%s</b><span>%s</span></a>' % (id_, ' class="sub"' if sub else '', html.escape(tt), html.escape(d))
         grid += '</div>'
     ql = ''.join('<a href="#%s">%s<small>%s</small></a>' % (i, html.escape(t), html.escape(d.split(',')[0][:34])) for i, t, d in quick)
-    parts = ''.join('<a href="%s.html" data-part="%d"%s>%s</a>' % (f, k, ' class="cur"' if n == num else '', html.escape(tt))
+    parts = ''.join('<a href="#teil%d" data-part="%d"%s>%s</a>' % (n, k, ' class="cur"' if n == num else '', html.escape(tt))
                     for k, (n, f, tt) in enumerate(PARTS))
     return grid, ql, parts
 
@@ -329,7 +334,7 @@ def build(num):
   <div class="lbm-grid">{grid}</div>
   <div class="lbm-opts">
     <label><input type="checkbox" id="lbHlG"> 📘 Grundlage-Inhalte hervorheben</label>
-    <label>🎬 Video-Ordner <input type="text" id="lbVbase" value="videos/" title="relativ zur HTML-Datei (z. B. Symlink „videos") oder absolut, z. B. /home/NAME/Videos/Statistik/"></label>
+    <label>🎬 Video-Ordner <input type="text" id="lbVbase" value="{VBASE}" title="absoluter Pfad zum Video-Ordner, z. B. /home/lllvrm/Personal/Statistics/"></label>
     <span>Esc schließt · T = Teile</span>
   </div>
 </div></div>
@@ -347,8 +352,8 @@ def build(num):
 </body>
 </html>
 '''
-    os.makedirs(OUT, exist_ok=True)
-    path = os.path.join(OUT, fname + '.html')
+    os.makedirs(STAGE, exist_ok=True)
+    path = os.path.join(STAGE, fname + '.html')
     open(path, 'w', encoding='utf-8').write(page)
     return path
 

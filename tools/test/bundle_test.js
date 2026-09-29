@@ -20,13 +20,13 @@ const LIBS = process.env.LIBS || path.join(__dirname, 'libs');
       await page.waitForFunction(k => window.__lbReady[k], i, { timeout: 15000 });
       await page.waitForTimeout(150);
       const fr = page.frames().filter(x => x.url().startsWith('blob:'))[i];
-      const info = await fr.evaluate(() => ({ h: document.querySelector('.lbt b') && document.querySelector('.lbt b').textContent, v: (document.querySelector('.vid a.vopen') || {}).href || '-', ov: document.documentElement.scrollWidth - window.innerWidth,
+      const info = await fr.evaluate(() => ({ single: document.querySelectorAll('a[href$=".html"]').length, h: document.querySelector('.lbt b') && document.querySelector('.lbt b').textContent, v: (document.querySelector('.vid a.vopen') || {}).href || '-', ov: document.documentElement.scrollWidth - window.innerWidth,
         kx: document.querySelectorAll('.katex-error').length }));
       const hash = await page.evaluate(() => location.hash);
-      const okV = info.v === '-' || info.v.startsWith('file://' + path.dirname(f) + '/videos/');
-      const ok = okV && info.ov <= 1 && info.kx === 0;
+      const okV = info.v === '-' || info.v.startsWith('file:///home/lllvrm/Personal/Statistics/');
+      const ok = okV && info.single === 0 && info.ov <= 1 && info.kx === 0;
       if (!ok) fail++;
-      console.log((ok ? '✓' : '✗') + ' ' + w + ' Teil ' + (i + 1) + ' ' + hash + ' · ' + info.h + ' · Video ' + (info.v === '-' ? 'keins' : okV ? 'absolut ok' : info.v) + ' · Überlauf ' + info.ov + ' · KaTeX-Fehler ' + info.kx);
+      console.log((ok ? '✓' : '✗') + ' ' + w + ' Teil ' + (i + 1) + ' ' + hash + ' · ' + info.h + ' · Video ' + (info.v === '-' ? 'keins' : okV ? 'absolut ok' : info.v) + ' · Überlauf ' + info.ov + ' · KaTeX-Fehler ' + info.kx + ' · .html-Links ' + info.single);
     }
     const sov = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     if (sov > 1) { fail++; console.log('✗ Hülle läuft über: ' + sov); }

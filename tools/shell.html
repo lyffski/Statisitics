@@ -34,7 +34,7 @@ button:hover,button:focus-visible{border-color:var(--rule);outline:none}
 #ov .grid .k{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--rule)}
 #ov .grid b{font-size:1.05rem}
 #ov .grid span.d{font-size:.85rem;color:var(--muted)}
-#ov .grid a{font-size:.78rem;color:var(--par)}
+#ov code{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--text)}
 #ov .row{display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap}
 #ov .keys{font-size:.85rem;color:var(--muted)}
 kbd{font-family:'JetBrains Mono',monospace;border:1px solid var(--border);border-radius:4px;padding:0 .3rem;background:var(--card2)}
@@ -52,9 +52,9 @@ kbd{font-family:'JetBrains Mono',monospace;border:1px solid var(--border);border
 <div id="ov" role="dialog" aria-label="Übersicht aller Teile">
   <div class="in">
     <div class="row"><h1>📚 Lernbegleiter Statistik I · alle Teile</h1><button id="ovClose">✕ schließen</button></div>
-    <p>Jeder Teil läuft in einem eigenen Rahmen, genau wie die Einzeldatei: eigenes ☰-Menü, eigene Rechner und Tracer, eigener Zustand. Wechseln behält den Zustand der schon geöffneten Teile.</p>
+    <p>Jeder Teil läuft in einem eigenen Rahmen: eigenes ☰-Menü, eigene Rechner und Tracer, eigener Zustand. Wechseln behält den Zustand der schon geöffneten Teile.</p>
     <div class="grid" id="ovGrid"></div>
-    <p class="keys"><kbd>T</kbd> Übersicht · <kbd>Esc</kbd> schließen · Links „Einzeldatei“ öffnen denselben Teil ohne Hülle (Datei muss daneben liegen).</p>
+    <p class="keys"><kbd>T</kbd> Übersicht · <kbd>Esc</kbd> schließen · 🎬-Links öffnen deine Videos aus <code id="ovVb"></code> (änderbar im ☰-Menü jedes Teils).</p>
   </div>
 </div>
 <!--BLOBS-->
@@ -66,12 +66,15 @@ kbd{font-family:'JetBrains Mono',monospace;border:1px solid var(--border);border
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const frames = {}, ready = {};
-  let cur = -1, vbase = store.get('lb-vbase', 'videos/');
+  const VBASE = /*VBASE*/;
+  let cur = -1, vbase = store.get('lb-vbase', VBASE);
+  if (!vbase || vbase === 'videos/') vbase = VBASE;
   window.__lbReady = ready;
+  const showVb = () => { const c = $('ovVb'); if (c) c.textContent = vbase; };
 
   /* Video-Basis absolut machen (der Teil selbst läuft unter blob: und kann relative Pfade nicht auflösen) */
   function absBase(v) {
-    let b = (v || 'videos/').trim(); if (!/\/$/.test(b)) b += '/';
+    let b = (v || VBASE).trim(); if (!/\/$/.test(b)) b += '/';
     if (/^\//.test(b)) return 'file://' + b;
     try { return new URL(b, location.href).href; } catch (e) { return b; }
   }
@@ -98,7 +101,7 @@ kbd{font-family:'JetBrains Mono',monospace;border:1px solid var(--border);border
     Object.keys(frames).forEach(k => frames[k].classList.toggle('on', +k === i));
     if (frames[i]) { $('load').style.display = 'none'; frames[i].focus(); return; }
     if (!('DecompressionStream' in window)) {
-      $('load').innerHTML = 'Dieser Browser kann die eingebetteten Teile nicht entpacken (DecompressionStream fehlt).<br>Bitte die Einzeldatei öffnen: <a style="color:var(--par)" href="' + esc(p.file) + '">' + esc(p.file) + '</a>';
+      $('load').innerHTML = 'Dieser Browser kann die eingebetteten Teile nicht entpacken (DecompressionStream fehlt).<br>Bitte eine aktuelle Version von Firefox oder Chrome verwenden.';
       $('load').style.display = ''; return;
     }
     $('load').textContent = 'Teil wird entpackt …'; $('load').style.display = '';
@@ -120,13 +123,12 @@ kbd{font-family:'JetBrains Mono',monospace;border:1px solid var(--border);border
     else if (d.lb === 'part') { show(d.i); }
     else if (d.lb === 'overview') { overview(); }
     else if (d.lb === 'open' && d.f) { const w = window.open(videoURL(d.f), '_blank'); if (!w) location.href = videoURL(d.f); }
-    else if (d.lb === 'vbase') { vbase = d.v || 'videos/'; store.set('lb-vbase', vbase); Object.keys(frames).forEach(sendVbase); }
+    else if (d.lb === 'vbase') { vbase = d.v || VBASE; store.set('lb-vbase', vbase); showVb(); Object.keys(frames).forEach(sendVbase); }
   });
 
   $('tabs').innerHTML = PARTS.map((p, i) => '<button type="button" data-i="' + i + '" title="' + esc(p.short) + '">' + (p.n === 9 ? '🧰' : p.n) + '</button>').join('');
-  $('ovGrid').innerHTML = PARTS.map((p, i) => '<button type="button" data-i="' + i + '"><span class="k">' + (p.n === 9 ? 'Teil 9' : 'Kapitel ' + p.n) + '</span><b>' + esc(p.title || p.short) + '</b><span class="d">' + esc(p.desc) + '</span><a href="' + esc(p.file) + '" data-single>Einzeldatei ↗</a></button>').join('');
+  $('ovGrid').innerHTML = PARTS.map((p, i) => '<button type="button" data-i="' + i + '"><span class="k">' + (p.n === 9 ? 'Teil 9' : 'Kapitel ' + p.n) + '</span><b>' + esc(p.title || p.short) + '</b><span class="d">' + esc(p.desc) + '</span></button>').join('');
   document.addEventListener('click', e => {
-    if (e.target.closest('[data-single]')) return;
     const b = e.target.closest('#tabs button, #ovGrid button'); if (b) { show(+b.dataset.i); overview(false); }
   });
   $('ovBtn').addEventListener('click', () => overview());
@@ -141,6 +143,7 @@ kbd{font-family:'JetBrains Mono',monospace;border:1px solid var(--border);border
   const m = location.hash.match(/^#teil(\d+)$/), last = store.get('lb-last', null);
   let start = m ? PARTS.findIndex(p => p.n === +m[1]) : last !== null ? +last : 0;
   if (!(start >= 0 && start < PARTS.length)) start = 0;
+  showVb();
   show(start);
   if (!m && last === null) overview(true);
 })();

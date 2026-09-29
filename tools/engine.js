@@ -367,14 +367,16 @@ function initMenu() {
 
 /* =====================================================================
    Video-Links auf lokale .mp4-Dateien (Linux Mint, file://)
-   Standard: Ordner „videos/" neben der HTML-Datei (Symlink genügt),
+   Standard: ~/Personal/Statistics auf dem Laptop (LB.VBASE),
    sonst absoluten Pfad im ☰-Menü eintragen.
    ===================================================================== */
-LB.vbase = LB.store.get('lb-vbase', 'videos/');
+LB.VBASE = '/home/lllvrm/Personal/Statistics/';                  // Video-Ordner auf dem Laptop
+LB.vbase = LB.store.get('lb-vbase', LB.VBASE);
+if (LB.vbase === 'videos/') LB.vbase = LB.VBASE;
 LB.vbaseAbs = null;                                                // von der Gesamtdatei gesetzt
 function vurl(f) {
   const enc = f.split('/').map(encodeURIComponent).join('/');
-  let base = LB.vbaseAbs || LB.vbase || 'videos/';
+  let base = LB.vbaseAbs || LB.vbase || LB.VBASE;
   if (!/\/$/.test(base)) base += '/';
   if (/^\//.test(base)) base = 'file://' + base;                   // /home/… → file:///home/…
   try { return new URL(base + enc, LB.vbaseAbs ? undefined : document.baseURI).href; } catch (e) { return base + enc; }
@@ -395,7 +397,7 @@ function initVideos() {
     }
   });
   const inp = document.getElementById('lbVbase');
-  if (inp) { inp.value = LB.vbase; inp.addEventListener('change', () => { LB.vbase = inp.value.trim() || 'videos/'; LB.store.set('lb-vbase', LB.vbase); upd();
+  if (inp) { inp.value = LB.vbase; inp.addEventListener('change', () => { LB.vbase = inp.value.trim() || LB.VBASE; LB.store.set('lb-vbase', LB.vbase); upd();
     if (LB.inFrame) window.parent.postMessage({ lb: 'vbase', v: LB.vbase }, '*'); }); }
   window.addEventListener('message', e => {
     const d = e.data || {};
