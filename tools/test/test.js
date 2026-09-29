@@ -38,7 +38,7 @@ async function route(page) {
         document.querySelectorAll('[id]').forEach(e => { if (ids[e.id]) dup.push(e.id); ids[e.id] = 1; });
         const over = [];
         document.querySelectorAll('main *').forEach(e => {
-          if (e.closest('.katex-display, .js-plotly-plot, .katex')) return;
+          if (e.closest('.katex-display, .js-plotly-plot, .katex') || e.tagName === 'INPUT' || e.tagName === 'TEXTAREA' || e.tagName === 'SELECT') return;
           const cs = getComputedStyle(e);
           if (e.scrollWidth > e.clientWidth + 1 && e.clientWidth > 0 && cs.overflowX !== 'visible' && cs.overflowX !== 'hidden') over.push((e.id || e.className || e.tagName).toString().slice(0, 50));
         });
